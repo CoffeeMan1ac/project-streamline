@@ -1,4 +1,4 @@
-package com.munichre.project_streamline;
+package com.munichre.projectstreamline;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
