@@ -1,0 +1,24 @@
+﻿spring:
+  application:
+    name: streamline
+    
+  datasource:
+    url: jdbc:postgresql://localhost:5432/streamline
+    username: postgres
+    password: postgres
+    
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+server:
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+    com.munichre: DEBUG
