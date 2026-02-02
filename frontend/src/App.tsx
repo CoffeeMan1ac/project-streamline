@@ -1,15 +1,17 @@
-import { ThemeProvider, CssBaseline, Container, Typography } from "@mui/material";
+import { BrowserRouter } from "react-router-dom";
+import { ThemeProvider, CssBaseline, Container } from "@mui/material";
 import theme from "./theme/theme";
+import AppRoutes from "./routes/AppRoutes";
 
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline /> {/* resets browser styling */}
-      <Container>
-        <Typography variant="h4" sx={{ mt: 4 }}>
-          Hello World
-        </Typography>
-      </Container>
+      <CssBaseline />
+      <BrowserRouter>
+        <Container sx={{ mt: 4 }}>
+          <AppRoutes />
+        </Container>
+      </BrowserRouter>
     </ThemeProvider>
   );
 };
