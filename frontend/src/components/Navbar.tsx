@@ -1,4 +1,4 @@
-import React from "react";
+
 import {
   AppBar,
   Toolbar,
@@ -7,7 +7,7 @@ import {
   Box,
 } from "@mui/material";
 
-const Navbar: React.FC = () => {
+const Navbar = () => {
   return (
     <AppBar position="static" color="primary" elevation={0}>
       <Toolbar sx={{ justifyContent: "space-between" }}>

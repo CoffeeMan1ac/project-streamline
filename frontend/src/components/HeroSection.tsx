@@ -1,7 +1,7 @@
-import React from "react";
+
 import { Box, Container, Typography } from "@mui/material";
 
-const HeroSection: React.FC = () => {
+const HeroSection = () => {
   return (
     <Box
       sx={{

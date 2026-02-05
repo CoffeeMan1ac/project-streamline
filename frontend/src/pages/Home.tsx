@@ -1,2 +1,13 @@
-const Home = () => <h2>Home Page</h2>;
+import Navbar from "../components/Navbar";
+import HeroSection from "../components/HeroSection";
+
+const Home = () => {
+  return (
+    <>
+      <Navbar />
+      <HeroSection />
+    </>
+  );
+};
+
 export default Home;
