@@ -94,7 +94,6 @@ const QuotesPage = () => {
               label="First Name"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
-              required
               error={!!errors.firstName}
               helperText={errors.firstName}
             />
@@ -103,7 +102,6 @@ const QuotesPage = () => {
               label="Last Name"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
-              required
               error={!!errors.lastName}
               helperText={errors.lastName}
             />
@@ -116,7 +114,6 @@ const QuotesPage = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required
               error={!!errors.email}
               helperText={errors.email}
             />
@@ -125,7 +122,6 @@ const QuotesPage = () => {
               label="Phone Number"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              required
               error={!!errors.phone}
               helperText={errors.phone}
             />
@@ -138,7 +134,6 @@ const QuotesPage = () => {
             value={dob}
             onChange={(e) => setDob(e.target.value)}
             style={{ marginBottom: "16px" }}
-            required
             error={!!errors.dob}
             helperText={errors.dob}
           />
@@ -150,7 +145,6 @@ const QuotesPage = () => {
             value={address1}
             onChange={(e) => setAddress1(e.target.value)}
             style={{ marginBottom: "16px" }}
-            required
             error={!!errors.address1}
             helperText={errors.address1}
           />
@@ -170,7 +164,6 @@ const QuotesPage = () => {
               label="City"
               value={city}
               onChange={(e) => setCity(e.target.value)}
-              required
               error={!!errors.city}
               helperText={errors.city}
             />
@@ -179,11 +172,10 @@ const QuotesPage = () => {
               label="Postal Code"
               value={postalCode}
               onChange={(e) => setPostalCode(e.target.value)}
-              required
               error={!!errors.postalCode}
               helperText={errors.postalCode}
             />
-            <FormControl fullWidth required error={!!errors.country}>
+            <FormControl fullWidth error={!!errors.country}>
               <InputLabel>Country</InputLabel>
               <Select
                 value={country}
@@ -204,7 +196,7 @@ const QuotesPage = () => {
           </Typography>
 
           <div style={{ display: "flex", gap: "16px", marginBottom: "16px" }}>
-            <FormControl fullWidth required error={!!errors.phoneMake}>
+            <FormControl fullWidth error={!!errors.phoneMake}>
               <InputLabel>Phone Make</InputLabel>
               <Select
                 value={phoneMake}
@@ -218,7 +210,7 @@ const QuotesPage = () => {
               </Select>
               {errors.phoneMake && <div style={{color: "#d32f2f", fontSize: "12px", marginTop: "4px"}}>{errors.phoneMake}</div>}
             </FormControl>
-            <FormControl fullWidth required error={!!errors.phoneModel}>
+            <FormControl fullWidth error={!!errors.phoneModel}>
               <InputLabel>Phone Model</InputLabel>
               <Select
                 value={phoneModel}
@@ -238,7 +230,7 @@ const QuotesPage = () => {
             Coverage Type
           </Typography>
 
-          <FormControl fullWidth required error={!!errors.coverage} style={{ marginBottom: "32px" }}>
+          <FormControl fullWidth error={!!errors.coverage} style={{ marginBottom: "32px" }}>
             <InputLabel>Select Coverage</InputLabel>
             <Select
               value={coverage}

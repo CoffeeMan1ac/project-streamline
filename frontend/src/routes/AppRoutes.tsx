@@ -1,14 +1,17 @@
-import { Routes, Route } from "react-router-dom";
 import Home from "../pages/Home";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import QuotesPage from "../pages/QuotesPage";
 
-const AppRoutes = () => {
+function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/quotes" element={<QuotesPage />} />
-    </Routes>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/quotes" element={<QuotesPage />} />
+      </Routes>
+    </BrowserRouter>
   );
-};
+}
 
-export default AppRoutes;
+
+export default App;
