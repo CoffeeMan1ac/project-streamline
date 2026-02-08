@@ -111,7 +111,7 @@ const PricingCard = ({ plan }: PricingCardProps) => {
         {/* Button */}
         <Button
           fullWidth
-          variant={plan.popular ? "contained" : "outlined"}
+          variant="contained"
           color="primary"
           size="large"
         >

@@ -1,11 +1,12 @@
 
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Container, Typography, } from "@mui/material";
+import ShieldLogo from "../assets/ShieldLogo.png";
 
 const HeroSection = () => {
   return (
     <Box
       sx={{
-        bgcolor: "primary.main",
+        bgcolor: "#0057a7",
         color: "common.white",
         py: { xs: 6, md: 10 },
         textAlign: "center",
@@ -13,16 +14,12 @@ const HeroSection = () => {
     >
       <Container maxWidth="md">
 
-        {/* Circle / Icon Placeholder */}
+        {/* Logo */}
         <Box
-          sx={{
-            width: 56,
-            height: 56,
-            borderRadius: "50%",
-            border: "2px solid rgba(255,255,255,0.8)",
-            mx: "auto",
-            mb: 3,
-          }}
+          component="img"
+          src={ShieldLogo}
+          alt="Phone Shield logo"
+          sx={{height: 80 }}
         />
 
         {/* Main Heading */}
