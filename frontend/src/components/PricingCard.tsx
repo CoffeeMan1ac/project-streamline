@@ -52,7 +52,7 @@ const PricingCard = ({ plan }: PricingCardProps) => {
     >
       <CardContent sx={{ p: 4 }}>
         
-        {/* Popular Tag */}
+        {/* Popular Tag, only for middle pricing plan */}
         {plan.popular && (
           <Chip
             label="Most Popular"
@@ -67,7 +67,7 @@ const PricingCard = ({ plan }: PricingCardProps) => {
           />
         )}
 
-        {/* Plan Name */}
+        {/* Plan Name, popular name is pushed down */}
         <Typography variant="h6" gutterBottom sx={{ mt: plan.popular ? 4 : 0 }}>
           {plan.name}
         </Typography>
@@ -84,9 +84,14 @@ const PricingCard = ({ plan }: PricingCardProps) => {
 
         {/* Features List */}
         <List dense sx={{ mb: 3 }}>
+          
+          {/* loop through each feature in the plan */}
           {plan.features.map((feature, index) => (
+
             <ListItem key={index} sx={{ py: 0.5 }}>
               <ListItemIcon sx={{ minWidth: 32 }}>
+
+                {/* use correct icon based on feature inclusion */}
                 {feature.included ? (
                   <CheckCircleOutlineIcon fontSize="small" />
                 ) : (

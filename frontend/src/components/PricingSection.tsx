@@ -2,6 +2,8 @@ import { Box, Container, Typography, Grid } from "@mui/material";
 import PricingCard from "./PricingCard";
 import type { PricingPlan } from "./PricingCard";
 
+// List of text and features for each pricing plan.
+
 const plans: PricingPlan[] = [
   {
     name: "Standard Shield",
@@ -58,7 +60,7 @@ const PricingSection = () => {
     <Box component="section" sx={{ py: { xs: 6, md: 8 } }}>
       <Container maxWidth="lg">
         
-        {/* Section Header */}
+        {/* stuff above the 3 cards */}
         <Box textAlign="center" mb={5}>
           <Typography variant="h5" fontWeight="bold" gutterBottom>
             Choose Your Protection Plan
@@ -69,7 +71,7 @@ const PricingSection = () => {
           </Typography>
         </Box>
 
-        {/* Pricing Cards */}
+        {/* iterates through the 3 pricing plans and creates the cards*/}
         <Grid container spacing={4} justifyContent="center">
           {plans.map((plan) => (
             <Grid size={{ xs: 12, md: 4 }} key={plan.name}>
