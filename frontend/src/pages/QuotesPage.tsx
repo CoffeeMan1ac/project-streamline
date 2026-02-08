@@ -74,7 +74,6 @@ const QuotesPage = () => {
     setIsLoading(true);
     await new Promise(resolve => setTimeout(resolve, 2000));
     setIsLoading(false);
-    console.log("Form submitted");
   };
 
   return (
@@ -238,6 +237,7 @@ const QuotesPage = () => {
               </Select>
               {errors.phoneMake && <div style={{color: "#d32f2f", fontSize: "12px", marginTop: "4px"}}>{errors.phoneMake}</div>}
             </FormControl>
+            
             <FormControl fullWidth error={!!errors.phoneModel} disabled={isLoading}>
               <InputLabel>Phone Model</InputLabel>
               <Select
