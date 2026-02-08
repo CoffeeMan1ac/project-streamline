@@ -1,15 +1,9 @@
-import Navbar from "./components/Navbar";
-import HeroSection from "./components/HeroSection";
-import PricingSection from "./components/PricingSection";
-import Footer from "./components/Footer";
+import Home from "./pages/Home";
 
 function App() {
   return (
     <>
-      <Navbar />
-      <HeroSection />
-      <PricingSection />
-      <Footer />
+      <Home />
     </>
   );
 }
