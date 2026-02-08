@@ -72,7 +72,7 @@ const PricingSection = () => {
         {/* Pricing Cards */}
         <Grid container spacing={4} justifyContent="center">
           {plans.map((plan) => (
-            <Grid key={plan.name} item xs={12} md={4}>
+            <Grid size={{ xs: 12, md: 4 }} key={plan.name}>
               <PricingCard plan={plan} />
             </Grid>
           ))}
