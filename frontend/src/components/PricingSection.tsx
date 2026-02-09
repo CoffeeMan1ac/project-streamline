@@ -74,9 +74,13 @@ const PricingSection = () => {
         </Box>
 
         {/* iterates through the 3 pricing plans and creates the cards*/}
-        <Grid container spacing={4} justifyContent="center">
+        <Grid container spacing={4} justifyContent="center" alignItems="stretch">
           {plans.map((plan) => (
-            <Grid size={{ xs: 12, md: 4 }} key={plan.name}>
+            <Grid
+              key={plan.name}
+              size={{ xs: 12, md: 4 }}
+              sx={{ display: "flex" }}
+            >
               <PricingCard plan={plan} />
             </Grid>
           ))}

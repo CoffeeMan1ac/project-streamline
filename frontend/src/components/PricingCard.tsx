@@ -14,8 +14,6 @@ import {
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 
-// Types
-
 export interface Feature {
   label: string;
   included: boolean;
@@ -32,13 +30,13 @@ interface PricingCardProps {
   plan: PricingPlan;
 }
 
-// Component
-
 const PricingCard = ({ plan }: PricingCardProps) => {
   return (
     <Card
       elevation={plan.popular ? 6 : 2}
       sx={{
+        display: "flex",
+        flexDirection: "column",
         height: "100%",
         borderRadius: 3,
         position: "relative",
@@ -46,9 +44,8 @@ const PricingCard = ({ plan }: PricingCardProps) => {
         borderColor: plan.popular ? "primary.main" : "grey.300",
       }}
     >
-      <CardContent sx={{ p: 4 }}>
+      <CardContent sx={{ p: 4, display: "flex", flexDirection: "column", flex: 1 }}>
         
-        {/* Popular Tag, only for middle pricing plan */}
         {plan.popular && (
           <Chip
             label="Most Popular"
@@ -63,12 +60,10 @@ const PricingCard = ({ plan }: PricingCardProps) => {
           />
         )}
 
-        {/* Plan Name, popular name is pushed down */}
         <Typography variant="h6" gutterBottom sx={{ mt: plan.popular ? 4 : 0 }}>
           {plan.name}
         </Typography>
 
-        {/* Price */}
         <Box display="flex" alignItems="baseline" mb={2}>
           <Typography variant="h4" component="span" fontWeight="bold">
             {plan.price}
@@ -78,20 +73,14 @@ const PricingCard = ({ plan }: PricingCardProps) => {
           </Typography>
         </Box>
 
-        {/* Features List */}
         <List dense sx={{ mb: 3 }}>
-
-          {/* loop through each feature in the plan */}
           {plan.features.map((feature, index) => (
-
             <ListItem key={index} sx={{ py: 0.5 }}>
               <ListItemIcon sx={{ minWidth: 32 }}>
-
-                {/* use correct icon based on feature inclusion */}
                 {feature.included ? (
-                  <CheckCircleOutlineIcon fontSize="small" />
+                  <CheckCircleOutlineIcon fontSize="small" sx={{ color: "success.main" }} />
                 ) : (
-                  <CancelOutlinedIcon fontSize="small" />
+                  <CancelOutlinedIcon fontSize="small" sx={{ color: "text.secondary" }} />
                 )}
               </ListItemIcon>
 
@@ -100,21 +89,19 @@ const PricingCard = ({ plan }: PricingCardProps) => {
                 primaryTypographyProps={{
                   variant: "body2",
                   color: feature.included ? "text.primary" : "text.secondary",
-                  sx: !feature.included
-                    ? { textDecoration: "line-through", opacity: 0.7 }
-                    : {},
+                  sx: feature.included ? {} : { opacity: 0.7 },
                 }}
               />
             </ListItem>
           ))}
         </List>
 
-        {/* Button */}
         <Button
           fullWidth
           variant="contained"
           color="primary"
           size="large"
+          sx={{ mt: "auto" }}
         >
           Get a Quote
         </Button>
