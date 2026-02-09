@@ -4,6 +4,8 @@ import type { PricingPlan } from "./PricingCard";
 
 // List of text and features for each pricing plan.
 
+// hopefully make this more dynamic
+
 const plans: PricingPlan[] = [
   {
     name: "Standard Shield",

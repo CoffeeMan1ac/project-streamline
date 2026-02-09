@@ -14,9 +14,7 @@ import {
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 
-// -------------------------
 // Types
-// -------------------------
 
 export interface Feature {
   label: string;
@@ -34,9 +32,7 @@ interface PricingCardProps {
   plan: PricingPlan;
 }
 
-// -------------------------
 // Component
-// -------------------------
 
 const PricingCard = ({ plan }: PricingCardProps) => {
   return (
@@ -84,7 +80,7 @@ const PricingCard = ({ plan }: PricingCardProps) => {
 
         {/* Features List */}
         <List dense sx={{ mb: 3 }}>
-          
+
           {/* loop through each feature in the plan */}
           {plan.features.map((feature, index) => (
 

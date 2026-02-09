@@ -14,7 +14,7 @@ const HeroSection = () => {
     >
       <Container maxWidth="md">
 
-        {/* Logo */}
+        {/* shield Logo */}
         <Box
           component="img"
           src={ShieldLogo}
