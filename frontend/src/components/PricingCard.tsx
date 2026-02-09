@@ -87,9 +87,9 @@ const PricingCard = ({ plan }: PricingCardProps) => {
               <ListItemText
                 primary={feature.label}
                 primaryTypographyProps={{
-                  variant: "body2",
-                  color: feature.included ? "text.primary" : "text.secondary",
-                  sx: feature.included ? {} : { opacity: 0.7 },
+                variant: "body2",
+                color: feature.included ? "text.primary" : "text.secondary",
+                sx: feature.included ? {} : { textDecoration: "line-through", opacity: 0.7 },
                 }}
               />
             </ListItem>
