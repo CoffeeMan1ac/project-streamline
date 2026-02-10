@@ -77,7 +77,7 @@ const QuotesPage = () => {
   };
 
   return (
-    <div style={{ backgroundColor: "#f8f9ff", minHeight: "100vh", padding: "20px" }}>
+    <div style={{ minHeight: "100vh", padding: "20px" }}>
       <Container maxWidth="md" style={{ padding: 24, backgroundColor: "white", borderRadius: 8 }}>
         <Typography variant="h4" gutterBottom style={{ color: "black" }}>
           Get Your Quote
@@ -205,6 +205,7 @@ const QuotesPage = () => {
                 value={country}
                 label="Country"
                 onChange={(e) => setCountry(e.target.value)}
+                style={{ textAlign: "left" }}
               >
                 <MenuItem value="">Select country</MenuItem>
                 <MenuItem value="ireland">Ireland</MenuItem>
@@ -229,6 +230,7 @@ const QuotesPage = () => {
                 value={phoneMake}
                 label="Phone Make"
                 onChange={(e) => setPhoneMake(e.target.value)}
+                style={{ textAlign: "left" }}
               >
                 <MenuItem value="">Select make</MenuItem>
                 <MenuItem value="apple">Apple</MenuItem>
@@ -244,6 +246,7 @@ const QuotesPage = () => {
                 value={phoneModel}
                 label="Phone Model"
                 onChange={(e) => setPhoneModel(e.target.value)}
+                style={{ textAlign: "left" }}
               >
                 <MenuItem value="">Select model</MenuItem>
                 <MenuItem value="iphone15">iPhone 15</MenuItem>
@@ -267,6 +270,7 @@ const QuotesPage = () => {
               value={coverage}
               label="Select Coverage"
               onChange={(e) => setCoverage(e.target.value)}
+              style={{ textAlign: "left" }}
             >
               <MenuItem value="">Select coverage</MenuItem>
               <MenuItem value="premium">Premium Shield - €14.99/month</MenuItem>
@@ -281,7 +285,10 @@ const QuotesPage = () => {
             variant="contained"
             fullWidth
             disabled={isLoading}
-            style={{ padding: "12px" }}
+            style={{ 
+              padding: "12px", 
+              backgroundColor: "#0167b2" 
+            }}
           >
             {isLoading ? "Submitting..." : "Get Quote"}
           </Button>
