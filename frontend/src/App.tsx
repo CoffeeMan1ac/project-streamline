@@ -1,9 +1,7 @@
-import { useState } from "react";
 import Home from "./pages/Home";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import QuotesPage from "./pages/QuotesPage";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+
 import "./App.css";
 
 function App() {
@@ -16,6 +14,5 @@ function App() {
     </BrowserRouter>
   );
 }
-
 
 export default App;

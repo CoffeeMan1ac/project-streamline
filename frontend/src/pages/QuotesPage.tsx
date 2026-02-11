@@ -15,6 +15,7 @@ const QuotesPage = () => {
   const [phoneMake, setPhoneMake] = useState("");
   const [phoneModel, setPhoneModel] = useState("");
   const [coverage, setCoverage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   
   const [errors, setErrors] = useState({
     firstName: "",
@@ -66,14 +67,25 @@ const QuotesPage = () => {
     return allValid;
   };
 
-  const handleSubmit = (e: React.SyntheticEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    if (validateForm()) {
-      console.log("Form valid, submitting...");
-    }
+    if (!validateForm()) return;
+    
+    setIsLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    setIsLoading(false);
+    console.log("Form submitted");
   };
 
   return (
+    <div style={{ backgroundColor: "#f8f9ff", minHeight: "100vh", padding: "20px" }}>
+      <Container maxWidth="md" style={{ padding: 24, backgroundColor: "white", borderRadius: 8 }}>
+        <Typography variant="h4" gutterBottom style={{ color: "black" }}>
+          Get Your Quote
+        </Typography>
+        <Typography variant="body1" gutterBottom style={{ color: "black", marginBottom: 24 }}>
+          Fill in your details below to receive an instant quote
+        </Typography>
     <div style={{ backgroundColor: "#f8f9ff", minHeight: "100vh", padding: "20px" }}>
       <Container maxWidth="md" style={{ padding: 24, backgroundColor: "white", borderRadius: 8 }}>
         <Typography variant="h4" gutterBottom style={{ color: "black" }}>
@@ -87,6 +99,10 @@ const QuotesPage = () => {
           <Typography variant="h6" gutterBottom style={{ color: "black" }}>
             Personal Details
           </Typography>
+        <Box component="form" onSubmit={handleSubmit}>
+          <Typography variant="h6" gutterBottom style={{ color: "black" }}>
+            Personal Details
+          </Typography>
 
           <div style={{ display: "flex", gap: "16px", marginBottom: "16px" }}>
             <TextField
@@ -96,6 +112,7 @@ const QuotesPage = () => {
               onChange={(e) => setFirstName(e.target.value)}
               error={!!errors.firstName}
               helperText={errors.firstName}
+              disabled={isLoading}
             />
             <TextField
               fullWidth
@@ -104,6 +121,7 @@ const QuotesPage = () => {
               onChange={(e) => setLastName(e.target.value)}
               error={!!errors.lastName}
               helperText={errors.lastName}
+              disabled={isLoading}
             />
           </div>
 
@@ -116,6 +134,7 @@ const QuotesPage = () => {
               onChange={(e) => setEmail(e.target.value)}
               error={!!errors.email}
               helperText={errors.email}
+              disabled={isLoading}
             />
             <TextField
               fullWidth
@@ -124,6 +143,7 @@ const QuotesPage = () => {
               onChange={(e) => setPhone(e.target.value)}
               error={!!errors.phone}
               helperText={errors.phone}
+              disabled={isLoading}
             />
           </div>
 
@@ -136,6 +156,7 @@ const QuotesPage = () => {
             style={{ marginBottom: "16px" }}
             error={!!errors.dob}
             helperText={errors.dob}
+            disabled={isLoading}
           />
 
           <TextField
@@ -147,6 +168,7 @@ const QuotesPage = () => {
             style={{ marginBottom: "16px" }}
             error={!!errors.address1}
             helperText={errors.address1}
+            disabled={isLoading}
           />
 
           <TextField
@@ -156,6 +178,7 @@ const QuotesPage = () => {
             value={address2}
             onChange={(e) => setAddress2(e.target.value)}
             style={{ marginBottom: "16px" }}
+            disabled={isLoading}
           />
 
           <div style={{ display: "flex", gap: "16px", marginBottom: "16px" }}>
@@ -166,6 +189,7 @@ const QuotesPage = () => {
               onChange={(e) => setCity(e.target.value)}
               error={!!errors.city}
               helperText={errors.city}
+              disabled={isLoading}
             />
             <TextField
               fullWidth
@@ -174,8 +198,9 @@ const QuotesPage = () => {
               onChange={(e) => setPostalCode(e.target.value)}
               error={!!errors.postalCode}
               helperText={errors.postalCode}
+              disabled={isLoading}
             />
-            <FormControl fullWidth error={!!errors.country}>
+            <FormControl fullWidth error={!!errors.country} disabled={isLoading}>
               <InputLabel>Country</InputLabel>
               <Select
                 value={country}
@@ -194,9 +219,12 @@ const QuotesPage = () => {
           <Typography variant="h6" gutterBottom style={{ color: "black", marginTop: "32px" }}>
             Phone Details
           </Typography>
+          <Typography variant="h6" gutterBottom style={{ color: "black", marginTop: "32px" }}>
+            Phone Details
+          </Typography>
 
           <div style={{ display: "flex", gap: "16px", marginBottom: "16px" }}>
-            <FormControl fullWidth error={!!errors.phoneMake}>
+            <FormControl fullWidth error={!!errors.phoneMake} disabled={isLoading}>
               <InputLabel>Phone Make</InputLabel>
               <Select
                 value={phoneMake}
@@ -210,7 +238,7 @@ const QuotesPage = () => {
               </Select>
               {errors.phoneMake && <div style={{color: "#d32f2f", fontSize: "12px", marginTop: "4px"}}>{errors.phoneMake}</div>}
             </FormControl>
-            <FormControl fullWidth error={!!errors.phoneModel}>
+            <FormControl fullWidth error={!!errors.phoneModel} disabled={isLoading}>
               <InputLabel>Phone Model</InputLabel>
               <Select
                 value={phoneModel}
@@ -229,8 +257,11 @@ const QuotesPage = () => {
           <Typography variant="h6" gutterBottom style={{ color: "black", marginTop: "32px" }}>
             Coverage Type
           </Typography>
+          <Typography variant="h6" gutterBottom style={{ color: "black", marginTop: "32px" }}>
+            Coverage Type
+          </Typography>
 
-          <FormControl fullWidth error={!!errors.coverage} style={{ marginBottom: "32px" }}>
+          <FormControl fullWidth error={!!errors.coverage} disabled={isLoading} style={{ marginBottom: "32px" }}>
             <InputLabel>Select Coverage</InputLabel>
             <Select
               value={coverage}
@@ -249,9 +280,10 @@ const QuotesPage = () => {
             type="submit"
             variant="contained"
             fullWidth
+            disabled={isLoading}
             style={{ padding: "12px" }}
           >
-            Get Quote
+            {isLoading ? "Submitting..." : "Get Quote"}
           </Button>
         </Box>
       </Container>
