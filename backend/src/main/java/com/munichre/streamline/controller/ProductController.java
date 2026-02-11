@@ -1,6 +1,8 @@
 package com.munichre.streamline.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.munichre.streamline.model.Product;
+import com.munichre.streamline.service.ProductService;
 
 import java.util.List;
 
