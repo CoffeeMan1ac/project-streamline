@@ -50,7 +50,11 @@ const QuotesPage = () => {
     
     if (!firstName) newErrors.firstName = "Required";
     if (!lastName) newErrors.lastName = "Required";
-    if (!email.includes("@")) newErrors.email = "Valid email required";
+    if (!email) {
+      newErrors.email = "Required";
+    } else if (!email.includes("@") || !email.includes(".")) { // so that they have to put in something after @
+      newErrors.email = "Valid email required";
+    }
     if (!phone) newErrors.phone = "Required";
     if (!dob) newErrors.dob = "Required";
     if (!address1) newErrors.address1 = "Required";
@@ -63,17 +67,17 @@ const QuotesPage = () => {
     
     setErrors(newErrors);
     
-    const allValid = Object.values(newErrors).every(error => error === "");
+    const allValid = Object.values(newErrors).every(error => error === ""); // checks if every error string is empty
     return allValid;
   };
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    if (!validateForm()) return;
+    if (!validateForm()) return; // if false dont submit form
     
-    setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setIsLoading(false);
+    setIsLoading(true); // disables form
+    await new Promise(resolve => setTimeout(resolve, 1000)); // can change the loading time on this if need be
+    setIsLoading(false); // enables it again after load time
   };
 
   return (
@@ -97,7 +101,10 @@ const QuotesPage = () => {
                 fullWidth
                 label="First Name"
                 value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
+                onChange={(e) => { // required and red box go away after user enters something
+                  setFirstName(e.target.value);
+                  setErrors(prev => ({ ...prev, firstName: "" }));
+                }}
                 error={!!errors.firstName}
                 helperText={errors.firstName}
                 disabled={isLoading}
@@ -106,7 +113,10 @@ const QuotesPage = () => {
                 fullWidth
                 label="Last Name"
                 value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
+                onChange={(e) => {
+                  setLastName(e.target.value);
+                  setErrors(prev => ({ ...prev, lastName: "" }));
+                }}
                 error={!!errors.lastName}
                 helperText={errors.lastName}
                 disabled={isLoading}
@@ -117,9 +127,11 @@ const QuotesPage = () => {
               <TextField
                 fullWidth
                 label="Email Address"
-                type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setErrors(prev => ({ ...prev, email: "" }));
+                }}
                 error={!!errors.email}
                 helperText={errors.email}
                 disabled={isLoading}
@@ -128,7 +140,10 @@ const QuotesPage = () => {
                 fullWidth
                 label="Phone Number"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={(e) => {
+                  setPhone(e.target.value);
+                  setErrors(prev => ({ ...prev, phone: "" }));
+                }}
                 error={!!errors.phone}
                 helperText={errors.phone}
                 disabled={isLoading}
@@ -140,7 +155,10 @@ const QuotesPage = () => {
               label="Date of Birth"
               placeholder="dd/mm/yyyy"
               value={dob}
-              onChange={(e) => setDob(e.target.value)}
+              onChange={(e) => {
+                setDob(e.target.value);
+                setErrors(prev => ({ ...prev, dob: "" }));
+              }}
               style={{ marginBottom: "16px" }}
               error={!!errors.dob}
               helperText={errors.dob}
@@ -152,7 +170,10 @@ const QuotesPage = () => {
               label="Address Line 1"
               placeholder="Street number and name"
               value={address1}
-              onChange={(e) => setAddress1(e.target.value)}
+              onChange={(e) => {
+                setAddress1(e.target.value);
+                setErrors(prev => ({ ...prev, address1: "" }));
+              }}
               style={{ marginBottom: "16px" }}
               error={!!errors.address1}
               helperText={errors.address1}
@@ -174,7 +195,10 @@ const QuotesPage = () => {
                 fullWidth
                 label="City"
                 value={city}
-                onChange={(e) => setCity(e.target.value)}
+                onChange={(e) => {
+                  setCity(e.target.value);
+                  setErrors(prev => ({ ...prev, city: "" }));
+                }}
                 error={!!errors.city}
                 helperText={errors.city}
                 disabled={isLoading}
@@ -183,17 +207,25 @@ const QuotesPage = () => {
                 fullWidth
                 label="Postal Code"
                 value={postalCode}
-                onChange={(e) => setPostalCode(e.target.value)}
+                onChange={(e) => {
+                  setPostalCode(e.target.value);
+                  setErrors(prev => ({ ...prev, postalCode: "" }));
+                }}
                 error={!!errors.postalCode}
                 helperText={errors.postalCode}
                 disabled={isLoading}
               />
               <FormControl fullWidth error={!!errors.country} disabled={isLoading}>
-                <InputLabel>Country</InputLabel>
+                <InputLabel id="country-label">Country</InputLabel>
                 <Select
+                  labelId="country-label"
+                  id="country"
                   value={country}
                   label="Country"
-                  onChange={(e) => setCountry(e.target.value)}
+                   onChange={(e) => {
+                    setCountry(e.target.value);
+                    setErrors(prev => ({ ...prev, country: "" }));
+                  }}
                   style={{ textAlign: "left" }}
                 >
                   <MenuItem value="">Select country</MenuItem>
@@ -201,7 +233,11 @@ const QuotesPage = () => {
                   <MenuItem value="uk">United Kingdom</MenuItem>
                   <MenuItem value="usa">United States</MenuItem>
                 </Select>
-                {errors.country && <div style={{color: "#d32f2f", fontSize: "12px", marginTop: "4px"}}>{errors.country}</div>}
+                {errors.country && (
+                  <div style={{color: "#d32f2f", fontSize: "12px", marginTop: "4px"}}>
+                    {errors.country}
+                  </div>
+                  )}
               </FormControl>
             </div>
 
@@ -211,11 +247,16 @@ const QuotesPage = () => {
 
             <div style={{ display: "flex", gap: "16px", marginBottom: "16px" }}>
               <FormControl fullWidth error={!!errors.phoneMake} disabled={isLoading}>
-                <InputLabel>Phone Make</InputLabel>
+                <InputLabel id="phone-make-label">Phone Make</InputLabel>
                 <Select
+                  labelId="phone-make-label"
+                  id="phone-make"
                   value={phoneMake}
                   label="Phone Make"
-                  onChange={(e) => setPhoneMake(e.target.value)}
+                  onChange={(e) => {
+                    setPhoneMake(e.target.value);
+                    setErrors(prev => ({ ...prev, phoneMake: "" }));
+                  }}
                   style={{ textAlign: "left" }}
                 >
                   <MenuItem value="">Select make</MenuItem>
@@ -227,11 +268,16 @@ const QuotesPage = () => {
               </FormControl>
               
               <FormControl fullWidth error={!!errors.phoneModel} disabled={isLoading}>
-                <InputLabel>Phone Model</InputLabel>
+                <InputLabel id="phone-model-label">Phone Model</InputLabel>
                 <Select
+                  labelId="phone-model-label"
+                  id="phone-model"
                   value={phoneModel}
                   label="Phone Model"
-                  onChange={(e) => setPhoneModel(e.target.value)}
+                  onChange={(e) => {
+                    setPhoneModel(e.target.value);
+                    setErrors(prev => ({ ...prev, phoneModel: "" }));
+                  }}
                   style={{ textAlign: "left" }}
                 >
                   <MenuItem value="">Select model</MenuItem>
@@ -248,14 +294,21 @@ const QuotesPage = () => {
             </Typography>
 
             <FormControl fullWidth error={!!errors.coverage} disabled={isLoading} style={{ marginBottom: "32px" }}>
-              <InputLabel>Select Coverage</InputLabel>
+              <InputLabel id="coverage-label">Select Coverage</InputLabel>
               <Select
+                labelId="coverage-label"
+                id="coverage"
+                name="coverage"
                 value={coverage}
                 label="Select Coverage"
-                onChange={(e) => setCoverage(e.target.value)}
+                onChange={(e) => {
+                  setCoverage(e.target.value);
+                  setErrors(prev => ({ ...prev, coverage: "" }));
+                }}
                 style={{ textAlign: "left" }}
+                MenuProps={{ disablePortal: true, keepMounted: true }}
               >
-                <MenuItem value="">Select coverage</MenuItem>
+                <MenuItem value="">Choose coverage</MenuItem>
                 <MenuItem value="premium">Premium Shield - €14.99/month</MenuItem>
                 <MenuItem value="basic">Basic Cover - €9.99/month</MenuItem>
                 <MenuItem value="ultimate">Ultimate Protection - €24.99/month</MenuItem>
