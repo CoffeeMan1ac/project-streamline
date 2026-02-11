@@ -28,6 +28,9 @@ public class Product {
         orphanRemoval = true
     )
     private List<Rule> rules;
+    
+    @Column(nullable = false)
+    private BigDecimal baseRate;
 
     @Column(nullable = false)
     private String name;
@@ -39,16 +42,29 @@ public class Product {
     private Boolean mostPopular;
 
     @Column(nullable = false)
-    private Boolean active;
-
-    @Column(nullable = false)
     private List<String> coverage;
 
     @Column(nullable = false)
     private List<String> exclusions;
-
+    
+    /**
+     * When the product was launched, or when it should be launched.
+     */
     @Column(nullable = false)
-    private BigDecimal baseRate;
+    private LocalDateTime startDate;
+
+    /**
+     * When the product should stop being offered. Can be null.
+     */
+    @Column()
+    private LocalDateTime endDate;
+    
+    /**
+     * Whether or not the product is active, even if it's within
+     * <code>startDate</code> and <code>endDate</code>.
+     */
+    @Column(nullable = false)
+    private Boolean active;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
