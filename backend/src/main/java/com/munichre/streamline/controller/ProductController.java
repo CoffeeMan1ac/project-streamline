@@ -3,6 +3,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.munichre.streamline.model.Product;
 import com.munichre.streamline.service.ProductService;
+import java.util.UUID;
 import java.util.List;
 
 @RestController
@@ -24,9 +25,9 @@ public class ProductController {
     }
 
     //deletes selected product
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable UUID id) {
-        productService.deleteProduct(id);   
-        return ResponseEntity.noContent().build();
-    }
+    //@DeleteMapping("/{id}")
+    //public ResponseEntity<Void> deleteProduct(@PathVariable UUID id) {
+    //    productService.deleteProduct(id);   
+    //    return ResponseEntity.noContent().build();
+    //}
 }

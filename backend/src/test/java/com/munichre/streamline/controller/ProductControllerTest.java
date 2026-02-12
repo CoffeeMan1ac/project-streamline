@@ -27,7 +27,7 @@ class ProductControllerTest {
     private ProductService productService;
 
     @Test
-    void getAllProducts_returnsOk() throws Exception {
+    void getProducts_returnsOk() throws Exception {
         mockMvc.perform(get("/api/products"))
                 .andExpect(status().isOk());
     }
