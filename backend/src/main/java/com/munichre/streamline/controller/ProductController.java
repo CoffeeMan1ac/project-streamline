@@ -16,9 +16,18 @@ public class ProductController {
         this.productService = productService;
     }
 
+    //returns all active products
     @GetMapping
     public ResponseEntity<List<Product>> getProducts() {
         List<Product> products = productService.getProducts();
         return ResponseEntity.ok(products);
+    }
+
+    //deletes selected product
+    @DeleteMapping
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        productService.deleteProduct(id);   
+        return ResponseEntity.noContent().build();
     }
 }
