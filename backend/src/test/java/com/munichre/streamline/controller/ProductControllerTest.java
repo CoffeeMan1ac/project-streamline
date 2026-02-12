@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import static org.mockito.BDDMockito.given;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
@@ -31,5 +32,15 @@ class ProductControllerTest {
         mockMvc.perform(get("/api/products"))
                 .andExpect(status().isOk());
     }
+
+	@Test
+	void getAllProducts_returnsEmptyArray_whenNoProducts() throws Exception {
+    given(productService.getProducts()).willReturn(List.of());
+
+    mockMvc.perform(get("/api/products"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentTypeCompatibleWith("application/json"))
+            .andExpect(jsonPath("$.length()").value(0));
+}
 }
 
