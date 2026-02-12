@@ -19,7 +19,7 @@ public class ProductController {
     //returns all active products
     @GetMapping
     public ResponseEntity<List<Product>> getProducts() {
-        List<Product> products = productService.getProducts();
+        List<Product> products = productService.getActiveProducts();
         return ResponseEntity.ok(products);
     }
 
