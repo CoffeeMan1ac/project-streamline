@@ -41,10 +41,10 @@ public class Product {
     @Column(nullable = false)
     private Boolean mostPopular;
 
-    @Column(nullable = false)
+    @ElementCollection
     private List<String> coverage;
 
-    @Column(nullable = false)
+    @ElementCollection
     private List<String> exclusions;
     
     /**
