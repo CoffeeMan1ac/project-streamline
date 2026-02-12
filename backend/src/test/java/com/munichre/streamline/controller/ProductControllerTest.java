@@ -1,27 +1,24 @@
 package com.munichre.streamline.controller;
 
-package com.munichre.streamline.controller;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.munichre.streamline.model.Product;
-import com.munichre.streamline.repository.ProductRepository;
-import org.junit.jupiter.api.BeforeEach;
+import com.munichre.streamline.service.ProductService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-class ControllerTests {
-
-	@Test
-	void contextLoads() {
-	}
-
+@WebMvcTest(ProductController.class)
+class ProductControllerTest { 
+	
 }
+
