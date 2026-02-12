@@ -3,7 +3,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.munichre.streamline.model.Product;
 import com.munichre.streamline.service.ProductService;
-
 import java.util.List;
 
 @RestController
@@ -18,8 +17,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> get_products() {
-        List<Product> products = productService.getAllProducts();
+    public ResponseEntity<List<Product>> getProducts() {
+        List<Product> products = productService.getProducts();
         return ResponseEntity.ok(products);
     }
 }
