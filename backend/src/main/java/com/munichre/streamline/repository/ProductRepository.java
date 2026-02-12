@@ -10,11 +10,15 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ProductRepository extends JpaRepository<Product, UUID> {
+
+    /**
+     * @param now The time that we want to check that products are within.
+     */
     @Query("""
     SELECT p FROM Product p
     WHERE p.active = true
       AND p.startDate <= :now
       AND (p.endDate IS NULL OR p.endDate >= :now)
     """)
-    List<Product> findActiveProducts(@Param("now") LocalDateTime now);
+    public List<Product> findActiveProducts(@Param("now") LocalDateTime now);
 }
