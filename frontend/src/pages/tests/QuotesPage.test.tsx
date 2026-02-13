@@ -1,25 +1,37 @@
 import "@testing-library/jest-dom/vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { describe, test, expect } from "vitest";
+import { describe, test, expect, vi } from "vitest";
+import { MemoryRouter } from "react-router-dom";
+import axios from "axios";
 import QuotesPage from "../QuotesPage";
 
-// branch 71
+vi.mock("axios");
+
 describe("QuotesPage", () => {
+  const renderWithRouter = () => {
+    (axios.get as any).mockResolvedValue({ data: { name: "Basic", baseRate: 9.99 } });
+    return render(
+      <MemoryRouter>
+        <QuotesPage />
+      </MemoryRouter>
+    );
+  };
+
   test("renders main heading and subtitle", () => {
-    render(<QuotesPage />);
+    renderWithRouter();
     expect(screen.getByRole("heading", { name: /Get Your Quote/i })).toBeInTheDocument();
     expect(screen.getByText(/Fill in your details below to receive an instant quote/i)).toBeInTheDocument();
   });
 
   test("renders section headings", () => {
-    render(<QuotesPage />);
+    renderWithRouter();
     expect(screen.getByRole("heading", { name: /Personal Details/i })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /Phone Details/i })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /Coverage Type/i })).toBeInTheDocument();
   });
 
   test("renders all personal detail form fields", () => {
-    render(<QuotesPage />);
+    renderWithRouter();
     expect(screen.getByLabelText(/First Name/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Last Name/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Email Address/i)).toBeInTheDocument();
@@ -32,33 +44,32 @@ describe("QuotesPage", () => {
   });
 
   test("renders dropdown selects with labels", () => {
-    render(<QuotesPage />);
+    renderWithRouter();
     expect(screen.getByLabelText(/Country/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Phone Make/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Phone Model/i)).toBeInTheDocument();
     expect(screen.getByRole("combobox", { name: /Select Coverage/i })).toBeInTheDocument();  });
 
   test("renders submit button with correct text", () => {
-    render(<QuotesPage />);
+    renderWithRouter();
     expect(screen.getByRole("button", { name: /Get Quote/i })).toBeInTheDocument();
   });
 
   test("renders coverage options with pricing", () => {
-    render(<QuotesPage />);
+    renderWithRouter();
     expect(screen.getByText(/Premium Shield - €14\.99\/month/i)).toBeInTheDocument();
     expect(screen.getByText(/Basic Cover - €9\.99\/month/i)).toBeInTheDocument();
     expect(screen.getByText(/Ultimate Protection - €24\.99\/month/i)).toBeInTheDocument();
   });
 
-  // branch 72 testing
   test("shows required errors when submitting empty form", () => {
-    render(<QuotesPage />);
+    renderWithRouter();
     fireEvent.click(screen.getByRole("button", { name: /Get Quote/i }));
     expect(screen.getAllByText(/Required/i).length).toBeGreaterThan(0);
   });
 
   test("shows email validation error for invalid email", () => {
-    render(<QuotesPage />);
+    renderWithRouter();
 
     fireEvent.change(screen.getByLabelText(/First Name/i), { target: { value: "Test" } });
     fireEvent.change(screen.getByLabelText(/Last Name/i), { target: { value: "User" } });
@@ -84,9 +95,8 @@ describe("QuotesPage", () => {
     expect(screen.getByText(/Valid email required/i)).toBeInTheDocument();
 });
 
-  // branch 75
   test("shows loading text when form is submitted", async () => {
-    render(<QuotesPage />);
+    renderWithRouter();
     fireEvent.change(screen.getByLabelText(/First Name/i), { target: { value: "Joe" } });
     fireEvent.change(screen.getByLabelText(/Last Name/i), { target: { value: "Mama" } });
     fireEvent.change(screen.getByLabelText(/Email Address/i), { target: { value: "joe@example.com" } });
@@ -112,7 +122,7 @@ describe("QuotesPage", () => {
   });
 
   test("disables form fields during submission", async () => {
-    render(<QuotesPage />);
+    renderWithRouter();
     
     fireEvent.change(screen.getByLabelText(/First Name/i), { target: { value: "Test" } });
     fireEvent.change(screen.getByLabelText(/Last Name/i), { target: { value: "User" } });

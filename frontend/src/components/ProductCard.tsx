@@ -16,39 +16,41 @@ import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import { Link as RouterLink } from "react-router-dom";
 
 
-export interface Feature {
-  label: string;
-  included: boolean;
-}
-
-export interface PricingPlan {
+export interface Product {
+  id: string;
   name: string;
   price: string;
-  popular?: boolean;
-  features: Feature[];
+  mostPopular?: boolean;
+  coverages: String[];
+  exclusions: String[];
 }
 
 interface PricingCardProps {
-  plan: PricingPlan;
+  product: Product;
 }
 
-const PricingCard = ({ plan }: PricingCardProps) => {
+const ProductCard = ({ product }: PricingCardProps) => {
   return (
     <Card
-      elevation={plan.popular ? 6 : 2}
+      elevation={product.mostPopular ? 6 : 2}
       sx={{
         display: "flex",
         flexDirection: "column",
+        width: "100%",
         height: "100%",
         borderRadius: 3,
         position: "relative",
-        border: plan.popular ? "2px solid" : "1px solid",
-        borderColor: plan.popular ? "primary.main" : "grey.300",
+        border: product.mostPopular ? "2px solid" : "1px solid",
+        borderColor: product.mostPopular ? "primary.main" : "grey.300",
+        transition: "transform 0.2s ease-in-out",
+        "&:hover": {
+          transform: "translateY(-4px)", // Subtle hover effect
+        },
       }}
     >
       <CardContent sx={{ p: 4, display: "flex", flexDirection: "column", flex: 1 }}>
         
-        {plan.popular && (
+        {product.mostPopular && (
           <Chip
             label="Most Popular"
             color="primary"
@@ -62,13 +64,13 @@ const PricingCard = ({ plan }: PricingCardProps) => {
           />
         )}
 
-        <Typography variant="h6" gutterBottom sx={{ mt: plan.popular ? 4 : 0 }}>
-          {plan.name}
+        <Typography variant="h6" gutterBottom sx={{ mt: product.mostPopular ? 4 : 0 }}>
+          {product.name}
         </Typography>
 
         <Box display="flex" alignItems="baseline" mb={2}>
           <Typography variant="h4" component="span" fontWeight="bold">
-            {plan.price}
+            {product.price}
           </Typography>
           <Typography variant="subtitle2" component="span" sx={{ ml: 0.5 }}>
             /month
@@ -76,22 +78,34 @@ const PricingCard = ({ plan }: PricingCardProps) => {
         </Box>
 
         <List dense sx={{ mb: 3 }}>
-          {plan.features.map((feature, index) => (
-            <ListItem key={index} sx={{ py: 0.5 }}>
+          {product.coverages.map((coverage, index) => (
+            <ListItem key={`coverage-${index}`} sx={{ py: 0.5 }}>
               <ListItemIcon sx={{ minWidth: 32 }}>
-                {feature.included ? (
                   <CheckCircleOutlineIcon fontSize="small" sx={{ color: "success.main" }} />
-                ) : (
-                  <CancelOutlinedIcon fontSize="small" sx={{ color: "text.secondary" }} />
-                )}
               </ListItemIcon>
 
               <ListItemText
-                primary={feature.label}
+                primary={coverage}
                 primaryTypographyProps={{
                 variant: "body2",
-                color: feature.included ? "text.primary" : "text.secondary",
-                sx: feature.included ? {} : { textDecoration: "line-through", opacity: 0.7 },
+                color: "text.primary"
+                }}
+              />
+            </ListItem>
+          ))}
+
+          {product.exclusions.map((exclusion, index) => (
+            <ListItem key={`exclusion-${index}`} sx={{ py: 0.5 }}>
+              <ListItemIcon sx={{ minWidth: 32 }}>
+                  <CancelOutlinedIcon fontSize="small" sx={{ color: "text.secondary" }} />
+              </ListItemIcon>
+
+              <ListItemText
+                primary={exclusion}
+                primaryTypographyProps={{
+                variant: "body2",
+                color: "text.secondary",
+                sx: { textDecoration: "line-through", opacity: 0.7 },
                 }}
               />
             </ListItem>
@@ -116,4 +130,4 @@ const PricingCard = ({ plan }: PricingCardProps) => {
   );
 };
 
-export default PricingCard;
+export default ProductCard;
