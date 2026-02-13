@@ -30,7 +30,7 @@ So in the end is = "SELECT * FROM rules WHERE active = true ORDER BY priority AS
     
 
 
-    List<Rule> findByActiveTrueOrderByPriorityAsc();
+    List<Rule> findByProductIdAndActiveTrueOrderByPriorityAsc(UUID productId);
     //interface
 
     // WHAT IT DOES:

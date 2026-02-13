@@ -3,7 +3,9 @@ package com.munichre.streamline.service;
 import com.munichre.streamline.dto.DecisionStatus;
 import com.munichre.streamline.dto.EvaluationResult;
 import com.munichre.streamline.exception.FieldNotFoundException;
+import com.munichre.streamline.model.Product;
 import com.munichre.streamline.model.Rule;
+import com.munichre.streamline.repository.ProductRepository;
 import com.munichre.streamline.repository.RuleRepository;
 
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Rule Decision Engine.
@@ -41,10 +44,11 @@ import java.util.Map;
 public class DecisionService {
 
     private final RuleRepository ruleRepository;
+    private final ProductRepository productRepository;
 
-    // TODO: base premium - make configurable per product later.
-    // TODO: FieldNotFoundException not implemented.
-    private static final BigDecimal BASE_PREMIUM = new BigDecimal("10.00");
+    // // TODO: base premium - make configurable per product later.
+    // // TODO: FieldNotFoundException not implemented.
+    // private static final BigDecimal BASE_PREMIUM = new BigDecimal("10.00");
 
     /**
      * The one function. Takes the hashmap, returns the decision.
@@ -60,8 +64,14 @@ public class DecisionService {
         long startTime = System.currentTimeMillis();
         log.info("Starting rule evaluation with " + fields.size() +  " fields");
 
+        String productIdString = (String) fields.get("productId");
+        UUID productId = UUID.fromString(productIdString);
+
+        final Product product = productRepository.getReferenceById(productId);
+        final BigDecimal BASE_PREMIUM = product.getBaseRate();
+
         // 1. Fetch rules from database
-        List<Rule> rules = ruleRepository.findByActiveTrueOrderByPriorityAsc();
+        List<Rule> rules = ruleRepository.findByProductIdAndActiveTrueOrderByPriorityAsc(productId);
 
         // Auto-accept if no rules in database
         if (rules.isEmpty()) {
