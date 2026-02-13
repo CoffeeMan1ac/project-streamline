@@ -1,8 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button, Container, Typography, Box } from "@mui/material";
 import checkmark from "../assets/checkmark.png";
 
 const AcceptPage = () => {
+
+    const navigate = useNavigate();
+
     const [purchaseIsLoading, setPurchaseIsLoading] = useState(false);
     const [backIsLoading, setBackIsLoading] = useState(false);
 
@@ -12,11 +16,13 @@ const AcceptPage = () => {
         setPurchaseIsLoading(false);
     };
 
-    const handleBack = async () => {
-        setBackIsLoading(true);
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        setBackIsLoading(false);
-    };
+ const handleBack = async () => {
+    setBackIsLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setBackIsLoading(false);
+    navigate("/"); 
+};
+
 
     return (
         <>
