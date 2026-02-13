@@ -30,5 +30,5 @@ export const streamlineApi = {
   createQuote: async (payload: Record<string, unknown>) => {
     const res = await http.post<EvaluationResult>("/quotes", payload);
     return res.data;
-  }
+  },
 };

@@ -1,13 +1,11 @@
 package com.munichre.streamline.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
-
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -18,19 +16,17 @@ import org.hibernate.annotations.UpdateTimestamp;
 @AllArgsConstructor
 public class CoverageCategory {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
 
-    @Column(nullable = false, unique = true)
-    private String code;
+  @Column(nullable = false, unique = true)
+  private String code;
 
-    @Column(nullable = false)
-    private String label;
+  @Column(nullable = false)
+  private String label;
 
-    @CreationTimestamp
-    private LocalDateTime createdAt;
+  @CreationTimestamp private LocalDateTime createdAt;
 
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
+  @UpdateTimestamp private LocalDateTime updatedAt;
 }

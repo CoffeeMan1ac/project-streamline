@@ -1,46 +1,40 @@
 package com.munichre.streamline.repository;
 
+import com.munichre.streamline.model.Rule;
 import java.util.List;
 import java.util.UUID;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import com.munichre.streamline.model.Rule;
 
 @Repository
 public interface RuleRepository extends JpaRepository<Rule, UUID> {
 
-    /*
+  /*
 
 
-findBy     ActiveTrue     OrderBy    PriorityAsc
-  ↓           ↓             ↓            ↓
-SELECT      WHERE         ORDER BY     ASC
- *          active=true              priority
-FROM rules        
+  findBy     ActiveTrue     OrderBy    PriorityAsc
+    ↓           ↓             ↓            ↓
+  SELECT      WHERE         ORDER BY     ASC
+   *          active=true              priority
+  FROM rules
 
 
-So in the end is = "SELECT * FROM rules WHERE active = true ORDER BY priority ASC" 
+  So in the end is = "SELECT * FROM rules WHERE active = true ORDER BY priority ASC"
 
-    */
+      */
 
-    /** Fetch all active rules, ordered by priority (lower = first). */
+  /** Fetch all active rules, ordered by priority (lower = first). */
+  List<Rule> findByProductIdAndActiveTrueOrderByPriorityAsc(UUID productId);
+  // interface
 
-    
-
-
-    List<Rule> findByProductIdAndActiveTrueOrderByPriorityAsc(UUID productId);
-    //interface
-
-    // WHAT IT DOES:
-    // rule.setId(UUID.fromString(rs.getString("id")));
-    // rule.setName(rs.getString("name"));
-    // rule.setConditionField(rs.getString("condition_field"));
-    // rule.setConditionOperator(rs.getString("condition_operator"));
-    // rule.setConditionValue(rs.getString("condition_value"));
-    // rule.setActionType(rs.getString("action_type"));
-    // rule.setActionReason(rs.getString("action_reason"));
-    // rule.setPriority(rs.getInt("priority"));
-    // rule.setActive(rs.getBoolean("active"));    
+  // WHAT IT DOES:
+  // rule.setId(UUID.fromString(rs.getString("id")));
+  // rule.setName(rs.getString("name"));
+  // rule.setConditionField(rs.getString("condition_field"));
+  // rule.setConditionOperator(rs.getString("condition_operator"));
+  // rule.setConditionValue(rs.getString("condition_value"));
+  // rule.setActionType(rs.getString("action_type"));
+  // rule.setActionReason(rs.getString("action_reason"));
+  // rule.setPriority(rs.getInt("priority"));
+  // rule.setActive(rs.getBoolean("active"));
 }

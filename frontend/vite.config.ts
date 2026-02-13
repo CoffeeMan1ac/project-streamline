@@ -13,9 +13,8 @@ export default defineConfig({
     },
   },
   test: {
+    globals: true, // This is the key fix!
     environment: "jsdom",
-    globals: true,
-    setupFiles: "./src/setupTests.ts",
-    css: true,
+    setupFiles: "./src/setupTests.ts", // Points to the file we created in Step 1
   },
 });

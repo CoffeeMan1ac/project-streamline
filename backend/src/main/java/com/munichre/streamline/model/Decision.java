@@ -1,15 +1,14 @@
 package com.munichre.streamline.model;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Table(name = "decisions")
@@ -18,28 +17,26 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Decision {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
-    private String requestData;
+  @Column(columnDefinition = "TEXT", nullable = false)
+  private String requestData;
 
-    @Column(nullable = false)
-    private String status;
+  @Column(nullable = false)
+  private String status;
 
-    private BigDecimal premium;
+  private BigDecimal premium;
 
-    private String reason;
+  private String reason;
 
-    @Column(columnDefinition = "TEXT")
-    private String rulesApplied;
+  @Column(columnDefinition = "TEXT")
+  private String rulesApplied;
 
-    private Long processingTimeMs;
+  private Long processingTimeMs;
 
-    @CreationTimestamp
-    private LocalDateTime createdAt;
+  @CreationTimestamp private LocalDateTime createdAt;
 
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
+  @UpdateTimestamp private LocalDateTime updatedAt;
 }

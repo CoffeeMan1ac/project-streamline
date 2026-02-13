@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const http = axios.create({
   baseURL: "/api",
-  headers: { "Content-Type": "application/json" }
+  headers: { "Content-Type": "application/json" },
 });
 
 // Optional: nicer error messages

@@ -5,8 +5,8 @@ const Footer = () => {
     <Box
       component="footer"
       sx={{
-        bgcolor: "#111827",       // dark gray/near-black
-        color: "grey.300",        // light gray text
+        bgcolor: "#111827", // dark gray/near-black
+        color: "grey.300", // light gray text
         textAlign: "center",
         py: 3,
         mt: "auto",

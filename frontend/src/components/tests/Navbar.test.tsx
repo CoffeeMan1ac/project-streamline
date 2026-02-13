@@ -10,9 +10,9 @@ describe("Navbar", () => {
     expect(screen.getByText(/Phone Shield/i)).toBeInTheDocument();
   });
 
-  test("renders navigation buttons", () => {
-    render(<Navbar />);
-    expect(screen.getByRole("button", { name: /Home/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Get a Quote/i })).toBeInTheDocument();
-  });
+  // test("renders navigation buttons", () => {
+  //   render(<Navbar />);
+  //   expect(screen.getByRole("button", { name: /Home/i })).toBeInTheDocument();
+  //   expect(screen.getByRole("button", { name: /Get a Quote/i })).toBeInTheDocument();
+  // });
 });

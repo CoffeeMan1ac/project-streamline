@@ -3,10 +3,23 @@ import ProductCard, { type Product } from "./ProductCard";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+interface ApiProduct {
+  id: string;
+  name: string;
+  baseRate: number;
+  mostPopular: boolean;
+  coverages: CoverageDetail[];
+  exclusions: CoverageDetail[];
+}
+
+interface CoverageDetail {
+  id: string;
+  label: string;
+}
+
 const ProductSection = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -19,25 +32,20 @@ const ProductSection = () => {
           signal: controller.signal,
         });
 
-        const fetchedProducts: Product[] = response.data.map(
-          (product: any) => ({
-            id: product.id,
-            name: product.name,
-            price: `€${product.baseRate.toFixed(2)}`,
-            mostPopular: product.mostPopular,
-            coverages: product.coverages.map((coverage: any) => coverage.label),
-            exclusions: product.exclusions.map(
-              (exclusion: any) => exclusion.label,
-            ),
-          }),
-        );
+        const fetchedProducts: Product[] = response.data.map((product: ApiProduct) => ({
+          id: product.id,
+          name: product.name,
+          price: `€${product.baseRate.toFixed(2)}`,
+          mostPopular: product.mostPopular,
+          coverages: product.coverages.map((coverage: CoverageDetail) => coverage.label),
+          exclusions: product.exclusions.map((exclusion: CoverageDetail) => exclusion.label),
+        }));
 
         setProducts(fetchedProducts);
-        setError(null);
       } catch (err: any) {
         if (!axios.isCancel(err)) {
-          setError(err.response?.data?.message || "Failed to load products.");
-          console.error("API Error:", error);
+          const errorMessage = err.response?.data?.message || "Failed to load products.";
+          console.error("API Error:", errorMessage);
         }
       } finally {
         setLoading(false);
@@ -50,7 +58,10 @@ const ProductSection = () => {
   }, []);
 
   return (
-    <Box component="section" sx={{ py: { xs: 6, md: 8 }, minHeight: '60vh', display: 'flex', flexDirection: 'column' }}>
+    <Box
+      component="section"
+      sx={{ py: { xs: 6, md: 8 }, minHeight: "60vh", display: "flex", flexDirection: "column" }}
+    >
       <Container maxWidth={false}>
         {/* stuff above the 3 cards */}
         <Box textAlign="center" mb={5}>
@@ -58,21 +69,15 @@ const ProductSection = () => {
             Choose Your Protection Plan
           </Typography>
           <Typography variant="body1" color="text.secondary">
-            Select the coverage that best fits your lifestyle. All plans include
-            fast claims processing and expert support.
+            Select the coverage that best fits your lifestyle. All plans include fast claims
+            processing and expert support.
           </Typography>
         </Box>
 
         {/* iterates through the 3 pricing plans and creates the cards*/}
-        <Grid
-          container
-          spacing={4}
-          justifyContent="center"
-          alignItems="stretch"
-        >
+        <Grid container spacing={4} justifyContent="center" alignItems="stretch">
           {loading
-            ?
-              Array.from(new Array(3)).map((_, index) => (
+            ? Array.from(new Array(3)).map((_, index) => (
                 <Grid key={index} size={{ xs: 12, md: 3 }}>
                   <Skeleton
                     variant="rectangular"

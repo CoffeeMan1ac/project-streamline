@@ -11,21 +11,23 @@ import { Box } from "@mui/material";
 
 function App() {
   return (
-    <Box sx={{ 
-      display: 'flex', 
-      flexDirection: 'column', 
-      minHeight: '100vh'
-    }}>
-    <BrowserRouter>
-    <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/quote" element={<QuotesPage />} />
-        <Route path="/accepted" element={<AcceptPage/>} />
-        <Route path="/declined" element={<DeclinePage />} />
-      </Routes>
-      <Footer />
-    </BrowserRouter>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+      }}
+    >
+      <BrowserRouter>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/quote" element={<QuotesPage />} />
+          <Route path="/accepted" element={<AcceptPage />} />
+          <Route path="/declined" element={<DeclinePage />} />
+        </Routes>
+        <Footer />
+      </BrowserRouter>
     </Box>
   );
 }

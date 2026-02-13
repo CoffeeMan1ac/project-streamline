@@ -2,17 +2,17 @@ package com.munichre.streamline.repository;
 
 import com.munichre.streamline.dto.ProductCoverageRowDto;
 import com.munichre.streamline.model.Product;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
-
 public interface ProductCoverageRepository extends Repository<Product, UUID> {
 
-  @Query("""
+  @Query(
+      """
     SELECT new com.munichre.streamline.dto.ProductCoverageRowDto(
       p.id,
       c.id, c.code, c.label,
@@ -25,7 +25,8 @@ public interface ProductCoverageRepository extends Repository<Product, UUID> {
   """)
   List<ProductCoverageRowDto> findCoverageRows(@Param("productIds") Collection<UUID> productIds);
 
-  @Query("""
+  @Query(
+      """
     SELECT new com.munichre.streamline.dto.ProductCoverageRowDto(
       p.id,
       c.id, c.code, c.label,

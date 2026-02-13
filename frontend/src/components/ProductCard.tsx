@@ -1,28 +1,27 @@
-import { 
-  Card, 
-  CardContent, 
-  Typography, 
-  Chip, 
-  Box, 
-  Button, 
-  List, 
-  ListItem, 
-  ListItemIcon, 
-  ListItemText 
+import {
+  Card,
+  CardContent,
+  Typography,
+  Chip,
+  Box,
+  Button,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
 } from "@mui/material";
 
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import { Link as RouterLink } from "react-router-dom";
 
-
 export interface Product {
   id: string;
   name: string;
   price: string;
   mostPopular?: boolean;
-  coverages: String[];
-  exclusions: String[];
+  coverages: string[];
+  exclusions: string[];
 }
 
 interface ProductCardProps {
@@ -49,7 +48,6 @@ const ProductCard = ({ product }: ProductCardProps) => {
       }}
     >
       <CardContent sx={{ p: 4, display: "flex", flexDirection: "column", flex: 1 }}>
-        
         {product.mostPopular && (
           <Chip
             label="Most Popular"
@@ -81,14 +79,14 @@ const ProductCard = ({ product }: ProductCardProps) => {
           {product.coverages.map((coverage, index) => (
             <ListItem key={`coverage-${index}`} sx={{ py: 0.5 }}>
               <ListItemIcon sx={{ minWidth: 32 }}>
-                  <CheckCircleOutlineIcon fontSize="small" sx={{ color: "success.main" }} />
+                <CheckCircleOutlineIcon fontSize="small" sx={{ color: "success.main" }} />
               </ListItemIcon>
 
               <ListItemText
                 primary={coverage}
                 primaryTypographyProps={{
-                variant: "body2",
-                color: "text.primary"
+                  variant: "body2",
+                  color: "text.primary",
                 }}
               />
             </ListItem>
@@ -97,15 +95,15 @@ const ProductCard = ({ product }: ProductCardProps) => {
           {product.exclusions.map((exclusion, index) => (
             <ListItem key={`exclusion-${index}`} sx={{ py: 0.5 }}>
               <ListItemIcon sx={{ minWidth: 32 }}>
-                  <CancelOutlinedIcon fontSize="small" sx={{ color: "text.secondary" }} />
+                <CancelOutlinedIcon fontSize="small" sx={{ color: "text.secondary" }} />
               </ListItemIcon>
 
               <ListItemText
                 primary={exclusion}
                 primaryTypographyProps={{
-                variant: "body2",
-                color: "text.secondary",
-                sx: { textDecoration: "line-through", opacity: 0.7 },
+                  variant: "body2",
+                  color: "text.secondary",
+                  sx: { textDecoration: "line-through", opacity: 0.7 },
                 }}
               />
             </ListItem>
@@ -121,10 +119,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
           component={RouterLink}
           to={`/quote?productId=${product.id}`}
         >
-        Get a Quote
+          Get a Quote
         </Button>
-
-
       </CardContent>
     </Card>
   );

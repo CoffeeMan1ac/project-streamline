@@ -1,7 +1,17 @@
-import { useState} from "react";
+import { useState } from "react";
 import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { TextField, Button, Container, Typography, Box, Select, MenuItem, InputLabel, FormControl } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Container,
+  Typography,
+  Box,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+} from "@mui/material";
 
 const QuotesPage = () => {
   const navigate = useNavigate();
@@ -22,7 +32,6 @@ const QuotesPage = () => {
   const [searchParams] = useSearchParams();
 
   const productId = searchParams.get("productId");
-  
 
   // const [productIdsByName, setProductIdsByName] = useState<Record<string, string>>({});
 
@@ -69,12 +78,13 @@ const QuotesPage = () => {
       phoneMake: "",
       phoneModel: "",
     };
-    
+
     if (!firstName) newErrors.firstName = "Required";
     if (!lastName) newErrors.lastName = "Required";
     if (!email) {
       newErrors.email = "Required";
-    } else if (!email.includes("@") || !email.includes(".")) { // so that they have to put in something after @
+    } else if (!email.includes("@") || !email.includes(".")) {
+      // so that they have to put in something after @
       newErrors.email = "Valid email required";
     }
     if (!phone) newErrors.phone = "Required";
@@ -85,25 +95,32 @@ const QuotesPage = () => {
     if (!country) newErrors.country = "Required";
     if (!phoneMake) newErrors.phoneMake = "Required";
     if (!phoneModel) newErrors.phoneModel = "Required";
-    
+
     setErrors(newErrors);
-    
-    const allValid = Object.values(newErrors).every(error => error === ""); // checks if every error string is empty
+
+    const allValid = Object.values(newErrors).every((error) => error === ""); // checks if every error string is empty
     return allValid;
   };
 
   const makeLabel =
-    phoneMake === "apple" ? "Apple" :
-    phoneMake === "samsung" ? "Samsung" :
-    phoneMake === "google" ? "Google" :
-    phoneMake;
+    phoneMake === "apple"
+      ? "Apple"
+      : phoneMake === "samsung"
+        ? "Samsung"
+        : phoneMake === "google"
+          ? "Google"
+          : phoneMake;
 
   const modelLabel =
-    phoneModel === "iphone15" ? "iPhone 15" :
-    phoneModel === "galaxy24" ? "Galaxy S24" :
-    phoneModel === "pixel8" ? "Pixel 8" :
-    phoneModel == "galaxyNote7" ? "Galaxy Note 7" :
-    phoneModel;
+    phoneModel === "iphone15"
+      ? "iPhone 15"
+      : phoneModel === "galaxy24"
+        ? "Galaxy S24"
+        : phoneModel === "pixel8"
+          ? "Pixel 8"
+          : phoneModel == "galaxyNote7"
+            ? "Galaxy Note 7"
+            : phoneModel;
 
   // const selectedProductName =
   //   coverage === "basic" ? "StandardShield" :
@@ -123,7 +140,7 @@ const QuotesPage = () => {
       const payload = {
         firstName,
         lastName,
-        emailAddress: email,   
+        emailAddress: email,
         phoneNumber: phone,
         dateOfBirth: dob,
         address1,
@@ -133,7 +150,7 @@ const QuotesPage = () => {
         country,
         phoneMake: makeLabel,
         phoneModel: modelLabel,
-        productId: productId
+        productId: productId,
       };
 
       const res = await axios.post("/api/quotes", payload);
@@ -179,9 +196,10 @@ const QuotesPage = () => {
                 fullWidth
                 label="First Name"
                 value={firstName}
-                onChange={(e) => { // required and red box go away after user enters something
+                onChange={(e) => {
+                  // required and red box go away after user enters something
                   setFirstName(e.target.value);
-                  setErrors(prev => ({ ...prev, firstName: "" }));
+                  setErrors((prev) => ({ ...prev, firstName: "" }));
                 }}
                 error={!!errors.firstName}
                 helperText={errors.firstName}
@@ -193,7 +211,7 @@ const QuotesPage = () => {
                 value={lastName}
                 onChange={(e) => {
                   setLastName(e.target.value);
-                  setErrors(prev => ({ ...prev, lastName: "" }));
+                  setErrors((prev) => ({ ...prev, lastName: "" }));
                 }}
                 error={!!errors.lastName}
                 helperText={errors.lastName}
@@ -208,7 +226,7 @@ const QuotesPage = () => {
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
-                  setErrors(prev => ({ ...prev, email: "" }));
+                  setErrors((prev) => ({ ...prev, email: "" }));
                 }}
                 error={!!errors.email}
                 helperText={errors.email}
@@ -220,7 +238,7 @@ const QuotesPage = () => {
                 value={phone}
                 onChange={(e) => {
                   setPhone(e.target.value);
-                  setErrors(prev => ({ ...prev, phone: "" }));
+                  setErrors((prev) => ({ ...prev, phone: "" }));
                 }}
                 error={!!errors.phone}
                 helperText={errors.phone}
@@ -235,7 +253,7 @@ const QuotesPage = () => {
               value={dob}
               onChange={(e) => {
                 setDob(e.target.value);
-                setErrors(prev => ({ ...prev, dob: "" }));
+                setErrors((prev) => ({ ...prev, dob: "" }));
               }}
               style={{ marginBottom: "16px" }}
               error={!!errors.dob}
@@ -250,7 +268,7 @@ const QuotesPage = () => {
               value={address1}
               onChange={(e) => {
                 setAddress1(e.target.value);
-                setErrors(prev => ({ ...prev, address1: "" }));
+                setErrors((prev) => ({ ...prev, address1: "" }));
               }}
               style={{ marginBottom: "16px" }}
               error={!!errors.address1}
@@ -275,7 +293,7 @@ const QuotesPage = () => {
                 value={city}
                 onChange={(e) => {
                   setCity(e.target.value);
-                  setErrors(prev => ({ ...prev, city: "" }));
+                  setErrors((prev) => ({ ...prev, city: "" }));
                 }}
                 error={!!errors.city}
                 helperText={errors.city}
@@ -287,7 +305,7 @@ const QuotesPage = () => {
                 value={postalCode}
                 onChange={(e) => {
                   setPostalCode(e.target.value);
-                  setErrors(prev => ({ ...prev, postalCode: "" }));
+                  setErrors((prev) => ({ ...prev, postalCode: "" }));
                 }}
                 error={!!errors.postalCode}
                 helperText={errors.postalCode}
@@ -300,9 +318,9 @@ const QuotesPage = () => {
                   id="country"
                   value={country}
                   label="Country"
-                   onChange={(e) => {
+                  onChange={(e) => {
                     setCountry(e.target.value);
-                    setErrors(prev => ({ ...prev, country: "" }));
+                    setErrors((prev) => ({ ...prev, country: "" }));
                   }}
                   style={{ textAlign: "left" }}
                 >
@@ -312,10 +330,10 @@ const QuotesPage = () => {
                   <MenuItem value="usa">United States</MenuItem>
                 </Select>
                 {errors.country && (
-                  <div style={{color: "#d32f2f", fontSize: "12px", marginTop: "4px"}}>
+                  <div style={{ color: "#d32f2f", fontSize: "12px", marginTop: "4px" }}>
                     {errors.country}
                   </div>
-                  )}
+                )}
               </FormControl>
             </div>
 
@@ -333,7 +351,7 @@ const QuotesPage = () => {
                   label="Phone Make"
                   onChange={(e) => {
                     setPhoneMake(e.target.value);
-                    setErrors(prev => ({ ...prev, phoneMake: "" }));
+                    setErrors((prev) => ({ ...prev, phoneMake: "" }));
                   }}
                   style={{ textAlign: "left" }}
                 >
@@ -342,9 +360,13 @@ const QuotesPage = () => {
                   <MenuItem value="samsung">Samsung</MenuItem>
                   <MenuItem value="google">Google</MenuItem>
                 </Select>
-                {errors.phoneMake && <div style={{color: "#d32f2f", fontSize: "12px", marginTop: "4px"}}>{errors.phoneMake}</div>}
+                {errors.phoneMake && (
+                  <div style={{ color: "#d32f2f", fontSize: "12px", marginTop: "4px" }}>
+                    {errors.phoneMake}
+                  </div>
+                )}
               </FormControl>
-              
+
               <FormControl fullWidth error={!!errors.phoneModel} disabled={isLoading}>
                 <InputLabel id="phone-model-label">Phone Model</InputLabel>
                 <Select
@@ -354,7 +376,7 @@ const QuotesPage = () => {
                   label="Phone Model"
                   onChange={(e) => {
                     setPhoneModel(e.target.value);
-                    setErrors(prev => ({ ...prev, phoneModel: "" }));
+                    setErrors((prev) => ({ ...prev, phoneModel: "" }));
                   }}
                   style={{ textAlign: "left" }}
                 >
@@ -364,7 +386,11 @@ const QuotesPage = () => {
                   <MenuItem value="galaxyNote7">Galaxy Note 7</MenuItem>
                   <MenuItem value="pixel8">Pixel 8</MenuItem>
                 </Select>
-                {errors.phoneModel && <div style={{color: "#d32f2f", fontSize: "12px", marginTop: "4px"}}>{errors.phoneModel}</div>}
+                {errors.phoneModel && (
+                  <div style={{ color: "#d32f2f", fontSize: "12px", marginTop: "4px" }}>
+                    {errors.phoneModel}
+                  </div>
+                )}
               </FormControl>
             </div>
 
@@ -373,10 +399,10 @@ const QuotesPage = () => {
               variant="contained"
               fullWidth
               disabled={isLoading}
-              style={{ 
+              style={{
                 marginTop: "10px",
-                padding: "12px", 
-                backgroundColor: "#0167b2" 
+                padding: "12px",
+                backgroundColor: "#0167b2",
               }}
             >
               {isLoading ? "Submitting..." : "Get Quote"}

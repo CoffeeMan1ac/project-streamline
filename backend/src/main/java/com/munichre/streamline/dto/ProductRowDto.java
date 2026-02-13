@@ -5,15 +5,14 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record ProductRowDto(
-        UUID id,
-        BigDecimal baseRate,
-        String name,
-        String description,
-        boolean mostPopular,
-        LocalDateTime startDate,
-        LocalDateTime endDate,
-        boolean active,
-        UUID typeId,
-        String typeCode,
-        String typeLabel) {
-}
+    UUID id,
+    BigDecimal baseRate,
+    String name,
+    String description,
+    boolean mostPopular,
+    LocalDateTime startDate,
+    LocalDateTime endDate,
+    boolean active,
+    UUID typeId,
+    String typeCode,
+    String typeLabel) {}

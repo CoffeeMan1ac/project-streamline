@@ -3,17 +3,17 @@ package com.munichre.streamline.repository;
 import com.munichre.streamline.dto.ProductCoverageRowDto;
 import com.munichre.streamline.dto.ProductRowDto;
 import com.munichre.streamline.model.Product;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
-
 public interface ProductRepository extends JpaRepository<Product, UUID> {
 
-  @Query("""
+  @Query(
+      """
   SELECT new com.munichre.streamline.dto.ProductRowDto(
     p.id, p.baseRate, p.name, p.description, p.mostPopular,
     p.startDate, p.endDate, p.active,
@@ -28,7 +28,8 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
   """)
   List<ProductRowDto> findActiveProductRows(@Param("now") LocalDateTime now);
 
-  @Query("""
+  @Query(
+      """
   SELECT new com.munichre.streamline.dto.ProductCoverageRowDto(
     p.id,
     c.id, c.code, c.label,
@@ -41,7 +42,8 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
   """)
   List<ProductCoverageRowDto> findCoverageRows(@Param("productIds") List<UUID> productIds);
 
-  @Query("""
+  @Query(
+      """
   SELECT new com.munichre.streamline.dto.ProductCoverageRowDto(
     p.id,
     c.id, c.code, c.label,

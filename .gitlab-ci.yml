@@ -1,0 +1,195 @@
+default:
+  tags: [docker]
+
+stages:
+  - lint
+  - test
+  - security
+  - build
+
+variables:
+  AST_ENABLE_MR_PIPELINES: "true"
+  FRONTEND_DIR: "frontend"
+  BACKEND_DIR: "backend"
+  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_PIPELINE_SOURCE == "push"
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+
+# -----------------------------
+# Security templates
+# -----------------------------
+include:
+  - template: Security/SAST.gitlab-ci.yml
+  - template: Security/Dependency-Scanning.gitlab-ci.yml
+  - template: Jobs/Secret-Detection.gitlab-ci.yml
+
+# Override security job stages / behavior
+secret_detection:
+  stage: security
+  allow_failure: false
+
+sast:
+  stage: security
+
+dependency_scanning:
+  stage: security
+
+# -----------------------------
+# Frontend (Vite / React)
+# -----------------------------
+frontend:lint:
+  stage: lint
+  image: node:20
+  cache:
+    key:
+      files:
+        - $FRONTEND_DIR/package-lock.json
+    paths:
+      - $FRONTEND_DIR/.npm/
+  script:
+    - cd $FRONTEND_DIR
+    - npm ci --cache .npm --prefer-offline
+    - npm run lint
+
+frontend:format:
+  stage: lint
+  image: node:20
+  cache:
+    key:
+      files:
+        - $FRONTEND_DIR/package-lock.json
+    paths:
+      - $FRONTEND_DIR/.npm/
+  script:
+    - cd $FRONTEND_DIR
+    - npm ci --cache .npm --prefer-offline
+    - npm run format:check
+
+frontend:test:
+  stage: test
+  image: node:20
+  cache:
+    key:
+      files:
+        - $FRONTEND_DIR/package-lock.json
+    paths:
+      - $FRONTEND_DIR/.npm/
+  script:
+    - cd $FRONTEND_DIR
+    - npm ci --cache .npm --prefer-offline
+    - npm run test:coverage
+    - node -e "const s=require('./coverage/coverage-summary.json'); console.log('FRONTEND_LINES_COVERAGE='+s.total.lines.pct+'%')"
+  coverage: '/FRONTEND_LINES_COVERAGE=([0-9]+(?:\.[0-9]+)?)%/'
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - $FRONTEND_DIR/reports/junit.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: $FRONTEND_DIR/coverage/cobertura-coverage.xml
+    paths:
+      - $FRONTEND_DIR/coverage/
+      - $FRONTEND_DIR/reports/
+    expire_in: 1 week
+
+frontend:build:
+  stage: build
+  image: node:20
+  needs: ["frontend:test"]
+  cache:
+    key:
+      files:
+        - $FRONTEND_DIR/package-lock.json
+    paths:
+      - $FRONTEND_DIR/.npm/
+  script:
+    - cd $FRONTEND_DIR
+    - npm ci --cache .npm --prefer-offline
+    - npm run build
+  artifacts:
+    paths:
+      - $FRONTEND_DIR/dist/
+    expire_in: 1 week
+
+# -----------------------------
+# Backend (Spring Boot / Maven)
+# -----------------------------
+backend:format:
+  stage: lint
+  image: maven:3.9.6-eclipse-temurin-21
+  cache:
+    key:
+      files:
+        - $BACKEND_DIR/pom.xml
+    paths:
+      - .m2/repository/
+  script:
+    - cd $BACKEND_DIR
+    - mvn -B -DskipTests spotless:check
+
+backend:lint:
+  stage: lint
+  image: maven:3.9.6-eclipse-temurin-21
+  cache:
+    key:
+      files:
+        - $BACKEND_DIR/pom.xml
+    paths:
+      - .m2/repository/
+  script:
+    - cd $BACKEND_DIR
+    - mvn -B -DskipTests checkstyle:check
+
+backend:test:
+  stage: test
+  image: maven:3.9.6-eclipse-temurin-21
+  cache:
+    key:
+      files:
+        - $BACKEND_DIR/pom.xml
+    paths:
+      - .m2/repository/
+  script:
+    - cd $BACKEND_DIR
+    - mvn -B test
+    - |
+      LINE_ROW="$(grep -m1 'counter type="LINE"' target/site/jacoco/jacoco.xml)"
+      echo "$LINE_ROW" | sed -E 's/.*missed="([0-9]+)".*covered="([0-9]+)".*/\1 \2/' \
+        | awk '{m=$1; c=$2; t=m+c; pct=(t==0?0:(c/t*100)); printf("BACKEND_LINES_COVERAGE=%.2f%%\n", pct)}'
+  coverage: '/BACKEND_LINES_COVERAGE=([0-9]+(?:\.[0-9]+)?)%/'
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - $BACKEND_DIR/target/surefire-reports/*.xml
+      coverage_report:
+        coverage_format: jacoco
+        path: $BACKEND_DIR/target/site/jacoco/jacoco.xml
+    paths:
+      - $BACKEND_DIR/target/site/jacoco/
+      - $BACKEND_DIR/target/surefire-reports/
+    expire_in: 1 week
+
+backend:build:
+  stage: build
+  image: maven:3.9.6-eclipse-temurin-21
+  needs: ["backend:test"]
+  cache:
+    key:
+      files:
+        - $BACKEND_DIR/pom.xml
+    paths:
+      - .m2/repository/
+  script:
+    - cd $BACKEND_DIR
+    - mvn -B -DskipTests package
+  artifacts:
+    paths:
+      - $BACKEND_DIR/target/*.jar
+    expire_in: 1 week

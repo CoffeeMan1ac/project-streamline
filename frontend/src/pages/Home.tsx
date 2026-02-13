@@ -3,10 +3,10 @@ import ProductSection from "../components/ProductSection";
 
 const Home = () => {
   return (
-          <>
-            <HeroSection />
-            <ProductSection />
-          </>
+    <>
+      <HeroSection />
+      <ProductSection />
+    </>
   );
 };
 
