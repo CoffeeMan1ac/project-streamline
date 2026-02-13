@@ -14,9 +14,9 @@ function App() {
     <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/quotes" element={<QuotesPage />} />
-        <Route path="/accept" element={<AcceptPage/>} />
-        <Route path="/decline" element={<DeclinePage />} />
+        <Route path="/quote" element={<QuotesPage />} />
+        <Route path="/accepted" element={<AcceptPage/>} />
+        <Route path="/declined" element={<DeclinePage />} />
       </Routes>
       <Footer />
     </BrowserRouter>
