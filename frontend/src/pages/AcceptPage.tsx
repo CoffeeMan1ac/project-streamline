@@ -12,7 +12,6 @@ const AcceptPage = () => {
     const premium = quoteResult?.premium ?? 0.00;
 
     const [purchaseIsLoading, setPurchaseIsLoading] = useState(false);
-    const [backIsLoading, setBackIsLoading] = useState(false);
 
     const handleProceed = async () => {
         setPurchaseIsLoading(true);
@@ -21,9 +20,6 @@ const AcceptPage = () => {
     };
 
  const handleBack = async () => {
-    setBackIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setBackIsLoading(false);
     navigate("/"); 
 };
 
@@ -74,7 +70,6 @@ const AcceptPage = () => {
                             <Button
                                 variant="contained"
                                 disableElevation
-                                disabled={backIsLoading}
                                 onClick={handleBack}
                                 style={{ 
                                     padding: "12px 24px", 
@@ -86,7 +81,7 @@ const AcceptPage = () => {
                                     height: "45px"
                                 }}
                             >
-                                {backIsLoading ? "Returning..." : "Back to Home"}
+                                {"Back to Home"}
                             </Button>
                         </Box>
                     </Box>

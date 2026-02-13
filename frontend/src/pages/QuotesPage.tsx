@@ -102,6 +102,7 @@ const QuotesPage = () => {
     phoneModel === "iphone15" ? "iPhone 15" :
     phoneModel === "galaxy24" ? "Galaxy S24" :
     phoneModel === "pixel8" ? "Pixel 8" :
+    phoneModel == "galaxyNote7" ? "Galaxy Note 7" :
     phoneModel;
 
   // const selectedProductName =
@@ -360,6 +361,7 @@ const QuotesPage = () => {
                   <MenuItem value="">Select model</MenuItem>
                   <MenuItem value="iphone15">iPhone 15</MenuItem>
                   <MenuItem value="galaxy24">Galaxy S24</MenuItem>
+                  <MenuItem value="galaxyNote7">Galaxy Note 7</MenuItem>
                   <MenuItem value="pixel8">Pixel 8</MenuItem>
                 </Select>
                 {errors.phoneModel && <div style={{color: "#d32f2f", fontSize: "12px", marginTop: "4px"}}>{errors.phoneModel}</div>}

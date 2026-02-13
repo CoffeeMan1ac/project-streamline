@@ -11,7 +11,6 @@ const DeclinePage = () => {
 
   const [callIsLoading, setCallIsLoading] = useState(false);
   const [emailIsLoading, setEmailIsLoading] = useState(false);
-  const [backIsLoading, setBackIsLoading] = useState(false);
 
   const handleCall = async () => {
     setCallIsLoading(true);
@@ -26,9 +25,6 @@ const DeclinePage = () => {
   };
 
   const handleBack = async () => {
-      setBackIsLoading(true);
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setBackIsLoading(false);
       navigate("/");  
   };
 
@@ -51,7 +47,7 @@ const DeclinePage = () => {
               Application Declined
             </Typography>
             <Typography variant="body1" style={{ color: "#4a4a4a", marginBottom: 24 }}>
-              Unfortunately, we are unable to provide coverage for your <strong>Apple iPhone 15 Pro</strong> at this time.
+              Unfortunately, we are unable to provide coverage at this time.
             </Typography>
 
             <Paper elevation={0} sx={{ bgcolor: "#f8fbfc", p: 3, borderRadius: 2, mb: 3, textAlign: "left" }}>
@@ -117,7 +113,6 @@ const DeclinePage = () => {
             <Button
               variant="contained"
               disableElevation
-              disabled={backIsLoading}
               onClick={handleBack}
               style={{ 
                 padding: "12px 24px", 
@@ -128,7 +123,7 @@ const DeclinePage = () => {
                 width: "150px"
               }}
             >
-              {backIsLoading ? "Returning..." : "Back to Home"}
+              {"Back to Home"}
             </Button>
           </Box>
         </Container>

@@ -48,6 +48,7 @@ public class Rule {
     @Column(nullable = false)
     private String actionType;
 
+    @Column(nullable = false)
     private String actionReason;
 
     @CreationTimestamp
