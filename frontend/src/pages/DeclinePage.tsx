@@ -1,10 +1,14 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button, Container, Typography, Box, Paper } from "@mui/material";
 import decline from "../assets/decline.png";
 import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 
 const DeclinePage = () => {
+
+  const navigate = useNavigate();
+
   const [callIsLoading, setCallIsLoading] = useState(false);
   const [emailIsLoading, setEmailIsLoading] = useState(false);
   const [backIsLoading, setBackIsLoading] = useState(false);
@@ -22,9 +26,10 @@ const DeclinePage = () => {
   };
 
   const handleBack = async () => {
-    setBackIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setBackIsLoading(false);
+      setBackIsLoading(true);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setBackIsLoading(false);
+      navigate("/");  
   };
 
   return (
