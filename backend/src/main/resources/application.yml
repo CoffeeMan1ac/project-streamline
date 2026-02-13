@@ -21,6 +21,8 @@
       mode: always
       data-locations:
       - classpath:db/data/product_types.sql
+      - classpath:db/data/coverage_categories.sql
+
 server:
   port: 8080
 
