@@ -13,6 +13,8 @@ import {
 
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
+import { Link as RouterLink } from "react-router-dom";
+
 
 export interface Feature {
   label: string;
@@ -102,9 +104,12 @@ const PricingCard = ({ plan }: PricingCardProps) => {
           color="primary"
           size="large"
           sx={{ mt: "auto" }}
+          component={RouterLink}
+          to="/quote"
         >
-          Get a Quote
+        Get a Quote
         </Button>
+
 
       </CardContent>
     </Card>
