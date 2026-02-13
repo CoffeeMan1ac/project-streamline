@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { TextField, Button, Container, Typography, Box, Select, MenuItem, InputLabel, FormControl } from "@mui/material";
 
 const QuotesPage = () => {
@@ -17,11 +17,14 @@ const QuotesPage = () => {
   const [country, setCountry] = useState("");
   const [phoneMake, setPhoneMake] = useState("");
   const [phoneModel, setPhoneModel] = useState("");
-  const [coverage, setCoverage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const [searchParams] = useSearchParams();
+
+  const productId = searchParams.get("productId");
   
 
-  const [productIdsByName, setProductIdsByName] = useState<Record<string, string>>({});
+  // const [productIdsByName, setProductIdsByName] = useState<Record<string, string>>({});
 
   const [errors, setErrors] = useState({
     firstName: "",
@@ -35,23 +38,22 @@ const QuotesPage = () => {
     country: "",
     phoneMake: "",
     phoneModel: "",
-    coverage: ""
   });
 
-  useEffect(() => {
-    axios
-      .get("/api/products")
-      .then((res) => {
-        const map: Record<string, string> = {};
-        for (const p of res.data ?? []) {
-          if (p?.name && p?.id) map[p.name] = p.id;
-        }
-        setProductIdsByName(map);
-      })
-      .catch(() => {
-        // leave empty; quote can still be submitted with selectedProduct fallback
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get("/api/products")
+  //     .then((res) => {
+  //       const map: Record<string, string> = {};
+  //       for (const p of res.data ?? []) {
+  //         if (p?.name && p?.id) map[p.name] = p.id;
+  //       }
+  //       setProductIdsByName(map);
+  //     })
+  //     .catch(() => {
+  //       // leave empty; quote can still be submitted with selectedProduct fallback
+  //     });
+  // }, []);
 
   const validateForm = () => {
     const newErrors = {
@@ -66,7 +68,6 @@ const QuotesPage = () => {
       country: "",
       phoneMake: "",
       phoneModel: "",
-      coverage: ""
     };
     
     if (!firstName) newErrors.firstName = "Required";
@@ -84,7 +85,6 @@ const QuotesPage = () => {
     if (!country) newErrors.country = "Required";
     if (!phoneMake) newErrors.phoneMake = "Required";
     if (!phoneModel) newErrors.phoneModel = "Required";
-    if (!coverage) newErrors.coverage = "Required";
     
     setErrors(newErrors);
     
@@ -104,13 +104,13 @@ const QuotesPage = () => {
     phoneModel === "pixel8" ? "Pixel 8" :
     phoneModel;
 
-  const selectedProductName =
-    coverage === "basic" ? "StandardShield" :
-    coverage === "premium" ? "PremiumShield" :
-    coverage === "ultimate" ? "UltimateShield" :
-    "";
+  // const selectedProductName =
+  //   coverage === "basic" ? "StandardShield" :
+  //   coverage === "premium" ? "PremiumShield" :
+  //   coverage === "ultimate" ? "UltimateShield" :
+  //   "";
 
-  const selectedProductId = selectedProductName ? productIdsByName[selectedProductName] : undefined;
+  // const selectedProductId = selectedProductName ? productIdsByName[selectedProductName] : undefined;
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -130,12 +130,9 @@ const QuotesPage = () => {
         city,
         postalCode,
         country,
-
         phoneMake: makeLabel,
         phoneModel: modelLabel,
-
-        selectedProduct: selectedProductName, 
-        productId: selectedProductId          
+        productId: productId
       };
 
       const res = await axios.post("/api/quotes", payload);
@@ -369,39 +366,13 @@ const QuotesPage = () => {
               </FormControl>
             </div>
 
-            <Typography variant="h6" gutterBottom style={{ color: "black", marginTop: "32px" }}>
-              Coverage Type
-            </Typography>
-
-            <FormControl fullWidth error={!!errors.coverage} disabled={isLoading} style={{ marginBottom: "32px" }}>
-              <InputLabel id="coverage-label">Select Coverage</InputLabel>
-              <Select
-                labelId="coverage-label"
-                id="coverage"
-                name="coverage"
-                value={coverage}
-                label="Select Coverage"
-                onChange={(e) => {
-                  setCoverage(e.target.value);
-                  setErrors(prev => ({ ...prev, coverage: "" }));
-                }}
-                style={{ textAlign: "left" }}
-                MenuProps={{ disablePortal: true, keepMounted: true }}
-              >
-                <MenuItem value="">Choose coverage</MenuItem>
-                <MenuItem value="premium">Premium Shield - €14.99/month</MenuItem>
-                <MenuItem value="basic">Basic Cover - €9.99/month</MenuItem>
-                <MenuItem value="ultimate">Ultimate Protection - €24.99/month</MenuItem>
-              </Select>
-              {errors.coverage && <div style={{color: "#d32f2f", fontSize: "12px", marginTop: "4px"}}>{errors.coverage}</div>}
-            </FormControl>
-
             <Button
               type="submit"
               variant="contained"
               fullWidth
               disabled={isLoading}
               style={{ 
+                marginTop: "10px",
                 padding: "12px", 
                 backgroundColor: "#0167b2" 
               }}

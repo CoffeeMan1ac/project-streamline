@@ -25,11 +25,11 @@ export interface Product {
   exclusions: String[];
 }
 
-interface PricingCardProps {
+interface ProductCardProps {
   product: Product;
 }
 
-const ProductCard = ({ product }: PricingCardProps) => {
+const ProductCard = ({ product }: ProductCardProps) => {
   return (
     <Card
       elevation={product.mostPopular ? 6 : 2}
@@ -119,7 +119,7 @@ const ProductCard = ({ product }: PricingCardProps) => {
           size="large"
           sx={{ mt: "auto" }}
           component={RouterLink}
-          to="/quote"
+          to={`/quote?productId=${product.id}`}
         >
         Get a Quote
         </Button>
