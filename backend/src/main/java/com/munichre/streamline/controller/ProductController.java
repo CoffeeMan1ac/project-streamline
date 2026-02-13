@@ -1,7 +1,7 @@
 package com.munichre.streamline.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.munichre.streamline.model.Product;
+import com.munichre.streamline.dto.ProductDto;
 import com.munichre.streamline.service.ProductService;
 import java.util.List;
 
@@ -18,8 +18,8 @@ public class ProductController {
 
     //returns all active products
     @GetMapping
-    public ResponseEntity<List<Product>> getProducts() {
-        List<Product> products = productService.getActiveProducts();
+    public ResponseEntity<List<ProductDto>> getProducts() {
+        List<ProductDto> products = productService.getActiveProducts();
         return ResponseEntity.ok(products);
     }
 
