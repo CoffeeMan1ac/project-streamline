@@ -1,6 +1,5 @@
 
 import { Box, Container, Typography, } from "@mui/material";
-import ShieldLogo from "../assets/ShieldLogo.png";
 
 const HeroSection = () => {
   return (
@@ -17,7 +16,7 @@ const HeroSection = () => {
         {/* shield Logo */}
         <Box
           component="img"
-          src={ShieldLogo}
+          src={"shield_logo.png"}
           alt="Phone Shield logo"
           sx={{height: 80 }}
         />

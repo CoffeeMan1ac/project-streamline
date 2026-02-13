@@ -6,7 +6,6 @@ import {
   Box,
 } from "@mui/material";
 
-import ShieldLogo from "../assets/ShieldLogo.png";
 
 const Navbar = () => {
   return (
@@ -17,7 +16,7 @@ const Navbar = () => {
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           <Box
             component="img"
-            src={ShieldLogo}
+            src={"shield_logo.png"}
             alt="Phone Shield logo"
             sx={{ height: 80 }}
           />
