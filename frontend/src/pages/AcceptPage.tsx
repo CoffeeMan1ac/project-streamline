@@ -1,11 +1,15 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Button, Container, Typography, Box } from "@mui/material";
 import checkmark from "../assets/checkmark.png";
 
 const AcceptPage = () => {
 
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const quoteResult = location.state;
+    const premium = quoteResult?.premium ?? 0.00;
 
     const [purchaseIsLoading, setPurchaseIsLoading] = useState(false);
     const [backIsLoading, setBackIsLoading] = useState(false);
@@ -43,10 +47,10 @@ const AcceptPage = () => {
                             Accepted!
                         </Typography>
                         <Typography variant="body1" style={{ color: "#4a4a4a"}}>
-                            Your quote for the <strong>Apple iPhone 15 Pro</strong> has been approved with a
+                            Your quote has been approved with a
                         </Typography>
                         <Typography variant="body1" style={{ color: "#4a4a4a", marginBottom: 27 }}>
-                            premium of <span style={{ fontSize: "1.5rem", color: "#0167b2", fontWeight: "bold" }}>€10.00</span> per month.
+                            premium of <span style={{ fontSize: "1.5rem", color: "#0167b2", fontWeight: "bold" }}>€{premium.toFixed(2)}</span> per month.
                         </Typography>
                         
                         <Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
