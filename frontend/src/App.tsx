@@ -7,9 +7,15 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import AcceptPage from "./pages/AcceptPage";
 import DeclinePage from "./pages/DeclinePage";
+import { Box } from "@mui/material";
 
 function App() {
   return (
+    <Box sx={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      minHeight: '100vh'
+    }}>
     <BrowserRouter>
     <Navbar />
       <Routes>
@@ -20,6 +26,7 @@ function App() {
       </Routes>
       <Footer />
     </BrowserRouter>
+    </Box>
   );
 }
 
