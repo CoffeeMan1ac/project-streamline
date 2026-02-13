@@ -25,6 +25,7 @@
       - classpath:db/data/coverages.sql
       - classpath:db/data/products.sql
       - classpath:db/data/product_coverages.sql
+      - classpath:db/data/product_exclusions.sql
 
 server:
   port: 8080
