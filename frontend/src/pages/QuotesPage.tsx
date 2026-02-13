@@ -162,7 +162,7 @@ const QuotesPage = () => {
 
   return (
     <>
-      <div style={{ backgroundColor: "#f7fbfc", minHeight: "100vh", padding: "20px" }}>
+      <div style={{ backgroundColor: "#f7fbfc", padding: 50 }}>
         <Container maxWidth="md" style={{ padding: 24, backgroundColor: "white", borderRadius: 8 }}>
           <Typography variant="h4" gutterBottom style={{ color: "black" }}>
             Get Your Quote
