@@ -22,6 +22,7 @@
       data-locations:
       - classpath:db/data/product_types.sql
       - classpath:db/data/coverage_categories.sql
+      - classpath:db/data/coverages.sql
 
 server:
   port: 8080
