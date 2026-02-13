@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { TextField, Button, Container, Typography, Box, Select, MenuItem, InputLabel, FormControl } from "@mui/material";
 
 const QuotesPage = () => {
+  const navigate = useNavigate();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -17,6 +20,9 @@ const QuotesPage = () => {
   const [coverage, setCoverage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   
+
+  const [productIdsByName, setProductIdsByName] = useState<Record<string, string>>({});
+
   const [errors, setErrors] = useState({
     firstName: "",
     lastName: "",
@@ -31,6 +37,21 @@ const QuotesPage = () => {
     phoneModel: "",
     coverage: ""
   });
+
+  useEffect(() => {
+    axios
+      .get("/api/products")
+      .then((res) => {
+        const map: Record<string, string> = {};
+        for (const p of res.data ?? []) {
+          if (p?.name && p?.id) map[p.name] = p.id;
+        }
+        setProductIdsByName(map);
+      })
+      .catch(() => {
+        // leave empty; quote can still be submitted with selectedProduct fallback
+      });
+  }, []);
 
   const validateForm = () => {
     const newErrors = {
@@ -71,13 +92,72 @@ const QuotesPage = () => {
     return allValid;
   };
 
+  const makeLabel =
+    phoneMake === "apple" ? "Apple" :
+    phoneMake === "samsung" ? "Samsung" :
+    phoneMake === "google" ? "Google" :
+    phoneMake;
+
+  const modelLabel =
+    phoneModel === "iphone15" ? "iPhone 15" :
+    phoneModel === "galaxy24" ? "Galaxy S24" :
+    phoneModel === "pixel8" ? "Pixel 8" :
+    phoneModel;
+
+  const selectedProductName =
+    coverage === "basic" ? "StandardShield" :
+    coverage === "premium" ? "PremiumShield" :
+    coverage === "ultimate" ? "UltimateShield" :
+    "";
+
+  const selectedProductId = selectedProductName ? productIdsByName[selectedProductName] : undefined;
+
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    if (!validateForm()) return; // if false dont submit form
-    
-    setIsLoading(true); // disables form
-    await new Promise(resolve => setTimeout(resolve, 1000)); // can change the loading time on this if need be
-    setIsLoading(false); // enables it again after load time
+    if (!validateForm()) return;
+
+    setIsLoading(true);
+
+    try {
+      const payload = {
+        firstName,
+        lastName,
+        emailAddress: email,   
+        phoneNumber: phone,
+        dateOfBirth: dob,
+        address1,
+        address2,
+        city,
+        postalCode,
+        country,
+
+        phoneMake: makeLabel,
+        phoneModel: modelLabel,
+
+        selectedProduct: selectedProductName, 
+        productId: selectedProductId          
+      };
+
+      const res = await axios.post("/api/quotes", payload);
+      const result = res.data;
+
+      const status = String(result?.status ?? "").toUpperCase();
+
+      if (status === "ACCEPTED" || status === "APPROVED") {
+        navigate("/accepted", { state: result });
+      } else {
+        navigate("/declined", { state: result });
+      }
+    } catch (err: any) {
+      const msg =
+        err?.response?.data?.message ??
+        err?.response?.data?.error ??
+        err?.message ??
+        "Failed to create quote";
+      alert(msg);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
