@@ -39,8 +39,8 @@ class ProductControllerTest {
 	@Test
 	void getProducts_returnsTwoProducts() throws Exception {
 
-		Product p1 = new Product(null, null, null, "StandardShield", null, null, null, null, null, null, null, null, null);
-		Product p2 = new Product(null, null, null, "PremiumShield", null, null, null, null, null, null, null, null, null);
+		Product p1 = new Product(null, null, null, "StandardShield", null, null, null, null, null, null, null, null);
+		Product p2 = new Product(null, null, null, "PremiumShield", null, null, null, null, null, null, null, null);
 
 		when(productService.getProducts())
 			.thenReturn(new ArrayList<>(List.of(p1, p2)));
