@@ -21,4 +21,4 @@ server:
 logging:
   level:
     root: INFO
-    com.munichre: DEBUG
+    "[com.munichre]": DEBUG
