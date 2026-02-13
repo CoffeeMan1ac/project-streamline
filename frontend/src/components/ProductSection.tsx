@@ -51,7 +51,7 @@ const ProductSection = () => {
 
   return (
     <Box component="section" sx={{ py: { xs: 6, md: 8 }, minHeight: '60vh', display: 'flex', flexDirection: 'column' }}>
-      <Container maxWidth="lg">
+      <Container maxWidth={false}>
         {/* stuff above the 3 cards */}
         <Box textAlign="center" mb={5}>
           <Typography variant="h5" fontWeight="bold" gutterBottom>
@@ -73,7 +73,7 @@ const ProductSection = () => {
           {loading
             ?
               Array.from(new Array(3)).map((_, index) => (
-                <Grid key={index} size={{ xs: 12, md: 4 }}>
+                <Grid key={index} size={{ xs: 12, md: 3 }}>
                   <Skeleton
                     variant="rectangular"
                     height={500}
@@ -85,7 +85,7 @@ const ProductSection = () => {
             : products.map((product) => (
                 <Grid
                   key={product.name}
-                  size={{ xs: 12, md: 4 }}
+                  size={{ xs: 12, sm: 10, md: 6, lg: 4, xl: 2.5 }}
                   sx={{ display: "flex" }}
                 >
                   <ProductCard product={product} />
