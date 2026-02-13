@@ -23,6 +23,7 @@
       - classpath:db/data/product_types.sql
       - classpath:db/data/coverage_categories.sql
       - classpath:db/data/coverages.sql
+      - classpath:db/data/products.sql
 
 server:
   port: 8080
