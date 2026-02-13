@@ -16,9 +16,11 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
      */
     @Query("""
     SELECT p FROM Product p
+    join fetch p.type
     WHERE p.active = true
       AND p.startDate <= :now
       AND (p.endDate IS NULL OR p.endDate >= :now)
+    ORDER BY p.baseRate ASC
     """)
     public List<Product> findActiveProducts(@Param("now") LocalDateTime now);
 }

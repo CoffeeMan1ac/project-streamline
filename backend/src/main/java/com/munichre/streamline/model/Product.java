@@ -21,25 +21,31 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    
+
     @Column(nullable = false)
     private BigDecimal baseRate;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "product_type_id", nullable = false)
+    private ProductType type;
 
     @Column
     private String description;
-    
+
     @Column(nullable = false)
-    private Boolean mostPopular;
+    private Boolean mostPopular = false;
 
-    @ElementCollection
-    private List<String> coverage;
+    @ManyToMany
+    @JoinTable(name = "product_coverages", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "coverage_id"))
+    private List<Coverage> coverages;
 
-    @ElementCollection
-    private List<String> exclusions;
-    
+    @ManyToMany
+    @JoinTable(name = "product_exclusions", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "coverage_id"))
+    private List<Coverage> exclusions;
+
     /**
      * When the product was launched, or when it should be launched.
      */
@@ -51,13 +57,13 @@ public class Product {
      */
     @Column()
     private LocalDateTime endDate;
-    
+
     /**
      * Whether or not the product is active, even if it's within
      * <code>startDate</code> and <code>endDate</code>.
      */
     @Column(nullable = false)
-    private Boolean active;
+    private Boolean active = true;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
