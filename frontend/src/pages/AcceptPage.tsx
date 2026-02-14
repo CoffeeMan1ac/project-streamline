@@ -24,7 +24,7 @@ const AcceptPage = () => {
 
   return (
     <>
-      <div style={{ backgroundColor: "#f7fbfc", minHeight: "100vh", padding: "20px" }}>
+      <div style={{ backgroundColor: "#f7fbfc", padding: "20px" }}>
         <Container maxWidth="sm" style={{ marginTop: "30px", maxWidth: "700px" }}>
           <Box
             sx={{
