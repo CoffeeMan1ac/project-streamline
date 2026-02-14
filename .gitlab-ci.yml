@@ -153,8 +153,8 @@ backend:test:
     - postgres:15
   variables:
     SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/streamline
-    SPRING_DATASOURCE_USERNAME: streamline
-    SPRING_DATASOURCE_PASSWORD: password
+    SPRING_DATASOURCE_USERNAME: postgres
+    SPRING_DATASOURCE_PASSWORD: postgres
     POSTGRES_DB: streamline
     POSTGRES_PASSWORD: password
   cache:
