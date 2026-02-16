@@ -21,10 +21,12 @@ const Navbar = () => {
 
         {/* Right: Navigation */}
         <Box>
-          <Button color="inherit" sx={{ mr: 2 }} onClick={() => navigate("/")} >
+          <Button color="inherit" sx={{ mr: 2 }} onClick={() => navigate("/")}>
             Home
           </Button>
-          <Button color="inherit" onClick={() => navigate("/quote")}>Get a Quote</Button>
+          <Button color="inherit" onClick={() => navigate("/quote")}>
+            Get a Quote
+          </Button>
         </Box>
       </Toolbar>
     </AppBar>
