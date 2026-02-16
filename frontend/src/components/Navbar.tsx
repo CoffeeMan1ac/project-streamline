@@ -1,6 +1,8 @@
 import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+  const navigate = useNavigate();
   return (
     <AppBar position="static" color="primary" elevation={0} sx={{ bgcolor: "#0167b2" }}>
       <Toolbar sx={{ justifyContent: "space-between" }}>
@@ -19,7 +21,7 @@ const Navbar = () => {
 
         {/* Right: Navigation */}
         <Box>
-          <Button color="inherit" sx={{ mr: 2 }}>
+          <Button color="inherit" sx={{ mr: 2 }} >
             Home
           </Button>
           <Button color="inherit">Get a Quote</Button>
