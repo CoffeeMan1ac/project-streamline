@@ -7,28 +7,44 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import AcceptPage from "./pages/AcceptPage";
 import DeclinePage from "./pages/DeclinePage";
-import { Box } from "@mui/material";
+import { ThemeProvider, CssBaseline, Box } from "@mui/material";
+import { lightTheme, darkTheme } from "./theme/theme";
+import React from "react";
 
 function App() {
+  // state to manage theme:
+  const [mode, setMode] = React.useState<"light" | "dark">("light");
+
+  // determine which theme to use based on state:
+  const toggleTheme = () => {
+    setMode((prev) => (prev === "light" ? "dark" : "light"));
+  };
+
+  const theme = mode === "light" ? lightTheme : darkTheme;
+
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "100vh",
-      }}
-    >
-      <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/quote" element={<QuotesPage />} />
-          <Route path="/accepted" element={<AcceptPage />} />
-          <Route path="/declined" element={<DeclinePage />} />
-        </Routes>
-        <Footer />
-      </BrowserRouter>
-    </Box>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          minHeight: "100vh",
+          bgcolor: "background.default",
+        }}
+      >
+        <BrowserRouter>
+          <Navbar mode={mode} toggleTheme={toggleTheme} />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/quote" element={<QuotesPage />} />
+            <Route path="/accepted" element={<AcceptPage />} />
+            <Route path="/declined" element={<DeclinePage />} />
+          </Routes>
+          <Footer />
+        </BrowserRouter>
+      </Box>
+    </ThemeProvider>
   );
 }
 

@@ -1,6 +1,6 @@
 import { createTheme } from "@mui/material/styles";
 
-const theme = createTheme({
+export const lightTheme = createTheme({
   palette: {
     primary: {
       main: "#0156a7", // blue
@@ -9,10 +9,28 @@ const theme = createTheme({
     secondary: {
       main: "#9c27b0", // purple
     },
-  },
-  typography: {
-    fontFamily: "Roboto, Arial, sans-serif",
+    background: {
+      default: "#f9fafc", // light background
+      paper: "#ffffff", // slightly lighter for cards and surfaces
+    },
   },
 });
 
-export default theme;
+export const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+    primary: {
+      main: "#0156a7", // blue
+      light: "#0167b2", // light blue for backgrounds and accents
+    },
+    secondary: {
+      main: "#9c27b0", // purple
+    },
+
+    background: {
+      default: "#111727", // dark background
+      paper: "#1d2937", // slightly lighter for cards and surfaces
+    },
+  },
+});
+

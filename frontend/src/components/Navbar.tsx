@@ -1,18 +1,21 @@
 import { AppBar, Toolbar, Typography, Button, Box, IconButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Brightness4, Brightness7 } from "@mui/icons-material";
-import { useState } from "react";
 
-const Navbar = () => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+type NavbarProps = {
+  mode: "light" | "dark";
+  toggleTheme: () => void;
+};
 
-  const handleThemeToggle = () => {
-    setIsDarkMode(!isDarkMode);
-  };
-
+const Navbar = ({ mode, toggleTheme }: NavbarProps) => {
   const navigate = useNavigate();
   return (
-    <AppBar position="static" color="primary" elevation={0} sx={{ bgcolor: "#0167b2" }}>
+    <AppBar
+      position="static"
+      color="inherit"
+      elevation={0}
+      sx={{ bgcolor: "primary.light", color: "primary.contrastText" }}
+    >
       <Toolbar sx={{ justifyContent: "space-between" }}>
         {/* Logo and Title */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
@@ -35,8 +38,8 @@ const Navbar = () => {
           <Button color="inherit" sx={{ mr: 2 }} onClick={() => navigate("/quote")}>
             Get a Quote
           </Button>
-          <IconButton color="inherit" onClick={handleThemeToggle} sx={{ p: 1 }}>
-            {isDarkMode ? <Brightness7 /> : <Brightness4 />}
+          <IconButton color="inherit" onClick={toggleTheme} sx={{ p: 1 }}>
+            {mode === "dark" ? <Brightness7 /> : <Brightness4 />}
           </IconButton>
         </Box>
       </Toolbar>
