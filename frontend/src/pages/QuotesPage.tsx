@@ -28,6 +28,8 @@ const QuotesPage = () => {
   const [country, setCountry] = useState("");
   const [phoneMake, setPhoneMake] = useState("");
   const [phoneModel, setPhoneModel] = useState("");
+  const [phoneCondition, setPhoneCondition] = useState("");
+  const [phoneAge, setPhoneAge] = useState("");  
   const [isLoading, setIsLoading] = useState(false);
 
   const [searchParams] = useSearchParams();
@@ -49,6 +51,8 @@ const QuotesPage = () => {
     country: "",
     phoneMake: "",
     phoneModel: "",
+    phoneCondition: "",
+    phoneAge: "",
   });
 
   // useEffect(() => {
@@ -80,6 +84,8 @@ const QuotesPage = () => {
       country: "",
       phoneMake: "",
       phoneModel: "",
+      phoneCondition: "",
+      phoneAge: "",
     };
 
     if (!firstName) newErrors.firstName = "Required";
@@ -99,6 +105,8 @@ const QuotesPage = () => {
     if (!country) newErrors.country = "Required";
     if (!phoneMake) newErrors.phoneMake = "Required";
     if (!phoneModel) newErrors.phoneModel = "Required";
+    if (!phoneCondition) newErrors.phoneCondition = "Required";
+    if (!phoneAge) newErrors.phoneAge = "Required";
 
     setErrors(newErrors);
 
@@ -134,6 +142,7 @@ const QuotesPage = () => {
 
   // const selectedProductId = selectedProductName ? productIdsByName[selectedProductName] : undefined;
 
+
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -155,6 +164,8 @@ const QuotesPage = () => {
         country,
         phoneMake: makeLabel,
         phoneModel: modelLabel,
+        phoneCondition,
+        phoneAge,
         productId: productId,
       };
 
@@ -425,6 +436,63 @@ const QuotesPage = () => {
                 )}
               </FormControl>
             </div>
+
+            <div style={{ display: "flex", gap: "16px", marginBottom: "16px" }}>
+              <FormControl fullWidth error={!!errors.phoneCondition} disabled={isLoading}>
+                <InputLabel id="phone-condition-label">Phone Condition</InputLabel>
+                <Select
+                  labelId="phone-condition-label"
+                  id="phone-condition"
+                  value={phoneCondition}
+                  label="Phone Condition"
+                  onChange={(e) => {
+                    setPhoneCondition(e.target.value);
+                    setErrors((prev) => ({ ...prev, phoneCondition: "" }));
+                  }}
+                  style={{ textAlign: "left" }}
+                >
+                  <MenuItem value="">Select condition</MenuItem>
+                  <MenuItem value="brand new">Brand New</MenuItem>
+                  <MenuItem value="lightly used">Lightly Used</MenuItem>
+                  <MenuItem value="good">Good</MenuItem>
+                  <MenuItem value="heavily used">Heavily Used</MenuItem>
+                  <MenuItem value="damaged">Damaged</MenuItem>
+                </Select>
+                {errors.phoneMake && (
+                  <div style={{ color: "#d32f2f", fontSize: "12px", marginTop: "4px" }}>
+                    {errors.phoneCondition}
+                  </div>
+                )}
+              </FormControl>
+
+              <FormControl fullWidth error={!!errors.phoneAge} disabled={isLoading}>
+                <InputLabel id="phone-age-label">Phone Age</InputLabel>
+                <Select
+                  labelId="phone-age-label"
+                  id="phone-age"
+                  value={phoneAge}
+                  label="Phone Age"
+                  onChange={(e) => {
+                    setPhoneAge(e.target.value);
+                    setErrors((prev) => ({ ...prev, phoneAge: "" }));
+                  }}
+                  style={{ textAlign: "left" }}
+                >
+                  <MenuItem value="">Select age</MenuItem>
+                  <MenuItem value="less than 1 year">Less than 1 year</MenuItem>
+                  <MenuItem value="1 year">1 year</MenuItem>
+                  <MenuItem value="2 years">2 years</MenuItem>
+                  <MenuItem value="3 years">3 years</MenuItem>
+                  <MenuItem value="4+ years">4+ years</MenuItem>
+                </Select>
+                {errors.phoneAge && (
+                  <div style={{ color: "#d32f2f", fontSize: "12px", marginTop: "4px" }}>
+                    {errors.phoneAge}
+                  </div>
+                )}
+              </FormControl>
+            </div>
+
             <Button
               type="submit"
               variant="contained"
