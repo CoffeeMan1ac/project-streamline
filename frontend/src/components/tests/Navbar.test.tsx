@@ -6,9 +6,14 @@ import Navbar from "../Navbar";
 
 describe("Navbar", () => {
   test("renders logo and title", () => {
-    render(<Navbar mode={"light"} toggleTheme={function (): void {
-      throw new Error("Function not implemented.");
-    } } />);
+    render(
+      <Navbar
+        mode={"light"}
+        toggleTheme={function (): void {
+          throw new Error("Function not implemented.");
+        }}
+      />
+    );
     expect(screen.getByAltText(/Phone Shield logo/i)).toBeInTheDocument();
     expect(screen.getByText(/Phone Shield/i)).toBeInTheDocument();
   });
