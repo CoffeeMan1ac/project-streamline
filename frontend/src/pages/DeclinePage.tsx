@@ -29,99 +29,118 @@ const DeclinePage = () => {
 
   return (
     <>
-      <div style={{ backgroundColor: "#f7fbfc", padding: "20px" }}>
-        <Container maxWidth="sm" style={{ marginTop: "40px", maxWidth: "700px" }}>
+      <Box sx={{ bgcolor: "background.default", p: 3 }}>
+        <Container maxWidth="sm" sx={{ mt: 5, maxWidth: 700 }}>
           <Box
             sx={{
               boxShadow: 3,
               p: 4,
-              bgcolor: "white",
+              bgcolor: "background.paper",
               borderRadius: 2,
               textAlign: "center",
             }}
           >
-            <img
+            <Box
+              component="img"
               src={decline}
               alt="Decline"
-              style={{ width: 100, height: 100, marginBottom: 16 }}
+              sx={{ width: 100, height: 100, mb: 2 }}
             />
 
-            <Typography variant="h4" gutterBottom style={{ color: "black", fontWeight: "bold" }}>
+            <Typography
+              variant="h4"
+              gutterBottom
+              sx={{ color: "text.primary", fontWeight: "bold" }}
+            >
               Application Declined
             </Typography>
-            <Typography variant="body1" style={{ color: "#4a4a4a", marginBottom: 24 }}>
+            <Typography variant="body1" sx={{ color: "text.secondary", mb: 3 }}>
               Unfortunately, we are unable to provide coverage at this time.
             </Typography>
 
             <Paper
               elevation={0}
-              sx={{ bgcolor: "#f8fbfc", p: 3, borderRadius: 2, mb: 3, textAlign: "left" }}
+              sx={{
+                bgcolor: "background.default",
+                p: 3,
+                borderRadius: 2,
+                mb: 3,
+                textAlign: "left",
+              }}
             >
-              <Typography
-                variant="h6"
-                style={{ color: "black", fontWeight: "bold", marginBottom: 16 }}
-              >
+              <Typography variant="h6" sx={{ color: "text.primary", fontWeight: "bold", mb: 2 }}>
                 Common reasons for decline:
               </Typography>
-              <Box component="ul" sx={{ color: "#4a4a4a", listStyleType: "none", p: 0, m: 0 }}>
-                <li style={{ marginBottom: 8 }}>
+              <Box
+                component="ul"
+                sx={{ color: "text.secondary", listStyleType: "none", p: 0, m: 0 }}
+              >
+                <Box component="li" sx={{ mb: 1 }}>
                   • Device is older than our coverage eligibility criteria
-                </li>
-                <li style={{ marginBottom: 8 }}>• Pre-existing damage detected on the device</li>
-                <li style={{ marginBottom: 8 }}>
+                </Box>
+                <Box component="li" sx={{ mb: 1 }}>
+                  • Pre-existing damage detected on the device
+                </Box>
+                <Box component="li" sx={{ mb: 1 }}>
                   • Device model not currently covered under our policies
-                </li>
-                <li style={{ marginBottom: 8 }}>• Information provided could not be verified</li>
+                </Box>
+                <Box component="li" sx={{ mb: 1 }}>
+                  • Information provided could not be verified
+                </Box>
               </Box>
             </Paper>
 
             <Paper
               elevation={0}
-              sx={{ bgcolor: "#f0f6ff", p: 3, borderRadius: 2, mb: 3, border: "1px solid #eaedf8" }}
+              sx={{
+                bgcolor: "background.default",
+                p: 3,
+                borderRadius: 2,
+                mb: 3,
+                border: "1px solid",
+                borderColor: "divider",
+              }}
             >
-              <Typography
-                variant="h6"
-                style={{ color: "black", fontWeight: "bold", marginBottom: 8 }}
-              >
+              <Typography variant="h6" sx={{ color: "text.primary", fontWeight: "bold", mb: 1 }}>
                 Need help or have questions?
               </Typography>
-              <Typography variant="body1" style={{ color: "#4a4a4a", marginBottom: 16 }}>
+              <Typography variant="body1" sx={{ color: "text.secondary", mb: 2 }}>
                 Our team is here to help you understand your options
               </Typography>
 
               <Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
                 <Button
                   variant="contained"
+                  color="primary"
                   disableElevation
                   disabled={callIsLoading}
                   onClick={handleCall}
-                  startIcon={<PhoneOutlinedIcon sx={{ color: "white" }} />}
-                  style={{
-                    padding: "12px 24px",
-                    backgroundColor: "#0167b2",
-                    color: "white",
+                  startIcon={<PhoneOutlinedIcon sx={{ color: "inherit" }} />}
+                  sx={{
+                    px: 3,
+                    py: 1,
                     textTransform: "none",
                     fontWeight: "bold",
-                    width: "125px",
-                    height: "40px",
+                    width: 125,
+                    height: 40,
                   }}
                 >
                   {callIsLoading ? "Calling..." : "Call Us"}
                 </Button>
                 <Button
                   variant="contained"
+                  color="primary"
                   disableElevation
                   disabled={emailIsLoading}
                   onClick={handleEmail}
-                  startIcon={<EmailOutlinedIcon sx={{ color: "white" }} />}
-                  style={{
-                    padding: "12px 24px",
-                    backgroundColor: "#0167b2",
-                    color: "white",
+                  startIcon={<EmailOutlinedIcon sx={{ color: "inherit" }} />}
+                  sx={{
+                    px: 3,
+                    py: 1,
                     textTransform: "none",
                     fontWeight: "bold",
-                    width: "175px",
-                    height: "40px",
+                    width: 175,
+                    height: 40,
                   }}
                 >
                   {emailIsLoading ? "Sending..." : "Email Support"}
@@ -133,20 +152,21 @@ const DeclinePage = () => {
               variant="contained"
               disableElevation
               onClick={handleBack}
-              style={{
-                padding: "12px 24px",
-                backgroundColor: "#e6e7eb",
-                color: "#3b444b",
+              sx={{
+                px: 3,
+                py: 1,
                 textTransform: "none",
                 fontWeight: "bold",
-                width: "150px",
+                width: 150,
+                bgcolor: "background.default",
+                color: "text.primary",
               }}
             >
               {"Back to Home"}
             </Button>
           </Box>
         </Container>
-      </div>
+      </Box>
     </>
   );
 };
