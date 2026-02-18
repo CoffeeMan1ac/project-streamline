@@ -20,6 +20,7 @@ public class RuleService {
     Rule newRule = new Rule();
 
     UUID productUUID = UUID.fromString(fields.get("product").toString());
+    if (productUUID == null) throw new Error("Product ID cannot be null");
     Product product = productService.getProduct(productUUID);
     newRule.setProduct(product);
 
@@ -33,7 +34,7 @@ public class RuleService {
     Integer priority = (Integer) fields.get("priority");
     for (Rule rule : currentRules) {
       Integer existingPriority = rule.getPriority();
-      if (existingPriority == priority) throw new Error();
+      if (existingPriority == priority) throw new Error("New rule has duplicate priority");
       if (existingPriority > priority) break;
     }
     newRule.setPriority(priority);
