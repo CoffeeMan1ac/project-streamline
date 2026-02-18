@@ -29,7 +29,7 @@ const QuotesPage = () => {
   const [phoneMake, setPhoneMake] = useState("");
   const [phoneModel, setPhoneModel] = useState("");
   const [phoneCondition, setPhoneCondition] = useState("");
-  const [phoneAge, setPhoneAge] = useState("");  
+  const [phoneAge, setPhoneAge] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const [searchParams] = useSearchParams();
@@ -159,7 +159,7 @@ const QuotesPage = () => {
   const handleMakeChange = (e: any) => {
     setPhoneMake(e.target.value);
     setPhoneModel("");
-    setErrors((prev) => ({ ...prev, phoneMake: "", phoneModel: ""}));
+    setErrors((prev) => ({ ...prev, phoneMake: "", phoneModel: "" }));
   };
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
@@ -286,7 +286,7 @@ const QuotesPage = () => {
                 disabled={isLoading}
               />
             </div>
-            
+
             <div style={{ display: "flex", gap: "16px", marginBottom: "16px" }}>
               <TextField
                 fullWidth
@@ -303,14 +303,14 @@ const QuotesPage = () => {
                 helperText={errors.dob}
                 disabled={isLoading}
               />
-                <TextField
+              <TextField
                 fullWidth
                 label="Occupation"
                 placeholder="Occupation"
                 value={occupation}
                 onChange={(e) => {
-                    setOccupation(e.target.value);
-                    setErrors((prev) => ({ ...prev, occupation: "" }));
+                  setOccupation(e.target.value);
+                  setErrors((prev) => ({ ...prev, occupation: "" }));
                 }}
                 error={!!errors.occupation}
                 helperText={errors.occupation}
@@ -442,9 +442,7 @@ const QuotesPage = () => {
                   }}
                   sx={{ textAlign: "left" }}
                 >
-                  <MenuItem value="">
-                    {phoneMake ? "Select model" : "Select a make first"}
-                  </MenuItem>
+                  <MenuItem value="">{phoneMake ? "Select model" : "Select a make first"}</MenuItem>
                   {/* loop through models for the selected make and create dropdown option for each */}
                   {availableModels.map((model) => (
                     <MenuItem key={model.value} value={model.value}>
