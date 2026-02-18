@@ -123,16 +123,30 @@ const QuotesPage = () => {
           ? "Google"
           : phoneMake;
 
-  const modelLabel =
-    phoneModel === "iphone15"
-      ? "iPhone 15"
-      : phoneModel === "galaxy24"
-        ? "Galaxy S24"
-        : phoneModel === "pixel8"
-          ? "Pixel 8"
-          : phoneModel == "galaxyNote7"
-            ? "Galaxy Note 7"
-            : phoneModel;
+  const modelsByMake: Record<string, { value: string; label: string }[]> = {
+    apple: [
+      { value: "iphone13", label: "iPhone 13" },
+      { value: "iphone14", label: "iPhone 14" },
+      { value: "iphone15", label: "iPhone 15" },
+      { value: "iphone16", label: "iPhone 16" },
+    ],
+    samsung: [
+      { value: "galaxy22", label: "Galaxy S22" },
+      { value: "galaxy23", label: "Galaxy S23" },
+      { value: "galaxy24", label: "Galaxy S24" },
+      { value: "galaxyNote7", label: "Galaxy Note 7" },
+    ],
+    google: [
+      { value: "pixel6", label: "Pixel 6" },
+      { value: "pixel7", label: "Pixel 7" },
+      { value: "pixel8", label: "Pixel 8" },
+      { value: "pixel9", label: "Pixel 9" },
+    ],
+  };
+
+  // looks up the display label for the selected model
+  const modelsForMake = modelsByMake[phoneMake] ?? [];
+  const modelLabel = modelsForMake.find((model) => model.value === phoneModel)?.label ?? phoneModel;
 
   // const selectedProductName =
   //   coverage === "basic" ? "StandardShield" :
@@ -142,6 +156,11 @@ const QuotesPage = () => {
 
   // const selectedProductId = selectedProductName ? productIdsByName[selectedProductName] : undefined;
 
+  const handleMakeChange = (e: any) => {
+    setPhoneMake(e.target.value);
+    setPhoneModel("");
+    setErrors((prev) => ({ ...prev, phoneMake: "", phoneModel: ""}));
+  };
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -190,6 +209,8 @@ const QuotesPage = () => {
       setIsLoading(false);
     }
   };
+
+  const availableModels = modelsByMake[phoneMake] ?? [];
 
   return (
     <>
@@ -391,10 +412,7 @@ const QuotesPage = () => {
                   inputProps={{ "data-testid": "phone-make-select" }}
                   value={phoneMake}
                   label="Phone Make"
-                  onChange={(e) => {
-                    setPhoneMake(e.target.value);
-                    setErrors((prev) => ({ ...prev, phoneMake: "" }));
-                  }}
+                  onChange={handleMakeChange}
                   sx={{ textAlign: "left" }}
                 >
                   <MenuItem value="">Select make</MenuItem>
@@ -409,7 +427,8 @@ const QuotesPage = () => {
                 )}
               </FormControl>
 
-              <FormControl fullWidth error={!!errors.phoneModel} disabled={isLoading}>
+              {/* model dropdown is disabled until a make is selected */}
+              <FormControl fullWidth error={!!errors.phoneModel} disabled={isLoading || !phoneMake}>
                 <InputLabel id="phone-model-label">Phone Model</InputLabel>
                 <Select
                   labelId="phone-model-label"
@@ -423,11 +442,15 @@ const QuotesPage = () => {
                   }}
                   sx={{ textAlign: "left" }}
                 >
-                  <MenuItem value="">Select model</MenuItem>
-                  <MenuItem value="iphone15">iPhone 15</MenuItem>
-                  <MenuItem value="galaxy24">Galaxy S24</MenuItem>
-                  <MenuItem value="galaxyNote7">Galaxy Note 7</MenuItem>
-                  <MenuItem value="pixel8">Pixel 8</MenuItem>
+                  <MenuItem value="">
+                    {phoneMake ? "Select model" : "Select a make first"}
+                  </MenuItem>
+                  {/* loop through models for the selected make and create dropdown option for each */}
+                  {availableModels.map((model) => (
+                    <MenuItem key={model.value} value={model.value}>
+                      {model.label}
+                    </MenuItem>
+                  ))}
                 </Select>
                 {errors.phoneModel && (
                   <div style={{ color: "#d32f2f", fontSize: "12px", marginTop: "4px" }}>
@@ -458,7 +481,7 @@ const QuotesPage = () => {
                   <MenuItem value="heavily used">Heavily Used</MenuItem>
                   <MenuItem value="damaged">Damaged</MenuItem>
                 </Select>
-                {errors.phoneMake && (
+                {errors.phoneCondition && (
                   <div style={{ color: "#d32f2f", fontSize: "12px", marginTop: "4px" }}>
                     {errors.phoneCondition}
                   </div>
