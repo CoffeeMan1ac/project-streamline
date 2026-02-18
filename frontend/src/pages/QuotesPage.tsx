@@ -20,6 +20,7 @@ const QuotesPage = () => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [dob, setDob] = useState("");
+  const [occupation, setOccupation] = useState("");
   const [address1, setAddress1] = useState("");
   const [address2, setAddress2] = useState("");
   const [city, setCity] = useState("");
@@ -41,6 +42,7 @@ const QuotesPage = () => {
     email: "",
     phone: "",
     dob: "",
+    occupation: "",
     address1: "",
     city: "",
     postalCode: "",
@@ -71,6 +73,7 @@ const QuotesPage = () => {
       email: "",
       phone: "",
       dob: "",
+      occupation: "",
       address1: "",
       city: "",
       postalCode: "",
@@ -89,6 +92,7 @@ const QuotesPage = () => {
     }
     if (!phone) newErrors.phone = "Required";
     if (!dob) newErrors.dob = "Required";
+    if (!occupation) newErrors.occupation = "Required";
     if (!address1) newErrors.address1 = "Required";
     if (!city) newErrors.city = "Required";
     if (!postalCode) newErrors.postalCode = "Required";
@@ -143,6 +147,7 @@ const QuotesPage = () => {
         emailAddress: email,
         phoneNumber: phone,
         dateOfBirth: dob,
+        occupation,
         address1,
         address2,
         city,
@@ -249,22 +254,37 @@ const QuotesPage = () => {
                 disabled={isLoading}
               />
             </div>
-
-            <TextField
-              fullWidth
-              label="Date of Birth"
-              placeholder="dd/mm/yyyy"
-              value={dob}
-              slotProps={{ htmlInput: { "data-testid": "dob-input" } }}
-              onChange={(e) => {
-                setDob(e.target.value);
-                setErrors((prev) => ({ ...prev, dob: "" }));
-              }}
-              sx={{ marginBottom: "16px" }}
-              error={!!errors.dob}
-              helperText={errors.dob}
-              disabled={isLoading}
-            />
+            
+            <div style={{ display: "flex", gap: "16px", marginBottom: "16px" }}>
+              <TextField
+                fullWidth
+                label="Date of Birth"
+                placeholder="dd/mm/yyyy"
+                value={dob}
+                slotProps={{ htmlInput: { "data-testid": "dob-input" } }}
+                onChange={(e) => {
+                  setDob(e.target.value);
+                  setErrors((prev) => ({ ...prev, dob: "" }));
+                }}
+                sx={{ marginBottom: "16px" }}
+                error={!!errors.dob}
+                helperText={errors.dob}
+                disabled={isLoading}
+              />
+                <TextField
+                fullWidth
+                label="Occupation"
+                placeholder="Occupation"
+                value={occupation}
+                onChange={(e) => {
+                    setOccupation(e.target.value);
+                    setErrors((prev) => ({ ...prev, occupation: "" }));
+                }}
+                error={!!errors.occupation}
+                helperText={errors.occupation}
+                disabled={isLoading}
+              />
+            </div>
 
             <TextField
               fullWidth
