@@ -24,71 +24,56 @@ const AcceptPage = () => {
 
   return (
     <>
-      <div style={{ backgroundColor: "#f7fbfc", padding: "20px" }}>
-        <Container maxWidth="sm" style={{ marginTop: "30px", maxWidth: "700px" }}>
+      <Box sx={{ bgcolor: 'background.default', p: 3 }}>
+        <Container maxWidth="sm" sx={{ mt: 4, maxWidth: 700 }}>
           <Box
             sx={{
               boxShadow: 3,
               p: 4,
-              bgcolor: "white",
+              bgcolor: 'background.paper',
               borderRadius: 2,
-              textAlign: "center",
+              textAlign: 'center',
             }}
           >
-            <img src={checkmark} alt="Checkmark" style={{ width: 140, height: 120 }} />
+            <Box component="img" src={checkmark} alt="Checkmark" sx={{ width: 140, height: 120, mx: 'auto' }} />
 
-            <Typography variant="h4" gutterBottom style={{ color: "black", fontWeight: "bold" }}>
+            <Typography variant="h4" gutterBottom sx={{ color: 'text.primary', fontWeight: 'bold' }}>
               Accepted!
             </Typography>
-            <Typography variant="body1" style={{ color: "#4a4a4a" }}>
+            <Typography variant="body1" sx={{ color: 'text.secondary' }}>
               Your quote has been approved with a
             </Typography>
-            <Typography variant="body1" style={{ color: "#4a4a4a", marginBottom: 27 }}>
-              premium of{" "}
-              <span style={{ fontSize: "1.5rem", color: "#0167b2", fontWeight: "bold" }}>
+            <Typography variant="body1" sx={{ color: 'text.secondary', mb: 3 }}>
+              premium of{' '}
+              <Box component="span" sx={{ fontSize: '1.5rem', color: 'primary.main', fontWeight: 'bold' }}>
                 €{premium.toFixed(2)}
-              </span>{" "}
+              </Box>{' '}
               per month.
             </Typography>
 
-            <Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
+            <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
               <Button
                 variant="contained"
                 disableElevation
                 disabled={purchaseIsLoading}
                 onClick={handleProceed}
-                style={{
-                  padding: "12px 24px",
-                  backgroundColor: "#0167b2",
-                  color: "white",
-                  textTransform: "none",
-                  fontWeight: "bold",
-                  width: "200px",
-                  height: "45px",
-                }}
+                color="primary"
+                sx={{ px: 3, py: 1.5, textTransform: 'none', fontWeight: 'bold', width: 200, height: 45 }}
               >
-                {purchaseIsLoading ? "Proceeding..." : "Proceed to Purchase"}
+                {purchaseIsLoading ? 'Proceeding...' : 'Proceed to Purchase'}
               </Button>
               <Button
                 variant="contained"
                 disableElevation
                 onClick={handleBack}
-                style={{
-                  padding: "12px 24px",
-                  backgroundColor: "#e6e7eb",
-                  color: "#3b444b",
-                  textTransform: "none",
-                  fontWeight: "bold",
-                  width: "160px",
-                  height: "45px",
-                }}
+                sx={{ px: 3, py: 1.5, textTransform: 'none', fontWeight: 'bold', width: 160, height: 45, bgcolor: 'background.default', color: 'text.primary' }}
               >
-                {"Back to Home"}
+                {'Back to Home'}
               </Button>
             </Box>
           </Box>
         </Container>
-      </div>
+      </Box>
     </>
   );
 };
