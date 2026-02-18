@@ -20,8 +20,8 @@ export const darkTheme = createTheme({
   palette: {
     mode: "dark",
     primary: {
-      main: "#0156a7", // blue
-      light: "#0167b2", // light blue for backgrounds and accents
+      main: "#004581",
+      light: "#004d89",
     },
     secondary: {
       main: "#9c27b0", // purple
