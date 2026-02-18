@@ -3,7 +3,6 @@ package com.munichre.streamline.controller;
 import com.munichre.streamline.service.RuleService;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

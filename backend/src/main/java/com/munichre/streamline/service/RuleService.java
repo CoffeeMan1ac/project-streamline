@@ -1,58 +1,50 @@
 package com.munichre.streamline.service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-
-import org.springframework.stereotype.Service;
-
 import com.munichre.streamline.model.Product;
 import com.munichre.streamline.model.Rule;
 import com.munichre.streamline.repository.RuleRepository;
-import com.munichre.streamline.service.ProductService;
-
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class RuleService {
-    private final RuleRepository ruleRepository;
-    private final ProductService productService;
+  private final RuleRepository ruleRepository;
+  private final ProductService productService;
 
-    public void createRule(Map<String, Object> fields) {
-        
-        Rule newRule = new Rule();
+  public void createRule(Map<String, Object> fields) {
 
-        UUID productUUID = UUID.fromString(fields.get("product").toString());
-        Product product = productService.getProduct(productUUID);
-        newRule.setProduct(product);
+    Rule newRule = new Rule();
 
-        List<Rule> currentRules = ruleRepository
-            .findByProductIdAndActiveTrueOrderByPriorityAsc(productUUID);
+    UUID productUUID = UUID.fromString(fields.get("product").toString());
+    Product product = productService.getProduct(productUUID);
+    newRule.setProduct(product);
 
-        newRule.setName((String) fields.get("name"));
-        newRule.setDescription((String) fields.get("description"));
+    List<Rule> currentRules =
+        ruleRepository.findByProductIdAndActiveTrueOrderByPriorityAsc(productUUID);
 
-        // Check for duplicate priorities in existing rules.
-        Integer priority = (Integer) fields.get("priority");
-        for (Rule rule : currentRules) {
-            Integer existingPriority = rule.getPriority();
-            if (existingPriority == priority)
-                throw new Error();
-            if (existingPriority > priority)
-                break;
-        }
-        newRule.setPriority(priority);
+    newRule.setName((String) fields.get("name"));
+    newRule.setDescription((String) fields.get("description"));
 
-        newRule.setActive((Boolean) fields.get("active"));
-        newRule.setConditionField((String) fields.get("conditionField"));
-        newRule.setConditionOperator((String) fields.get("conditionOperator"));
-        newRule.setConditionValue((String) fields.get("conditionValue"));
-        newRule.setActionType((String) fields.get("actionType"));
-        newRule.setActionReason((String) fields.get("actionReason"));
-
-        ruleRepository.saveAndFlush(newRule);
-        
+    // Check for duplicate priorities in existing rules.
+    Integer priority = (Integer) fields.get("priority");
+    for (Rule rule : currentRules) {
+      Integer existingPriority = rule.getPriority();
+      if (existingPriority == priority) throw new Error();
+      if (existingPriority > priority) break;
     }
+    newRule.setPriority(priority);
+
+    newRule.setActive((Boolean) fields.get("active"));
+    newRule.setConditionField((String) fields.get("conditionField"));
+    newRule.setConditionOperator((String) fields.get("conditionOperator"));
+    newRule.setConditionValue((String) fields.get("conditionValue"));
+    newRule.setActionType((String) fields.get("actionType"));
+    newRule.setActionReason((String) fields.get("actionReason"));
+
+    ruleRepository.saveAndFlush(newRule);
+  }
 }
