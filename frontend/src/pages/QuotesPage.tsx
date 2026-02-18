@@ -177,17 +177,17 @@ const QuotesPage = () => {
 
   return (
     <>
-      <div style={{ padding: 50 }}>
-        <Container maxWidth="md" style={{ padding: 24, backgroundColor: "white", borderRadius: 8 }}>
-          <Typography variant="h4" gutterBottom style={{ color: "black" }}>
+      <Box sx={{ p: 6 }}>
+        <Container maxWidth="md" sx={{ p: 3, borderRadius: 2, bgcolor: "background.paper" }}>
+          <Typography variant="h4" gutterBottom sx={{ color: "text.primary" }}>
             Get Your Quote
           </Typography>
-          <Typography variant="body1" gutterBottom style={{ color: "black", marginBottom: 24 }}>
+          <Typography variant="body1" gutterBottom sx={{ color: "text.secondary", mb: 3 }}>
             Fill in your details below to receive an instant quote
           </Typography>
 
           <Box component="form" onSubmit={handleSubmit}>
-            <Typography variant="h6" gutterBottom style={{ color: "black" }}>
+            <Typography variant="h6" gutterBottom sx={{ color: "text.primary" }}>
               Personal Details
             </Typography>
 
@@ -255,7 +255,7 @@ const QuotesPage = () => {
                 setDob(e.target.value);
                 setErrors((prev) => ({ ...prev, dob: "" }));
               }}
-              style={{ marginBottom: "16px" }}
+              sx={{ marginBottom: "16px" }}
               error={!!errors.dob}
               helperText={errors.dob}
               disabled={isLoading}
@@ -270,7 +270,7 @@ const QuotesPage = () => {
                 setAddress1(e.target.value);
                 setErrors((prev) => ({ ...prev, address1: "" }));
               }}
-              style={{ marginBottom: "16px" }}
+              sx={{ marginBottom: "16px" }}
               error={!!errors.address1}
               helperText={errors.address1}
               disabled={isLoading}
@@ -282,7 +282,7 @@ const QuotesPage = () => {
               placeholder="Apartment, suite, etc."
               value={address2}
               onChange={(e) => setAddress2(e.target.value)}
-              style={{ marginBottom: "16px" }}
+              sx={{ marginBottom: "16px" }}
               disabled={isLoading}
             />
 
@@ -322,7 +322,7 @@ const QuotesPage = () => {
                     setCountry(e.target.value);
                     setErrors((prev) => ({ ...prev, country: "" }));
                   }}
-                  style={{ textAlign: "left" }}
+                  sx={{ textAlign: "left" }}
                 >
                   <MenuItem value="">Select country</MenuItem>
                   <MenuItem value="ireland">Ireland</MenuItem>
@@ -337,7 +337,7 @@ const QuotesPage = () => {
               </FormControl>
             </div>
 
-            <Typography variant="h6" gutterBottom style={{ color: "black", marginTop: "32px" }}>
+            <Typography variant="h6" gutterBottom sx={{ color: "text.primary", mt: 4 }}>
               Phone Details
             </Typography>
 
@@ -353,7 +353,7 @@ const QuotesPage = () => {
                     setPhoneMake(e.target.value);
                     setErrors((prev) => ({ ...prev, phoneMake: "" }));
                   }}
-                  style={{ textAlign: "left" }}
+                  sx={{ textAlign: "left" }}
                 >
                   <MenuItem value="">Select make</MenuItem>
                   <MenuItem value="apple">Apple</MenuItem>
@@ -378,7 +378,7 @@ const QuotesPage = () => {
                     setPhoneModel(e.target.value);
                     setErrors((prev) => ({ ...prev, phoneModel: "" }));
                   }}
-                  style={{ textAlign: "left" }}
+                  sx={{ textAlign: "left" }}
                 >
                   <MenuItem value="">Select model</MenuItem>
                   <MenuItem value="iphone15">iPhone 15</MenuItem>
@@ -393,23 +393,19 @@ const QuotesPage = () => {
                 )}
               </FormControl>
             </div>
-
             <Button
               type="submit"
               variant="contained"
+              color="primary"
               fullWidth
               disabled={isLoading}
-              style={{
-                marginTop: "10px",
-                padding: "12px",
-                backgroundColor: "#0167b2",
-              }}
+              sx={{ marginTop: 1, py: 1.5 }}
             >
               {isLoading ? "Submitting..." : "Get Quote"}
             </Button>
           </Box>
         </Container>
-      </div>
+      </Box>
     </>
   );
 };
