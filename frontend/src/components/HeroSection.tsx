@@ -4,7 +4,7 @@ const HeroSection = () => {
   return (
     <Box
       sx={{
-        bgcolor: "#0057a7",
+        bgcolor: "primary.main",
         color: "common.white",
         py: { xs: 6, md: 10 },
         textAlign: "center",
