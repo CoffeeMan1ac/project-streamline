@@ -4,12 +4,20 @@ import com.munichre.streamline.dto.EvaluationResult;
 import com.munichre.streamline.model.Quotation;
 import com.munichre.streamline.repository.QuotationRepository;
 import java.util.Map;
+import java.security.SecureRandom;
+import java.util.UUID;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
 public class QuotationService {
+
+  private static final SecureRandom RNG = new SecureRandom();
+  private static final char[] LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
 
   private final DecisionService decisionService;
   private final QuotationRepository quotationRepository;
@@ -19,6 +27,7 @@ public class QuotationService {
 
     Quotation quotation =
         Quotation.builder()
+            .reference(generateUniqueReference())
             .status(evaluation.getStatus())
             .reason(evaluation.getReason())
             .rulesApplied(evaluation.getRulesApplied())
@@ -27,6 +36,7 @@ public class QuotationService {
             .build();
 
     quotationRepository.save(quotation);
+    evaluation.setReference(quotation.getReference());
 
     return evaluation;
   }
