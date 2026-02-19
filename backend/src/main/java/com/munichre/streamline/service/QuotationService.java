@@ -48,5 +48,13 @@ public class QuotationService {
     char c = LETTERS[RNG.nextInt(26)];
     return String.format("%03d%c%c%c", numbers, a, b, c);
   }
+
+  private String generateUniqueReference() {
+    String ref;
+    do {
+      ref = generateReference();
+    } while (quotationRepository.existsByReference(ref));
+    return ref;
+  }
 }
 
