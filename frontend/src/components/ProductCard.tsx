@@ -127,9 +127,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
           size="large"
           sx={{
             mt: "auto",
+            textDecoration: "none",
             bgcolor: product.ecoFriendly ? "success.light" : "primary.main",
             "&:hover": {
               bgcolor: product.ecoFriendly ? "success.main" : "primary.dark",
+              color: "white",
             },
           }}
           component={RouterLink}
