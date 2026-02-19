@@ -40,4 +40,13 @@ public class QuotationService {
 
     return evaluation;
   }
+
+  private String generateReference() {
+    int numbers = RNG.nextInt(1000); // 000-999
+    char a = LETTERS[RNG.nextInt(26)];
+    char b = LETTERS[RNG.nextInt(26)];
+    char c = LETTERS[RNG.nextInt(26)];
+    return String.format("%03d%c%c%c", numbers, a, b, c);
+  }
 }
+
