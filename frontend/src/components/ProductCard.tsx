@@ -58,11 +58,12 @@ const ProductCard = ({ product }: ProductCardProps) => {
     >
       <CardContent sx={{ p: 4, display: "flex", flexDirection: "column", flex: 1 }}>
         {hasTopChip && (
-          <Box sx={{ display: "flex", justifyContent: "center", gap: 1, mb: 2 }}>
+          <Box sx={{ display: "flex", justifyContent: "left", gap: 1, mb: 2, flexWrap: "wrap" }}>
             {product.mostPopular && <Chip label="Most Popular" color="primary" size="small" />}
             {product.ecoFriendly && <Chip label="Eco-Friendly" color="success" size="small" />}
           </Box>
         )}
+
         <Typography fontWeight="bold" variant="h6" gutterBottom sx={{ mt: 0 }}>
           {product.name}
         </Typography>
