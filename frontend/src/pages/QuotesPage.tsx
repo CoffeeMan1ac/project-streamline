@@ -196,6 +196,7 @@ const QuotesPage = () => {
                 fullWidth
                 label="First Name"
                 value={firstName}
+                slotProps={{ htmlInput: { "data-testid": "first-name-input" } }}
                 onChange={(e) => {
                   // required and red box go away after user enters something
                   setFirstName(e.target.value);
@@ -209,6 +210,7 @@ const QuotesPage = () => {
                 fullWidth
                 label="Last Name"
                 value={lastName}
+                slotProps={{ htmlInput: { "data-testid": "last-name-input" } }}
                 onChange={(e) => {
                   setLastName(e.target.value);
                   setErrors((prev) => ({ ...prev, lastName: "" }));
@@ -224,6 +226,7 @@ const QuotesPage = () => {
                 fullWidth
                 label="Email Address"
                 value={email}
+                slotProps={{ htmlInput: { "data-testid": "email-input" } }}
                 onChange={(e) => {
                   setEmail(e.target.value);
                   setErrors((prev) => ({ ...prev, email: "" }));
@@ -236,6 +239,7 @@ const QuotesPage = () => {
                 fullWidth
                 label="Phone Number"
                 value={phone}
+                slotProps={{ htmlInput: { "data-testid": "phone-number-input" } }}
                 onChange={(e) => {
                   setPhone(e.target.value);
                   setErrors((prev) => ({ ...prev, phone: "" }));
@@ -251,6 +255,7 @@ const QuotesPage = () => {
               label="Date of Birth"
               placeholder="dd/mm/yyyy"
               value={dob}
+              slotProps={{ htmlInput: { "data-testid": "dob-input" } }}
               onChange={(e) => {
                 setDob(e.target.value);
                 setErrors((prev) => ({ ...prev, dob: "" }));
@@ -266,6 +271,7 @@ const QuotesPage = () => {
               label="Address Line 1"
               placeholder="Street number and name"
               value={address1}
+              slotProps={{ htmlInput: { "data-testid": "address-1-input" } }}
               onChange={(e) => {
                 setAddress1(e.target.value);
                 setErrors((prev) => ({ ...prev, address1: "" }));
@@ -281,6 +287,7 @@ const QuotesPage = () => {
               label="Address Line 2 (Optional)"
               placeholder="Apartment, suite, etc."
               value={address2}
+              slotProps={{ htmlInput: { "data-testid": "address-2-input" } }}
               onChange={(e) => setAddress2(e.target.value)}
               sx={{ marginBottom: "16px" }}
               disabled={isLoading}
@@ -291,6 +298,7 @@ const QuotesPage = () => {
                 fullWidth
                 label="City"
                 value={city}
+                slotProps={{ htmlInput: { "data-testid": "city-input" } }}
                 onChange={(e) => {
                   setCity(e.target.value);
                   setErrors((prev) => ({ ...prev, city: "" }));
@@ -303,6 +311,7 @@ const QuotesPage = () => {
                 fullWidth
                 label="Postal Code"
                 value={postalCode}
+                slotProps={{ htmlInput: { "data-testid": "post-code-input" } }}
                 onChange={(e) => {
                   setPostalCode(e.target.value);
                   setErrors((prev) => ({ ...prev, postalCode: "" }));
@@ -316,6 +325,7 @@ const QuotesPage = () => {
                 <Select
                   labelId="country-label"
                   id="country"
+                  inputProps={{ "data-testid": "country-select" }}
                   value={country}
                   label="Country"
                   onChange={(e) => {
@@ -347,6 +357,7 @@ const QuotesPage = () => {
                 <Select
                   labelId="phone-make-label"
                   id="phone-make"
+                  inputProps={{ "data-testid": "phone-make-select" }}
                   value={phoneMake}
                   label="Phone Make"
                   onChange={(e) => {
@@ -372,6 +383,7 @@ const QuotesPage = () => {
                 <Select
                   labelId="phone-model-label"
                   id="phone-model"
+                  inputProps={{ "data-testid": "phone-model-select" }}
                   value={phoneModel}
                   label="Phone Model"
                   onChange={(e) => {
