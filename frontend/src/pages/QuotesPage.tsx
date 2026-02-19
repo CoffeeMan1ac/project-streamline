@@ -303,19 +303,31 @@ const QuotesPage = () => {
                 helperText={errors.dob}
                 disabled={isLoading}
               />
-              <TextField
-                fullWidth
-                label="Occupation"
-                placeholder="Occupation"
-                value={occupation}
-                onChange={(e) => {
-                  setOccupation(e.target.value);
-                  setErrors((prev) => ({ ...prev, occupation: "" }));
-                }}
-                error={!!errors.occupation}
-                helperText={errors.occupation}
-                disabled={isLoading}
-              />
+              <FormControl fullWidth error={!!errors.occupation} disabled={isLoading}>
+                <InputLabel id="phone-occupation-label">Occupation</InputLabel>
+                <Select
+                  labelId="phone-occupation-label"
+                  id="occupation"
+                  value={occupation}
+                  label="Occupation"
+                  onChange={(e) => {
+                    setOccupation(e.target.value);
+                    setErrors((prev) => ({ ...prev, occupation: "" }));
+                  }}
+                  style={{ textAlign: "left" }}
+                >
+                  <MenuItem value="">Select occupation</MenuItem>
+                  <MenuItem value="apple">Teacher</MenuItem>
+                  <MenuItem value="samsung">Doctor</MenuItem>
+                  <MenuItem value="google">Pilot</MenuItem>
+                  <MenuItem value="google">Engineer</MenuItem>
+                </Select>
+                {errors.occupation && (
+                  <div style={{ color: "#d32f2f", fontSize: "12px", marginTop: "4px" }}>
+                    {errors.occupation}
+                  </div>
+                )}
+              </FormControl>
             </div>
 
             <TextField
