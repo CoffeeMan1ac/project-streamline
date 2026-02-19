@@ -19,6 +19,7 @@ type Condition = {
 
 const CreateRulePage = () => {
   const [ruleName, setRuleName] = useState("");
+  const [ruleDescription, setRuleDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   // start with two empty conditions by default
@@ -70,6 +71,7 @@ const CreateRulePage = () => {
     try {
       const payload = {
         ruleName,
+        ruleDescription,
         conditions,
       };
     } catch (err: any) {
@@ -91,7 +93,7 @@ const CreateRulePage = () => {
           </Box>
           <hr style={{ borderColor: "#d0d0d0f1", borderTop: "1px solid", margin: "0 -24px 16px -24px" }} />
           <Box component="form" onSubmit={handleSubmit}>
-            <Typography variant="h6" gutterBottom sx={{ color: "text.primary" }}>
+            <Typography variant="body1" fontWeight="bold" gutterBottom sx={{ color: "text.primary" }}>
               Rule Name *
             </Typography>
             <TextField
@@ -110,8 +112,22 @@ const CreateRulePage = () => {
               sx={{ mb: 3 }}
             />
 
+            <Typography variant="body1" fontWeight="bold" gutterBottom sx={{ color: "text.primary" }}>
+              Rule Description *
+            </Typography>
+            <TextField
+              fullWidth
+              placeholder="e.g., Checks if the applicant meets the age requirement"
+              value={ruleDescription}
+              onChange={(e) => {
+                setRuleDescription(e.target.value);
+              }}
+              disabled={isLoading}
+              sx={{ mb: 3 }}
+            />
+
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
-              <Typography variant="h6" sx={{ color: "text.primary" }}>
+              <Typography variant="body1" fontWeight="bold" sx={{ color: "text.primary" }}>
                 Conditions *
               </Typography>
               <Typography
