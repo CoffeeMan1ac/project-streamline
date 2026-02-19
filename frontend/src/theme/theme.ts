@@ -17,6 +17,14 @@ export const lightTheme = createTheme({
       main: "#00a73d",
     },
   },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: "none",
+        },
+      },
+    },
   },
 });
 
@@ -39,5 +47,13 @@ export const darkTheme = createTheme({
       main: "#4CAF50",
     },
   },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: "none",
+        },
+      },
+    },
   },
 });
