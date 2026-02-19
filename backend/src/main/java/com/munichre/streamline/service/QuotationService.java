@@ -3,13 +3,11 @@ package com.munichre.streamline.service;
 import com.munichre.streamline.dto.EvaluationResult;
 import com.munichre.streamline.model.Quotation;
 import com.munichre.streamline.repository.QuotationRepository;
-import java.util.Map;
 import java.security.SecureRandom;
-import java.util.UUID;
-
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -41,6 +39,23 @@ public class QuotationService {
     return evaluation;
   }
 
+  public EvaluationResult getQuoteByReference(String reference) {
+    Quotation quotation =
+        quotationRepository
+            .findByReference(reference)
+            .orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Quote not found"));
+
+    return EvaluationResult.builder()
+        .reference(quotation.getReference())
+        .status(quotation.getStatus())
+        .reason(quotation.getReason())
+        .rulesApplied(quotation.getRulesApplied())
+        .premium(quotation.getPremium())
+        .processingTimeMs(quotation.getProcessingTimeMs())
+        .build();
+  }
+
   private String generateReference() {
     int numbers = RNG.nextInt(1000); // 000-999
     char a = LETTERS[RNG.nextInt(26)];
@@ -57,4 +72,3 @@ public class QuotationService {
     return ref;
   }
 }
-
