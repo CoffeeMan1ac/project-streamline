@@ -63,7 +63,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
             {product.ecoFriendly && <Chip label="Eco-Friendly" color="success" size="small" />}
           </Box>
         )}
-        <Typography variant="h6" gutterBottom sx={{ mt: 0 }}>
+        <Typography fontWeight="bold" variant="h6" gutterBottom sx={{ mt: 0 }}>
           {product.name}
         </Typography>
 
