@@ -38,6 +38,7 @@ public class QuotationController {
     EvaluationResult result = quotationService.createQuote(payload);
     return ResponseEntity.ok(result);
   }
+
   @GetMapping("/{reference}")
   public ResponseEntity<EvaluationResult> getQuoteByReference(@PathVariable String reference) {
     EvaluationResult quote = quotationService.getQuoteByReference(reference);
