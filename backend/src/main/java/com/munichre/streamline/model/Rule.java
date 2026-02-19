@@ -7,7 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "rules")
@@ -35,20 +37,9 @@ public class Rule {
   @Column(nullable = false)
   private Boolean active = true;
 
-  @Column(columnDefinition = "TEXT", nullable = false)
-  private String conditionField;
-
-  @Column(nullable = false)
-  private String conditionOperator;
-
-  @Column(columnDefinition = "TEXT", nullable = false)
-  private String conditionValue;
-
-  @Column(nullable = false)
-  private String actionType;
-
-  @Column(nullable = false)
-  private String actionReason;
+  @JdbcTypeCode(SqlTypes.JSON)
+  @Column(name = "rule_config", columnDefinition = "jsonb", nullable = false)
+  private RuleConfig ruleConfig;
 
   @CreationTimestamp private LocalDateTime createdAt;
 
