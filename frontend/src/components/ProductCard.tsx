@@ -73,7 +73,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
             variant="h4"
             component="span"
             fontWeight="bold"
-            color={product.ecoFriendly ? "success.light" : "primary.main"}
+            color={product.ecoFriendly ? "success.main" : "primary.main"}
           >
             {product.price}
           </Typography>
@@ -87,7 +87,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
             <ListItem key={`coverage-${index}`} sx={{ py: 0.5 }}>
               <ListItemIcon sx={{ minWidth: 32 }}>
                 {product.ecoFriendly ? (
-                  <CompostIcon fontSize="small" sx={{ color: "success.light" }} />
+                  <CompostIcon fontSize="small" sx={{ color: "success.main" }} />
                 ) : (
                   <CheckCircleOutlineIcon fontSize="small" sx={{ color: "success.main" }} />
                 )}
@@ -129,7 +129,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           sx={{
             mt: "auto",
             textDecoration: "none",
-            bgcolor: product.ecoFriendly ? "success.light" : "primary.main",
+            bgcolor: product.ecoFriendly ? "success.main" : "primary.main",
             "&:hover": {
               bgcolor: product.ecoFriendly ? "success.main" : "primary.dark",
               color: "white",
