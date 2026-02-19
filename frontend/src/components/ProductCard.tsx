@@ -138,7 +138,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           component={RouterLink}
           to={`/quote?productId=${product.id}`}
         >
-          Get a Quote
+          Get a {product.ecoFriendly ? "Green" : ""} Quote
         </Button>
       </CardContent>
     </Card>
