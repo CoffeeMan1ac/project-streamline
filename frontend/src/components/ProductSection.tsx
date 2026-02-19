@@ -37,7 +37,7 @@ const ProductSection = () => {
           name: product.name,
           price: `€${product.baseRate.toFixed(2)}`,
           mostPopular: product.mostPopular,
-          ecoFriendly: true, // TESTING ECO-FRIENDLY - CHANGE LATER
+          ecoFriendly: false,
           coverages: product.coverages.map((coverage: CoverageDetail) => coverage.label),
           exclusions: product.exclusions.map((exclusion: CoverageDetail) => exclusion.label),
         }));
