@@ -12,7 +12,9 @@ import {
   RadioGroup,
   FormControlLabel,
   InputLabel,
+  Button,
 } from "@mui/material";
+import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 
 // each condition row has a field, operator, and value
 type Condition = {
@@ -27,6 +29,7 @@ const CreateRulePage = () => {
   const [conditionLogic, setConditionLogic] = useState("all");
   const [outcome, setOutcome] = useState("");
   const [declineReason, setDeclineReason] = useState("");
+  const [premiumOutcome, setPremiumOutcome] = useState("override");
   const [isLoading, setIsLoading] = useState(false);
 
   // start with two empty conditions by default
@@ -37,6 +40,9 @@ const CreateRulePage = () => {
 
   const [errors, setErrors] = useState({
     ruleName: "",
+    ruleDescription: "",
+    outcome: "",
+    declineReason: "",
   });
 
   // adds a new condition row
@@ -59,9 +65,15 @@ const CreateRulePage = () => {
   const validateForm = () => {
     const newErrors = {
       ruleName: "",
+      ruleDescription: "",
+      outcome: "",
+      declineReason: "",
     };
 
     if (!ruleName) newErrors.ruleName = "Required";
+    if (!ruleDescription) newErrors.ruleDescription = "Required";
+    if (!outcome) newErrors.outcome = "Required";
+    if (outcome === "decline" && !declineReason) newErrors.declineReason = "Required";
 
     setErrors(newErrors);
 
@@ -83,6 +95,7 @@ const CreateRulePage = () => {
         conditionLogic,
         outcome,
         declineReason,
+        premiumOutcome,
       };
       console.log(payload);
     } catch (err: any) {
@@ -108,7 +121,7 @@ const CreateRulePage = () => {
           </Box>
           <hr
             style={{
-              borderColor: "#d0d0d0f1",
+              borderColor: "#d0d0d0f9",
               borderTop: "1px solid",
               margin: "0 -24px 16px -24px",
             }}
@@ -152,7 +165,10 @@ const CreateRulePage = () => {
               value={ruleDescription}
               onChange={(e) => {
                 setRuleDescription(e.target.value);
+                setErrors((prev) => ({ ...prev, ruleDescription: "" }));
               }}
+              error={!!errors.ruleDescription}
+              helperText={errors.ruleDescription}
               disabled={isLoading}
               sx={{ mb: 3 }}
             />
@@ -259,7 +275,7 @@ const CreateRulePage = () => {
               gutterBottom
               sx={{ color: "text.primary", mt: 2 }}
             >
-              Condition Logic *
+              Condition Logic
             </Typography>
             <RadioGroup
               row
@@ -287,19 +303,28 @@ const CreateRulePage = () => {
             >
               Outcome *
             </Typography>
-            <FormControl fullWidth disabled={isLoading} sx={{ mb: 3 }}>
+            <FormControl fullWidth disabled={isLoading} sx={{ mb: errors.outcome ? 0 : 3 }}>
               <InputLabel>Accept or Decline</InputLabel>
               <Select
                 value={outcome}
                 label="Accept or Decline"
-                onChange={(e) => setOutcome(e.target.value)}
+                onChange={(e) => {
+                  setOutcome(e.target.value);
+                  setErrors((prev) => ({ ...prev, outcome: "", declineReason: "" }));
+                }}
                 sx={{ textAlign: "left" }}
+                error={!!errors.outcome}
               >
                 <MenuItem value="">Select outcome</MenuItem>
                 <MenuItem value="accept">Accept</MenuItem>
                 <MenuItem value="decline">Decline</MenuItem>
               </Select>
             </FormControl>
+            {errors.outcome && (
+              <div style={{ color: "#d32f2f", fontSize: "12px", marginTop: "4px", marginBottom: "24px" }}>
+                {errors.outcome}
+              </div>
+            )}
 
             {/* only show decline reason if decline is selected */}
             {outcome === "decline" && (
@@ -316,12 +341,56 @@ const CreateRulePage = () => {
                   fullWidth
                   placeholder="e.g., Unfortunately we are unable to insure this device"
                   value={declineReason}
-                  onChange={(e) => setDeclineReason(e.target.value)}
+                  onChange={(e) => {
+                    setDeclineReason(e.target.value);
+                    setErrors((prev) => ({ ...prev, declineReason: "" }));
+                  }}
+                  error={!!errors.declineReason}
+                  helperText={errors.declineReason}
                   disabled={isLoading}
                   sx={{ mb: 3 }}
                 />
               </>
             )}
+
+            <Typography
+              variant="body1"
+              fontWeight="bold"
+              gutterBottom
+              sx={{ color: "text.primary" }}
+            >
+              Premium Outcome
+            </Typography>
+            <RadioGroup
+              value={premiumOutcome}
+              onChange={(e) => setPremiumOutcome(e.target.value)}
+              sx={{ mb: 3 }}
+            >
+              <FormControlLabel value="override" control={<Radio />} label="Premium Override" />
+              <FormControlLabel value="delta" control={<Radio />} label="Premium Delta" />
+            </RadioGroup>
+
+            <hr
+              style={{
+                borderColor: "#d0d0d0f9",
+                borderTop: "1px solid",
+                margin: "0 -24px 16px -24px",
+              }}
+            />
+            <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2 }}>
+              <Button variant="text" disabled={isLoading}>
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={isLoading}
+                startIcon={<SaveOutlinedIcon />}
+                sx={{ backgroundColor: "#0167b2" }}
+              >
+                {isLoading ? "Creating..." : "Create Rule"}
+              </Button>
+            </Box>
           </Box>
         </Container>
       </Box>
