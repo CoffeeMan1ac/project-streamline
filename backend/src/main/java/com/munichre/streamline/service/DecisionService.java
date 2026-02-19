@@ -5,6 +5,10 @@ import com.munichre.streamline.dto.EvaluationResult;
 import com.munichre.streamline.exception.FieldNotFoundException;
 import com.munichre.streamline.model.Product;
 import com.munichre.streamline.model.Rule;
+import com.munichre.streamline.model.RuleConfig;
+import com.munichre.streamline.model.RuleConfig.Condition;
+import com.munichre.streamline.model.RuleConfig.ThenClause;
+import com.munichre.streamline.model.RuleConfig.WhenClause;
 import com.munichre.streamline.repository.ProductRepository;
 import com.munichre.streamline.repository.RuleRepository;
 import java.math.BigDecimal;
@@ -50,198 +54,203 @@ public class DecisionService {
    * @return EvaluationResult with status (ACCEPTED/DECLINED/REFER), premium, reason, rules applied
    */
   public EvaluationResult evaluate(Map<String, Object> fields) {
-    EvaluationResult result = new EvaluationResult();
     long startTime = System.currentTimeMillis();
-    log.info("Starting rule evaluation with " + fields.size() + " fields");
+    log.info("Starting rule evaluation with {} fields", fields.size());
 
     String productIdString = (String) fields.get("productId");
     UUID productId = UUID.fromString(productIdString);
 
     final Product product = productRepository.getReferenceById(productId);
-    final BigDecimal BASE_PREMIUM = product.getBaseRate();
+    BigDecimal premium = product.getBaseRate();
 
     // 1. Fetch rules from database
     List<Rule> rules = ruleRepository.findByProductIdAndActiveTrueOrderByPriorityAsc(productId);
 
-    // Auto-accept if no rules in database
     if (rules.isEmpty()) {
       log.warn("No active rules found in database");
-      result.setStatus(DecisionStatus.ACCEPTED);
-      result.setPremium(BASE_PREMIUM);
-      result.setReason("Auto-accept. No rules configured.");
-      result.setRulesApplied(new ArrayList<>());
-      result.setProcessingTimeMs(System.currentTimeMillis() - startTime);
-      return result;
+      return buildResult(
+          DecisionStatus.ACCEPTED,
+          premium,
+          "Auto-accept. No rules configured.",
+          new ArrayList<>(),
+          startTime);
     }
 
-    log.info("Fetched " + rules.size() + " active rules");
+    log.info("Fetched {} active rules", rules.size());
 
-    // State tracking
-    BigDecimal premiumMultiplier = new BigDecimal("1");
-    BigDecimal studentDiscount = new BigDecimal("0.1");
-    BigDecimal damage = new BigDecimal("0.1");
     boolean declined = false;
-    // TODO: Implement referral
-    // boolean referred = false;
-
-    // smoke and mirrors
-    if ((fields.get("occupation")).equals("student")) {
-      premiumMultiplier = premiumMultiplier.subtract(studentDiscount);
-    }
-
-    if (fields.get("phoneCondition").equals("lightly used")
-        || fields.get("phoneAge").equals("1 year")) {
-      premiumMultiplier = premiumMultiplier.add(damage);
-    }
-
-    if (fields.get("phoneCondition").equals("good") || fields.get("phoneAge").equals("2 years")) {
-      premiumMultiplier = premiumMultiplier.add(damage).add(damage);
-    }
-
-    if (fields.get("phoneCondition").equals("heavily used")
-        || fields.get("phoneAge").equals("3 year")) {
-      premiumMultiplier = premiumMultiplier.add(damage).add(damage).add(damage);
-    }
-
     List<String> rulesApplied = new ArrayList<>();
     List<String> reasons = new ArrayList<>();
 
     // 2. Apply each rule in priority order
     for (Rule rule : rules) {
-      String fieldName = rule.getConditionField();
+      RuleConfig config = rule.getRuleConfig();
+      WhenClause when = config.getWhen();
+      ThenClause then = config.getThen();
 
-      // The RULE expects this field. Throw if not in passed hashmap
-      if (!fields.containsKey(fieldName)) {
-        throw new FieldNotFoundException(fieldName);
-      }
-
-      Object fieldValue = fields.get(fieldName);
-      log.debug(
-          "Rule '{}': field='{}', op='{}', threshold='{}', actual='{}'",
-          rule.getName(),
-          fieldName,
-          rule.getConditionOperator(),
-          rule.getConditionValue(),
-          fieldValue);
-
-      // Evaluate the condition
-      boolean triggered =
-          evaluateCondition(fieldValue, rule.getConditionOperator(), rule.getConditionValue());
+      // Evaluate conditions with AND/OR logic
+      boolean triggered = evaluateWhen(when, fields);
 
       if (!triggered) {
         continue;
       }
 
-      // Rule triggered
-      log.info("Rule '{}' triggered > action={}", rule.getName(), rule.getActionType());
+      log.info("Rule '{}' triggered -> decision={}", rule.getName(), then.getDecision());
       rulesApplied.add(rule.getName());
 
-      String actionType = rule.getActionType().toUpperCase();
+      String decision = then.getDecision().toUpperCase();
 
-      switch (actionType) {
-        case "DECLINED", "DECLINE" -> {
+      switch (decision) {
+        case "DECLINE" -> {
           declined = true;
           reasons.add(
-              rule.getActionReason() != null
-                  ? rule.getActionReason()
+              rule.getDescription() != null
+                  ? rule.getDescription()
                   : "Declined by rule: " + rule.getName());
 
-          // Hard stop: return immediately on decline
-          // (If later we want soft-decline with stop=false, add a 'stop' column to Rule)
-          result.setStatus(DecisionStatus.DECLINED);
-          result.setPremium(BigDecimal.ZERO);
-          result.setReason(String.join("; ", reasons));
-          result.setRulesApplied(rulesApplied);
-          result.setProcessingTimeMs(System.currentTimeMillis() - startTime);
-          return result;
+          // Check stop flag
+          if (Boolean.TRUE.equals(config.getStop())) {
+            log.info("Rule '{}' has stop=true. Stopping.", rule.getName());
+            return buildResult(
+                DecisionStatus.DECLINED,
+                BigDecimal.ZERO,
+                String.join("; ", reasons),
+                rulesApplied,
+                startTime);
+          }
         }
 
-        case "ACCEPTED", "ACCEPT" -> {
-          // Accumulate premium modifier if the rule specifies one
-          // TODO: for now using a simple approach — premium modifier could be
-          // e.g. accept BUT charge 50% more.
-          // stored in conditionValue or a new column. Discuss with team.
+        case "ACCEPT" -> {
+          // Apply premium adjustments
+          if (then.getPremiumOverride() != null) {
+            premium = then.getPremiumOverride();
+            log.info("Rule '{}' overrides premium to {}", rule.getName(), premium);
+          }
+          if (then.getPremiumDelta() != null) {
+            premium = premium.add(then.getPremiumDelta());
+            log.info(
+                "Rule '{}' adjusts premium by {}, now {}",
+                rule.getName(),
+                then.getPremiumDelta(),
+                premium);
+          }
+
+          if (Boolean.TRUE.equals(config.getStop())) {
+            log.info("Rule '{}' has stop=true. Stopping.", rule.getName());
+            return buildResult(
+                DecisionStatus.ACCEPTED,
+                premium,
+                "Accepted (stopped by rule: " + rule.getName() + ")",
+                rulesApplied,
+                startTime);
+          }
         }
 
-          // default -> log.warn("Unknown actionType '{}' on rule '{}'", actionType,
-          // rule.getName());
-          // This is against typo
+        case "REFER" -> {
+          reasons.add(
+              rule.getDescription() != null
+                  ? rule.getDescription()
+                  : "Referred by rule: " + rule.getName());
+
+          if (Boolean.TRUE.equals(config.getStop())) {
+            return buildResult(
+                DecisionStatus.REFER, premium, String.join("; ", reasons), rulesApplied, startTime);
+          }
+        }
       }
     }
 
-    // 3. All rules processed — build final result
-    // long elapsed = System.currentTimeMillis() - startTime;
-
+    // 3. After all rules
     if (declined) {
-      // normally it does't reach here in current logic,
-      // but added in case we do STOP flag later (Keith mentioned)
-      result.setStatus(DecisionStatus.DECLINED);
-      result.setPremium(BigDecimal.ZERO);
-      result.setReason(String.join("; ", reasons));
-      result.setRulesApplied(rulesApplied);
-      result.setProcessingTimeMs(System.currentTimeMillis() - startTime);
-      return result;
+      return buildResult(
+          DecisionStatus.DECLINED,
+          BigDecimal.ZERO,
+          String.join("; ", reasons),
+          rulesApplied,
+          startTime);
     }
 
-    // All rules passed ( yas 🎉)
-    result.setStatus(DecisionStatus.ACCEPTED);
-    result.setPremium(BASE_PREMIUM.multiply(premiumMultiplier));
-    result.setReason("All rules passed");
-    result.setRulesApplied(rulesApplied);
-    result.setProcessingTimeMs(System.currentTimeMillis() - startTime);
-    return result;
+    return buildResult(
+        DecisionStatus.ACCEPTED, premium, "All rules passed", rulesApplied, startTime);
   }
 
   // ──────────────────────────────────────────────────────────
-  // Condition evaluation
+  // When clause: AND/OR over multiple conditions
   // ──────────────────────────────────────────────────────────
 
-  /**
-   * Does the field value satisfy the operator + threshold? Returns true if the rule TRIGGERS
-   * (condition is met).
-   */
-  private boolean evaluateCondition(Object fieldValue, String operator, String threshold) {
-    if (fieldValue == null) {
-      return false;
+  private boolean evaluateWhen(WhenClause when, Map<String, Object> fields) {
+    List<Condition> conditions = when.getConditions();
+    String match = when.getMatch().toLowerCase();
+
+    if ("all".equals(match)) {
+      // AND: every condition must be true
+      for (Condition c : conditions) {
+        if (!evaluateCondition(c, fields)) {
+          return false;
+        }
+      }
+      return true;
     }
 
-    String fieldStr = fieldValue.toString();
-    String op = operator.toUpperCase();
-
-    if (op.equals("EQUALS")) {
-      return fieldStr.equalsIgnoreCase(threshold);
-    }
-    if (op.equals("NOT_EQUALS")) {
-      return !fieldStr.equalsIgnoreCase(threshold);
-    }
-    if (op.equals("GREATER_THAN")) {
-      return toDouble(fieldStr) > toDouble(threshold);
-    }
-    if (op.equals("LESS_THAN")) {
-      return toDouble(fieldStr) < toDouble(threshold);
-    }
-    if (op.equals("GREATER_THAN_OR_EQUAL")) {
-      return toDouble(fieldStr) >= toDouble(threshold);
-    }
-    if (op.equals("LESS_THAN_OR_EQUAL")) {
-      return toDouble(fieldStr) <= toDouble(threshold);
-    }
-    if (op.equals("BETWEEN")) {
-      String[] parts = threshold.split(",");
-      double val = toDouble(fieldStr);
-      return val >= toDouble(parts[0].trim()) && val <= toDouble(parts[1].trim());
-    }
-    if (op.equals("IN")) {
-      String[] allowed = threshold.split(",");
-      for (String a : allowed) {
-        if (fieldStr.equalsIgnoreCase(a.trim())) {
+    if ("one".equals(match)) {
+      // OR: any condition being true is enough
+      for (Condition c : conditions) {
+        if (evaluateCondition(c, fields)) {
           return true;
         }
       }
       return false;
     }
 
+    log.warn("Unknown match type '{}', defaulting to AND", match);
     return false;
+  }
+
+  // ──────────────────────────────────────────────────────────
+  // Single condition evaluation
+  // ──────────────────────────────────────────────────────────
+
+  private boolean evaluateCondition(Condition condition, Map<String, Object> fields) {
+    String fieldName = condition.getField();
+
+    if (!fields.containsKey(fieldName)) {
+      throw new FieldNotFoundException(fieldName);
+    }
+
+    Object fieldValue = fields.get(fieldName);
+    if (fieldValue == null) {
+      return false;
+    }
+
+    String fieldStr = fieldValue.toString();
+    String threshold = condition.getValue();
+    String op = condition.getOperator().toUpperCase();
+
+    return switch (op) {
+      case "EQUALS" -> fieldStr.equalsIgnoreCase(threshold);
+      case "NOT_EQUALS" -> !fieldStr.equalsIgnoreCase(threshold);
+      case "GREATER_THAN" -> toDouble(fieldStr) > toDouble(threshold);
+      case "LESS_THAN" -> toDouble(fieldStr) < toDouble(threshold);
+      case "GREATER_THAN_OR_EQUAL" -> toDouble(fieldStr) >= toDouble(threshold);
+      case "LESS_THAN_OR_EQUAL" -> toDouble(fieldStr) <= toDouble(threshold);
+      case "BETWEEN" -> {
+        String[] parts = threshold.split(",");
+        double val = toDouble(fieldStr);
+        yield val >= toDouble(parts[0].trim()) && val <= toDouble(parts[1].trim());
+      }
+      case "IN" -> {
+        String[] allowed = threshold.split(",");
+        boolean found = false;
+        for (String a : allowed) {
+          if (fieldStr.equalsIgnoreCase(a.trim())) {
+            found = true;
+            break;
+          }
+        }
+        yield found;
+      }
+      default -> false;
+    };
   }
 
   private double toDouble(String value) {
@@ -251,5 +260,24 @@ public class DecisionService {
       throw new IllegalArgumentException(
           "Cannot convert '" + value + "' to number for rule comparison");
     }
+  }
+
+  // ──────────────────────────────────────────────────────────
+  // Result builder
+  // ──────────────────────────────────────────────────────────
+
+  private EvaluationResult buildResult(
+      DecisionStatus status,
+      BigDecimal premium,
+      String reason,
+      List<String> rulesApplied,
+      long startTime) {
+    EvaluationResult result = new EvaluationResult();
+    result.setStatus(status);
+    result.setPremium(premium);
+    result.setReason(reason);
+    result.setRulesApplied(rulesApplied);
+    result.setProcessingTimeMs(System.currentTimeMillis() - startTime);
+    return result;
   }
 }
