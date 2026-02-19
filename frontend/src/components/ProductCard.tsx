@@ -21,16 +21,16 @@ export interface Product {
   name: string;
   price: string;
   mostPopular?: boolean;
+  ecoFriendly?: boolean;
   coverages: string[];
   exclusions: string[];
 }
 
 interface ProductCardProps {
   product: Product;
-  variant?: "default" | "green";
 }
 
-const ProductCard = ({ product, variant = "default" }: ProductCardProps) => {
+const ProductCard = ({ product}: ProductCardProps) => {
   return (
     <Card
       elevation={product.mostPopular ? 6 : 2}
@@ -50,20 +50,44 @@ const ProductCard = ({ product, variant = "default" }: ProductCardProps) => {
       }}
     >
       <CardContent sx={{ p: 4, display: "flex", flexDirection: "column", flex: 1 }}>
-        {product.mostPopular && (
-          <Chip
-            label="Most Popular"
-            color="primary"
-            size="small"
+        <Box
             sx={{
               position: "absolute",
               top: 16,
               left: "50%",
               transform: "translateX(-50%)",
+              display: "flex",
+              gap: 1,
             }}
-          />
-        )}
+          >
+            {product.mostPopular && (
+              <Chip
+                label="Most Popular"
+                color="primary"
+                size="small"
+                sx={{
+                  position: "absolute",
+                  top: 16,
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                }}
+              />
+            )}
 
+            {product.ecoFriendly && (
+              <Chip
+                label="Eco-Friendly"
+                color="success"
+                size="small"
+                sx={{
+                  position: "absolute",
+                  top: 16,
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                }}
+              />
+            )}
+        </Box>
         <Typography variant="h6" gutterBottom sx={{ mt: product.mostPopular ? 4 : 0 }}>
           {product.name}
         </Typography>
@@ -81,7 +105,7 @@ const ProductCard = ({ product, variant = "default" }: ProductCardProps) => {
           {product.coverages.map((coverage, index) => (
             <ListItem key={`coverage-${index}`} sx={{ py: 0.5 }}>
               <ListItemIcon sx={{ minWidth: 32 }}>
-                {variant === "green" ? (
+                {product.ecoFriendly ? (
                   <CompostIcon fontSize="small" sx={{ color: "success.main" }} />
                 ) : (
                   <CheckCircleOutlineIcon fontSize="small" sx={{ color: "success.main" }} />
