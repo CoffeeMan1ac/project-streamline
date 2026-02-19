@@ -11,7 +11,7 @@ import {
   ListItemText,
 } from "@mui/material";
 
-import CompostIcon from '@mui/icons-material/Compost';
+import CompostIcon from "@mui/icons-material/Compost";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import { Link as RouterLink } from "react-router-dom";
@@ -30,7 +30,14 @@ interface ProductCardProps {
   product: Product;
 }
 
-const ProductCard = ({ product}: ProductCardProps) => {
+const ProductCard = ({ product }: ProductCardProps) => {
+  const hasTopChip = product.mostPopular || product.ecoFriendly;
+  const hasHighlightedBorder = product.mostPopular || product.ecoFriendly;
+  const cardBorderColor = product.ecoFriendly
+    ? "success.main"
+    : product.mostPopular
+      ? "primary.main"
+      : "grey.300";
   return (
     <Card
       elevation={product.mostPopular ? 6 : 2}
@@ -41,8 +48,8 @@ const ProductCard = ({ product}: ProductCardProps) => {
         height: "100%",
         borderRadius: 3,
         position: "relative",
-        border: product.mostPopular ? "2px solid" : "1px solid",
-        borderColor: product.mostPopular ? "primary.main" : "grey.300",
+        border: hasHighlightedBorder ? "2px solid" : "1px solid",
+        borderColor: cardBorderColor,
         transition: "transform 0.2s ease-in-out",
         "&:hover": {
           transform: "translateY(-4px)", // Subtle hover effect
@@ -50,45 +57,13 @@ const ProductCard = ({ product}: ProductCardProps) => {
       }}
     >
       <CardContent sx={{ p: 4, display: "flex", flexDirection: "column", flex: 1 }}>
-        <Box
-            sx={{
-              position: "absolute",
-              top: 16,
-              left: "50%",
-              transform: "translateX(-50%)",
-              display: "flex",
-              gap: 1,
-            }}
-          >
-            {product.mostPopular && (
-              <Chip
-                label="Most Popular"
-                color="primary"
-                size="small"
-                sx={{
-                  position: "absolute",
-                  top: 16,
-                  left: "50%",
-                  transform: "translateX(-50%)",
-                }}
-              />
-            )}
-
-            {product.ecoFriendly && (
-              <Chip
-                label="Eco-Friendly"
-                color="success"
-                size="small"
-                sx={{
-                  position: "absolute",
-                  top: 16,
-                  left: "50%",
-                  transform: "translateX(-50%)",
-                }}
-              />
-            )}
-        </Box>
-        <Typography variant="h6" gutterBottom sx={{ mt: product.mostPopular ? 4 : 0 }}>
+        {hasTopChip && (
+          <Box sx={{ display: "flex", justifyContent: "center", gap: 1, mb: 2 }}>
+            {product.mostPopular && <Chip label="Most Popular" color="primary" size="small" />}
+            {product.ecoFriendly && <Chip label="Eco-Friendly" color="success" size="small" />}
+          </Box>
+        )}
+        <Typography variant="h6" gutterBottom sx={{ mt: 0 }}>
           {product.name}
         </Typography>
 
@@ -143,9 +118,15 @@ const ProductCard = ({ product}: ProductCardProps) => {
         <Button
           fullWidth
           variant="contained"
-          color="primary"
+          color="primary" // keep a valid palette color
           size="large"
-          sx={{ mt: "auto" }}
+          sx={{
+            mt: "auto",
+            bgcolor: product.ecoFriendly ? "#00a73d" : "primary.main",
+            "&:hover": {
+              bgcolor: product.ecoFriendly ? "#009638" : "primary.dark",
+            },
+          }}
           component={RouterLink}
           to={`/quote?productId=${product.id}`}
         >

@@ -20,6 +20,12 @@ const popularPlan: Product = {
   mostPopular: true,
 };
 
+const ecoPlan: Product = {
+  ...plan,
+  name: "Green",
+  ecoFriendly: true,
+};
+
 describe("ProductCard", () => {
   test("renders plan name, price and month text", () => {
     render(
@@ -62,5 +68,14 @@ describe("ProductCard", () => {
       </MemoryRouter>
     );
     expect(screen.getByText(/Most Popular/i)).toBeInTheDocument();
+  });
+
+  test("shows 'Eco-Friendly' chip when product.ecoFriendly is true", () => {
+    render(
+      <MemoryRouter>
+        <ProductCard product={ecoPlan} />
+      </MemoryRouter>
+    );
+    expect(screen.getByText(/Eco-Friendly/i)).toBeInTheDocument();
   });
 });
