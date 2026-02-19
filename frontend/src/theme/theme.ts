@@ -13,6 +13,10 @@ export const lightTheme = createTheme({
       default: "#f9fafc", // light background
       paper: "#ffffff", // slightly lighter for cards and surfaces
     },
+    success: {
+      main: "#00a73d",
+    },
+  },
   },
 });
 
@@ -31,5 +35,9 @@ export const darkTheme = createTheme({
       default: "#111727", // dark background
       paper: "#1d2937", // slightly lighter for cards and surfaces
     },
+    success: {
+      main: "#4CAF50",
+    },
+  },
   },
 });
