@@ -317,10 +317,11 @@ const QuotesPage = () => {
                   style={{ textAlign: "left" }}
                 >
                   <MenuItem value="">Select occupation</MenuItem>
-                  <MenuItem value="apple">Teacher</MenuItem>
-                  <MenuItem value="samsung">Doctor</MenuItem>
-                  <MenuItem value="google">Pilot</MenuItem>
-                  <MenuItem value="google">Engineer</MenuItem>
+                  <MenuItem value="teacher">Teacher</MenuItem>
+                  <MenuItem value="doctor">Doctor</MenuItem>
+                  <MenuItem value="pilot">Pilot</MenuItem>
+                  <MenuItem value="engineer">Engineer</MenuItem>
+                  <MenuItem value="other">Other</MenuItem>
                 </Select>
                 {errors.occupation && (
                   <div style={{ color: "#d32f2f", fontSize: "12px", marginTop: "4px" }}>
