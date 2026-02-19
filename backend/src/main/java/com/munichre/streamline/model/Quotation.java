@@ -19,6 +19,9 @@ public class Quotation {
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
 
+  @Column(name = "reference", unique = true, nullable = false, length = 6)
+  private String reference;
+
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   private DecisionStatus status;
