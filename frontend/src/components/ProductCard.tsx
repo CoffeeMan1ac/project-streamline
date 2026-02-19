@@ -11,6 +11,7 @@ import {
   ListItemText,
 } from "@mui/material";
 
+import CompostIcon from '@mui/icons-material/Compost';
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import { Link as RouterLink } from "react-router-dom";
@@ -26,9 +27,10 @@ export interface Product {
 
 interface ProductCardProps {
   product: Product;
+  variant?: "default" | "green";
 }
 
-const ProductCard = ({ product }: ProductCardProps) => {
+const ProductCard = ({ product, variant = "default" }: ProductCardProps) => {
   return (
     <Card
       elevation={product.mostPopular ? 6 : 2}
@@ -79,7 +81,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
           {product.coverages.map((coverage, index) => (
             <ListItem key={`coverage-${index}`} sx={{ py: 0.5 }}>
               <ListItemIcon sx={{ minWidth: 32 }}>
-                <CheckCircleOutlineIcon fontSize="small" sx={{ color: "success.main" }} />
+                {variant === "green" ? (
+                  <CompostIcon fontSize="small" sx={{ color: "success.main" }} />
+                ) : (
+                  <CheckCircleOutlineIcon fontSize="small" sx={{ color: "success.main" }} />
+                )}
               </ListItemIcon>
 
               <ListItemText

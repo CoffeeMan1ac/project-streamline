@@ -60,7 +60,8 @@ const ProductSection = () => {
   return (
     <Box
       component="section"
-      sx={{ py: { xs: 6, md: 8 }, minHeight: "60vh", display: "flex", flexDirection: "column" }}
+      sx={{ py: { xs: 6, md: 8 }, minHeight: "60vh", display: "flex", flexDirection: "column",
+            bgcolor: "background.default" }}
     >
       <Container maxWidth={false}>
         {/* stuff above the 3 cards */}
@@ -93,7 +94,7 @@ const ProductSection = () => {
                   size={{ xs: 12, sm: 10, md: 6, lg: 4, xl: 2.5 }}
                   sx={{ display: "flex" }}
                 >
-                  <ProductCard product={product} />
+                  <ProductCard product={product}/>
                 </Grid>
               ))}
         </Grid>
