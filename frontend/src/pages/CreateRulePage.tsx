@@ -11,6 +11,7 @@ import {
   Radio,
   RadioGroup,
   FormControlLabel,
+  InputLabel,
 } from "@mui/material";
 
 // each condition row has a field, operator, and value
@@ -24,6 +25,8 @@ const CreateRulePage = () => {
   const [ruleName, setRuleName] = useState("");
   const [ruleDescription, setRuleDescription] = useState("");
   const [conditionLogic, setConditionLogic] = useState("all");
+  const [outcome, setOutcome] = useState("");
+  const [declineReason, setDeclineReason] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   // start with two empty conditions by default
@@ -78,7 +81,10 @@ const CreateRulePage = () => {
         ruleDescription,
         conditions,
         conditionLogic,
+        outcome,
+        declineReason,
       };
+      console.log(payload);
     } catch (err: any) {
       console.error(err);
     } finally {
@@ -90,15 +96,30 @@ const CreateRulePage = () => {
     <>
       <Box sx={{ p: 6 }}>
         <Container maxWidth="md" sx={{ p: 3, borderRadius: 2, bgcolor: "background.paper" }}>
-          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
+          <Box
+            sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}
+          >
             <Typography variant="h4" sx={{ color: "text.primary" }}>
               Create New Rule
             </Typography>
-            <Typography sx={{ cursor: "pointer", color: "text.secondary", fontSize: "20px" }}>✕</Typography>
+            <Typography sx={{ cursor: "pointer", color: "text.secondary", fontSize: "20px" }}>
+              ✕
+            </Typography>
           </Box>
-          <hr style={{ borderColor: "#d0d0d0f1", borderTop: "1px solid", margin: "0 -24px 16px -24px" }} />
+          <hr
+            style={{
+              borderColor: "#d0d0d0f1",
+              borderTop: "1px solid",
+              margin: "0 -24px 16px -24px",
+            }}
+          />
           <Box component="form" onSubmit={handleSubmit}>
-            <Typography variant="body1" fontWeight="bold" gutterBottom sx={{ color: "text.primary" }}>
+            <Typography
+              variant="body1"
+              fontWeight="bold"
+              gutterBottom
+              sx={{ color: "text.primary" }}
+            >
               Rule Name *
             </Typography>
             <TextField
@@ -117,7 +138,12 @@ const CreateRulePage = () => {
               sx={{ mb: 3 }}
             />
 
-            <Typography variant="body1" fontWeight="bold" gutterBottom sx={{ color: "text.primary" }}>
+            <Typography
+              variant="body1"
+              fontWeight="bold"
+              gutterBottom
+              sx={{ color: "text.primary" }}
+            >
               Rule Description *
             </Typography>
             <TextField
@@ -131,13 +157,20 @@ const CreateRulePage = () => {
               sx={{ mb: 3 }}
             />
 
-            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
+            <Box
+              sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}
+            >
               <Typography variant="body1" fontWeight="bold" sx={{ color: "text.primary" }}>
                 Conditions *
               </Typography>
               <Typography
                 onClick={addCondition}
-                sx={{ cursor: "pointer", color: "primary.main", fontSize: "14px", fontWeight: "bold" }}
+                sx={{
+                  cursor: "pointer",
+                  color: "primary.main",
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                }}
               >
                 + Add Condition
               </Typography>
@@ -152,7 +185,9 @@ const CreateRulePage = () => {
               >
                 <Box sx={{ display: "flex", gap: 2, alignItems: "flex-start" }}>
                   <Box sx={{ flex: 1 }}>
-                    <Typography variant="body2" sx={{ mb: 0.5, color: "text.secondary" }}>Field</Typography>
+                    <Typography variant="body2" sx={{ mb: 0.5, color: "text.secondary" }}>
+                      Field
+                    </Typography>
                     <FormControl fullWidth disabled={isLoading}>
                       <Select
                         value={condition.field}
@@ -170,7 +205,9 @@ const CreateRulePage = () => {
                   </Box>
 
                   <Box sx={{ flex: 1 }}>
-                    <Typography variant="body2" sx={{ mb: 0.5, color: "text.secondary" }}>Operator</Typography>
+                    <Typography variant="body2" sx={{ mb: 0.5, color: "text.secondary" }}>
+                      Operator
+                    </Typography>
                     <FormControl fullWidth disabled={isLoading}>
                       <Select
                         value={condition.operator}
@@ -188,7 +225,9 @@ const CreateRulePage = () => {
                   </Box>
 
                   <Box sx={{ flex: 1 }}>
-                    <Typography variant="body2" sx={{ mb: 0.5, color: "text.secondary" }}>Value</Typography>
+                    <Typography variant="body2" sx={{ mb: 0.5, color: "text.secondary" }}>
+                      Value
+                    </Typography>
                     <TextField
                       fullWidth
                       placeholder="Value"
@@ -200,7 +239,13 @@ const CreateRulePage = () => {
 
                   <Typography
                     onClick={() => removeCondition(index)}
-                    sx={{ cursor: "pointer", color: "error.main", fontSize: "20px", flexShrink: 0, mt: 3.5 }}
+                    sx={{
+                      cursor: "pointer",
+                      color: "error.main",
+                      fontSize: "20px",
+                      flexShrink: 0,
+                      mt: 3.5,
+                    }}
                   >
                     ✕
                   </Typography>
@@ -208,8 +253,13 @@ const CreateRulePage = () => {
               </Paper>
             ))}
 
-            <Typography variant="body1" fontWeight="bold" gutterBottom sx={{ color: "text.primary", mt: 2 }}>
-              Condition Logic
+            <Typography
+              variant="body1"
+              fontWeight="bold"
+              gutterBottom
+              sx={{ color: "text.primary", mt: 2 }}
+            >
+              Condition Logic *
             </Typography>
             <RadioGroup
               row
@@ -217,10 +267,61 @@ const CreateRulePage = () => {
               onChange={(e) => setConditionLogic(e.target.value)}
               sx={{ mb: 3 }}
             >
-              <FormControlLabel value="all" control={<Radio />} label="All conditions must be true" />
-              <FormControlLabel value="any" control={<Radio />} label="At least one condition must be true" />
+              <FormControlLabel
+                value="all"
+                control={<Radio />}
+                label="All conditions must be true"
+              />
+              <FormControlLabel
+                value="any"
+                control={<Radio />}
+                label="At least one condition must be true"
+              />
             </RadioGroup>
 
+            <Typography
+              variant="body1"
+              fontWeight="bold"
+              gutterBottom
+              sx={{ color: "text.primary" }}
+            >
+              Outcome *
+            </Typography>
+            <FormControl fullWidth disabled={isLoading} sx={{ mb: 3 }}>
+              <InputLabel>Accept or Decline</InputLabel>
+              <Select
+                value={outcome}
+                label="Accept or Decline"
+                onChange={(e) => setOutcome(e.target.value)}
+                sx={{ textAlign: "left" }}
+              >
+                <MenuItem value="">Select outcome</MenuItem>
+                <MenuItem value="accept">Accept</MenuItem>
+                <MenuItem value="decline">Decline</MenuItem>
+              </Select>
+            </FormControl>
+
+            {/* only show decline reason if decline is selected */}
+            {outcome === "decline" && (
+              <>
+                <Typography
+                  variant="body1"
+                  fontWeight="bold"
+                  gutterBottom
+                  sx={{ color: "text.primary" }}
+                >
+                  Customer Facing Reason for Decline *
+                </Typography>
+                <TextField
+                  fullWidth
+                  placeholder="e.g., Unfortunately we are unable to insure this device"
+                  value={declineReason}
+                  onChange={(e) => setDeclineReason(e.target.value)}
+                  disabled={isLoading}
+                  sx={{ mb: 3 }}
+                />
+              </>
+            )}
           </Box>
         </Container>
       </Box>
