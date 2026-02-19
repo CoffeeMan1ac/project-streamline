@@ -34,7 +34,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const hasTopChip = product.mostPopular || product.ecoFriendly;
   const hasHighlightedBorder = product.mostPopular || product.ecoFriendly;
   const cardBorderColor = product.ecoFriendly
-    ? "success.main"
+    ? "success.light"
     : product.mostPopular
       ? "primary.main"
       : "grey.300";
@@ -68,7 +68,12 @@ const ProductCard = ({ product }: ProductCardProps) => {
         </Typography>
 
         <Box display="flex" alignItems="baseline" mb={2}>
-          <Typography variant="h4" component="span" fontWeight="bold">
+          <Typography
+            variant="h4"
+            component="span"
+            fontWeight="bold"
+            color={product.ecoFriendly ? "success.light" : "primary.main"}
+          >
             {product.price}
           </Typography>
           <Typography variant="subtitle2" component="span" sx={{ ml: 0.5 }}>
@@ -81,7 +86,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
             <ListItem key={`coverage-${index}`} sx={{ py: 0.5 }}>
               <ListItemIcon sx={{ minWidth: 32 }}>
                 {product.ecoFriendly ? (
-                  <CompostIcon fontSize="small" sx={{ color: "success.main" }} />
+                  <CompostIcon fontSize="small" sx={{ color: "success.light" }} />
                 ) : (
                   <CheckCircleOutlineIcon fontSize="small" sx={{ color: "success.main" }} />
                 )}
@@ -122,9 +127,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
           size="large"
           sx={{
             mt: "auto",
-            bgcolor: product.ecoFriendly ? "#00a73d" : "primary.main",
+            bgcolor: product.ecoFriendly ? "success.light" : "primary.main",
             "&:hover": {
-              bgcolor: product.ecoFriendly ? "#009638" : "primary.dark",
+              bgcolor: product.ecoFriendly ? "success.main" : "primary.dark",
             },
           }}
           component={RouterLink}
