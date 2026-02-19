@@ -321,7 +321,14 @@ const CreateRulePage = () => {
               </Select>
             </FormControl>
             {errors.outcome && (
-              <div style={{ color: "#d32f2f", fontSize: "12px", marginTop: "4px", marginBottom: "24px" }}>
+              <div
+                style={{
+                  color: "#d32f2f",
+                  fontSize: "12px",
+                  marginTop: "4px",
+                  marginBottom: "24px",
+                }}
+              >
                 {errors.outcome}
               </div>
             )}
