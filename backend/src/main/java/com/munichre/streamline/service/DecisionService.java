@@ -137,12 +137,16 @@ public class DecisionService {
 
           if (config.getStop()) {
             log.info("Rule '{}' has stop=true. Stopping.", rule.getName());
-            return buildResult(
-                DecisionStatus.ACCEPTED,
-                premium.multiply(delta),
-                rule.getReason(),
-                rulesApplied,
-                startTime);
+            EvaluationResult result =
+                buildResult(
+                    DecisionStatus.ACCEPTED,
+                    premium.multiply(delta),
+                    rule.getReason(),
+                    rulesApplied,
+                    startTime);
+            result.setEvaluationStopped(true);
+            result.setStoppedByRule(rule.getName());
+            return result;
           }
         }
 
@@ -152,12 +156,16 @@ public class DecisionService {
           }
 
           if (config.getStop()) {
-            return buildResult(
-                DecisionStatus.REFER,
-                premium.multiply(delta),
-                String.join("; ", reasons),
-                rulesApplied,
-                startTime);
+            EvaluationResult result =
+                buildResult(
+                    DecisionStatus.REFER,
+                    premium.multiply(delta),
+                    String.join("; ", reasons),
+                    rulesApplied,
+                    startTime);
+            result.setEvaluationStopped(true);
+            result.setStoppedByRule(rule.getName());
+            return result;
           }
         }
       }

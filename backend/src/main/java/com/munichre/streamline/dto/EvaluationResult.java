@@ -18,6 +18,8 @@ public class EvaluationResult {
   @Builder.Default private List<String> rulesApplied = new ArrayList<>();
   private BigDecimal premium;
   private long processingTimeMs;
+  @Builder.Default private boolean evaluationStopped = false;
+  private String stoppedByRule;
 
   public static EvaluationResult accepted(BigDecimal premium) {
     return EvaluationResult.builder()
