@@ -8,6 +8,9 @@ import {
   Select,
   MenuItem,
   Paper,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
 } from "@mui/material";
 
 // each condition row has a field, operator, and value
@@ -20,6 +23,7 @@ type Condition = {
 const CreateRulePage = () => {
   const [ruleName, setRuleName] = useState("");
   const [ruleDescription, setRuleDescription] = useState("");
+  const [conditionLogic, setConditionLogic] = useState("all");
   const [isLoading, setIsLoading] = useState(false);
 
   // start with two empty conditions by default
@@ -73,6 +77,7 @@ const CreateRulePage = () => {
         ruleName,
         ruleDescription,
         conditions,
+        conditionLogic,
       };
     } catch (err: any) {
       console.error(err);
@@ -202,6 +207,20 @@ const CreateRulePage = () => {
                 </Box>
               </Paper>
             ))}
+
+            <Typography variant="body1" fontWeight="bold" gutterBottom sx={{ color: "text.primary", mt: 2 }}>
+              Condition Logic
+            </Typography>
+            <RadioGroup
+              row
+              value={conditionLogic}
+              onChange={(e) => setConditionLogic(e.target.value)}
+              sx={{ mb: 3 }}
+            >
+              <FormControlLabel value="all" control={<Radio />} label="All conditions must be true" />
+              <FormControlLabel value="any" control={<Radio />} label="At least one condition must be true" />
+            </RadioGroup>
+
           </Box>
         </Container>
       </Box>
