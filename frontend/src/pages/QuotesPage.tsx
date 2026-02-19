@@ -125,22 +125,22 @@ const QuotesPage = () => {
 
   const modelsByMake: Record<string, { value: string; label: string }[]> = {
     apple: [
-      { value: "iphone13", label: "iPhone 13" },
-      { value: "iphone14", label: "iPhone 14" },
-      { value: "iphone15", label: "iPhone 15" },
       { value: "iphone16", label: "iPhone 16" },
+      { value: "iphone15", label: "iPhone 15" },
+      { value: "iphone14", label: "iPhone 14" },
+      { value: "iphone13", label: "iPhone 13" },
     ],
     samsung: [
-      { value: "galaxy22", label: "Galaxy S22" },
-      { value: "galaxy23", label: "Galaxy S23" },
       { value: "galaxy24", label: "Galaxy S24" },
+      { value: "galaxy23", label: "Galaxy S23" },
+      { value: "galaxy22", label: "Galaxy S22" },
       { value: "galaxyNote7", label: "Galaxy Note 7" },
     ],
     google: [
-      { value: "pixel6", label: "Pixel 6" },
-      { value: "pixel7", label: "Pixel 7" },
-      { value: "pixel8", label: "Pixel 8" },
       { value: "pixel9", label: "Pixel 9" },
+      { value: "pixel8", label: "Pixel 8" },
+      { value: "pixel7", label: "Pixel 7" },
+      { value: "pixel6", label: "Pixel 6" },
     ],
   };
 
