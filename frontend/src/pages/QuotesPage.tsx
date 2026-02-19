@@ -321,6 +321,7 @@ const QuotesPage = () => {
                   <MenuItem value="doctor">Doctor</MenuItem>
                   <MenuItem value="pilot">Pilot</MenuItem>
                   <MenuItem value="engineer">Engineer</MenuItem>
+                  <MenuItem value="student">Student</MenuItem>
                   <MenuItem value="other">Other</MenuItem>
                 </Select>
                 {errors.occupation && (
