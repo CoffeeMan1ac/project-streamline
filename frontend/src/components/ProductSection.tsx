@@ -3,7 +3,7 @@ import ProductCard, { type CoverageDetail, type Product, type ProductTag } from 
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-interface ApiProduct {
+export interface ApiProduct {
   id: string;
   name: string;
   baseRate: number;
