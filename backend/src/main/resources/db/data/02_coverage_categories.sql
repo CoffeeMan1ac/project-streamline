@@ -49,6 +49,13 @@ VALUES
         'Excess',
         now (),
         now ()
+    ),
+    (
+        '5038b4bc-effa-4f5f-9000-f7423d7ae2ec',
+        'GREEN',
+        'Eco Friendly Coverage',
+        now (),
+        now ()
     ) ON CONFLICT (code) DO
 UPDATE
 SET

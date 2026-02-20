@@ -107,6 +107,24 @@ VALUES
         'Same day brand new replacement phone worldwide',
         now (),
         now ()
+    ),
+    (
+        'ae90d866-8138-4485-b347-d34d83df58ba',
+        '9333558f-9a40-4ad6-b20b-7f45246c70ea', -- PHONE_INSURANCE product_type id
+        '5038b4bc-effa-4f5f-9000-f7423d7ae2ec', -- GREEN category id,
+        'LOCAL_GREEN_REPLACEMENT',
+        'Next day refurbished replacement phone',
+        now (),
+        now ()
+    ),
+    (
+        'a7df9472-dad6-47ac-aee2-3191d2a0b0be',
+        '9333558f-9a40-4ad6-b20b-7f45246c70ea', -- PHONE_INSURANCE product_type id
+        '5038b4bc-effa-4f5f-9000-f7423d7ae2ec', -- GREEN category id,
+        'GLOBAL_GREEN_REPLACEMENT',
+        'Same day refurbished phone worldwide',
+        now (),
+        now ()
     ) ON CONFLICT (code) DO
 UPDATE
 SET
