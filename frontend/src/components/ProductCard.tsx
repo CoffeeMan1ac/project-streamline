@@ -20,10 +20,30 @@ export interface Product {
   id: string;
   name: string;
   price: string;
-  mostPopular?: boolean;
-  ecoFriendly?: boolean;
-  coverages: string[];
-  exclusions: string[];
+  mostPopular: boolean;
+  green: boolean;
+  tags: ProductTag[];
+  coverages: CoverageDetail[];
+  exclusions: CoverageDetail[];
+}
+
+export interface CoverageDetail {
+  id: string;
+  label: string;
+  category: CoverageCategory;
+  green: boolean;
+}
+
+export interface CoverageCategory {
+  id: string;
+  code: string;
+  label: string;
+}
+
+export interface ProductTag {
+  id: string;
+  code: string;
+  label: string;
 }
 
 interface ProductCardProps {
@@ -31,9 +51,8 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
-  const hasTopChip = product.mostPopular || product.ecoFriendly;
-  const hasHighlightedBorder = product.mostPopular || product.ecoFriendly;
-  const cardBorderColor = product.ecoFriendly
+  const hasHighlightedBorder = product.mostPopular || product.green;
+  const cardBorderColor = product.green
     ? "success.light"
     : product.mostPopular
       ? "primary.main"
@@ -57,12 +76,17 @@ const ProductCard = ({ product }: ProductCardProps) => {
       }}
     >
       <CardContent sx={{ p: 4, display: "flex", flexDirection: "column", flex: 1 }}>
-        {hasTopChip && (
-          <Box sx={{ display: "flex", justifyContent: "left", gap: 1, mb: 2, flexWrap: "wrap" }}>
-            {product.mostPopular && <Chip label="Most Popular" color="primary" size="small" />}
-            {product.ecoFriendly && <Chip label="Eco-Friendly" color="success" size="small" />}
-          </Box>
-        )}
+        <Box sx={{ display: "flex", justifyContent: "left", gap: 1, mb: 2, flexWrap: "wrap" }}>
+          {product.tags?.map((tag) => (
+            <Chip
+              key={tag.id}
+              label={tag.label}
+              size="small"
+              color="primary"
+              sx={{ bgcolor: product.green ? "success.main" : "primary.main" }}
+            />
+          ))}
+        </Box>
 
         <Typography fontWeight="bold" variant="h6" gutterBottom sx={{ mt: 0 }}>
           {product.name}
@@ -73,7 +97,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
             variant="h4"
             component="span"
             fontWeight="bold"
-            color={product.ecoFriendly ? "success.main" : "primary.main"}
+            color={product.green ? "success.main" : "primary.main"}
           >
             {product.price}
           </Typography>
@@ -86,7 +110,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           {product.coverages.map((coverage, index) => (
             <ListItem key={`coverage-${index}`} sx={{ py: 0.5 }}>
               <ListItemIcon sx={{ minWidth: 32 }}>
-                {product.ecoFriendly ? (
+                {coverage.green ? (
                   <CompostIcon fontSize="small" sx={{ color: "success.main" }} />
                 ) : (
                   <CheckCircleOutlineIcon fontSize="small" sx={{ color: "success.main" }} />
@@ -94,7 +118,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
               </ListItemIcon>
 
               <ListItemText
-                primary={coverage}
+                primary={coverage.label}
                 primaryTypographyProps={{
                   variant: "body2",
                   color: "text.primary",
@@ -110,7 +134,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
               </ListItemIcon>
 
               <ListItemText
-                primary={exclusion}
+                primary={exclusion.label}
                 primaryTypographyProps={{
                   variant: "body2",
                   color: "text.secondary",
@@ -129,16 +153,16 @@ const ProductCard = ({ product }: ProductCardProps) => {
           sx={{
             mt: "auto",
             textDecoration: "none",
-            bgcolor: product.ecoFriendly ? "success.main" : "primary.main",
+            bgcolor: product.green ? "success.main" : "primary.main",
             "&:hover": {
-              bgcolor: product.ecoFriendly ? "success.main" : "primary.dark",
+              bgcolor: product.green ? "success.main" : "primary.dark",
               color: "white",
             },
           }}
           component={RouterLink}
           to={`/quote?productId=${product.id}`}
         >
-          Get a {product.ecoFriendly ? "Green" : ""} Quote
+          Get a {product.green ? "Green" : ""} Quote
         </Button>
       </CardContent>
     </Card>

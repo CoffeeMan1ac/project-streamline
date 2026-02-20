@@ -1,5 +1,5 @@
 import { Box, Container, Typography, Grid, Skeleton } from "@mui/material";
-import ProductCard, { type Product } from "./ProductCard";
+import ProductCard, { type CoverageDetail, type Product, type ProductTag } from "./ProductCard";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -7,14 +7,9 @@ interface ApiProduct {
   id: string;
   name: string;
   baseRate: number;
-  mostPopular: boolean;
+  tags: ProductTag[];
   coverages: CoverageDetail[];
   exclusions: CoverageDetail[];
-}
-
-interface CoverageDetail {
-  id: string;
-  label: string;
 }
 
 const ProductSection = () => {
@@ -36,10 +31,14 @@ const ProductSection = () => {
           id: product.id,
           name: product.name,
           price: `€${product.baseRate.toFixed(2)}`,
-          mostPopular: product.mostPopular,
-          ecoFriendly: false,
-          coverages: product.coverages.map((coverage: CoverageDetail) => coverage.label),
-          exclusions: product.exclusions.map((exclusion: CoverageDetail) => exclusion.label),
+          mostPopular: product.tags.find((tag) => tag.code === "POPULAR"),
+          green: product.tags.find((tag) => tag.code === "GREEN"),
+          tags: product.tags,
+          coverages: product.coverages.map((coverage) => ({
+            ...coverage,
+            green: coverage.category.code === "GREEN",
+          })),
+          exclusions: product.exclusions,
         }));
 
         setProducts(fetchedProducts);
