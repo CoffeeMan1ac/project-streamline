@@ -28,12 +28,6 @@ include:
   - template: Security/Dependency-Scanning.gitlab-ci.yml
   - template: Jobs/Secret-Detection.gitlab-ci.yml
 
-# override scanner job to use Java 21
-gemnasium-maven-dependency_scanning:
-image: maven:3.9.9-eclipse-temurin-21
-
-# Override security job stages / behavior
-
 secret_detection:
   stage: security
   allow_failure: false
