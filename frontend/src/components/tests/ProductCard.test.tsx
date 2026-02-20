@@ -9,8 +9,32 @@ const plan: Product = {
   name: "Basic",
   price: "€9.00",
   mostPopular: false,
-  coverages: ["Accidental Damage"],
-  exclusions: ["Screen Replacement"],
+  coverages: [
+    {
+      id: "",
+      label: "Accidental Damage",
+      category: {
+        id: "",
+        code: "",
+        label: "",
+      },
+      green: false,
+    },
+  ],
+  exclusions: [
+    {
+      id: "",
+      label: "Screen Replacement",
+      category: {
+        id: "",
+        code: "",
+        label: "",
+      },
+      green: false,
+    },
+  ],
+  green: false,
+  tags: [],
 };
 
 const popularPlan: Product = {
@@ -18,12 +42,14 @@ const popularPlan: Product = {
   name: "Pro",
   price: "€19.00",
   mostPopular: true,
+  tags: [{ id: "1", code: "POPULAR", label: "Most Popular" }],
 };
 
-const ecoPlan: Product = {
+const greenPlan: Product = {
   ...plan,
   name: "Green",
-  ecoFriendly: true,
+  green: true,
+  tags: [{ id: "1", code: "GREEN", label: "Eco Friendly" }],
 };
 
 describe("ProductCard", () => {
@@ -70,12 +96,12 @@ describe("ProductCard", () => {
     expect(screen.getByText(/Most Popular/i)).toBeInTheDocument();
   });
 
-  test("shows 'Eco-Friendly' chip when product.ecoFriendly is true", () => {
+  test("shows 'Eco Friendly' chip when product.ecoFriendly is true", () => {
     render(
       <MemoryRouter>
-        <ProductCard product={ecoPlan} />
+        <ProductCard product={greenPlan} />
       </MemoryRouter>
     );
-    expect(screen.getByText(/Eco-Friendly/i)).toBeInTheDocument();
+    expect(screen.getByText(/Eco Friendly/i)).toBeInTheDocument();
   });
 });
