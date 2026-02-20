@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EvaluationResult {
+  private String reference;
   private DecisionStatus status;
   private String reason;
   @Builder.Default private List<String> rulesApplied = new ArrayList<>();
