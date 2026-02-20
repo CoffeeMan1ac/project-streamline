@@ -78,9 +78,30 @@ public class DecisionService {
 
     // State tracking
     BigDecimal premiumMultiplier = new BigDecimal("1");
+    BigDecimal studentDiscount = new BigDecimal("0.1");
+    BigDecimal damage = new BigDecimal("0.1");
     boolean declined = false;
     // TODO: Implement referral
     // boolean referred = false;
+
+    // smoke and mirrors
+    if ((fields.get("occupation")).equals("student")) {
+      premiumMultiplier = premiumMultiplier.subtract(studentDiscount);
+    }
+
+    if (fields.get("phoneCondition").equals("lightly used")
+        || fields.get("phoneAge").equals("1 year")) {
+      premiumMultiplier = premiumMultiplier.add(damage);
+    }
+
+    if (fields.get("phoneCondition").equals("good") || fields.get("phoneAge").equals("2 years")) {
+      premiumMultiplier = premiumMultiplier.add(damage).add(damage);
+    }
+
+    if (fields.get("phoneCondition").equals("heavily used")
+        || fields.get("phoneAge").equals("3 year")) {
+      premiumMultiplier = premiumMultiplier.add(damage).add(damage).add(damage);
+    }
 
     List<String> rulesApplied = new ArrayList<>();
     List<String> reasons = new ArrayList<>();
