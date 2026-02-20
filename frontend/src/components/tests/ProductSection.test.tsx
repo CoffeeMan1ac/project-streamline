@@ -3,34 +3,40 @@ import { render, screen } from "@testing-library/react";
 import { describe, test, expect, vi, beforeEach } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import axios from "axios";
-import ProductSection from "../ProductSection";
+import ProductSection, { type ApiProduct } from "../ProductSection";
 
 vi.mock("axios");
 
-const mockProducts = [
+const mockProducts: ApiProduct[] = [
   {
     id: "uuid-1",
     name: "Standard Shield",
     baseRate: 9.99,
-    mostPopular: false,
-    coverages: [{ label: "Covered 1" }],
-    exclusions: [{ label: "Excluded 1" }],
+    tags: [],
+    coverages: [],
+    exclusions: [],
   },
   {
     id: "uuid-2",
     name: "Premium Shield",
     baseRate: 14.99,
-    mostPopular: true,
-    coverages: [{ label: "Covered 2" }],
-    exclusions: [{ label: "Excluded 2" }],
+    tags: [
+      {
+        label: "Most Popular",
+        id: "",
+        code: "POPULAR",
+      },
+    ],
+    coverages: [],
+    exclusions: [],
   },
   {
     id: "uuid-3",
     name: "Global Shield",
     baseRate: 19.99,
-    mostPopular: false,
-    coverages: [{ label: "Covered 3" }],
-    exclusions: [{ label: "Excluded 3" }],
+    tags: [],
+    coverages: [],
+    exclusions: [],
   },
 ];
 
