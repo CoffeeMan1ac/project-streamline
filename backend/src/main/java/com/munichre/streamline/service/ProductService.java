@@ -7,9 +7,12 @@ import com.munichre.streamline.dto.CoverageDto;
 import com.munichre.streamline.dto.ProductCoverageRowDto;
 import com.munichre.streamline.dto.ProductDto;
 import com.munichre.streamline.dto.ProductRowDto;
+import com.munichre.streamline.dto.ProductTagDto;
+import com.munichre.streamline.dto.ProductTagRowDto;
 import com.munichre.streamline.dto.ProductTypeDto;
 import com.munichre.streamline.repository.ProductCoverageRepository;
 import com.munichre.streamline.repository.ProductRepository;
+import com.munichre.streamline.repository.ProductTagRepository;
 import java.time.LocalDateTime;
 import java.util.*;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +26,7 @@ public class ProductService {
 
   private final ProductRepository productReadRepository;
   private final ProductCoverageRepository productCoverageRepository;
+  private final ProductTagRepository productTagRepository;
 
   /**
    * Fetches active products and assembles them with their respective coverages and exclusions using
@@ -46,13 +50,18 @@ public class ProductService {
         productCoverageRepository.findExclusionRows(productIds).stream()
             .collect(groupingBy(ProductCoverageRowDto::productId));
 
+    Map<UUID, List<ProductTagRowDto>> tagsByProduct =
+        productTagRepository.findTagRows(productIds).stream()
+            .collect(groupingBy(ProductTagRowDto::productId));
+
     return productRows.stream()
         .map(
             row ->
                 ProductAssembler.toDto(
                     row,
                     coveragesByProduct.getOrDefault(row.id(), List.of()),
-                    exclusionsByProduct.getOrDefault(row.id(), List.of())))
+                    exclusionsByProduct.getOrDefault(row.id(), List.of()),
+                    tagsByProduct.getOrDefault(row.id(), List.of())))
         .toList();
   }
 
@@ -61,13 +70,14 @@ public class ProductService {
     static ProductDto toDto(
         ProductRowDto row,
         List<ProductCoverageRowDto> coverageRows,
-        List<ProductCoverageRowDto> exclusionRows) {
+        List<ProductCoverageRowDto> exclusionRows,
+        List<ProductTagRowDto> tags) {
       return new ProductDto(
           row.id(),
           row.baseRate(),
           row.name(),
           row.description(),
-          row.mostPopular(),
+          mapTags(tags),
           new ProductTypeDto(row.typeId(), row.typeCode(), row.typeLabel()),
           mapCoverages(coverageRows),
           mapCoverages(exclusionRows));
@@ -83,6 +93,14 @@ public class ProductService {
           r.coverageCode(),
           r.coverageLabel(),
           new CoverageCategoryDto(r.categoryId(), r.categoryCode(), r.categoryLabel()));
+    }
+
+    private static List<ProductTagDto> mapTags(List<ProductTagRowDto> rows) {
+      return rows.stream().map(ProductAssembler::toProductTagDto).distinct().toList();
+    }
+
+    private static ProductTagDto toProductTagDto(ProductTagRowDto row) {
+      return new ProductTagDto(row.id(), row.code(), row.label());
     }
   }
 }

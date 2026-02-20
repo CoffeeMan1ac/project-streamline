@@ -33,8 +33,12 @@ public class Product {
 
   @Column private String description;
 
-  @Column(nullable = false)
-  private Boolean mostPopular = false;
+  @ManyToMany
+  @JoinTable(
+      name = "product_product_tags",
+      joinColumns = @JoinColumn(name = "product_id"),
+      inverseJoinColumns = @JoinColumn(name = "product_tag_id"))
+  private List<ProductTag> tags;
 
   @ManyToMany
   @JoinTable(

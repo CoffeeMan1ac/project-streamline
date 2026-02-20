@@ -9,7 +9,6 @@ public record ProductRowDto(
     BigDecimal baseRate,
     String name,
     String description,
-    boolean mostPopular,
     LocalDateTime startDate,
     LocalDateTime endDate,
     boolean active,
