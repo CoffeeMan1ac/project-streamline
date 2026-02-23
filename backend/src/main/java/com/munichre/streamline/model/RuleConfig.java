@@ -11,14 +11,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RuleConfig {
 
-  private WhenClause when;
-  private ThenClause then;
+  private When when;
+  private Then then;
   private Boolean stop;
 
   @Data
   @NoArgsConstructor
   @AllArgsConstructor
-  public static class WhenClause {
+  public static class When {
     /** "all" = AND (every condition must match), "one" = OR (any condition matches) */
     private String match;
 
@@ -37,7 +37,7 @@ public class RuleConfig {
   @Data
   @NoArgsConstructor
   @AllArgsConstructor
-  public static class ThenClause {
+  public static class Then {
     /** ACCEPT, DECLINE, or REFER */
     private String decision;
 
