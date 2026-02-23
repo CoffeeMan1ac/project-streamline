@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom/vitest";
-import { render } from "@testing-library/react";
-import { describe, vi } from "vitest";
+import { render, screen, within } from "@testing-library/react";
+import { describe, test, expect, vi } from "vitest";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import EditRulePage from "../EditRulePage";
 
@@ -25,4 +25,34 @@ describe("EditRulePage", () => {
     return utils;
   };
 
+  test("renders page title", () => {
+    renderWithRouter();
+    expect(screen.getAllByText(/Edit Rule/i)[0]).toBeInTheDocument();
+  });
+
+  test("renders all form fields", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    expect(f.getByTestId("rule-name-input")).toBeInTheDocument();
+    expect(f.getByText(/Rule Description/i)).toBeInTheDocument();
+    expect(f.getByText(/Conditions/i)).toBeInTheDocument();
+    expect(f.getByText(/Condition Logic/i)).toBeInTheDocument();
+    expect(f.getByText(/Outcome/i)).toBeInTheDocument();
+    expect(f.getByText(/Premium Outcome/i)).toBeInTheDocument();
+  });
+
+  test("renders save changes button", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    expect(f.getByRole("button", { name: /Save Changes/i })).toBeInTheDocument();
+  });
+
+  test("renders cancel button", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    expect(f.getByRole("button", { name: /Cancel/i })).toBeInTheDocument();
+  });
 });
