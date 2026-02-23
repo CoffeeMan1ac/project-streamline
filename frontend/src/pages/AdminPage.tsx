@@ -1,15 +1,41 @@
-import RuleRow from "../components/RuleRow";
+import RuleTable from "../components/RuleTable";
+import Box from "@mui/material/Box";
+const testRules: {
+  order: number;
+  ruleName: string;
+  status: "active" | "inactive";
+  numberOfConditions: number;
+  outcome: string;
+}[] = [
+  {
+    order: 1,
+    ruleName: "Age Limit Check",
+    status: "active",
+    numberOfConditions: 1,
+    outcome: "Decision: accept",
+  },
+  {
+    order: 2,
+    ruleName: "Premium Adjustment",
+    status: "inactive",
+    numberOfConditions: 1,
+    outcome: "Delta: +2.00",
+  },
+  {
+    order: 3,
+    ruleName: "User Age Check",
+    status: "active",
+    numberOfConditions: 1,
+    outcome: "Decision: accept",
+  },
+];
 
 const AdminPage = () => {
   return (
     <>
-      <RuleRow
-        order={1}
-        ruleName="Sample Rule"
-        status="active"
-        numberOfConditions={3}
-        outcome="Sample Outcome"
-      />
+      <Box sx={{ mx: 20, my: 4 }}>
+        <RuleTable rules={testRules} />
+      </Box>
     </>
   );
 };
