@@ -3,7 +3,7 @@
     name: streamline
     
   datasource:
-    url: jdbc:postgresql://localhost:5433/streamline
+    url: jdbc:postgresql://localhost:5432/streamline
     username: postgres
     password: postgres
     
