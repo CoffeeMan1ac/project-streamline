@@ -1,0 +1,79 @@
+import "@testing-library/jest-dom/vitest";
+import { render, screen, fireEvent, within, cleanup } from "@testing-library/react";
+import { describe, test, expect, vi, beforeEach } from "vitest";
+import { MemoryRouter } from "react-router-dom";
+import CreateRulePage from "../CreateRulePage";
+
+vi.mock("axios");
+
+describe("CreateRulePage", () => {
+  let form: HTMLFormElement;
+
+  beforeEach(() => {
+    cleanup();
+  });
+
+  const renderWithRouter = () => {
+    const utils = render(
+      <MemoryRouter>
+        <CreateRulePage />
+      </MemoryRouter>
+    );
+
+    const found = utils.container.querySelector("form");
+    if (!found) throw new Error("Create rule form not found");
+    form = found as HTMLFormElement;
+
+    return utils;
+  };
+
+  test("renders page title", () => {
+    renderWithRouter();
+    expect(screen.getAllByText(/Create New Rule/i)[0]).toBeInTheDocument();
+  });
+
+  test("renders all form fields", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    expect(f.getByTestId("rule-name-input")).toBeInTheDocument();
+    expect(f.getByText(/Rule Description/i)).toBeInTheDocument();
+    expect(f.getAllByText(/Conditions/i)[0]).toBeInTheDocument();
+    expect(f.getByText(/Condition Logic/i)).toBeInTheDocument();
+    expect(f.getByText(/^Outcome \*$/i)).toBeInTheDocument();
+    expect(f.getByText(/Premium Outcome/i)).toBeInTheDocument();
+  });
+
+  test("renders create rule button", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    expect(f.getByRole("button", { name: /Create Rule/i })).toBeInTheDocument();
+  });
+
+  test("renders cancel button", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    expect(f.getByRole("button", { name: /Cancel/i })).toBeInTheDocument();
+  });
+
+  test("shows required errors when submitting empty form", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    fireEvent.click(f.getByRole("button", { name: /Create Rule/i }));
+    expect(f.getAllByText(/Required/i).length).toBeGreaterThan(0);
+  });
+
+  test("shows decline reason field when decline is selected", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    const comboboxes = f.getAllByRole("combobox");
+    fireEvent.mouseDown(comboboxes[4]); // outcome dropdown is the 5th combobox
+    fireEvent.click(screen.getByText(/^Decline$/i));
+
+    expect(f.getByText(/Customer Facing Reason for Decline/i)).toBeInTheDocument();
+  });
+});
