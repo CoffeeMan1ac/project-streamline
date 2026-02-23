@@ -8,6 +8,7 @@ import Footer from "./components/Footer";
 import AcceptPage from "./pages/AcceptPage";
 import DeclinePage from "./pages/DeclinePage";
 import RulesManagementPage from "./pages/RulesManagementPage";
+import EditRulePage from "./pages/EditRulePage";
 import { ThemeProvider, CssBaseline, Box } from "@mui/material";
 import { lightTheme, darkTheme } from "./theme/theme";
 import React from "react";
@@ -42,6 +43,7 @@ function App() {
             <Route path="/rules-management" element={<RulesManagementPage />} />
             <Route path="/accepted" element={<AcceptPage />} />
             <Route path="/declined" element={<DeclinePage />} />
+            <Route path="/editRule" element={<EditRulePage />} />
           </Routes>
           <Footer />
         </BrowserRouter>
