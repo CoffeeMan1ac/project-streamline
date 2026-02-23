@@ -108,7 +108,7 @@ public class DecisionService {
                   : "Declined by rule: " + rule.getName());
 
           // Check stop flag
-          if (Boolean.TRUE.equals(config.getStop())) {
+          if (config.getStop()) {
             log.info("Rule '{}' has stop=true. Stopping.", rule.getName());
             return buildResult(
                 DecisionStatus.DECLINED,
@@ -134,7 +134,7 @@ public class DecisionService {
                 premium);
           }
 
-          if (Boolean.TRUE.equals(config.getStop())) {
+          if (config.getStop()) {
             log.info("Rule '{}' has stop=true. Stopping.", rule.getName());
             return buildResult(
                 DecisionStatus.ACCEPTED,
@@ -151,7 +151,7 @@ public class DecisionService {
                   ? rule.getDescription()
                   : "Referred by rule: " + rule.getName());
 
-          if (Boolean.TRUE.equals(config.getStop())) {
+          if (config.getStop()) {
             return buildResult(
                 DecisionStatus.REFER, premium, String.join("; ", reasons), rulesApplied, startTime);
           }
