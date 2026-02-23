@@ -43,7 +43,7 @@ function App() {
             <Route path="/rules-management" element={<RulesManagementPage />} />
             <Route path="/accepted" element={<AcceptPage />} />
             <Route path="/declined" element={<DeclinePage />} />
-            <Route path="/editRule" element={<EditRulePage />} />
+            <Route path="/editRule/:id" element={<EditRulePage />} />
           </Routes>
           <Footer />
         </BrowserRouter>

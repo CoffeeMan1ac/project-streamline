@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import {
   TextField,
   Container,
@@ -23,7 +24,8 @@ type Condition = {
   value: string;
 };
 
-const CreateRulePage = () => {
+const EditRulePage = () => {
+  const {id} = useParams();
   const [ruleName, setRuleName] = useState("");
   const [ruleDescription, setRuleDescription] = useState("");
   const [conditionLogic, setConditionLogic] = useState("all");
@@ -44,6 +46,10 @@ const CreateRulePage = () => {
     outcome: "",
     declineReason: "",
   });
+
+  useEffect(() => {
+    // fetch rule data from backend when its ready
+  }, [id]);
 
   // adds a new condition row
   const addCondition = () => {
@@ -405,4 +411,4 @@ const CreateRulePage = () => {
   );
 };
 
-export default CreateRulePage;
+export default EditRulePage;
