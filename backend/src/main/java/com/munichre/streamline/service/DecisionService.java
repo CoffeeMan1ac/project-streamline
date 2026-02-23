@@ -103,10 +103,9 @@ public class DecisionService {
       switch (decision) {
         case "DECLINE" -> {
           declined = true;
-          reasons.add(
-              rule.getDescription() != null
-                  ? rule.getDescription()
-                  : "Declined by rule: " + rule.getName());
+          if (rule.getReason() != null) {
+            reasons.add(rule.getReason());
+          }
 
           // Check stop flag
           if (config.getStop()) {
@@ -141,17 +140,16 @@ public class DecisionService {
             return buildResult(
                 DecisionStatus.ACCEPTED,
                 premium.multiply(delta),
-                "Accepted (stopped by rule: " + rule.getName() + ")",
+                rule.getReason(),
                 rulesApplied,
                 startTime);
           }
         }
 
         case "REFER" -> {
-          reasons.add(
-              rule.getDescription() != null
-                  ? rule.getDescription()
-                  : "Referred by rule: " + rule.getName());
+          if (rule.getReason() != null) {
+            reasons.add(rule.getReason());
+          }
 
           if (config.getStop()) {
             return buildResult(
