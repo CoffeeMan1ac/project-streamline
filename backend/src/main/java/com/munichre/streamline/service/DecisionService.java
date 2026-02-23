@@ -43,7 +43,6 @@ public class DecisionService {
   private final RuleRepository ruleRepository;
   private final ProductRepository productRepository;
 
-  // // TODO: base premium - make configurable per product later.
   // // TODO: FieldNotFoundException not implemented.
   // private static final BigDecimal BASE_PREMIUM = new BigDecimal("10.00");
 
