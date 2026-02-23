@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom/vitest";
-import { render, screen, fireEvent, within } from "@testing-library/react";
-import { describe, test, expect, vi } from "vitest";
+import { render, screen, fireEvent, within, cleanup } from "@testing-library/react";
+import { describe, test, expect, vi, beforeEach } from "vitest";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import EditRulePage from "../EditRulePage";
 
@@ -8,6 +8,10 @@ vi.mock("axios");
 
 describe("EditRulePage", () => {
   let form: HTMLFormElement;
+
+  beforeEach(() => {
+    cleanup();
+  });
 
   const renderWithRouter = () => {
     const utils = render(
@@ -73,5 +77,39 @@ describe("EditRulePage", () => {
     fireEvent.click(screen.getByText(/^Decline$/i));
 
     expect(f.getByText(/Customer Facing Reason for Decline/i)).toBeInTheDocument();
+  });
+
+  test("renders two condition rows by default", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    expect(f.getAllByText(/Field/i).length).toBeGreaterThanOrEqual(2);
+  });
+
+  test("adds a condition row when + Add Condition is clicked", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    const before = f.getAllByText(/Field/i).length;
+    fireEvent.click(f.getByText(/\+ Add Condition/i));
+    const after = f.getAllByText(/Field/i).length;
+
+    expect(after).toBeGreaterThan(before);
+  });
+
+  test("condition logic radio buttons are rendered", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    expect(f.getByLabelText(/All conditions must be true/i)).toBeInTheDocument();
+    expect(f.getByLabelText(/At least one condition must be true/i)).toBeInTheDocument();
+  });
+
+  test("premium outcome radio buttons are rendered", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    expect(f.getByLabelText(/Premium Override/i)).toBeInTheDocument();
+    expect(f.getByLabelText(/Premium Delta/i)).toBeInTheDocument();
   });
 });

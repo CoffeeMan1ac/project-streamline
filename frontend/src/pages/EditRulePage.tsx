@@ -92,7 +92,7 @@ const EditRulePage = () => {
 
     setErrors(newErrors);
 
-    const allValid = Object.values(newErrors).every((error) => error === "");
+    const allValid = Object.values(newErrors).every((error) => error === ""); // checks if every error string is empty
     return allValid;
   };
 
@@ -158,6 +158,7 @@ const EditRulePage = () => {
               value={ruleName}
               slotProps={{ htmlInput: { "data-testid": "rule-name-input" } }}
               onChange={(e) => {
+                // required and red box go away after user enters something
                 setRuleName(e.target.value);
                 setErrors((prev) => ({ ...prev, ruleName: "" }));
               }}
@@ -208,6 +209,7 @@ const EditRulePage = () => {
               </Typography>
             </Box>
 
+            {/* loop through conditions and render a row for each one */}
             {conditions.map((condition, index) => (
               <Paper
                 key={index}
@@ -348,6 +350,7 @@ const EditRulePage = () => {
               </div>
             )}
 
+            {/* only show decline reason if decline is selected */}
             {outcome === "decline" && (
               <>
                 <Typography
@@ -403,7 +406,7 @@ const EditRulePage = () => {
               <TextField
                 fullWidth
                 placeholder="e.g., 29.99"
-                label="Override Price (£)"
+                label="Override Price (€)"
                 type="number"
                 value={overrideValue}
                 onChange={(e) => {
