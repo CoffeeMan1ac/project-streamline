@@ -54,6 +54,7 @@ public class DecisionService {
    */
   public EvaluationResult evaluate(Map<String, Object> fields) {
     long startTime = System.currentTimeMillis();
+    BigDecimal delta = BigDecimal.ONE;
     log.info("Starting rule evaluation with {} fields", fields.size());
 
     String productIdString = (String) fields.get("productId");
@@ -69,7 +70,7 @@ public class DecisionService {
       log.warn("No active rules found in database");
       return buildResult(
           DecisionStatus.ACCEPTED,
-          premium,
+          premium.multiply(delta),
           "Auto-accept. No rules configured.",
           new ArrayList<>(),
           startTime);
@@ -122,11 +123,12 @@ public class DecisionService {
         case "ACCEPT" -> {
           // Apply premium adjustments
           if (then.getPremiumOverride() != null) {
+            delta = BigDecimal.ONE;
             premium = then.getPremiumOverride();
             log.info("Rule '{}' overrides premium to {}", rule.getName(), premium);
           }
           if (then.getPremiumDelta() != null) {
-            premium = premium.add(then.getPremiumDelta());
+            delta = delta.add(then.getPremiumDelta());
             log.info(
                 "Rule '{}' adjusts premium by {}, now {}",
                 rule.getName(),
@@ -138,7 +140,7 @@ public class DecisionService {
             log.info("Rule '{}' has stop=true. Stopping.", rule.getName());
             return buildResult(
                 DecisionStatus.ACCEPTED,
-                premium,
+                premium.multiply(delta),
                 "Accepted (stopped by rule: " + rule.getName() + ")",
                 rulesApplied,
                 startTime);
@@ -153,7 +155,11 @@ public class DecisionService {
 
           if (config.getStop()) {
             return buildResult(
-                DecisionStatus.REFER, premium, String.join("; ", reasons), rulesApplied, startTime);
+                DecisionStatus.REFER,
+                premium.multiply(delta),
+                String.join("; ", reasons),
+                rulesApplied,
+                startTime);
           }
         }
       }
@@ -170,7 +176,11 @@ public class DecisionService {
     }
 
     return buildResult(
-        DecisionStatus.ACCEPTED, premium, "All rules passed", rulesApplied, startTime);
+        DecisionStatus.ACCEPTED,
+        premium.multiply(delta),
+        "All rules passed",
+        rulesApplied,
+        startTime);
   }
 
   // ──────────────────────────────────────────────────────────
