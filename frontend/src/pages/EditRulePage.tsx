@@ -25,7 +25,7 @@ type Condition = {
 };
 
 const EditRulePage = () => {
-  const {id} = useParams();
+  const { id } = useParams();
   const [ruleName, setRuleName] = useState("");
   const [ruleDescription, setRuleDescription] = useState("");
   const [conditionLogic, setConditionLogic] = useState("all");
