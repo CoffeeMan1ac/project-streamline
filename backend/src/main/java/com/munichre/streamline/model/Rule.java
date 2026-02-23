@@ -31,6 +31,9 @@ public class Rule {
 
   private String description;
 
+  @Column(nullable = true)
+  private String reason;
+
   @Column(nullable = false)
   private Integer priority;
 
