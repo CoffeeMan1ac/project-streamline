@@ -110,12 +110,16 @@ public class DecisionService {
           // Check stop flag
           if (config.getStop()) {
             log.info("Rule '{}' has stop=true. Stopping.", rule.getName());
-            return buildResult(
-                DecisionStatus.DECLINED,
-                BigDecimal.ZERO,
-                String.join("; ", reasons),
-                rulesApplied,
-                startTime);
+            EvaluationResult result =
+                buildResult(
+                    DecisionStatus.DECLINED,
+                    BigDecimal.ZERO,
+                    String.join("; ", reasons),
+                    rulesApplied,
+                    startTime);
+            result.setEvaluationStopped(true);
+            result.setStoppedByRule(rule.getName());
+            return result;
           }
         }
 
