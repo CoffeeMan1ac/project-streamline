@@ -7,8 +7,8 @@ import com.munichre.streamline.model.Product;
 import com.munichre.streamline.model.Rule;
 import com.munichre.streamline.model.RuleConfig;
 import com.munichre.streamline.model.RuleConfig.Condition;
-import com.munichre.streamline.model.RuleConfig.ThenClause;
-import com.munichre.streamline.model.RuleConfig.WhenClause;
+import com.munichre.streamline.model.RuleConfig.Then;
+import com.munichre.streamline.model.RuleConfig.When;
 import com.munichre.streamline.repository.ProductRepository;
 import com.munichre.streamline.repository.RuleRepository;
 import java.math.BigDecimal;
@@ -85,8 +85,8 @@ public class DecisionService {
     // 2. Apply each rule in priority order
     for (Rule rule : rules) {
       RuleConfig config = rule.getRuleConfig();
-      WhenClause when = config.getWhen();
-      ThenClause then = config.getThen();
+      When when = config.getWhen();
+      Then then = config.getThen();
 
       // Evaluate conditions with AND/OR logic
       boolean triggered = evaluateWhen(when, fields);
@@ -178,7 +178,7 @@ public class DecisionService {
   // When clause: AND/OR over multiple conditions
   // ──────────────────────────────────────────────────────────
 
-  private boolean evaluateWhen(WhenClause when, Map<String, Object> fields) {
+  private boolean evaluateWhen(When when, Map<String, Object> fields) {
     List<Condition> conditions = when.getConditions();
     String match = when.getMatch().toLowerCase();
 
