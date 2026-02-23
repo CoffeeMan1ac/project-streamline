@@ -32,6 +32,8 @@ const EditRulePage = () => {
   const [outcome, setOutcome] = useState("");
   const [declineReason, setDeclineReason] = useState("");
   const [premiumOutcome, setPremiumOutcome] = useState("override");
+  const [overrideValue, setOverrideValue] = useState("");
+  const [deltaValue, setDeltaValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   // start with two empty conditions by default
@@ -45,6 +47,8 @@ const EditRulePage = () => {
     ruleDescription: "",
     outcome: "",
     declineReason: "",
+    overrideValue: "",
+    deltaValue: "",
   });
 
   useEffect(() => {
@@ -74,16 +78,21 @@ const EditRulePage = () => {
       ruleDescription: "",
       outcome: "",
       declineReason: "",
+      overrideValue: "",
+      deltaValue: "",
     };
 
     if (!ruleName) newErrors.ruleName = "Required";
     if (!ruleDescription) newErrors.ruleDescription = "Required";
     if (!outcome) newErrors.outcome = "Required";
     if (outcome === "decline" && !declineReason) newErrors.declineReason = "Required";
+    // only validate the value field for whichever premium option is selected
+    if (premiumOutcome === "override" && !overrideValue) newErrors.overrideValue = "Required";
+    if (premiumOutcome === "delta" && !deltaValue) newErrors.deltaValue = "Required";
 
     setErrors(newErrors);
 
-    const allValid = Object.values(newErrors).every((error) => error === ""); // checks if every error string is empty
+    const allValid = Object.values(newErrors).every((error) => error === "");
     return allValid;
   };
 
@@ -102,6 +111,8 @@ const EditRulePage = () => {
         outcome,
         declineReason,
         premiumOutcome,
+        overrideValue,
+        deltaValue,
       };
       console.log(payload);
     } catch (err: any) {
@@ -147,7 +158,6 @@ const EditRulePage = () => {
               value={ruleName}
               slotProps={{ htmlInput: { "data-testid": "rule-name-input" } }}
               onChange={(e) => {
-                // required and red box go away after user enters something
                 setRuleName(e.target.value);
                 setErrors((prev) => ({ ...prev, ruleName: "" }));
               }}
@@ -198,7 +208,6 @@ const EditRulePage = () => {
               </Typography>
             </Box>
 
-            {/* loop through conditions and render a row for each one */}
             {conditions.map((condition, index) => (
               <Paper
                 key={index}
@@ -339,7 +348,6 @@ const EditRulePage = () => {
               </div>
             )}
 
-            {/* only show decline reason if decline is selected */}
             {outcome === "decline" && (
               <>
                 <Typography
@@ -374,14 +382,59 @@ const EditRulePage = () => {
             >
               Premium Outcome
             </Typography>
+            {/* horizontal radio buttons, value field pops up below when one is selected */}
             <RadioGroup
+              row
               value={premiumOutcome}
-              onChange={(e) => setPremiumOutcome(e.target.value)}
-              sx={{ mb: 3 }}
+              onChange={(e) => {
+                setPremiumOutcome(e.target.value);
+                setOverrideValue("");
+                setDeltaValue("");
+                setErrors((prev) => ({ ...prev, overrideValue: "", deltaValue: "" }));
+              }}
+              sx={{ mb: 2 }}
             >
               <FormControlLabel value="override" control={<Radio />} label="Premium Override" />
               <FormControlLabel value="delta" control={<Radio />} label="Premium Delta" />
             </RadioGroup>
+
+            {/* show price field if override is selected */}
+            {premiumOutcome === "override" && (
+              <TextField
+                fullWidth
+                placeholder="e.g., 29.99"
+                label="Override Price (£)"
+                type="number"
+                value={overrideValue}
+                onChange={(e) => {
+                  setOverrideValue(e.target.value);
+                  setErrors((prev) => ({ ...prev, overrideValue: "" }));
+                }}
+                error={!!errors.overrideValue}
+                helperText={errors.overrideValue}
+                disabled={isLoading}
+                sx={{ mb: 3 }}
+              />
+            )}
+
+            {/* show percentage field if delta is selected */}
+            {premiumOutcome === "delta" && (
+              <TextField
+                fullWidth
+                placeholder="e.g., 10"
+                label="Delta Percentage (%)"
+                type="number"
+                value={deltaValue}
+                onChange={(e) => {
+                  setDeltaValue(e.target.value);
+                  setErrors((prev) => ({ ...prev, deltaValue: "" }));
+                }}
+                error={!!errors.deltaValue}
+                helperText={errors.deltaValue}
+                disabled={isLoading}
+                sx={{ mb: 3 }}
+              />
+            )}
 
             <hr
               style={{
