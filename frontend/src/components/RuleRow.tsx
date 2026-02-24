@@ -3,6 +3,7 @@ import { TableRow, TableCell, Chip, IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 
 interface RuleRowProps {
   order: number;
@@ -21,6 +22,9 @@ const RuleRow: React.FC<RuleRowProps> = ({
 }) => {
   return (
     <TableRow>
+      <TableCell>
+        <DragIndicatorIcon />
+      </TableCell>
       <TableCell>{order}</TableCell>
 
       <TableCell>{ruleName}</TableCell>
@@ -34,11 +38,11 @@ const RuleRow: React.FC<RuleRowProps> = ({
       <TableCell>{outcome}</TableCell>
 
       <TableCell>
-        <IconButton size="small">
+        <IconButton size="small" color="success">
           <PowerSettingsNewIcon fontSize="small" />
         </IconButton>
 
-        <IconButton size="small">
+        <IconButton size="small" color="primary">
           <EditIcon fontSize="small" />
         </IconButton>
 
