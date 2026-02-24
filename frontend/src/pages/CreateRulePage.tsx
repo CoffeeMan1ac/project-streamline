@@ -44,7 +44,6 @@ const CreateRulePage = () => {
     ruleName: "",
     ruleDescription: "",
     outcome: "",
-    declineReason: "",
     overrideValue: "",
     deltaValue: "",
   });
@@ -71,7 +70,6 @@ const CreateRulePage = () => {
       ruleName: "",
       ruleDescription: "",
       outcome: "",
-      declineReason: "",
       overrideValue: "",
       deltaValue: "",
     };
@@ -79,7 +77,6 @@ const CreateRulePage = () => {
     if (!ruleName) newErrors.ruleName = "Required";
     if (!ruleDescription) newErrors.ruleDescription = "Required";
     if (!outcome) newErrors.outcome = "Required";
-    if (outcome === "decline" && !declineReason) newErrors.declineReason = "Required";
     // only validate the value field for whichever premium option is selected
     if (premiumOutcome === "override" && !overrideValue) newErrors.overrideValue = "Required";
     if (premiumOutcome === "delta" && !deltaValue) newErrors.deltaValue = "Required";
@@ -353,84 +350,81 @@ const CreateRulePage = () => {
                   gutterBottom
                   sx={{ color: "text.primary" }}
                 >
-                  Customer Facing Reason for Decline *
+                  Reason for Decline
                 </Typography>
                 <TextField
                   fullWidth
                   placeholder="e.g., Unfortunately we are unable to insure this device"
                   value={declineReason}
-                  onChange={(e) => {
-                    setDeclineReason(e.target.value);
-                    setErrors((prev) => ({ ...prev, declineReason: "" }));
-                  }}
-                  error={!!errors.declineReason}
-                  helperText={errors.declineReason}
+                  onChange={(e) => setDeclineReason(e.target.value)}
                   disabled={isLoading}
                   sx={{ mb: 3 }}
                 />
               </>
             )}
 
-            <Typography
-              variant="body1"
-              fontWeight="bold"
-              gutterBottom
-              sx={{ color: "text.primary" }}
-            >
-              Premium Outcome
-            </Typography>
-            {/* horizontal radio buttons, value field pops up below when one is selected */}
-            <RadioGroup
-              row
-              value={premiumOutcome}
-              onChange={(e) => {
-                setPremiumOutcome(e.target.value);
-                setOverrideValue("");
-                setDeltaValue("");
-                setErrors((prev) => ({ ...prev, overrideValue: "", deltaValue: "" }));
-              }}
-              sx={{ mb: 2 }}
-            >
-              <FormControlLabel value="override" control={<Radio />} label="Premium Override" />
-              <FormControlLabel value="delta" control={<Radio />} label="Premium Delta" />
-            </RadioGroup>
+            {/* only show premium outcome if accept is selected */}
+            {outcome === "accept" && (
+              <>
+                <Typography
+                  variant="body1"
+                  fontWeight="bold"
+                  gutterBottom
+                  sx={{ color: "text.primary" }}
+                >
+                  Premium Outcome
+                </Typography>
+                <RadioGroup
+                  row
+                  value={premiumOutcome}
+                  onChange={(e) => {
+                    setPremiumOutcome(e.target.value);
+                    setOverrideValue("");
+                    setDeltaValue("");
+                    setErrors((prev) => ({ ...prev, overrideValue: "", deltaValue: "" }));
+                  }}
+                  sx={{ mb: 2 }}
+                >
+                  <FormControlLabel value="override" control={<Radio />} label="Premium Override" />
+                  <FormControlLabel value="delta" control={<Radio />} label="Premium Delta" />
+                </RadioGroup>
 
-            {/* show price field if override is selected */}
-            {premiumOutcome === "override" && (
-              <TextField
-                fullWidth
-                placeholder="e.g., 29.99"
-                label="Override Price (€)"
-                type="number"
-                value={overrideValue}
-                onChange={(e) => {
-                  setOverrideValue(e.target.value);
-                  setErrors((prev) => ({ ...prev, overrideValue: "" }));
-                }}
-                error={!!errors.overrideValue}
-                helperText={errors.overrideValue}
-                disabled={isLoading}
-                sx={{ mb: 3 }}
-              />
-            )}
+                {premiumOutcome === "override" && (
+                  <TextField
+                    fullWidth
+                    placeholder="e.g., 29.99"
+                    label="Override Price (€)"
+                    type="number"
+                    value={overrideValue}
+                    onChange={(e) => {
+                      setOverrideValue(e.target.value);
+                      setErrors((prev) => ({ ...prev, overrideValue: "" }));
+                    }}
+                    error={!!errors.overrideValue}
+                    helperText={errors.overrideValue}
+                    disabled={isLoading}
+                    sx={{ mb: 3 }}
+                  />
+                )}
 
-            {/* show percentage field if delta is selected */}
-            {premiumOutcome === "delta" && (
-              <TextField
-                fullWidth
-                placeholder="e.g., 10"
-                label="Delta Percentage (%)"
-                type="number"
-                value={deltaValue}
-                onChange={(e) => {
-                  setDeltaValue(e.target.value);
-                  setErrors((prev) => ({ ...prev, deltaValue: "" }));
-                }}
-                error={!!errors.deltaValue}
-                helperText={errors.deltaValue}
-                disabled={isLoading}
-                sx={{ mb: 3 }}
-              />
+                {premiumOutcome === "delta" && (
+                  <TextField
+                    fullWidth
+                    placeholder="e.g., 10"
+                    label="Delta Percentage (%)"
+                    type="number"
+                    value={deltaValue}
+                    onChange={(e) => {
+                      setDeltaValue(e.target.value);
+                      setErrors((prev) => ({ ...prev, deltaValue: "" }));
+                    }}
+                    error={!!errors.deltaValue}
+                    helperText={errors.deltaValue}
+                    disabled={isLoading}
+                    sx={{ mb: 3 }}
+                  />
+                )}
+              </>
             )}
 
             <hr
@@ -451,7 +445,7 @@ const CreateRulePage = () => {
                 startIcon={<SaveOutlinedIcon />}
                 sx={{ backgroundColor: "#0167b2" }}
               >
-                {isLoading ? "Saving..." : "Save Changes"}
+                {isLoading ? "Creating..." : "Create Rule"}
               </Button>
             </Box>
           </Box>
