@@ -9,6 +9,7 @@ import {
   TableContainer,
   Paper,
   Box,
+  Typography,
 } from "@mui/material";
 
 interface RuleTableProps {
@@ -23,10 +24,21 @@ interface RuleTableProps {
 
 const RuleTable: React.FC<RuleTableProps> = ({ rules }) => {
   return (
-    <Box border={1} borderColor="divider" borderRadius={2} bgcolor="white">
-      <Box sx={{ p: 2, borderBottom: 1, borderColor: "divider" }}>
-        <h2>Rules for Standard Shield</h2>
-        <p>2 active, 1 inactive</p>
+    <Box border={1} borderColor="divider" borderRadius={2} bgcolor={"background.paper"}>
+      <Box
+        sx={{
+          p: 2,
+          borderBottom: 1,
+          borderColor: "divider",
+        }}
+      >
+        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+          Rules for Standard Shield
+        </Typography>
+
+        <Typography variant="body2" color="text.secondary">
+          2 active, 1 inactive
+        </Typography>
       </Box>
       <TableContainer component={Paper}>
         <Table>

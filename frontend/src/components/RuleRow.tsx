@@ -23,7 +23,9 @@ const RuleRow: React.FC<RuleRowProps> = ({
   return (
     <TableRow>
       <TableCell>
-        <DragIndicatorIcon />
+        <IconButton size="small" color="default">
+          <DragIndicatorIcon />
+        </IconButton>
       </TableCell>
       <TableCell>{order}</TableCell>
 
