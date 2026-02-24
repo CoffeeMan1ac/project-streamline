@@ -32,10 +32,24 @@ const RuleRow: React.FC<RuleRowProps> = ({
       <TableCell>{ruleName}</TableCell>
 
       <TableCell>
-        <Chip label={status} size="small" color={status === "active" ? "success" : "default"} />
+        <Chip
+          label={status}
+          size="small"
+          sx={
+            status === "active"
+              ? {
+                  backgroundColor: "success.light",
+                  color: "success.dark",
+                  fontWeight: 500,
+                }
+              : undefined
+          }
+        />
       </TableCell>
 
-      <TableCell>{numberOfConditions} condition(s)</TableCell>
+      <TableCell>
+        {numberOfConditions} condition{numberOfConditions !== 1 ? "s" : ""}
+      </TableCell>
 
       <TableCell>{outcome}</TableCell>
 

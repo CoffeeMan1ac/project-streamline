@@ -16,17 +16,17 @@ const testRules: {
   },
   {
     order: 2,
-    ruleName: "Premium Adjustment",
-    status: "inactive",
-    numberOfConditions: 1,
-    outcome: "Delta: +2.00",
-  },
-  {
-    order: 3,
-    ruleName: "User Age Check",
+    ruleName: "Device Age Validation",
     status: "active",
     numberOfConditions: 1,
     outcome: "Decision: accept",
+  },
+  {
+    order: 3,
+    ruleName: "Premium Adjustment",
+    status: "inactive",
+    numberOfConditions: 1,
+    outcome: "Delta: +€2.00",
   },
 ];
 

@@ -15,6 +15,7 @@ export const lightTheme = createTheme({
     },
     success: {
       main: "#00a73d",
+      light: "#dbfdea",
     },
   },
   components: {
@@ -45,6 +46,7 @@ export const darkTheme = createTheme({
     },
     success: {
       main: "#4CAF50",
+      light: "#dbfdea",
     },
   },
   components: {

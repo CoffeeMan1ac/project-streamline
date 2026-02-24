@@ -43,7 +43,7 @@ const RuleTable: React.FC<RuleTableProps> = ({ rules }) => {
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
-            <TableRow>
+            <TableRow sx={{ bgcolor: "background.default" }}>
               <TableCell>Drag</TableCell>
               <TableCell>Order</TableCell>
               <TableCell>Rule Name</TableCell>
