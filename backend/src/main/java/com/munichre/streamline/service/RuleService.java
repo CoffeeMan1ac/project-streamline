@@ -2,7 +2,13 @@ package com.munichre.streamline.service;
 
 import com.munichre.streamline.model.Product;
 import com.munichre.streamline.model.Rule;
+import com.munichre.streamline.model.RuleConfig;
+import com.munichre.streamline.model.RuleConfig.Condition;
+import com.munichre.streamline.model.RuleConfig.Then;
+import com.munichre.streamline.model.RuleConfig.When;
 import com.munichre.streamline.repository.RuleRepository;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -27,9 +33,6 @@ public class RuleService {
     List<Rule> currentRules =
         ruleRepository.findByProductIdAndActiveTrueOrderByPriorityAsc(productUUID);
 
-    newRule.setName((String) fields.get("name"));
-    newRule.setDescription((String) fields.get("description"));
-
     // Check for duplicate priorities in existing rules.
     Integer priority = (Integer) fields.get("priority");
     for (Rule rule : currentRules) {
@@ -39,12 +42,47 @@ public class RuleService {
     }
     newRule.setPriority(priority);
 
+    newRule.setName((String) fields.get("name"));
+    newRule.setDescription((String) fields.get("description"));
     newRule.setActive((Boolean) fields.get("active"));
-    newRule.setConditionField((String) fields.get("conditionField"));
-    newRule.setConditionOperator((String) fields.get("conditionOperator"));
-    newRule.setConditionValue((String) fields.get("conditionValue"));
-    newRule.setActionType((String) fields.get("actionType"));
-    newRule.setActionReason((String) fields.get("actionReason"));
+    newRule.setReason((String) fields.get("reason"));
+    ;
+
+    @SuppressWarnings("unchecked")
+    Map<String, Object> ruleConfigFields = (Map<String, Object>) fields.get("rule_config");
+    @SuppressWarnings("unchecked")
+    Map<String, Object> whenField = (Map<String, Object>) ruleConfigFields.get("when");
+    @SuppressWarnings("unchecked")
+    Map<String, Object> thenField = (Map<String, Object>) ruleConfigFields.get("then");
+
+    // WHEN
+
+    When newWhen = new When();
+    newWhen.setMatch((String) whenField.get("match"));
+
+    @SuppressWarnings("unchecked")
+    List<Map<String, Object>> conditionFields =
+        (List<Map<String, Object>>) whenField.get("conditions");
+    List<Condition> newConditions = new ArrayList<>();
+    for (Map<String, Object> conditionField : conditionFields) {
+      String field = (String) conditionField.get("field");
+      String value = (String) conditionField.get("value");
+      String operator = (String) conditionField.get("operator");
+      newConditions.add(new Condition(field, operator, value));
+    }
+    newWhen.setConditions(newConditions);
+
+    // THEN
+
+    Then newThen = new Then();
+    newThen.setDecision((String) thenField.get("decision"));
+    newThen.setPremiumDelta((BigDecimal) thenField.get("premiumDelta"));
+    newThen.setPremiumOverride((BigDecimal) thenField.get("premiumOverride"));
+
+    Boolean newStop = (Boolean) ruleConfigFields.get("stop");
+
+    RuleConfig newRuleConfig = new RuleConfig(newWhen, newThen, newStop);
+    newRule.setRuleConfig(newRuleConfig);
 
     ruleRepository.saveAndFlush(newRule);
   }
