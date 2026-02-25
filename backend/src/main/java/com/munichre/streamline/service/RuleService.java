@@ -89,11 +89,10 @@ public class RuleService {
   }
 
   public List<Rule> getRules(@NonNull UUID product, Boolean active) {
-    List<Rule> rules = ruleRepository.findByProductIdAndActiveTrueOrderByPriorityAsc(product);
-    if (active == null) return rules;
-
-    if (active) rules.removeIf(rule -> !rule.getActive()); // Remove inactive rules
-    else rules.removeIf(rule -> rule.getActive()); // Remove active rules
+    List<Rule> rules;
+    if (active == null) rules = ruleRepository.findByProductIdOrderByPriorityAsc(product);
+    else if (active) rules = ruleRepository.findByProductIdAndActiveTrueOrderByPriorityAsc(product);
+    else rules = ruleRepository.findByProductIdAndActiveFalseOrderByPriorityAsc(product);
 
     return rules;
   }
