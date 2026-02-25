@@ -1,5 +1,6 @@
 package com.munichre.streamline.service;
 
+import com.munichre.streamline.dto.RuleResponseDto;
 import com.munichre.streamline.model.Product;
 import com.munichre.streamline.model.Rule;
 import com.munichre.streamline.model.RuleConfig;
@@ -88,12 +89,12 @@ public class RuleService {
     ruleRepository.saveAndFlush(newRule);
   }
 
-  public List<Rule> getRules(@NonNull UUID product, Boolean active) {
+  public List<RuleResponseDto> getRules(@NonNull UUID product, Boolean active) {
     List<Rule> rules;
     if (active == null) rules = ruleRepository.findByProductIdOrderByPriorityAsc(product);
     else if (active) rules = ruleRepository.findByProductIdAndActiveTrueOrderByPriorityAsc(product);
     else rules = ruleRepository.findByProductIdAndActiveFalseOrderByPriorityAsc(product);
 
-    return rules;
+    return rules.stream().map(rule -> RuleResponseDto.of(rule)).toList();
   }
 }
