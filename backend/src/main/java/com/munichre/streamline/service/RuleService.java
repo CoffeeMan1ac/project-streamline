@@ -136,5 +136,4 @@ public class RuleService {
         .map(rule -> RuleResponseDto.of(rule))
         .toList();
   }
-
 }

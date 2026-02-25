@@ -37,9 +37,9 @@ public class RuleController {
   }
 
   @PutMapping
-    public ResponseEntity<List<RuleResponseDto>> reorderRule(@RequestBody Map<String, Object> payload) {
+  public ResponseEntity<List<RuleResponseDto>> reorderRule(
+      @RequestBody Map<String, Object> payload) {
     List<RuleResponseDto> newOrder = ruleService.reorderRule(payload);
     return ResponseEntity.ok(newOrder);
   }
-
 }
