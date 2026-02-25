@@ -5,32 +5,36 @@ const testRules: {
   ruleName: string;
   status: "active" | "inactive";
   numberOfConditions: number;
-  outcome: string;
+  decision: string;
+  premium: string;
 }[] = [
   {
     order: 1,
     ruleName: "Age Limit Check",
     status: "active",
     numberOfConditions: 1,
-    outcome: "Decision: accept",
+    decision: "accept",
+    premium: "+10%",
   },
   {
     order: 2,
     ruleName: "Device Age Validation",
     status: "active",
     numberOfConditions: 1,
-    outcome: "Decision: accept",
+    decision: "accept",
+    premium: "+5%",
   },
   {
     order: 3,
     ruleName: "Premium Adjustment",
     status: "inactive",
     numberOfConditions: 1,
-    outcome: "Delta: +€2.00",
+    decision: "accept",
+    premium: "+15%",
   },
 ];
 
-const AdminPage = () => {
+const RulesManagementPage = () => {
   return (
     <>
       <Box sx={{ mx: 20, my: 4 }}>
@@ -40,4 +44,4 @@ const AdminPage = () => {
   );
 };
 
-export default AdminPage;
+export default RulesManagementPage;

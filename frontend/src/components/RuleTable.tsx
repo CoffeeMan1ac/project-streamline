@@ -18,7 +18,8 @@ interface RuleTableProps {
     ruleName: string;
     status: "active" | "inactive";
     numberOfConditions: number;
-    outcome: string;
+    decision: string;
+    premium: string;
   }[];
 }
 
@@ -49,7 +50,8 @@ const RuleTable: React.FC<RuleTableProps> = ({ rules }) => {
               <TableCell>Rule Name</TableCell>
               <TableCell>Status</TableCell>
               <TableCell>Conditions</TableCell>
-              <TableCell>Outcome</TableCell>
+              <TableCell>Decision</TableCell>
+              <TableCell>Premium</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -62,7 +64,8 @@ const RuleTable: React.FC<RuleTableProps> = ({ rules }) => {
                 ruleName={rule.ruleName}
                 status={rule.status}
                 numberOfConditions={rule.numberOfConditions}
-                outcome={rule.outcome}
+                decision={rule.decision}
+                premium={rule.premium}
               />
             ))}
           </TableBody>

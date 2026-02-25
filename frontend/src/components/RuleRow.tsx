@@ -10,7 +10,8 @@ interface RuleRowProps {
   ruleName: string;
   status: "active" | "inactive";
   numberOfConditions: number;
-  outcome: string;
+  decision: string;
+  premium: string;
 }
 
 const RuleRow: React.FC<RuleRowProps> = ({
@@ -18,7 +19,8 @@ const RuleRow: React.FC<RuleRowProps> = ({
   ruleName,
   status,
   numberOfConditions,
-  outcome,
+  decision,
+  premium,
 }) => {
   return (
     <TableRow>
@@ -51,7 +53,8 @@ const RuleRow: React.FC<RuleRowProps> = ({
         {numberOfConditions} condition{numberOfConditions !== 1 ? "s" : ""}
       </TableCell>
 
-      <TableCell>{outcome}</TableCell>
+      <TableCell>{decision}</TableCell>
+      <TableCell>{premium}</TableCell>
 
       <TableCell>
         <IconButton size="small" color="success">

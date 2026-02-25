@@ -7,7 +7,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import AcceptPage from "./pages/AcceptPage";
 import DeclinePage from "./pages/DeclinePage";
-import AdminPage from "./pages/AdminPage";
+import RulesManagementPage from "./pages/RulesManagementPage";
 import { ThemeProvider, CssBaseline, Box } from "@mui/material";
 import { lightTheme, darkTheme } from "./theme/theme";
 import React from "react";
@@ -39,7 +39,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/quote" element={<QuotesPage />} />
-            <Route path="/admin" element={<AdminPage />} />
+            <Route path="/admin" element={<RulesManagementPage />} />
             <Route path="/accepted" element={<AcceptPage />} />
             <Route path="/declined" element={<DeclinePage />} />
           </Routes>
