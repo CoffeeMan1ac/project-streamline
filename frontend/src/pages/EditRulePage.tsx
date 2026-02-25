@@ -26,6 +26,7 @@ type Condition = {
 
 const EditRulePage = () => {
   const { id } = useParams();
+  const [product, setProduct] = useState("");
   const [ruleName, setRuleName] = useState("");
   const [ruleDescription, setRuleDescription] = useState("");
   const [conditionLogic, setConditionLogic] = useState("all");
@@ -36,17 +37,19 @@ const EditRulePage = () => {
   const [deltaValue, setDeltaValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  // start with two empty conditions by default
+  // start with one empty condition by default
   const [conditions, setConditions] = useState<Condition[]>([
     { field: "", operator: "", value: "" },
-    { field: "", operator: "", value: "" },
   ]);
+
+  // tracks per-condition errors
+  const [conditionErrors, setConditionErrors] = useState<boolean[]>([false]);
 
   const [errors, setErrors] = useState({
     ruleName: "",
     ruleDescription: "",
+    product: "",
     outcome: "",
-    declineReason: "",
     overrideValue: "",
     deltaValue: "",
   });
@@ -58,11 +61,13 @@ const EditRulePage = () => {
   // adds a new condition row
   const addCondition = () => {
     setConditions((prev) => [...prev, { field: "", operator: "", value: "" }]);
+    setConditionErrors((prev) => [...prev, false]);
   };
 
-  // removes a condition row
+  // removes a condition row - only allowed if more than one condition exists
   const removeCondition = (index: number) => {
     setConditions((prev) => prev.filter((_, i) => i !== index));
+    setConditionErrors((prev) => prev.filter((_, i) => i !== index));
   };
 
   // updates a specific field in a specific condition row
@@ -70,30 +75,39 @@ const EditRulePage = () => {
     setConditions((prev) =>
       prev.map((condition, i) => (i === index ? { ...condition, [key]: value } : condition))
     );
+    // clear error for this condition when user updates it
+    setConditionErrors((prev) => prev.map((err, i) => (i === index ? false : err)));
   };
 
   const validateForm = () => {
     const newErrors = {
       ruleName: "",
       ruleDescription: "",
+      product: "",
       outcome: "",
-      declineReason: "",
       overrideValue: "",
       deltaValue: "",
     };
 
     if (!ruleName) newErrors.ruleName = "Required";
     if (!ruleDescription) newErrors.ruleDescription = "Required";
+    if (!product) newErrors.product = "Required";
     if (!outcome) newErrors.outcome = "Required";
-    if (outcome === "decline" && !declineReason) newErrors.declineReason = "Required";
     // only validate the value field for whichever premium option is selected
     if (premiumOutcome === "override" && !overrideValue) newErrors.overrideValue = "Required";
     if (premiumOutcome === "delta" && !deltaValue) newErrors.deltaValue = "Required";
 
+    // validate each condition row has all fields filled
+    const newConditionErrors = conditions.map(
+      (condition) => !condition.field || !condition.operator || !condition.value
+    );
+    setConditionErrors(newConditionErrors);
+
     setErrors(newErrors);
 
     const allValid = Object.values(newErrors).every((error) => error === ""); // checks if every error string is empty
-    return allValid;
+    const allConditionsValid = newConditionErrors.every((err) => !err);
+    return allValid && allConditionsValid;
   };
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
@@ -104,6 +118,7 @@ const EditRulePage = () => {
 
     try {
       const payload = {
+        product,
         ruleName,
         ruleDescription,
         conditions,
@@ -144,6 +159,48 @@ const EditRulePage = () => {
             }}
           />
           <Box component="form" onSubmit={handleSubmit}>
+            <Typography
+              variant="body1"
+              fontWeight="bold"
+              gutterBottom
+              sx={{ color: "text.primary" }}
+            >
+              Product *
+            </Typography>
+            <FormControl fullWidth disabled={isLoading} sx={{ mb: errors.product ? 0 : 3 }}>
+              <InputLabel>Select Product</InputLabel>
+              <Select
+                value={product}
+                label="Select Product"
+                onChange={(e) => {
+                  setProduct(e.target.value);
+                  setErrors((prev) => ({ ...prev, product: "" }));
+                }}
+                sx={{ textAlign: "left" }}
+                error={!!errors.product}
+              >
+                <MenuItem value="">Select product</MenuItem>
+                <MenuItem value="standard">Standard</MenuItem>
+                <MenuItem value="premium">Premium</MenuItem>
+                <MenuItem value="global">Global</MenuItem>
+                <MenuItem value="standardGreen">Standard Green</MenuItem>
+                <MenuItem value="premiumGreen">Premium Green</MenuItem>
+                <MenuItem value="globalGreen">Global Green</MenuItem>
+              </Select>
+            </FormControl>
+            {errors.product && (
+              <div
+                style={{
+                  color: "#d32f2f",
+                  fontSize: "12px",
+                  marginTop: "4px",
+                  marginBottom: "24px",
+                }}
+              >
+                {errors.product}
+              </div>
+            )}
+
             <Typography
               variant="body1"
               fontWeight="bold"
@@ -214,7 +271,13 @@ const EditRulePage = () => {
               <Paper
                 key={index}
                 elevation={0}
-                sx={{ bgcolor: "background.default", p: 2, borderRadius: 2, mb: 2 }}
+                sx={{
+                  bgcolor: conditionErrors[index] ? "#fff5f5" : "background.default",
+                  p: 2,
+                  borderRadius: 2,
+                  mb: 2,
+                  border: conditionErrors[index] ? "1px solid #d32f2f" : "none",
+                }}
               >
                 <Box sx={{ display: "flex", gap: 2, alignItems: "flex-start" }}>
                   <Box sx={{ flex: 1 }}>
@@ -270,19 +333,27 @@ const EditRulePage = () => {
                     />
                   </Box>
 
-                  <Typography
-                    onClick={() => removeCondition(index)}
-                    sx={{
-                      cursor: "pointer",
-                      color: "error.main",
-                      fontSize: "20px",
-                      flexShrink: 0,
-                      mt: 3.5,
-                    }}
-                  >
-                    ✕
-                  </Typography>
+                  {/* only show remove button if there is more than one condition */}
+                  {conditions.length > 1 && (
+                    <Typography
+                      onClick={() => removeCondition(index)}
+                      sx={{
+                        cursor: "pointer",
+                        color: "error.main",
+                        fontSize: "20px",
+                        flexShrink: 0,
+                        mt: 3.5,
+                      }}
+                    >
+                      ✕
+                    </Typography>
+                  )}
                 </Box>
+                {conditionErrors[index] && (
+                  <Typography variant="body2" sx={{ color: "#d32f2f", mt: 1, fontSize: "12px" }}>
+                    All fields in this condition are required
+                  </Typography>
+                )}
               </Paper>
             ))}
 
@@ -318,7 +389,7 @@ const EditRulePage = () => {
               gutterBottom
               sx={{ color: "text.primary" }}
             >
-              Outcome *
+              Decision *
             </Typography>
             <FormControl fullWidth disabled={isLoading} sx={{ mb: errors.outcome ? 0 : 3 }}>
               <InputLabel>Accept or Decline</InputLabel>
@@ -359,84 +430,84 @@ const EditRulePage = () => {
                   gutterBottom
                   sx={{ color: "text.primary" }}
                 >
-                  Customer Facing Reason for Decline *
+                  Reason for Decline
                 </Typography>
                 <TextField
                   fullWidth
                   placeholder="e.g., Unfortunately we are unable to insure this device"
                   value={declineReason}
-                  onChange={(e) => {
-                    setDeclineReason(e.target.value);
-                    setErrors((prev) => ({ ...prev, declineReason: "" }));
-                  }}
-                  error={!!errors.declineReason}
-                  helperText={errors.declineReason}
+                  onChange={(e) => setDeclineReason(e.target.value)}
                   disabled={isLoading}
                   sx={{ mb: 3 }}
                 />
               </>
             )}
 
-            <Typography
-              variant="body1"
-              fontWeight="bold"
-              gutterBottom
-              sx={{ color: "text.primary" }}
-            >
-              Premium Outcome
-            </Typography>
-            {/* horizontal radio buttons, value field pops up below when one is selected */}
-            <RadioGroup
-              row
-              value={premiumOutcome}
-              onChange={(e) => {
-                setPremiumOutcome(e.target.value);
-                setOverrideValue("");
-                setDeltaValue("");
-                setErrors((prev) => ({ ...prev, overrideValue: "", deltaValue: "" }));
-              }}
-              sx={{ mb: 2 }}
-            >
-              <FormControlLabel value="override" control={<Radio />} label="Premium Override" />
-              <FormControlLabel value="delta" control={<Radio />} label="Premium Delta" />
-            </RadioGroup>
+            {/* only show premium outcome if accept is selected */}
+            {outcome === "accept" && (
+              <>
+                <Typography
+                  variant="body1"
+                  fontWeight="bold"
+                  gutterBottom
+                  sx={{ color: "text.primary" }}
+                >
+                  Premium
+                </Typography>
+                {/* horizontal radio buttons, value field pops up below when one is selected */}
+                <RadioGroup
+                  row
+                  value={premiumOutcome}
+                  onChange={(e) => {
+                    setPremiumOutcome(e.target.value);
+                    setOverrideValue("");
+                    setDeltaValue("");
+                    setErrors((prev) => ({ ...prev, overrideValue: "", deltaValue: "" }));
+                  }}
+                  sx={{ mb: 2 }}
+                >
+                  <FormControlLabel value="override" control={<Radio />} label="Override" />
+                  <FormControlLabel value="delta" control={<Radio />} label="Delta" />
+                </RadioGroup>
 
-            {/* show price field if override is selected */}
-            {premiumOutcome === "override" && (
-              <TextField
-                fullWidth
-                placeholder="e.g., 29.99"
-                label="Override Price (€)"
-                type="number"
-                value={overrideValue}
-                onChange={(e) => {
-                  setOverrideValue(e.target.value);
-                  setErrors((prev) => ({ ...prev, overrideValue: "" }));
-                }}
-                error={!!errors.overrideValue}
-                helperText={errors.overrideValue}
-                disabled={isLoading}
-                sx={{ mb: 3 }}
-              />
-            )}
+                {/* show price field if override is selected */}
+                {premiumOutcome === "override" && (
+                  <TextField
+                    fullWidth
+                    placeholder="e.g., 29.99"
+                    label="Override Price (€)"
+                    type="number"
+                    value={overrideValue}
+                    onChange={(e) => {
+                      setOverrideValue(e.target.value);
+                      setErrors((prev) => ({ ...prev, overrideValue: "" }));
+                    }}
+                    error={!!errors.overrideValue}
+                    helperText={errors.overrideValue}
+                    disabled={isLoading}
+                    sx={{ mb: 3 }}
+                  />
+                )}
 
-            {/* show percentage field if delta is selected */}
-            {premiumOutcome === "delta" && (
-              <TextField
-                fullWidth
-                placeholder="e.g., 10"
-                label="Delta Percentage (%)"
-                type="number"
-                value={deltaValue}
-                onChange={(e) => {
-                  setDeltaValue(e.target.value);
-                  setErrors((prev) => ({ ...prev, deltaValue: "" }));
-                }}
-                error={!!errors.deltaValue}
-                helperText={errors.deltaValue}
-                disabled={isLoading}
-                sx={{ mb: 3 }}
-              />
+                {/* show percentage field if delta is selected */}
+                {premiumOutcome === "delta" && (
+                  <TextField
+                    fullWidth
+                    placeholder="e.g., 10"
+                    label="Delta Percentage (%)"
+                    type="number"
+                    value={deltaValue}
+                    onChange={(e) => {
+                      setDeltaValue(e.target.value);
+                      setErrors((prev) => ({ ...prev, deltaValue: "" }));
+                    }}
+                    error={!!errors.deltaValue}
+                    helperText={errors.deltaValue}
+                    disabled={isLoading}
+                    sx={{ mb: 3 }}
+                  />
+                )}
+              </>
             )}
 
             <hr
