@@ -39,7 +39,9 @@ const RulesManagementPage = () => {
   return (
     <>
       <Box sx={{ mx: 20, my: 4 }}>
-        <SelectProduct />
+        <Box sx={{ my: 4 }}>
+          <SelectProduct />
+        </Box>
         <RuleTable rules={testRules} />
       </Box>
     </>
