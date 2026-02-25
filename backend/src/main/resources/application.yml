@@ -1,11 +1,11 @@
-﻿spring:
+spring:
   application:
     name: streamline
     
   datasource:
     url: jdbc:postgresql://localhost:5432/streamline
-    username: postgres
-    password: postgres
+    username: ${SPRING_DATASOURCE_USERNAME:app_user}
+    password: ${SPRING_DATASOURCE_PASSWORD:app_pass}
     
   jpa:
     hibernate:
