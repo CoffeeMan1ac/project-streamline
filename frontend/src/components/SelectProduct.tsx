@@ -25,7 +25,12 @@ const SelectProduct = () => {
             sx={{ textAlign: "left" }}
           >
             <MenuItem value="">Select product</MenuItem>
+            <MenuItem value="standard-shield-green">Standard Shield Green</MenuItem>
             <MenuItem value="standard-shield">Standard Shield</MenuItem>
+            <MenuItem value="premium-shield-green">Premium Shield Green</MenuItem>
+            <MenuItem value="premium-shield">Premium Shield</MenuItem>
+            <MenuItem value="global-shield-green">Global Shield Green</MenuItem>
+            <MenuItem value="global-shield">Global Shield</MenuItem>
           </Select>
         </FormControl>
       </Box>
