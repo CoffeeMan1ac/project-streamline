@@ -1,6 +1,6 @@
 package com.munichre.streamline.controller;
 
-import com.munichre.streamline.model.Rule;
+import com.munichre.streamline.dto.RuleResponseDto;
 import com.munichre.streamline.service.RuleService;
 import java.util.List;
 import java.util.Map;
@@ -30,9 +30,9 @@ public class RuleController {
    * @return List of matching rules.
    */
   @GetMapping
-  public ResponseEntity<List<Rule>> getRules(
+  public ResponseEntity<List<RuleResponseDto>> getRules(
       @RequestParam UUID product, @RequestParam(required = false) Boolean active) {
-    List<Rule> rules = ruleService.getRules(product, active);
-    return ResponseEntity.ok(rules);
+    List<RuleResponseDto> rules = ruleService.getRules(product, active);
+    return ResponseEntity.ok(dtos);
   }
 }
