@@ -14,8 +14,7 @@ public record RuleResponseDto(
     Boolean active,
     RuleConfigResponseDto ruleConfig,
     LocalDateTime createdAt,
-    LocalDateTime updatedAt
-) {
+    LocalDateTime updatedAt) {
 
   public static RuleResponseDto of(Rule r) {
     if (r == null) {

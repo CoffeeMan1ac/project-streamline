@@ -33,6 +33,6 @@ public class RuleController {
   public ResponseEntity<List<RuleResponseDto>> getRules(
       @RequestParam UUID product, @RequestParam(required = false) Boolean active) {
     List<RuleResponseDto> rules = ruleService.getRules(product, active);
-    return ResponseEntity.ok(dtos);
+    return ResponseEntity.ok(rules);
   }
 }

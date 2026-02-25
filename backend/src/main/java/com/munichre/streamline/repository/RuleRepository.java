@@ -25,6 +25,7 @@ public interface RuleRepository extends JpaRepository<Rule, UUID> {
 
   /** Fetch all active rules, ordered by priority (lower = first). */
   List<Rule> findByProductIdAndActiveTrueOrderByPriorityAsc(UUID productId);
+
   // interface
 
   // WHAT IT DOES:
@@ -37,11 +38,10 @@ public interface RuleRepository extends JpaRepository<Rule, UUID> {
   // rule.setActionReason(rs.getString("action_reason"));
   // rule.setPriority(rs.getInt("priority"));
   // rule.setActive(rs.getBoolean("active"));
-  
+
   /** Fetch all inactive rules, ordered by priority (lower = first). */
   List<Rule> findByProductIdAndActiveFalseOrderByPriorityAsc(UUID productId);
 
   // Fetch all rules, ordered by priority (lower = first).
   List<Rule> findByProductIdOrderByPriorityAsc(UUID productId);
-
 }

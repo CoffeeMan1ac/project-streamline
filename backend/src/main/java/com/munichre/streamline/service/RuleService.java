@@ -48,7 +48,6 @@ public class RuleService {
     newRule.setDescription((String) fields.get("description"));
     newRule.setActive((Boolean) fields.get("active"));
     newRule.setReason((String) fields.get("reason"));
-    ;
 
     @SuppressWarnings("unchecked")
     Map<String, Object> ruleConfigFields = (Map<String, Object>) fields.get("rule_config");

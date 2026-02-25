@@ -8,15 +8,10 @@ import java.util.stream.Collectors;
 /**
  * DTO representation of {@link RuleConfig}. Used when serialising rules to the REST API.
  *
- * <p>The structure exactly mirrors the nested classes of the model so that Jackson can
- * convert from/to the JSON stored in the database with no translation logic on the
- * frontend.
+ * <p>The structure exactly mirrors the nested classes of the model so that Jackson can convert
+ * from/to the JSON stored in the database with no translation logic on the frontend.
  */
-public record RuleConfigResponseDto(
-    When when,
-    Then then,
-    Boolean stop
-) {
+public record RuleConfigResponseDto(When when, Then then, Boolean stop) {
 
   public static RuleConfigResponseDto of(RuleConfig config) {
     if (config == null) {
@@ -24,9 +19,7 @@ public record RuleConfigResponseDto(
     }
 
     return new RuleConfigResponseDto(
-        When.of(config.getWhen()),
-        Then.of(config.getThen()),
-        config.getStop());
+        When.of(config.getWhen()), Then.of(config.getThen()), config.getStop());
   }
 
   public static record When(String match, List<Condition> conditions) {
@@ -34,8 +27,10 @@ public record RuleConfigResponseDto(
       if (when == null) {
         return null;
       }
-      List<Condition> conds = when.getConditions() == null ?
-          null : when.getConditions().stream().map(Condition::of).collect(Collectors.toList());
+      List<Condition> conds =
+          when.getConditions() == null
+              ? null
+              : when.getConditions().stream().map(Condition::of).collect(Collectors.toList());
       return new When(when.getMatch(), conds);
     }
   }
@@ -58,4 +53,3 @@ public record RuleConfigResponseDto(
     }
   }
 }
-
