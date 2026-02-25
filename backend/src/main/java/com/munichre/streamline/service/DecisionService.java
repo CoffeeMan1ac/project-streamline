@@ -3,13 +3,13 @@ package com.munichre.streamline.service;
 import com.munichre.streamline.dto.DecisionStatus;
 import com.munichre.streamline.dto.EvaluationResult;
 import com.munichre.streamline.exception.FieldNotFoundException;
-import com.munichre.streamline.model.Product;
 import com.munichre.streamline.model.Rule;
 import com.munichre.streamline.model.RuleConfig;
 import com.munichre.streamline.model.RuleConfig.Condition;
 import com.munichre.streamline.model.RuleConfig.Then;
 import com.munichre.streamline.model.RuleConfig.When;
-import com.munichre.streamline.repository.ProductRepository;
+import com.munichre.streamline.product.model.Product;
+import com.munichre.streamline.product.service.ProductService;
 import com.munichre.streamline.repository.RuleRepository;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ import org.springframework.stereotype.Service;
 public class DecisionService {
 
   private final RuleRepository ruleRepository;
-  private final ProductRepository productRepository;
+  private final ProductService productService;
 
   // // TODO: FieldNotFoundException not implemented.
   // private static final BigDecimal BASE_PREMIUM = new BigDecimal("10.00");
@@ -60,7 +60,7 @@ public class DecisionService {
     String productIdString = (String) fields.get("productId");
     UUID productId = UUID.fromString(productIdString);
 
-    final Product product = productRepository.getReferenceById(productId);
+    final Product product = productService.getProduct(productId);
     BigDecimal premium = product.getBaseRate();
 
     // 1. Fetch rules from database

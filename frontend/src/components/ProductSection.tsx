@@ -23,7 +23,7 @@ const ProductSection = () => {
       try {
         setLoading(true);
 
-        const response = await axios.get("api/products", {
+        const response = await axios.get("api/customer/products", {
           signal: controller.signal,
         });
 

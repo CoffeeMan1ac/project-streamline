@@ -1,32 +1,52 @@
-package com.munichre.streamline.service;
+package com.munichre.streamline.product.service;
 
 import static java.util.stream.Collectors.groupingBy;
 
-import com.munichre.streamline.dto.CoverageCategoryDto;
-import com.munichre.streamline.dto.CoverageDto;
-import com.munichre.streamline.dto.ProductCoverageRowDto;
-import com.munichre.streamline.dto.ProductDto;
-import com.munichre.streamline.dto.ProductRowDto;
-import com.munichre.streamline.dto.ProductTagDto;
-import com.munichre.streamline.dto.ProductTagRowDto;
-import com.munichre.streamline.dto.ProductTypeDto;
-import com.munichre.streamline.repository.ProductCoverageRepository;
-import com.munichre.streamline.repository.ProductRepository;
-import com.munichre.streamline.repository.ProductTagRepository;
+import com.munichre.streamline.product.api.dto.CoverageCategoryDto;
+import com.munichre.streamline.product.api.dto.CoverageDto;
+import com.munichre.streamline.product.api.dto.ProductDto;
+import com.munichre.streamline.product.api.dto.ProductOptionDto;
+import com.munichre.streamline.product.api.dto.ProductTagDto;
+import com.munichre.streamline.product.api.dto.ProductTypeDto;
+import com.munichre.streamline.product.exception.ProductNotFoundException;
+import com.munichre.streamline.product.model.Product;
+import com.munichre.streamline.product.repository.ProductCoverageRepository;
+import com.munichre.streamline.product.repository.ProductRepository;
+import com.munichre.streamline.product.repository.ProductTagRepository;
+import com.munichre.streamline.product.repository.dto.ProductCoverageRowDto;
+import com.munichre.streamline.product.repository.dto.ProductRowDto;
+import com.munichre.streamline.product.repository.dto.ProductTagRowDto;
+import java.time.Clock;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class ProductService {
-
-  private final ProductRepository productReadRepository;
+  private final ProductRepository productRepository;
   private final ProductCoverageRepository productCoverageRepository;
   private final ProductTagRepository productTagRepository;
+  private final Clock clock;
+
+  public List<ProductOptionDto> getActiveProductOptions() {
+    LocalDateTime now = LocalDateTime.now(clock);
+    return productRepository.findActiveProductOptions(now);
+  }
+
+  public List<ProductOptionDto> getAllProductOptions() {
+    return productRepository.findProductOptions();
+  }
+
+  @Transactional(readOnly = true)
+  public Product getProduct(@NonNull UUID id) {
+    return productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
+  }
 
   /**
    * Fetches active products and assembles them with their respective coverages and exclusions using
@@ -35,7 +55,7 @@ public class ProductService {
   public List<ProductDto> getActiveProducts() {
     LocalDateTime now = LocalDateTime.now();
 
-    List<ProductRowDto> productRows = productReadRepository.findActiveProductRows(now);
+    List<ProductRowDto> productRows = productRepository.findActiveProductRows(now);
     if (productRows.isEmpty()) {
       return List.of();
     }
@@ -51,7 +71,7 @@ public class ProductService {
             .collect(groupingBy(ProductCoverageRowDto::productId));
 
     Map<UUID, List<ProductTagRowDto>> tagsByProduct =
-        productTagRepository.findTagRows(productIds).stream()
+        productTagRepository.findTagRowsByProductIds(productIds).stream()
             .collect(groupingBy(ProductTagRowDto::productId));
 
     return productRows.stream()

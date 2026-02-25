@@ -1,4 +1,4 @@
-package com.munichre.streamline.dto;
+package com.munichre.streamline.product.repository.dto;
 
 import java.util.UUID;
 

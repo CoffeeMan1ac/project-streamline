@@ -1,4 +1,4 @@
-package com.munichre.streamline.model;
+package com.munichre.streamline.product.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

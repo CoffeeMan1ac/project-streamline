@@ -1,4 +1,4 @@
-package com.munichre.streamline.dto;
+package com.munichre.streamline.product.api.dto;
 
 import java.math.BigDecimal;
 import java.util.List;

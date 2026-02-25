@@ -1,9 +1,9 @@
-package com.munichre.streamline.model;
+package com.munichre.streamline.product.model;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -38,21 +38,21 @@ public class Product {
       name = "product_product_tags",
       joinColumns = @JoinColumn(name = "product_id"),
       inverseJoinColumns = @JoinColumn(name = "product_tag_id"))
-  private List<ProductTag> tags;
+  private Set<ProductTag> tags;
 
   @ManyToMany
   @JoinTable(
       name = "product_coverages",
       joinColumns = @JoinColumn(name = "product_id"),
       inverseJoinColumns = @JoinColumn(name = "coverage_id"))
-  private List<Coverage> coverages;
+  private Set<Coverage> coverages;
 
   @ManyToMany
   @JoinTable(
       name = "product_exclusions",
       joinColumns = @JoinColumn(name = "product_id"),
       inverseJoinColumns = @JoinColumn(name = "coverage_id"))
-  private List<Coverage> exclusions;
+  private Set<Coverage> exclusions;
 
   /** When the product was launched, or when it should be launched. */
   @Column(nullable = false)

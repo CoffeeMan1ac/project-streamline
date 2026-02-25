@@ -1,7 +1,7 @@
-package com.munichre.streamline.repository;
+package com.munichre.streamline.product.repository;
 
-import com.munichre.streamline.dto.ProductTagRowDto;
-import com.munichre.streamline.model.Product;
+import com.munichre.streamline.product.model.Product;
+import com.munichre.streamline.product.repository.dto.ProductTagRowDto;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -13,13 +13,13 @@ public interface ProductTagRepository extends Repository<Product, UUID> {
 
   @Query(
       """
-    SELECT new com.munichre.streamline.dto.ProductTagRowDto(
-      p.id,
+    SELECT new com.munichre.streamline.product.repository.dto.ProductTagRowDto(
+    p.id,
       t.id, t.code, t.label
     )
     FROM Product p
     JOIN p.tags t
-    where p.id in :productIds
+    WHERE p.id in :productIds
   """)
-  List<ProductTagRowDto> findTagRows(@Param("productIds") Collection<UUID> productIds);
+  List<ProductTagRowDto> findTagRowsByProductIds(@Param("productIds") Collection<UUID> productIds);
 }

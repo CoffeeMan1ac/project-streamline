@@ -1,7 +1,7 @@
-package com.munichre.streamline.repository;
+package com.munichre.streamline.product.repository;
 
-import com.munichre.streamline.dto.ProductCoverageRowDto;
-import com.munichre.streamline.model.Product;
+import com.munichre.streamline.product.model.Product;
+import com.munichre.streamline.product.repository.dto.ProductCoverageRowDto;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -13,7 +13,7 @@ public interface ProductCoverageRepository extends Repository<Product, UUID> {
 
   @Query(
       """
-    SELECT new com.munichre.streamline.dto.ProductCoverageRowDto(
+    SELECT new com.munichre.streamline.product.repository.dto.ProductCoverageRowDto(
       p.id,
       c.id, c.code, c.label,
       cat.id, cat.code, cat.label
@@ -21,13 +21,13 @@ public interface ProductCoverageRepository extends Repository<Product, UUID> {
     FROM Product p
     JOIN p.coverages c
     JOIN c.category cat
-    where p.id in :productIds
+    WHERE p.id in :productIds
   """)
   List<ProductCoverageRowDto> findCoverageRows(@Param("productIds") Collection<UUID> productIds);
 
   @Query(
       """
-    SELECT new com.munichre.streamline.dto.ProductCoverageRowDto(
+    SELECT new com.munichre.streamline.product.repository.dto.ProductCoverageRowDto(
       p.id,
       c.id, c.code, c.label,
       cat.id, cat.code, cat.label
