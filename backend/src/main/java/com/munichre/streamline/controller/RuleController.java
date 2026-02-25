@@ -24,19 +24,15 @@ public class RuleController {
   }
 
   /**
-   * 
    * @param product UUID of product to check.
    * @param active Optional. Will return only active rules if true, and only inactive rules if
-   * false. If not present, will return all rules.
+   *     false. If not present, will return all rules.
    * @return List of matching rules.
    */
   @GetMapping
   public ResponseEntity<List<Rule>> getRules(
-    @RequestParam UUID product,
-    @RequestParam(required = false) Boolean active
-  ) {
+      @RequestParam UUID product, @RequestParam(required = false) Boolean active) {
     List<Rule> rules = ruleService.getRules(product, active);
     return ResponseEntity.ok(rules);
   }
-
 }

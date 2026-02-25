@@ -7,9 +7,7 @@ import com.munichre.streamline.model.RuleConfig.Condition;
 import com.munichre.streamline.model.RuleConfig.Then;
 import com.munichre.streamline.model.RuleConfig.When;
 import com.munichre.streamline.repository.RuleRepository;
-
 import io.micrometer.common.lang.NonNull;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -90,17 +88,13 @@ public class RuleService {
     ruleRepository.saveAndFlush(newRule);
   }
 
-    public List<Rule> getRules(@NonNull UUID product, Boolean active) {
+  public List<Rule> getRules(@NonNull UUID product, Boolean active) {
     List<Rule> rules = ruleRepository.findByProductIdAndActiveTrueOrderByPriorityAsc(product);
-    if (active == null)
-      return rules;
+    if (active == null) return rules;
 
-    if (active)
-      rules.removeIf(rule -> !rule.getActive()); // Remove inactive rules
-    else
-      rules.removeIf(rule -> rule.getActive()); // Remove active rules
+    if (active) rules.removeIf(rule -> !rule.getActive()); // Remove inactive rules
+    else rules.removeIf(rule -> rule.getActive()); // Remove active rules
 
     return rules;
   }
-
 }
