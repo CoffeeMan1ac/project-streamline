@@ -3,7 +3,7 @@ spring:
     name: streamline
     
   datasource:
-    url: jdbc:postgresql://localhost:5432/streamline
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/streamline}
     username: ${SPRING_DATASOURCE_USERNAME:app_user}
     password: ${SPRING_DATASOURCE_PASSWORD:app_pass}
     
