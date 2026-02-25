@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -96,4 +97,44 @@ public class RuleService {
 
     return rules.stream().map(rule -> RuleResponseDto.of(rule)).toList();
   }
+
+  @Transactional
+  public List<RuleResponseDto> reorderRule(Map<String, Object> fields) {
+    UUID productUUID = UUID.fromString(fields.get("product").toString());
+    if (productUUID == null) throw new Error("Invalid product ID.");
+    Product product = productService.getProduct(productUUID);
+    if (product == null) throw new Error("Product not found.");
+
+    UUID ruleToChangeUUID = UUID.fromString(fields.get("rule").toString());
+    if (ruleToChangeUUID == null) throw new Error("Invalid rule ID.");
+    Rule ruleToChange = ruleRepository.findById(ruleToChangeUUID).orElseThrow();
+
+    Integer newPriority = (Integer) fields.get("priority");
+    if (newPriority == null || newPriority < 1) throw new Error("Invalid priority.");
+
+    List<Rule> rules = ruleRepository.findByProductIdOrderByPriorityAsc(productUUID);
+
+    if (!rules.contains(ruleToChange)) throw new Error("Rule does not belong to product");
+
+    Integer oldPriority = ruleToChange.getPriority();
+
+    if (newPriority.equals(oldPriority)) {
+      return rules.stream().map(rule -> RuleResponseDto.of(rule)).toList();
+    }
+
+    if (newPriority < oldPriority)
+      // If moving up, lower priority of all inbetween
+      ruleRepository.incrementPriorityBetween(productUUID, newPriority, oldPriority - 1);
+    else
+      // If moving down, increase priority of all inbetween
+      ruleRepository.decrementPriorityBetween(productUUID, oldPriority + 1, newPriority);
+
+    ruleToChange.setPriority(newPriority);
+    ruleRepository.save(ruleToChange);
+
+    return ruleRepository.findByProductIdOrderByPriorityAsc(productUUID).stream()
+        .map(rule -> RuleResponseDto.of(rule))
+        .toList();
+  }
+
 }
