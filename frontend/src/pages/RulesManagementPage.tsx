@@ -1,4 +1,5 @@
 import RuleTable from "../components/RuleTable";
+import SelectProduct from "../components/SelectProduct";
 import Box from "@mui/material/Box";
 const testRules: {
   order: number;
@@ -38,6 +39,7 @@ const RulesManagementPage = () => {
   return (
     <>
       <Box sx={{ mx: 20, my: 4 }}>
+        <SelectProduct />
         <RuleTable rules={testRules} />
       </Box>
     </>

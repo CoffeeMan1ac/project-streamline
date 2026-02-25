@@ -39,7 +39,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/quote" element={<QuotesPage />} />
-            <Route path="/admin" element={<RulesManagementPage />} />
+            <Route path="/rules-management" element={<RulesManagementPage />} />
             <Route path="/accepted" element={<AcceptPage />} />
             <Route path="/declined" element={<DeclinePage />} />
           </Routes>
