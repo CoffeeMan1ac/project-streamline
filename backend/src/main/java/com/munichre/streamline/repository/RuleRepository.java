@@ -4,6 +4,8 @@ import com.munichre.streamline.model.Rule;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -42,6 +44,27 @@ public interface RuleRepository extends JpaRepository<Rule, UUID> {
   /** Fetch all inactive rules, ordered by priority (lower = first). */
   List<Rule> findByProductIdAndActiveFalseOrderByPriorityAsc(UUID productId);
 
-  // Fetch all rules, ordered by priority (lower = first).
+  /** Fetch all rules, ordered by priority (lower = first). */
   List<Rule> findByProductIdOrderByPriorityAsc(UUID productId);
+
+  // Clear and flush, because otherwise we return stale data since these are bulk updates.
+  @Modifying(clearAutomatically = true, flushAutomatically = true)
+  @Query(
+      """
+    UPDATE Rule r
+    SET r.priority = r.priority + 1
+    WHERE r.product.id = :productId
+      AND r.priority BETWEEN :start AND :end
+  """)
+  void incrementPriorityBetween(UUID productId, Integer start, Integer end);
+
+  @Modifying(clearAutomatically = true, flushAutomatically = true)
+  @Query(
+      """
+    UPDATE Rule r
+    SET r.priority = r.priority - 1
+    WHERE r.product.id = :productId
+      AND r.priority BETWEEN :start AND :end
+  """)
+  void decrementPriorityBetween(UUID productId, Integer start, Integer end);
 }
