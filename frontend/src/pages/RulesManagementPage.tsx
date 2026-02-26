@@ -52,10 +52,8 @@ const RulesManagementPage = () => {
             </Typography>
           </Box>
           <Box>
-            <Button>
-              + Create New Rule
-            </Button>
-        </Box>
+            <Button>+ Create New Rule</Button>
+          </Box>
         </Box>
         <Box sx={{ my: 4 }}>
           <SelectProduct />
