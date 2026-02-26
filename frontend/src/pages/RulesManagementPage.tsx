@@ -41,6 +41,23 @@ const testRules: {
 
 const RulesManagementPage = () => {
   const [selectedProduct, setSelectedProduct] = useState("");
+  const [rules, setRules] = useState(testRules);
+
+  const handleToggleRuleActive = (order: number) => {
+    setRules((prevRules) =>
+      prevRules.map((rule) =>
+        rule.order === order
+          ? {
+              ...rule,
+              active: !rule.active,
+            }
+          : rule
+      )
+    );
+  };
+
+  const numberOfActiveRules = rules.filter((rule) => rule.active).length;
+  const numberOfInactiveRules = rules.length - numberOfActiveRules;
 
   return (
     <>
@@ -63,7 +80,13 @@ const RulesManagementPage = () => {
         <Box sx={{ my: 4 }}>
           <SelectProduct selectedProduct={selectedProduct} onProductChange={setSelectedProduct} />
         </Box>
-        <RuleTable rules={testRules} activeProductName={selectedProduct || undefined} />
+        <RuleTable
+          rules={rules}
+          activeProductName={selectedProduct || undefined}
+          numberOfActiveRules={numberOfActiveRules}
+          numberOfInactiveRules={numberOfInactiveRules}
+          onToggleRuleActive={handleToggleRuleActive}
+        />
       </Box>
     </>
   );

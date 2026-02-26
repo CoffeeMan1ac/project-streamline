@@ -12,6 +12,7 @@ interface RuleRowProps {
   numberOfConditions: number;
   decision: string;
   premium: string;
+  onToggleActive: () => void;
 }
 
 const RuleRow: React.FC<RuleRowProps> = ({
@@ -21,6 +22,7 @@ const RuleRow: React.FC<RuleRowProps> = ({
   numberOfConditions,
   decision,
   premium,
+  onToggleActive,
 }) => {
   return (
     <TableRow>
@@ -57,10 +59,7 @@ const RuleRow: React.FC<RuleRowProps> = ({
       <TableCell>{premium}</TableCell>
 
       <TableCell>
-        <IconButton 
-          size="small" 
-          color={active ? "success" : "inherit"}
-        >
+        <IconButton size="small" color={active ? "success" : "inherit"} onClick={onToggleActive}>
           <PowerSettingsNewIcon fontSize="small" />
         </IconButton>
 

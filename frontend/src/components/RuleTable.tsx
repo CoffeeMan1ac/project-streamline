@@ -24,9 +24,16 @@ interface RuleTableProps {
   activeProductName?: string;
   numberOfActiveRules?: number;
   numberOfInactiveRules?: number;
+  onToggleRuleActive: (order: number) => void;
 }
 
-const RuleTable: React.FC<RuleTableProps> = ({ rules, activeProductName, numberOfActiveRules, numberOfInactiveRules }) => {
+const RuleTable: React.FC<RuleTableProps> = ({
+  rules,
+  activeProductName,
+  numberOfActiveRules,
+  numberOfInactiveRules,
+  onToggleRuleActive,
+}) => {
   return (
     <Box border={1} borderColor="divider" borderRadius={2} bgcolor={"background.paper"}>
       <Box
@@ -60,15 +67,16 @@ const RuleTable: React.FC<RuleTableProps> = ({ rules, activeProductName, numberO
           </TableHead>
 
           <TableBody>
-            {rules.map((rule, idx) => (
+            {rules.map((rule) => (
               <RuleRow
-                key={idx}
+                key={rule.order}
                 order={rule.order}
                 ruleName={rule.ruleName}
                 active={rule.active}
                 numberOfConditions={rule.numberOfConditions}
                 decision={rule.decision}
                 premium={rule.premium}
+                onToggleActive={() => onToggleRuleActive(rule.order)}
               />
             ))}
           </TableBody>
