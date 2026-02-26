@@ -1,6 +1,7 @@
 import { AppBar, Toolbar, Typography, Button, Box, IconButton } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Brightness4, Brightness7 } from "@mui/icons-material";
+import LoginIcon from "@mui/icons-material/Login";
 
 type NavbarProps = {
   mode: "light" | "dark";
@@ -49,7 +50,10 @@ const Navbar = ({ mode, toggleTheme }: NavbarProps) => {
           <Button color="inherit" sx={{ mr: 2 }} onClick={handleGetQuoteClick}>
             Get a Quote
           </Button>
-          <IconButton color="inherit" onClick={toggleTheme} sx={{ p: 1 }}>
+          <IconButton color="inherit" onClick={() => navigate("/rules-management")} sx={{ p: 2 }}>
+            <LoginIcon />
+          </IconButton>
+          <IconButton color="inherit" onClick={toggleTheme} sx={{ p: 2 }}>
             {mode === "dark" ? <Brightness7 /> : <Brightness4 />}
           </IconButton>
         </Box>
