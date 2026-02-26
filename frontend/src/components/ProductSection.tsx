@@ -81,7 +81,7 @@ const ProductSection = () => {
         </Box>
 
         {/* iterates through the 3 pricing plans and creates the cards*/}
-        <Grid container spacing={4} justifyContent="center" alignItems="stretch">
+        <Grid container spacing={4} justifyContent="center" alignItems="stretch" id="quotes">
           {loading
             ? Array.from(new Array(3)).map((_, index) => (
                 <Grid key={index} size={{ xs: 12, md: 3 }}>

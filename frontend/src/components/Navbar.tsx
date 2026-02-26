@@ -1,5 +1,5 @@
 import { AppBar, Toolbar, Typography, Button, Box, IconButton } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Brightness4, Brightness7 } from "@mui/icons-material";
 
 type NavbarProps = {
@@ -9,6 +9,17 @@ type NavbarProps = {
 
 const Navbar = ({ mode, toggleTheme }: NavbarProps) => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleGetQuoteClick = () => {
+    if (location.pathname === "/" && location.hash === "#quotes") {
+      document.getElementById("quotes")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+
+    navigate({ pathname: "/", hash: "#quotes" });
+  };
+
   return (
     <AppBar
       position="static"
@@ -35,7 +46,7 @@ const Navbar = ({ mode, toggleTheme }: NavbarProps) => {
           <Button color="inherit" sx={{ mr: 2 }} onClick={() => navigate("/")}>
             Home
           </Button>
-          <Button color="inherit" sx={{ mr: 2 }} onClick={() => navigate("/quote")}>
+          <Button color="inherit" sx={{ mr: 2 }} onClick={handleGetQuoteClick}>
             Get a Quote
           </Button>
           <IconButton color="inherit" onClick={toggleTheme} sx={{ p: 1 }}>
