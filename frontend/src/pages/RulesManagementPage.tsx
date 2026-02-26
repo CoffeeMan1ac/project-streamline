@@ -4,6 +4,7 @@ import SelectProduct from "../components/SelectProduct";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
+import AddIcon from '@mui/icons-material/Add';
 import { Dialog } from "@mui/material";
 import EditRulePage from "../pages/EditRulePage";
 
@@ -146,8 +147,8 @@ const RulesManagementPage = () => {
             </Typography>
           </Box>
           <Box>
-            <Button variant="contained" color="primary" sx={{ mt: 2 }}>
-              + Create New Rule
+            <Button variant="contained" color="primary" sx={{ mt: 2 }} startIcon={<AddIcon />}>
+              Create New Rule
             </Button>
           </Box>
         </Box>
