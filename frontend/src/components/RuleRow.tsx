@@ -8,7 +8,7 @@ import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 interface RuleRowProps {
   order: number;
   ruleName: string;
-  status: "active" | "inactive";
+  active: boolean;
   numberOfConditions: number;
   decision: string;
   premium: string;
@@ -17,7 +17,7 @@ interface RuleRowProps {
 const RuleRow: React.FC<RuleRowProps> = ({
   order,
   ruleName,
-  status,
+  active,
   numberOfConditions,
   decision,
   premium,
@@ -35,10 +35,10 @@ const RuleRow: React.FC<RuleRowProps> = ({
 
       <TableCell>
         <Chip
-          label={status}
+          label={active ? "active" : "inactive"}
           size="small"
           sx={
-            status === "active"
+            active
               ? {
                   backgroundColor: "success.light",
                   color: "success.dark",
@@ -57,7 +57,10 @@ const RuleRow: React.FC<RuleRowProps> = ({
       <TableCell>{premium}</TableCell>
 
       <TableCell>
-        <IconButton size="small" color="success">
+        <IconButton 
+          size="small" 
+          color={active ? "success" : "inherit"}
+        >
           <PowerSettingsNewIcon fontSize="small" />
         </IconButton>
 
