@@ -3,6 +3,7 @@ import RuleTable from "../components/RuleTable";
 import SelectProduct from "../components/SelectProduct";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { useState } from "react";
 
 const testRules: {
   order: number;
@@ -39,6 +40,8 @@ const testRules: {
 ];
 
 const RulesManagementPage = () => {
+  const [selectedProduct, setSelectedProduct] = useState("");
+
   return (
     <>
       <Box sx={{ mx: 20, my: 4 }}>
@@ -58,9 +61,9 @@ const RulesManagementPage = () => {
           </Box>
         </Box>
         <Box sx={{ my: 4 }}>
-          <SelectProduct />
+          <SelectProduct selectedProduct={selectedProduct} onProductChange={setSelectedProduct} />
         </Box>
-        <RuleTable rules={testRules} />
+        <RuleTable rules={testRules} activeProductName={selectedProduct || undefined} />
       </Box>
     </>
   );

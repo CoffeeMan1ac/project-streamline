@@ -1,9 +1,15 @@
 import { Box, Typography, MenuItem, InputLabel, Select, FormControl } from "@mui/material";
-import { useState } from "react";
+import type { SelectChangeEvent } from "@mui/material/Select";
 
-const SelectProduct = () => {
-  const [product, setProduct] = useState("");
-  const [, setErrors] = useState({ product: "" });
+interface SelectProductProps {
+  selectedProduct: string;
+  onProductChange: (product: string) => void;
+}
+
+const SelectProduct = ({ selectedProduct, onProductChange }: SelectProductProps) => {
+  const handleChange = (e: SelectChangeEvent<string>) => {
+    onProductChange(e.target.value);
+  };
 
   return (
     <Box border={1} borderColor="divider" borderRadius={2} bgcolor={"background.paper"} p={2}>
@@ -16,21 +22,17 @@ const SelectProduct = () => {
           <Select
             labelId="product-label"
             id="product"
-            value={product}
+            value={selectedProduct}
             label="Product"
-            onChange={(e) => {
-              setProduct(e.target.value);
-              setErrors((prev) => ({ ...prev, product: "" }));
-            }}
+            onChange={handleChange}
             sx={{ textAlign: "left" }}
           >
-            <MenuItem value="">Select product</MenuItem>
-            <MenuItem value="standard-shield-green">Standard Shield Green</MenuItem>
-            <MenuItem value="standard-shield">Standard Shield</MenuItem>
-            <MenuItem value="premium-shield-green">Premium Shield Green</MenuItem>
-            <MenuItem value="premium-shield">Premium Shield</MenuItem>
-            <MenuItem value="global-shield-green">Global Shield Green</MenuItem>
-            <MenuItem value="global-shield">Global Shield</MenuItem>
+            <MenuItem value="Standard Shield Green">Standard Shield Green</MenuItem>
+            <MenuItem value="Standard Shield">Standard Shield</MenuItem>
+            <MenuItem value="Premium Shield Green">Premium Shield Green</MenuItem>
+            <MenuItem value="Premium Shield">Premium Shield</MenuItem>
+            <MenuItem value="Global Shield Green">Global Shield Green</MenuItem>
+            <MenuItem value="Global Shield">Global Shield</MenuItem>
           </Select>
         </FormControl>
       </Box>
