@@ -8,7 +8,7 @@ import { useState } from "react";
 const testRules: {
   order: number;
   ruleName: string;
-  status: "active" | "inactive";
+  active: boolean;
   numberOfConditions: number;
   decision: string;
   premium: string;
@@ -16,7 +16,7 @@ const testRules: {
   {
     order: 1,
     ruleName: "Age Limit Check",
-    status: "active",
+    active: true,
     numberOfConditions: 1,
     decision: "accept",
     premium: "+10%",
@@ -24,7 +24,7 @@ const testRules: {
   {
     order: 2,
     ruleName: "Device Age Validation",
-    status: "active",
+    active: true,
     numberOfConditions: 1,
     decision: "accept",
     premium: "+5%",
@@ -32,7 +32,7 @@ const testRules: {
   {
     order: 3,
     ruleName: "Premium Adjustment",
-    status: "inactive",
+    active: false,
     numberOfConditions: 1,
     decision: "accept",
     premium: "+15%",

@@ -16,7 +16,7 @@ interface RuleTableProps {
   rules: {
     order: number;
     ruleName: string;
-    status: "active" | "inactive";
+    active: boolean;
     numberOfConditions: number;
     decision: string;
     premium: string;
@@ -65,7 +65,7 @@ const RuleTable: React.FC<RuleTableProps> = ({ rules, activeProductName, numberO
                 key={idx}
                 order={rule.order}
                 ruleName={rule.ruleName}
-                status={rule.status}
+                active={rule.active}
                 numberOfConditions={rule.numberOfConditions}
                 decision={rule.decision}
                 premium={rule.premium}
