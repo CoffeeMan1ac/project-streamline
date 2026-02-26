@@ -21,9 +21,10 @@ interface RuleTableProps {
     decision: string;
     premium: string;
   }[];
+  activeProductName?: string;
 }
 
-const RuleTable: React.FC<RuleTableProps> = ({ rules }) => {
+const RuleTable: React.FC<RuleTableProps> = ({ rules, activeProductName }) => {
   return (
     <Box border={1} borderColor="divider" borderRadius={2} bgcolor={"background.paper"}>
       <Box
@@ -34,7 +35,7 @@ const RuleTable: React.FC<RuleTableProps> = ({ rules }) => {
         }}
       >
         <Typography variant="h6" sx={{ fontWeight: 600 }}>
-          Rules for Standard Shield
+          Rules for {activeProductName || "Standard Shield"}
         </Typography>
 
         <Typography variant="body2" color="text.secondary">
