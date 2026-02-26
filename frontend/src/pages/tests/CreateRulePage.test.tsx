@@ -40,8 +40,7 @@ describe("CreateRulePage", () => {
     expect(f.getByText(/Rule Description/i)).toBeInTheDocument();
     expect(f.getAllByText(/Conditions/i)[0]).toBeInTheDocument();
     expect(f.getByText(/Condition Logic/i)).toBeInTheDocument();
-    expect(f.getByText(/^Outcome \*$/i)).toBeInTheDocument();
-    expect(f.getByText(/Premium Outcome/i)).toBeInTheDocument();
+    expect(f.getByText(/^Decision \*$/i)).toBeInTheDocument();
   });
 
   test("renders create rule button", () => {
@@ -71,17 +70,17 @@ describe("CreateRulePage", () => {
     const f = within(form);
 
     const comboboxes = f.getAllByRole("combobox");
-    fireEvent.mouseDown(comboboxes[4]); // outcome dropdown is the 5th combobox
+    fireEvent.mouseDown(comboboxes[3]);
     fireEvent.click(screen.getByText(/^Decline$/i));
 
-    expect(f.getByText(/Customer Facing Reason for Decline/i)).toBeInTheDocument();
+    expect(f.getByText(/Reason for Decline/i)).toBeInTheDocument();
   });
 
-  test("renders two condition rows by default", () => {
+  test("renders one condition row by default", () => {
     renderWithRouter();
     const f = within(form);
 
-    expect(f.getAllByText(/Field/i).length).toBeGreaterThanOrEqual(2);
+    expect(f.getAllByText(/Field/i).length).toBeGreaterThanOrEqual(1);
   });
 
   test("adds a condition row when + Add Condition is clicked", () => {
@@ -103,11 +102,15 @@ describe("CreateRulePage", () => {
     expect(f.getByLabelText(/At least one condition must be true/i)).toBeInTheDocument();
   });
 
-  test("premium outcome radio buttons are rendered", () => {
+  test("premium outcome radio buttons are rendered when accept is selected", () => {
     renderWithRouter();
     const f = within(form);
 
-    expect(f.getByLabelText(/Premium Override/i)).toBeInTheDocument();
-    expect(f.getByLabelText(/Premium Delta/i)).toBeInTheDocument();
+    const comboboxes = f.getAllByRole("combobox");
+    fireEvent.mouseDown(comboboxes[3]);
+    fireEvent.click(screen.getByText(/^Accept$/i));
+
+    expect(f.getByLabelText(/^Override$/i)).toBeInTheDocument();
+    expect(f.getByLabelText(/^Delta$/i)).toBeInTheDocument();
   });
 });
