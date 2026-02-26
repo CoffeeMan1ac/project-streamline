@@ -42,7 +42,7 @@ const RulesManagementPage = () => {
   return (
     <>
       <Box sx={{ mx: 20, my: 4 }}>
-        <Box>
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
           <Box>
             <Typography variant="h4" sx={{ fontWeight: 700 }}>
               Rules Management
@@ -52,7 +52,9 @@ const RulesManagementPage = () => {
             </Typography>
           </Box>
           <Box>
-            <Button>+ Create New Rule</Button>
+            <Button variant="contained" color="primary" sx={{ mt: 2 }}>
+              + Create New Rule
+            </Button>
           </Box>
         </Box>
         <Box sx={{ my: 4 }}>
