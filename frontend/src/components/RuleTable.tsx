@@ -22,9 +22,11 @@ interface RuleTableProps {
     premium: string;
   }[];
   activeProductName?: string;
+  numberOfActiveRules?: number;
+  numberOfInactiveRules?: number;
 }
 
-const RuleTable: React.FC<RuleTableProps> = ({ rules, activeProductName }) => {
+const RuleTable: React.FC<RuleTableProps> = ({ rules, activeProductName, numberOfActiveRules, numberOfInactiveRules }) => {
   return (
     <Box border={1} borderColor="divider" borderRadius={2} bgcolor={"background.paper"}>
       <Box
@@ -39,7 +41,7 @@ const RuleTable: React.FC<RuleTableProps> = ({ rules, activeProductName }) => {
         </Typography>
 
         <Typography variant="body2" color="text.secondary">
-          2 active, 1 inactive
+          {numberOfActiveRules || 0} active, {numberOfInactiveRules || 0} inactive
         </Typography>
       </Box>
       <TableContainer component={Paper}>
