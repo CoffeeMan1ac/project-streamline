@@ -167,14 +167,25 @@ backend:test:
         - $BACKEND_DIR/pom.xml
     paths:
       - .m2/repository/
+  before_script:
+    - apt-get update && apt-get install -y python3
   script:
     - cd $BACKEND_DIR
-    - mvn -B test
+    - mvn -B clean verify
     - |
-      LINE_ROW="$(grep -m1 'counter type="LINE"' target/site/jacoco/jacoco.xml)"
-      echo "$LINE_ROW" | sed -E 's/.*missed="([0-9]+)".*covered="([0-9]+)".*/\1 \2/' \
-        | awk '{m=$1; c=$2; t=m+c; pct=(t==0?0:(c/t*100)); printf("BACKEND_LINES_COVERAGE=%.2f%%\n", pct)}'
-  coverage: '/BACKEND_LINES_COVERAGE=([0-9]+(?:\.[0-9]+)?)%/'
+      python3 -c "
+      import xml.etree.ElementTree as ET
+      import sys
+      try:
+          tree = ET.parse('target/site/jacoco/jacoco.xml')
+          root = tree.getroot()
+          instr = next(c for c in root.findall('counter') if c.get('type') == 'INSTRUCTION')
+          covered, missed = int(instr.get('covered')), int(instr.get('missed'))
+          print(f'Total Instruction Coverage: {(covered / (covered + missed)) * 100:.2f}%')
+      except Exception as e:
+          print(f'Missing report: {e}'); sys.exit(1)
+      "
+  coverage: '/Total Instruction Coverage: \d+\.\d+%/'
   artifacts:
     when: always
     reports:
