@@ -1,13 +1,13 @@
 package com.munichre.streamline.service;
 
 import com.munichre.streamline.dto.RuleResponseDto;
-import com.munichre.streamline.product.model.Product;
-import com.munichre.streamline.product.service.ProductService;
 import com.munichre.streamline.model.Rule;
 import com.munichre.streamline.model.RuleConfig;
 import com.munichre.streamline.model.RuleConfig.Condition;
 import com.munichre.streamline.model.RuleConfig.Then;
 import com.munichre.streamline.model.RuleConfig.When;
+import com.munichre.streamline.product.model.Product;
+import com.munichre.streamline.product.service.ProductService;
 import com.munichre.streamline.repository.RuleRepository;
 import io.micrometer.common.lang.NonNull;
 import java.math.BigDecimal;
