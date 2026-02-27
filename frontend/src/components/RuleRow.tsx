@@ -6,6 +6,7 @@ import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 
 interface RuleRowProps {
+  id: string;
   order: number;
   ruleName: string;
   active: boolean;
@@ -17,6 +18,7 @@ interface RuleRowProps {
 }
 
 const RuleRow: React.FC<RuleRowProps> = ({
+  id,
   order,
   ruleName,
   active,
