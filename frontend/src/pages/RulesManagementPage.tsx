@@ -82,17 +82,6 @@ const RulesManagementPage = () => {
       });
   }, [selectedProduct]);
 
-  useEffect(() => {
-    if (!selectedProduct) return;
-    fetch(`/api/admin/rules?product=${selectedProduct}`)
-      .then((res) => res.json())
-      .then((data: RuleResponseDto[]) => setRules(data.map(mapRuleResponseToRule)))
-      .catch((err) => {
-        console.error("Failed to fetch rules:", err);
-        setRules([]);
-      });
-  }, [selectedProduct]);
-
   const fetchRules = () => {
     if (!selectedProduct) return;
     fetch(`/api/admin/rules?product=${selectedProduct}`)
@@ -120,6 +109,22 @@ const RulesManagementPage = () => {
     }
   };
 
+  const handleReorderRule = async (ruleId: string, newPriority: number) => {
+    try {
+      await fetch("/api/admin/rules/reorder", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          product: selectedProduct,
+          rule: ruleId,
+          priority: newPriority,
+        }),
+      });
+      fetchRules();
+    } catch (err) {
+      console.error("Failed to reorder rule:", err);
+    }
+  };
   const handleEditRule = (id: string) => {
     setEditRuleId(id);
   };
@@ -160,6 +165,7 @@ const RulesManagementPage = () => {
           numberOfInactiveRules={numberOfInactiveRules}
           onToggleRuleActive={handleToggleRuleActive}
           onEditRule={handleEditRule}
+          onReorderRule={handleReorderRule}
         />
       </Box>
 

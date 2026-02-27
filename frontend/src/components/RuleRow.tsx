@@ -4,6 +4,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 interface RuleRowProps {
   id: string;
@@ -18,6 +20,7 @@ interface RuleRowProps {
 }
 
 const RuleRow: React.FC<RuleRowProps> = ({
+  id,
   order,
   ruleName,
   active,
@@ -27,10 +30,12 @@ const RuleRow: React.FC<RuleRowProps> = ({
   onToggleActive,
   onEdit,
 }) => {
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
+  const style = { transform: CSS.Transform.toString(transform), transition };
   return (
-    <TableRow>
+    <TableRow ref={setNodeRef} style={style}>
       <TableCell>
-        <IconButton size="small" color="default">
+        <IconButton size="small" {...attributes} {...listeners}>
           <DragIndicatorIcon />
         </IconButton>
       </TableCell>
