@@ -12,9 +12,7 @@ const Footer = () => {
         mt: "auto",
       }}
     >
-      <Typography variant="body2">
-        THIS HAS BEEN AUTODEPLOYED
-      </Typography>
+      <Typography variant="body2">THIS HAS BEEN AUTODEPLOYED</Typography>
     </Box>
   );
 };
