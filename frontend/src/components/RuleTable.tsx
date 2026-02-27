@@ -56,7 +56,7 @@ const RuleTable: React.FC<RuleTableProps> = ({
     <Box border={1} borderColor="divider" borderRadius={2} bgcolor={"background.paper"}>
       <Box sx={{ p: 2, borderBottom: 1, borderColor: "divider" }}>
         <Typography variant="h6" sx={{ fontWeight: 600 }}>
-          Rules for {activeProductName || "Standard Shield"}
+          Rules for {activeProductName || "..."}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           {numberOfActiveRules || 0} active, {numberOfInactiveRules || 0} inactive
