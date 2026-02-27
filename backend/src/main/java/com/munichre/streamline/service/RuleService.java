@@ -100,9 +100,54 @@ public class RuleService {
   }
 
   public RuleResponseDto getRule(@NonNull UUID id) {
-  Rule rule = ruleRepository.findById(id).orElseThrow();
-  return RuleResponseDto.of(rule);
-}
+    Rule rule = ruleRepository.findById(id).orElseThrow();
+    return RuleResponseDto.of(rule);
+  }
+
+  public RuleResponseDto updateRule(@NonNull UUID id, Map<String, Object> fields) {
+    Rule rule = ruleRepository.findById(id).orElseThrow();
+
+    if (fields.containsKey("name")) rule.setName((String) fields.get("name"));
+    if (fields.containsKey("description")) rule.setDescription((String) fields.get("description"));
+    if (fields.containsKey("active")) rule.setActive((Boolean) fields.get("active"));
+    if (fields.containsKey("reason")) rule.setReason((String) fields.get("reason"));
+
+    if (fields.containsKey("rule_config")) {
+      @SuppressWarnings("unchecked")
+      Map<String, Object> ruleConfigFields = (Map<String, Object>) fields.get("rule_config");
+      @SuppressWarnings("unchecked")
+      Map<String, Object> whenField = (Map<String, Object>) ruleConfigFields.get("when");
+      @SuppressWarnings("unchecked")
+      Map<String, Object> thenField = (Map<String, Object>) ruleConfigFields.get("then");
+
+      When newWhen = new When();
+      newWhen.setMatch((String) whenField.get("match"));
+
+      @SuppressWarnings("unchecked")
+      List<Map<String, Object>> conditionFields =
+          (List<Map<String, Object>>) whenField.get("conditions");
+      List<Condition> newConditions = new ArrayList<>();
+      for (Map<String, Object> conditionField : conditionFields) {
+        newConditions.add(
+            new Condition(
+                (String) conditionField.get("field"),
+                (String) conditionField.get("operator"),
+                (String) conditionField.get("value")));
+      }
+      newWhen.setConditions(newConditions);
+
+      Then newThen = new Then();
+      newThen.setDecision((String) thenField.get("decision"));
+      newThen.setPremiumDelta((BigDecimal) thenField.get("premiumDelta"));
+      newThen.setPremiumOverride((BigDecimal) thenField.get("premiumOverride"));
+
+      Boolean stop = (Boolean) ruleConfigFields.get("stop");
+      rule.setRuleConfig(new RuleConfig(newWhen, newThen, stop));
+    }
+
+    ruleRepository.save(rule);
+    return RuleResponseDto.of(rule);
+  }
 
   @Transactional
   public List<RuleResponseDto> reorderRule(Map<String, Object> fields) {

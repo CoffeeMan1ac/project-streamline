@@ -37,19 +37,31 @@ public class RuleController {
   }
 
   /**
- * @param id UUID of the rule to fetch.
- * @return The matching rule.
- */
+   * @param id UUID of the rule to fetch.
+   * @return The matching rule.
+   */
   @GetMapping("/{id}")
-public ResponseEntity<RuleResponseDto> getRule(@PathVariable UUID id) {
-  RuleResponseDto rule = ruleService.getRule(id);
-  return ResponseEntity.ok(rule);
-}
+  public ResponseEntity<RuleResponseDto> getRule(@PathVariable UUID id) {
+    RuleResponseDto rule = ruleService.getRule(id);
+    return ResponseEntity.ok(rule);
+  }
 
   @PutMapping("/reorder")
   public ResponseEntity<List<RuleResponseDto>> reorderRule(
       @RequestBody Map<String, Object> payload) {
     List<RuleResponseDto> newOrder = ruleService.reorderRule(payload);
     return ResponseEntity.ok(newOrder);
+  }
+
+  /**
+   * @param id UUID of the rule to update.
+   * @param payload Map of fields to update.
+   * @return The updated rule.
+   */
+  @PutMapping("/{id}")
+  public ResponseEntity<RuleResponseDto> updateRule(
+      @PathVariable UUID id, @RequestBody Map<String, Object> payload) {
+    RuleResponseDto updated = ruleService.updateRule(id, payload);
+    return ResponseEntity.ok(updated);
   }
 }
