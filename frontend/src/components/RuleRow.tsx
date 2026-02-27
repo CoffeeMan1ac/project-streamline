@@ -18,7 +18,6 @@ interface RuleRowProps {
 }
 
 const RuleRow: React.FC<RuleRowProps> = ({
-  id,
   order,
   ruleName,
   active,
