@@ -71,14 +71,15 @@ const RulesManagementPage = () => {
   }, []);
 
   useEffect(() => {
-    if (!selectedProduct) {
-      setRules([]);
-      return;
-    }
+    if (!selectedProduct) return;
+
     fetch(`/api/admin/rules?product=${selectedProduct}`)
       .then((res) => res.json())
       .then((data: RuleResponseDto[]) => setRules(data.map(mapRuleResponseToRule)))
-      .catch((err) => console.error("Failed to fetch rules:", err));
+      .catch((err) => {
+        console.error("Failed to fetch rules:", err);
+        setRules([]);
+      });
   }, [selectedProduct]);
 
   useEffect(() => {
@@ -126,8 +127,7 @@ const RulesManagementPage = () => {
   const selectedProductName = products.find((p) => p.id === selectedProduct)?.name;
   const numberOfActiveRules = rules.filter((rule) => rule.active).length;
   const numberOfInactiveRules = rules.length - numberOfActiveRules;
-  const selectedProductName = products.find((p) => p.id === selectedProduct)?.name;
-  
+
   return (
     <>
       <Box sx={{ mx: 20, my: 4 }}>
