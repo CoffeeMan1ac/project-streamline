@@ -78,6 +78,14 @@ const RulesManagementPage = () => {
       });
   }, [selectedProduct]);
 
+  const fetchRules = () => {
+    if (!selectedProduct) return;
+    fetch(`/api/admin/rules?product=${selectedProduct}`)
+      .then((res) => res.json())
+      .then((data: RuleResponseDto[]) => setRules(data.map(mapRuleResponseToRule)))
+      .catch((err) => console.error("Failed to fetch rules:", err));
+  };
+
   const handleToggleRuleActive = (order: number) => {
     setRules((prevRules) =>
       prevRules.map((rule) => (rule.order === order ? { ...rule, active: !rule.active } : rule))
@@ -133,7 +141,12 @@ const RulesManagementPage = () => {
         maxWidth="md"
         fullWidth
       >
-        <EditRulePage id={editRuleId} products={products} onClose={() => setEditRuleId(null)} />
+        <EditRulePage
+          id={editRuleId}
+          products={products}
+          onClose={() => setEditRuleId(null)}
+          onSave={fetchRules}
+        />
       </Dialog>
     </>
   );

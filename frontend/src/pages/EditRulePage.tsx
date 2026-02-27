@@ -27,6 +27,7 @@ interface EditRulePageProps {
   id?: string | null;
   products?: ProductOption[];
   onClose?: () => void;
+  onSave?: () => void; 
 }
 
 type ProductOption = {
@@ -34,7 +35,7 @@ type ProductOption = {
   name: string;
 };
 
-const EditRulePage = ({ id, products = [], onClose }: EditRulePageProps) => {
+const EditRulePage = ({ id, products = [], onClose, onSave }: EditRulePageProps) => {
   const [product, setProduct] = useState("");
   const [ruleName, setRuleName] = useState("");
   const [ruleDescription, setRuleDescription] = useState("");
@@ -188,7 +189,7 @@ const EditRulePage = ({ id, products = [], onClose }: EditRulePageProps) => {
       });
 
       if (!res.ok) throw new Error("Failed to save rule");
-
+      onSave?.();
       onClose?.();
     } catch (err) {
       console.error(err);
