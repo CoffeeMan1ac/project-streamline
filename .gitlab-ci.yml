@@ -127,7 +127,9 @@ docker:build:frontend:
     - export AR_HOST="${GCP_REGION}-docker.pkg.dev"
     - export FRONTEND_IMAGE_URI="${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/frontend-prod"
 
-    - echo "$GCP_SA_KEY_B64" | base64 -d > /tmp/sa.json
+    # Write SA json somewhere guaranteed to exist + be writable
+    - SA_JSON="${CI_PROJECT_DIR}/sa.json"
+    - echo "$GCP_SA_KEY_B64" | base64 -d > "$SA_JSON"
 
     - mkdir -p /kaniko/.docker
     - |
@@ -136,7 +138,7 @@ docker:build:frontend:
         "auths": {
           "${AR_HOST}": {
             "username": "_json_key",
-            "password": "$(cat /tmp/sa.json | tr -d '\n')"
+            "password": "$(cat "$SA_JSON" | tr -d '\n')"
           }
         }
       }
@@ -259,7 +261,9 @@ docker:build:backend:
     - export AR_HOST="${GCP_REGION}-docker.pkg.dev"
     - export BACKEND_IMAGE_URI="${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/backend-prod"
 
-    - echo "$GCP_SA_KEY_B64" | base64 -d > /tmp/sa.json
+    # Write SA json somewhere guaranteed to exist + be writable
+    - SA_JSON="${CI_PROJECT_DIR}/sa.json"
+    - echo "$GCP_SA_KEY_B64" | base64 -d > "$SA_JSON"
 
     - mkdir -p /kaniko/.docker
     - |
@@ -268,7 +272,7 @@ docker:build:backend:
         "auths": {
           "${AR_HOST}": {
             "username": "_json_key",
-            "password": "$(cat /tmp/sa.json | tr -d '\n')"
+            "password": "$(cat "$SA_JSON" | tr -d '\n')"
           }
         }
       }
