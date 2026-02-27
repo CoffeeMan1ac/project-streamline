@@ -1,10 +1,8 @@
 import "@testing-library/jest-dom/vitest";
 import { render, screen, fireEvent, within, cleanup } from "@testing-library/react";
 import { describe, test, expect, vi, beforeEach } from "vitest";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 import EditRulePage from "../EditRulePage";
-
-vi.mock("axios");
 
 describe("EditRulePage", () => {
   let form: HTMLFormElement;
@@ -15,10 +13,8 @@ describe("EditRulePage", () => {
 
   const renderWithRouter = () => {
     const utils = render(
-      <MemoryRouter initialEntries={["/editRule/123"]}>
-        <Routes>
-          <Route path="/editRule/:id" element={<EditRulePage />} />
-        </Routes>
+      <MemoryRouter>
+        <EditRulePage id={123} onClose={vi.fn()} />
       </MemoryRouter>
     );
 

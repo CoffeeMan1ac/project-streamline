@@ -13,6 +13,7 @@ interface RuleRowProps {
   decision: string;
   premium: string;
   onToggleActive: () => void;
+  onEdit: () => void;
 }
 
 const RuleRow: React.FC<RuleRowProps> = ({
@@ -23,6 +24,7 @@ const RuleRow: React.FC<RuleRowProps> = ({
   decision,
   premium,
   onToggleActive,
+  onEdit,
 }) => {
   return (
     <TableRow>
@@ -63,7 +65,7 @@ const RuleRow: React.FC<RuleRowProps> = ({
           <PowerSettingsNewIcon fontSize="small" />
         </IconButton>
 
-        <IconButton size="small" color="primary">
+        <IconButton size="small" color="primary" onClick={onEdit}>
           <EditIcon fontSize="small" />
         </IconButton>
 

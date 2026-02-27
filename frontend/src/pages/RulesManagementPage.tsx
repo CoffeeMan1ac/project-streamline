@@ -4,6 +4,8 @@ import SelectProduct from "../components/SelectProduct";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
+import { Dialog } from "@mui/material";
+import EditRulePage from "../pages/EditRulePage";
 
 const testRules: {
   order: number;
@@ -40,6 +42,7 @@ const testRules: {
 ];
 
 const RulesManagementPage = () => {
+  const [editRuleId, setEditRuleId] = useState<number | null>(null);
   const [selectedProduct, setSelectedProduct] = useState("");
   const [rules, setRules] = useState(testRules);
 
@@ -54,6 +57,10 @@ const RulesManagementPage = () => {
           : rule
       )
     );
+  };
+
+  const handleEditRule = (order: number) => {
+    setEditRuleId(order);
   };
 
   const numberOfActiveRules = rules.filter((rule) => rule.active).length;
@@ -86,8 +93,18 @@ const RulesManagementPage = () => {
           numberOfActiveRules={numberOfActiveRules}
           numberOfInactiveRules={numberOfInactiveRules}
           onToggleRuleActive={handleToggleRuleActive}
+          onEditRule={handleEditRule}
         />
       </Box>
+
+      <Dialog
+        open={editRuleId !== null}
+        onClose={() => setEditRuleId(null)}
+        maxWidth="md"
+        fullWidth
+      >
+        <EditRulePage id={editRuleId} onClose={() => setEditRuleId(null)} />
+      </Dialog>
     </>
   );
 };

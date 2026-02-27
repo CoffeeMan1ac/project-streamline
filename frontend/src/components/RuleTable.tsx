@@ -25,6 +25,7 @@ interface RuleTableProps {
   numberOfActiveRules?: number;
   numberOfInactiveRules?: number;
   onToggleRuleActive: (order: number) => void;
+  onEditRule: (order: number) => void;
 }
 
 const RuleTable: React.FC<RuleTableProps> = ({
@@ -33,6 +34,7 @@ const RuleTable: React.FC<RuleTableProps> = ({
   numberOfActiveRules,
   numberOfInactiveRules,
   onToggleRuleActive,
+  onEditRule,
 }) => {
   return (
     <Box border={1} borderColor="divider" borderRadius={2} bgcolor={"background.paper"}>
@@ -77,6 +79,7 @@ const RuleTable: React.FC<RuleTableProps> = ({
                 decision={rule.decision}
                 premium={rule.premium}
                 onToggleActive={() => onToggleRuleActive(rule.order)}
+                onEdit={() => onEditRule(rule.order)}
               />
             ))}
           </TableBody>

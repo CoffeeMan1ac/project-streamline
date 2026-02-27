@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import {
   TextField,
   Container,
@@ -24,8 +23,12 @@ type Condition = {
   value: string;
 };
 
-const EditRulePage = () => {
-  const { id } = useParams();
+interface EditRulePageProps {
+  id?: number | null;
+  onClose?: () => void;
+}
+
+const EditRulePage = ({ id, onClose }: EditRulePageProps) => {
   const [product, setProduct] = useState("");
   const [ruleName, setRuleName] = useState("");
   const [ruleDescription, setRuleDescription] = useState("");
@@ -147,7 +150,10 @@ const EditRulePage = () => {
             <Typography variant="h4" sx={{ color: "text.primary" }}>
               Edit Rule
             </Typography>
-            <Typography sx={{ cursor: "pointer", color: "text.secondary", fontSize: "20px" }}>
+            <Typography
+              onClick={onClose}
+              sx={{ cursor: "pointer", color: "text.secondary", fontSize: "20px" }}
+            >
               ✕
             </Typography>
           </Box>
@@ -518,7 +524,7 @@ const EditRulePage = () => {
               }}
             />
             <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2 }}>
-              <Button variant="text" disabled={isLoading}>
+              <Button variant="text" disabled={isLoading} onClick={onClose}>
                 Cancel
               </Button>
               <Button
