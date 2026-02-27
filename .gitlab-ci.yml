@@ -295,7 +295,7 @@ deploy:cloudrun:
     - when: manual
   script:
     - SA_JSON="$CI_PROJECT_DIR/sa.json"
-    - echo "$GCP_SA_KEY_B64" | base64 -d > "$SA_JSON"
+    - printf '%s' "$GCP_SA_KEY_B64" | tr -d '\n\r ' | base64 -d > "$SA_JSON"
     - gcloud auth activate-service-account --key-file="$SA_JSON"
     - gcloud config set project "$GCP_PROJECT_ID"
 
@@ -303,14 +303,5 @@ deploy:cloudrun:
     - export BACKEND_IMAGE_URI="${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/backend-prod"
     - export FRONTEND_IMAGE_URI="${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/frontend-prod"
 
-    - gcloud run deploy "$BACKEND_SERVICE" \
-        --image "${BACKEND_IMAGE_URI}:${CI_COMMIT_SHA}" \
-        --region "$GCP_REGION" \
-        --platform managed \
-        --quiet
-
-    - gcloud run deploy "$FRONTEND_SERVICE" \
-        --image "${FRONTEND_IMAGE_URI}:${CI_COMMIT_SHA}" \
-        --region "$GCP_REGION" \
-        --platform managed \
-        --quiet
+    - gcloud run deploy "$BACKEND_SERVICE" --image "${BACKEND_IMAGE_URI}:${CI_COMMIT_SHA}" --region "$GCP_REGION" --platform managed --quiet
+    - gcloud run deploy "$FRONTEND_SERVICE" --image "${FRONTEND_IMAGE_URI}:${CI_COMMIT_SHA}" --region "$GCP_REGION" --platform managed --quiet
