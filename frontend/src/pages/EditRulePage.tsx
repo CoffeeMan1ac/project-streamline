@@ -25,10 +25,16 @@ type Condition = {
 
 interface EditRulePageProps {
   id?: string | null;
+  products?: ProductOption[];
   onClose?: () => void;
 }
 
-const EditRulePage = ({ id, onClose }: EditRulePageProps) => {
+type ProductOption = {
+  id: string;
+  name: string;
+};
+
+const EditRulePage = ({ id, products = [], onClose }: EditRulePageProps) => {
   const [product, setProduct] = useState("");
   const [ruleName, setRuleName] = useState("");
   const [ruleDescription, setRuleDescription] = useState("");
@@ -57,36 +63,38 @@ const EditRulePage = ({ id, onClose }: EditRulePageProps) => {
     deltaValue: "",
   });
 
-useEffect(() => {
-  if (!id) return;
+  useEffect(() => {
+    if (!id) return;
 
-  fetch(`/api/admin/rules/${id}`)
-    .then((res) => res.json())
-    .then((data) => {
-      setProduct(data.productId);
-      setRuleName(data.name);
-      setRuleDescription(data.description ?? "");
-      setConditionLogic(data.ruleConfig.when.match);
-      setConditions(
-        data.ruleConfig.when.conditions.map((c: { field: string; operator: string; value: string }) => ({
-          field: c.field,
-          operator: c.operator,
-          value: c.value,
-        }))
-      );
-      setConditionErrors(data.ruleConfig.when.conditions.map(() => false));
-      setOutcome(data.ruleConfig.then.decision.toLowerCase());
-      setDeclineReason(data.reason ?? "");
-      if (data.ruleConfig.then.premiumOverride !== null) {
-        setPremiumOutcome("override");
-        setOverrideValue(data.ruleConfig.then.premiumOverride.toString());
-      } else if (data.ruleConfig.then.premiumDelta !== null) {
-        setPremiumOutcome("delta");
-        setDeltaValue((data.ruleConfig.then.premiumDelta * 100).toFixed(0));
-      }
-    })
-    .catch((err) => console.error("Failed to fetch rule:", err));
-}, [id]);
+    fetch(`/api/admin/rules/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setProduct(data.productId);
+        setRuleName(data.name);
+        setRuleDescription(data.description ?? "");
+        setConditionLogic(data.ruleConfig.when.match);
+        setConditions(
+          data.ruleConfig.when.conditions.map(
+            (c: { field: string; operator: string; value: string }) => ({
+              field: c.field,
+              operator: c.operator.toLowerCase(),
+              value: c.value,
+            })
+          )
+        );
+        setConditionErrors(data.ruleConfig.when.conditions.map(() => false));
+        setOutcome(data.ruleConfig.then.decision.toLowerCase());
+        setDeclineReason(data.reason ?? "");
+        if (data.ruleConfig.then.premiumOverride !== null) {
+          setPremiumOutcome("override");
+          setOverrideValue(data.ruleConfig.then.premiumOverride.toString());
+        } else if (data.ruleConfig.then.premiumDelta !== null) {
+          setPremiumOutcome("delta");
+          setDeltaValue((data.ruleConfig.then.premiumDelta * 100).toFixed(0));
+        }
+      })
+      .catch((err) => console.error("Failed to fetch rule:", err));
+  }, [id]);
 
   // adds a new condition row
   const addCondition = () => {
@@ -213,12 +221,11 @@ useEffect(() => {
                 error={!!errors.product}
               >
                 <MenuItem value="">Select product</MenuItem>
-                <MenuItem value="standard">Standard</MenuItem>
-                <MenuItem value="premium">Premium</MenuItem>
-                <MenuItem value="global">Global</MenuItem>
-                <MenuItem value="standardGreen">Standard Green</MenuItem>
-                <MenuItem value="premiumGreen">Premium Green</MenuItem>
-                <MenuItem value="globalGreen">Global Green</MenuItem>
+                {products.map((p) => (
+                  <MenuItem key={p.id} value={p.id}>
+                    {p.name}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
             {errors.product && (
@@ -317,20 +324,13 @@ useEffect(() => {
                     <Typography variant="body2" sx={{ mb: 0.5, color: "text.secondary" }}>
                       Field
                     </Typography>
-                    <FormControl fullWidth disabled={isLoading}>
-                      <Select
-                        value={condition.field}
-                        displayEmpty
-                        onChange={(e) => updateCondition(index, "field", e.target.value)}
-                        sx={{ textAlign: "left" }}
-                      >
-                        <MenuItem value="">Select field</MenuItem>
-                        <MenuItem value="age">Age</MenuItem>
-                        <MenuItem value="phoneMake">Phone Make</MenuItem>
-                        <MenuItem value="phoneModel">Phone Model</MenuItem>
-                        <MenuItem value="phoneCondition">Phone Condition</MenuItem>
-                      </Select>
-                    </FormControl>
+                    <TextField
+                      fullWidth
+                      placeholder="e.g. phoneModel"
+                      value={condition.field}
+                      onChange={(e) => updateCondition(index, "field", e.target.value)}
+                      disabled={isLoading}
+                    />
                   </Box>
 
                   <Box sx={{ flex: 1 }}>
@@ -346,9 +346,9 @@ useEffect(() => {
                       >
                         <MenuItem value="">Select operator</MenuItem>
                         <MenuItem value="equals">Equals</MenuItem>
-                        <MenuItem value="notEquals">Not Equals</MenuItem>
-                        <MenuItem value="greaterThan">Greater Than</MenuItem>
-                        <MenuItem value="lessThan">Less Than</MenuItem>
+                        <MenuItem value="not_equals">Not Equals</MenuItem>
+                        <MenuItem value="greater_than">Greater Than</MenuItem>
+                        <MenuItem value="less_than">Less Than</MenuItem>
                       </Select>
                     </FormControl>
                   </Box>

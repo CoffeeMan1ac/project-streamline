@@ -14,7 +14,7 @@ import {
 
 interface RuleTableProps {
   rules: {
-    id: string; 
+    id: string;
     order: number;
     ruleName: string;
     active: boolean;
@@ -26,7 +26,7 @@ interface RuleTableProps {
   numberOfActiveRules?: number;
   numberOfInactiveRules?: number;
   onToggleRuleActive: (order: number) => void;
-  onEditRule: (id: string) => void; 
+  onEditRule: (id: string) => void;
 }
 
 const RuleTable: React.FC<RuleTableProps> = ({
@@ -81,7 +81,7 @@ const RuleTable: React.FC<RuleTableProps> = ({
                 decision={rule.decision}
                 premium={rule.premium}
                 onToggleActive={() => onToggleRuleActive(rule.order)}
-                onEdit={() => onEditRule(rule.id)} 
+                onEdit={() => onEditRule(rule.id)}
               />
             ))}
           </TableBody>

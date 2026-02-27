@@ -80,9 +80,7 @@ const RulesManagementPage = () => {
 
   const handleToggleRuleActive = (order: number) => {
     setRules((prevRules) =>
-      prevRules.map((rule) =>
-        rule.order === order ? { ...rule, active: !rule.active } : rule
-      )
+      prevRules.map((rule) => (rule.order === order ? { ...rule, active: !rule.active } : rule))
     );
   };
 
@@ -135,7 +133,7 @@ const RulesManagementPage = () => {
         maxWidth="md"
         fullWidth
       >
-        <EditRulePage id={editRuleId} onClose={() => setEditRuleId(null)} />
+        <EditRulePage id={editRuleId} products={products} onClose={() => setEditRuleId(null)} />
       </Dialog>
     </>
   );
