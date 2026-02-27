@@ -47,11 +47,14 @@ const mapRuleResponseToRule = (dto: RuleResponseDto): Rule => ({
   active: dto.active,
   numberOfConditions: dto.ruleConfig.when.conditions.length,
   decision: dto.ruleConfig.then.decision,
-  premium: dto.ruleConfig.then.premiumDelta
-    ? `${dto.ruleConfig.then.premiumDelta > 0 ? "+" : ""}${(dto.ruleConfig.then.premiumDelta * 100).toFixed(0)}%`
-    : dto.ruleConfig.then.premiumOverride
-      ? `€${dto.ruleConfig.then.premiumOverride}`
-      : "-",
+  premium:
+    dto.ruleConfig.then.decision === "DECLINE"
+      ? "-"
+      : dto.ruleConfig.then.premiumDelta
+        ? `${dto.ruleConfig.then.premiumDelta > 0 ? "+" : ""}${(dto.ruleConfig.then.premiumDelta * 100).toFixed(0)}%`
+        : dto.ruleConfig.then.premiumOverride
+          ? `€${dto.ruleConfig.then.premiumOverride}`
+          : "-",
 });
 
 const RulesManagementPage = () => {

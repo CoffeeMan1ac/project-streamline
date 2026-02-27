@@ -27,7 +27,7 @@ interface EditRulePageProps {
   id?: string | null;
   products?: ProductOption[];
   onClose?: () => void;
-  onSave?: () => void; 
+  onSave?: () => void;
 }
 
 type ProductOption = {
