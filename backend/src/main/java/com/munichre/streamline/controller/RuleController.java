@@ -36,6 +36,16 @@ public class RuleController {
     return ResponseEntity.ok(rules);
   }
 
+  /**
+ * @param id UUID of the rule to fetch.
+ * @return The matching rule.
+ */
+  @GetMapping("/{id}")
+public ResponseEntity<RuleResponseDto> getRule(@PathVariable UUID id) {
+  RuleResponseDto rule = ruleService.getRule(id);
+  return ResponseEntity.ok(rule);
+}
+
   @PutMapping("/reorder")
   public ResponseEntity<List<RuleResponseDto>> reorderRule(
       @RequestBody Map<String, Object> payload) {

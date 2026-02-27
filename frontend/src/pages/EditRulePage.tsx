@@ -57,9 +57,36 @@ const EditRulePage = ({ id, onClose }: EditRulePageProps) => {
     deltaValue: "",
   });
 
-  useEffect(() => {
-    // fetch rule data from backend when its ready
-  }, [id]);
+useEffect(() => {
+  if (!id) return;
+
+  fetch(`/api/admin/rules/${id}`)
+    .then((res) => res.json())
+    .then((data) => {
+      setProduct(data.productId);
+      setRuleName(data.name);
+      setRuleDescription(data.description ?? "");
+      setConditionLogic(data.ruleConfig.when.match);
+      setConditions(
+        data.ruleConfig.when.conditions.map((c: { field: string; operator: string; value: string }) => ({
+          field: c.field,
+          operator: c.operator,
+          value: c.value,
+        }))
+      );
+      setConditionErrors(data.ruleConfig.when.conditions.map(() => false));
+      setOutcome(data.ruleConfig.then.decision.toLowerCase());
+      setDeclineReason(data.reason ?? "");
+      if (data.ruleConfig.then.premiumOverride !== null) {
+        setPremiumOutcome("override");
+        setOverrideValue(data.ruleConfig.then.premiumOverride.toString());
+      } else if (data.ruleConfig.then.premiumDelta !== null) {
+        setPremiumOutcome("delta");
+        setDeltaValue((data.ruleConfig.then.premiumDelta * 100).toFixed(0));
+      }
+    })
+    .catch((err) => console.error("Failed to fetch rule:", err));
+}, [id]);
 
   // adds a new condition row
   const addCondition = () => {

@@ -12,44 +12,52 @@ type ProductOption = {
   name: string;
 };
 
-const testRules: {
+type Rule = {
+  id: string;
   order: number;
   ruleName: string;
   active: boolean;
   numberOfConditions: number;
   decision: string;
   premium: string;
-}[] = [
-  {
-    order: 1,
-    ruleName: "Age Limit Check",
-    active: true,
-    numberOfConditions: 1,
-    decision: "accept",
-    premium: "+10%",
-  },
-  {
-    order: 2,
-    ruleName: "Device Age Validation",
-    active: true,
-    numberOfConditions: 1,
-    decision: "accept",
-    premium: "+5%",
-  },
-  {
-    order: 3,
-    ruleName: "Premium Adjustment",
-    active: false,
-    numberOfConditions: 1,
-    decision: "accept",
-    premium: "+15%",
-  },
-];
+};
+
+type RuleResponseDto = {
+  id: string;
+  productId: string;
+  name: string;
+  priority: number;
+  active: boolean;
+  ruleConfig: {
+    when: {
+      conditions: unknown[];
+    };
+    then: {
+      decision: string;
+      premiumDelta: number | null;
+      premiumOverride: number | null;
+    };
+  };
+};
+
+const mapRuleResponseToRule = (dto: RuleResponseDto): Rule => ({
+  id: dto.id,
+  order: dto.priority,
+  ruleName: dto.name,
+  active: dto.active,
+  numberOfConditions: dto.ruleConfig.when.conditions.length,
+  decision: dto.ruleConfig.then.decision,
+  premium: dto.ruleConfig.then.premiumDelta
+    ? `${dto.ruleConfig.then.premiumDelta > 0 ? "+" : ""}${(dto.ruleConfig.then.premiumDelta * 100).toFixed(0)}%`
+    : dto.ruleConfig.then.premiumOverride
+      ? `€${dto.ruleConfig.then.premiumOverride}`
+      : "-",
+});
 
 const RulesManagementPage = () => {
-  const [editRuleId, setEditRuleId] = useState<number | null>(null);
+  const [editRuleId, setEditRuleId] = useState<string | null>(null);
   const [selectedProduct, setSelectedProduct] = useState("");
-  const [rules, setRules] = useState(testRules);
+  const [rules, setRules] = useState<Rule[]>([]);
   const [products, setProducts] = useState<ProductOption[]>([]);
 
   useEffect(() => {
@@ -59,23 +67,30 @@ const RulesManagementPage = () => {
       .catch((err) => console.error("Failed to fetch products:", err));
   }, []);
 
+  useEffect(() => {
+    if (!selectedProduct) return;
+    fetch(`/api/admin/rules?product=${selectedProduct}`)
+      .then((res) => res.json())
+      .then((data: RuleResponseDto[]) => setRules(data.map(mapRuleResponseToRule)))
+      .catch((err) => {
+        console.error("Failed to fetch rules:", err);
+        setRules([]);
+      });
+  }, [selectedProduct]);
+
   const handleToggleRuleActive = (order: number) => {
     setRules((prevRules) =>
       prevRules.map((rule) =>
-        rule.order === order
-          ? {
-              ...rule,
-              active: !rule.active,
-            }
-          : rule
+        rule.order === order ? { ...rule, active: !rule.active } : rule
       )
     );
   };
 
-  const handleEditRule = (order: number) => {
-    setEditRuleId(order);
+  const handleEditRule = (id: string) => {
+    setEditRuleId(id);
   };
 
+  const selectedProductName = products.find((p) => p.id === selectedProduct)?.name;
   const numberOfActiveRules = rules.filter((rule) => rule.active).length;
   const numberOfInactiveRules = rules.length - numberOfActiveRules;
 
@@ -106,7 +121,7 @@ const RulesManagementPage = () => {
         </Box>
         <RuleTable
           rules={rules}
-          activeProductName={selectedProduct || undefined}
+          activeProductName={selectedProductName}
           numberOfActiveRules={numberOfActiveRules}
           numberOfInactiveRules={numberOfInactiveRules}
           onToggleRuleActive={handleToggleRuleActive}

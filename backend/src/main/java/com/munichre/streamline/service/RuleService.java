@@ -99,6 +99,11 @@ public class RuleService {
     return rules.stream().map(rule -> RuleResponseDto.of(rule)).toList();
   }
 
+  public RuleResponseDto getRule(@NonNull UUID id) {
+  Rule rule = ruleRepository.findById(id).orElseThrow();
+  return RuleResponseDto.of(rule);
+}
+
   @Transactional
   public List<RuleResponseDto> reorderRule(Map<String, Object> fields) {
     UUID productUUID = UUID.fromString(fields.get("product").toString());
