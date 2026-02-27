@@ -1,0 +1,65 @@
+substitutions:
+  _REGION: "europe-west2"
+  _REPO: "streamline-repo"
+  _BACKEND_IMAGE: "backend"
+  _FRONTEND_IMAGE: "frontend"
+  _BACKEND_SERVICE: "backend-prod"
+  _FRONTEND_SERVICE: "frontend-prod"
+
+steps:
+
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_BACKEND_IMAGE}:$COMMIT_SHA",
+        "-t",
+        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_BACKEND_IMAGE}:latest",
+        "./backend"
+      ]
+
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_BACKEND_IMAGE}:$COMMIT_SHA"]
+
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_BACKEND_IMAGE}:latest"]
+
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_FRONTEND_IMAGE}:$COMMIT_SHA",
+        "-t",
+        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_FRONTEND_IMAGE}:latest",
+        "./frontend"
+      ]
+
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_FRONTEND_IMAGE}:$COMMIT_SHA"]
+
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_FRONTEND_IMAGE}:latest"]
+
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
+    args:
+      [
+        "run","deploy","${_BACKEND_SERVICE}",
+        "--image","${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_BACKEND_IMAGE}:$COMMIT_SHA",
+        "--region","${_REGION}",
+        "--platform","managed",
+        "--quiet"
+      ]
+
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
+    args:
+      [
+        "run","deploy","${_FRONTEND_SERVICE}",
+        "--image","${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_FRONTEND_IMAGE}:$COMMIT_SHA",
+        "--region","${_REGION}",
+        "--platform","managed",
+        "--quiet"
+      ]
