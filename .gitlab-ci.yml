@@ -127,6 +127,32 @@ frontend:build:
       - $FRONTEND_DIR/dist/
     expire_in: 1 week
 
+docker:build:frontend:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  needs: ["frontend:build"]
+  script:
+    - mkdir -p /kaniko/.docker
+    - |
+      cat > /kaniko/.docker/config.json <<EOF
+      {
+        "auths": {
+          "${AR_HOST}": {
+            "username": "_json_key",
+            "password": "$(echo "$GCP_SA_KEY_B64" | base64 -d | tr -d '\n')"
+          }
+        }
+      }
+      EOF
+    - /kaniko/executor
+      --context "${CI_PROJECT_DIR}/frontend"
+      --dockerfile "${CI_PROJECT_DIR}/frontend/Dockerfile"
+      --destination "${FRONTEND_IMAGE_URI}:${CI_COMMIT_SHA}"
+      --destination "${FRONTEND_IMAGE_URI}:latest"
+
+
 # -----------------------------
 # Backend (Spring Boot / Maven)
 # -----------------------------
@@ -226,3 +252,28 @@ backend:build:
     paths:
       - $BACKEND_DIR/target/*.jar
     expire_in: 1 week
+
+docker:build:backend:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  needs: ["backend:build"]
+  script:
+    - mkdir -p /kaniko/.docker
+    - |
+      cat > /kaniko/.docker/config.json <<EOF
+      {
+        "auths": {
+          "${AR_HOST}": {
+            "username": "_json_key",
+            "password": "$(echo "$GCP_SA_KEY_B64" | base64 -d | tr -d '\n')"
+          }
+        }
+      }
+      EOF
+    - /kaniko/executor
+      --context "${CI_PROJECT_DIR}/backend"
+      --dockerfile "${CI_PROJECT_DIR}/backend/Dockerfile"
+      --destination "${BACKEND_IMAGE_URI}:${CI_COMMIT_SHA}"
+      --destination "${BACKEND_IMAGE_URI}:latest"
