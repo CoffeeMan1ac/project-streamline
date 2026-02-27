@@ -1,6 +1,6 @@
 substitutions:
   _REGION: "europe-west2"
-  _REPO: "streamline-repo"
+  _REPO: "containers"
   _BACKEND_IMAGE: "backend"
   _FRONTEND_IMAGE: "frontend"
   _BACKEND_SERVICE: "backend-prod"
