@@ -13,7 +13,7 @@ const Footer = () => {
       }}
     >
       <Typography variant="body2">
-        © 2026 Phone Shield. Underwritten by leading global insurers.
+        THIS HAS BEEN AUTODEPLOYED
       </Typography>
     </Box>
   );
