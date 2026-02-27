@@ -277,3 +277,26 @@ docker:build:backend:
       --dockerfile "${CI_PROJECT_DIR}/backend/Dockerfile"
       --destination "${BACKEND_IMAGE_URI}:${CI_COMMIT_SHA}"
       --destination "${BACKEND_IMAGE_URI}:latest"
+
+deploy:cloudrun:
+  stage: deploy
+  image: google/cloud-sdk:slim
+  needs: ["docker:build:backend", "docker:build:frontend"]
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+  script:
+    - echo "$GCP_SA_KEY_B64" | base64 -d > /tmp/sa.json
+    - gcloud auth activate-service-account --key-file=/tmp/sa.json
+    - gcloud config set project "$GCP_PROJECT_ID"
+
+    - gcloud run deploy "$BACKEND_SERVICE" \
+        --image "${BACKEND_IMAGE_URI}:${CI_COMMIT_SHA}" \
+        --region "$GCP_REGION" \
+        --platform managed \
+        --quiet
+
+    - gcloud run deploy "$FRONTEND_SERVICE" \
+        --image "${FRONTEND_IMAGE_URI}:${CI_COMMIT_SHA}" \
+        --region "$GCP_REGION" \
+        --platform managed \
+        --quiet
