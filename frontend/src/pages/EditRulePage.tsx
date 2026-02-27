@@ -24,7 +24,7 @@ type Condition = {
 };
 
 interface EditRulePageProps {
-  id?: number | null;
+  id?: string | null;
   onClose?: () => void;
 }
 
