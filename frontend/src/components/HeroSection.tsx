@@ -16,7 +16,7 @@ const HeroSection = () => {
 
         {/* Main Heading */}
         <Typography variant="h3" fontWeight="bold" gutterBottom>
-          Sprint 2 demo meeting
+          Protect Your Phone, Protect Your World
         </Typography>
 
         {/* Subtitle */}
