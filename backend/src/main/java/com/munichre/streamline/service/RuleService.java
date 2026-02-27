@@ -1,7 +1,8 @@
 package com.munichre.streamline.service;
 
 import com.munichre.streamline.dto.RuleResponseDto;
-import com.munichre.streamline.model.Product;
+import com.munichre.streamline.product.model.Product;
+import com.munichre.streamline.product.service.ProductService;
 import com.munichre.streamline.model.Rule;
 import com.munichre.streamline.model.RuleConfig;
 import com.munichre.streamline.model.RuleConfig.Condition;
