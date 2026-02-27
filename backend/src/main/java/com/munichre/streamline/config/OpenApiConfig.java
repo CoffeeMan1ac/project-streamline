@@ -8,12 +8,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OpenApiConfig {
 
-    @Bean
-    public OpenAPI streamlineOpenAPI() {
-        return new OpenAPI()
-                .info(new Info()
-                        .title("Streamline API")
-                        .version("1.0.0")
-                        .description("API documentation for Streamline"));
-    }
+  @Bean
+  public OpenAPI streamlineOpenAPI() {
+    return new OpenAPI()
+        .info(
+            new Info()
+                .title("Streamline API")
+                .version("1.0.0")
+                .description("API documentation for Streamline"));
+  }
 }
