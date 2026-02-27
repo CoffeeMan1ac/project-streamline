@@ -126,7 +126,8 @@ const RulesManagementPage = () => {
   const selectedProductName = products.find((p) => p.id === selectedProduct)?.name;
   const numberOfActiveRules = rules.filter((rule) => rule.active).length;
   const numberOfInactiveRules = rules.length - numberOfActiveRules;
-
+  const selectedProductName = products.find((p) => p.id === selectedProduct)?.name;
+  
   return (
     <>
       <Box sx={{ mx: 20, my: 4 }}>
