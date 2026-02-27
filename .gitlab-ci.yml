@@ -293,6 +293,7 @@ deploy:cloudrun:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       when: on_success
     - when: manual
+      allow_failure: true
   script:
     - SA_JSON="$CI_PROJECT_DIR/sa.json"
     - printf '%s' "$GCP_SA_KEY_B64" | tr -d '\n\r ' | base64 -d > "$SA_JSON"
