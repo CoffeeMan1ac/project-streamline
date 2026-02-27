@@ -133,12 +133,14 @@ docker:build:frontend:
 
     - mkdir -p /kaniko/.docker
     - |
+      SA_ESCAPED=$(python3 -c 'import json,sys; print(json.dumps(open(sys.argv[1]).read()))' "$SA_JSON")
+
       cat > /kaniko/.docker/config.json <<EOF
       {
         "auths": {
           "${AR_HOST}": {
             "username": "_json_key",
-            "password": "$(cat "$SA_JSON" | tr -d '\n')"
+            "password": ${SA_ESCAPED}
           }
         }
       }
@@ -267,12 +269,14 @@ docker:build:backend:
 
     - mkdir -p /kaniko/.docker
     - |
+      SA_ESCAPED=$(python3 -c 'import json,sys; print(json.dumps(open(sys.argv[1]).read()))' "$SA_JSON")
+
       cat > /kaniko/.docker/config.json <<EOF
       {
         "auths": {
           "${AR_HOST}": {
             "username": "_json_key",
-            "password": "$(cat "$SA_JSON" | tr -d '\n')"
+            "password": ${SA_ESCAPED}
           }
         }
       }
