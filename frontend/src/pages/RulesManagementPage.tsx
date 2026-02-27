@@ -71,6 +71,17 @@ const RulesManagementPage = () => {
   }, []);
 
   useEffect(() => {
+    if (!selectedProduct) {
+      setRules([]);
+      return;
+    }
+    fetch(`/api/admin/rules?product=${selectedProduct}`)
+      .then((res) => res.json())
+      .then((data: RuleResponseDto[]) => setRules(data.map(mapRuleResponseToRule)))
+      .catch((err) => console.error("Failed to fetch rules:", err));
+  }, [selectedProduct]);
+
+  useEffect(() => {
     if (!selectedProduct) return;
     fetch(`/api/admin/rules?product=${selectedProduct}`)
       .then((res) => res.json())
