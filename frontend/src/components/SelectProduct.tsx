@@ -1,12 +1,18 @@
 import { Box, Typography, MenuItem, InputLabel, Select, FormControl } from "@mui/material";
 import type { SelectChangeEvent } from "@mui/material/Select";
 
+type ProductOption = {
+  id: string;
+  name: string;
+};
+
 interface SelectProductProps {
+  products: ProductOption[];
   selectedProduct: string;
   onProductChange: (product: string) => void;
 }
 
-const SelectProduct = ({ selectedProduct, onProductChange }: SelectProductProps) => {
+const SelectProduct = ({ products, selectedProduct, onProductChange }: SelectProductProps) => {
   const handleChange = (e: SelectChangeEvent<string>) => {
     onProductChange(e.target.value);
   };
@@ -27,12 +33,11 @@ const SelectProduct = ({ selectedProduct, onProductChange }: SelectProductProps)
             onChange={handleChange}
             sx={{ textAlign: "left" }}
           >
-            <MenuItem value="Standard Shield Green">Standard Shield Green</MenuItem>
-            <MenuItem value="Standard Shield">Standard Shield</MenuItem>
-            <MenuItem value="Premium Shield Green">Premium Shield Green</MenuItem>
-            <MenuItem value="Premium Shield">Premium Shield</MenuItem>
-            <MenuItem value="Global Shield Green">Global Shield Green</MenuItem>
-            <MenuItem value="Global Shield">Global Shield</MenuItem>
+            {products.map((product) => (
+              <MenuItem key={product.id} value={product.id}>
+                {product.name}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
       </Box>

@@ -3,9 +3,14 @@ import RuleTable from "../components/RuleTable";
 import SelectProduct from "../components/SelectProduct";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dialog } from "@mui/material";
 import EditRulePage from "../pages/EditRulePage";
+
+type ProductOption = {
+  id: string;
+  name: string;
+};
 
 const testRules: {
   order: number;
@@ -45,6 +50,14 @@ const RulesManagementPage = () => {
   const [editRuleId, setEditRuleId] = useState<number | null>(null);
   const [selectedProduct, setSelectedProduct] = useState("");
   const [rules, setRules] = useState(testRules);
+  const [products, setProducts] = useState<ProductOption[]>([]);
+
+  useEffect(() => {
+    fetch("/api/backoffice/products/options")
+      .then((res) => res.json())
+      .then((data: ProductOption[]) => setProducts(data))
+      .catch((err) => console.error("Failed to fetch products:", err));
+  }, []);
 
   const handleToggleRuleActive = (order: number) => {
     setRules((prevRules) =>
@@ -85,7 +98,11 @@ const RulesManagementPage = () => {
           </Box>
         </Box>
         <Box sx={{ my: 4 }}>
-          <SelectProduct selectedProduct={selectedProduct} onProductChange={setSelectedProduct} />
+          <SelectProduct
+            products={products}
+            selectedProduct={selectedProduct}
+            onProductChange={setSelectedProduct}
+          />
         </Box>
         <RuleTable
           rules={rules}
