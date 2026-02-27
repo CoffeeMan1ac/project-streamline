@@ -30,7 +30,10 @@ const Navbar = ({ mode, toggleTheme }: NavbarProps) => {
     >
       <Toolbar sx={{ justifyContent: "space-between" }}>
         {/* Logo and Title */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+        <Box
+          sx={{ display: "flex", alignItems: "center", gap: 2, cursor: "pointer" }}
+          onClick={() => navigate("/")}
+        >
           <Box
             component="img"
             src={"shield_logo.png"}
@@ -44,9 +47,6 @@ const Navbar = ({ mode, toggleTheme }: NavbarProps) => {
 
         {/* Right: Navigation and Theme Toggle */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <Button color="inherit" sx={{ mr: 2 }} onClick={() => navigate("/")}>
-            Home
-          </Button>
           <Button color="inherit" sx={{ mr: 2 }} onClick={handleGetQuoteClick}>
             Get a Quote
           </Button>
