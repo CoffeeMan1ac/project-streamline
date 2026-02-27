@@ -64,4 +64,16 @@ public class RuleController {
     RuleResponseDto updated = ruleService.updateRule(id, payload);
     return ResponseEntity.ok(updated);
   }
+
+  /**
+   * @param id UUID of the rule to update.
+   * @param payload Map containing the "active" field to update e.g. {"active": true}.
+   * @return The updated rule.
+   */
+  @PatchMapping("/{id}/active")
+  public ResponseEntity<RuleResponseDto> setRuleActive(
+      @PathVariable UUID id, @RequestBody Map<String, Object> payload) {
+    RuleResponseDto updated = ruleService.updateRule(id, payload);
+    return ResponseEntity.ok(updated);
+  }
 }

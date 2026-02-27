@@ -89,10 +89,23 @@ const RulesManagementPage = () => {
       .catch((err) => console.error("Failed to fetch rules:", err));
   };
 
-  const handleToggleRuleActive = (order: number) => {
-    setRules((prevRules) =>
-      prevRules.map((rule) => (rule.order === order ? { ...rule, active: !rule.active } : rule))
-    );
+  const handleToggleRuleActive = async (order: number) => {
+    const rule = rules.find((r) => r.order === order);
+    if (!rule) return;
+
+    try {
+      await fetch(`/api/admin/rules/${rule.id}/active`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ active: !rule.active }),
+      });
+      // only update local state if the backend call succeeded
+      setRules((prevRules) =>
+        prevRules.map((r) => (r.order === order ? { ...r, active: !r.active } : r))
+      );
+    } catch (err) {
+      console.error("Failed to toggle rule active status:", err);
+    }
   };
 
   const handleEditRule = (id: string) => {
