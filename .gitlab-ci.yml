@@ -13,12 +13,6 @@ variables:
   FRONTEND_DIR: "frontend"
   BACKEND_DIR: "backend"
   MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
-  GCP_PROJECT_ID: "${GCP_PROJECT_ID}"
-  GCP_REGION: "${GCP_REGION}"
-  AR_REPO: "${AR_REPO}"
-
-  BACKEND_IMAGE_URI: "${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/backend-prod"
-  FRONTEND_IMAGE_URI: "${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/frontend-prod"
 
 workflow:
   rules:
