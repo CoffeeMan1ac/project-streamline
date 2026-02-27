@@ -38,13 +38,15 @@ public class RuleService {
         ruleRepository.findByProductIdAndActiveTrueOrderByPriorityAsc(productUUID);
 
     // Check for duplicate priorities in existing rules.
-    Integer priority = (Integer) fields.get("priority");
-    for (Rule rule : currentRules) {
-      Integer existingPriority = rule.getPriority();
-      if (existingPriority == priority) throw new Error("New rule has duplicate priority");
-      if (existingPriority > priority) break;
-    }
-    newRule.setPriority(priority);
+    // Integer priority = (Integer) fields.get("priority");
+    // for (Rule rule : currentRules) {
+    //   Integer existingPriority = rule.getPriority();
+    //   if (existingPriority.equals(priority)) throw new Error("New rule has duplicate priority");
+    //   if (existingPriority > priority) break;
+    // }
+    // newRule.setPriority(priority);
+    Integer nextPriority = currentRules.isEmpty() ? 1 : currentRules.get(currentRules.size() - 1).getPriority() + 1;
+    newRule.setPriority(nextPriority);
 
     newRule.setName((String) fields.get("name"));
     newRule.setDescription((String) fields.get("description"));
@@ -79,8 +81,10 @@ public class RuleService {
 
     Then newThen = new Then();
     newThen.setDecision((String) thenField.get("decision"));
-    newThen.setPremiumDelta((BigDecimal) thenField.get("premiumDelta"));
-    newThen.setPremiumOverride((BigDecimal) thenField.get("premiumOverride"));
+    Object premiumDelta = thenField.get("premiumDelta");
+    Object premiumOverride = thenField.get("premiumOverride");
+    newThen.setPremiumDelta(premiumDelta != null ? new BigDecimal(premiumDelta.toString()) : null);
+    newThen.setPremiumOverride(premiumOverride != null ? new BigDecimal(premiumOverride.toString()) : null);
 
     Boolean newStop = (Boolean) ruleConfigFields.get("stop");
 

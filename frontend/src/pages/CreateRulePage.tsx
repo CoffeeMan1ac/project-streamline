@@ -16,6 +16,13 @@ import {
 } from "@mui/material";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 
+interface CreateRulePageProps {
+  products?: { id: string; name: string }[];
+  selectedProduct?: string;
+  onClose?: () => void;
+  onSave?: () => void;
+}
+
 // each condition row has a field, operator, and value
 type Condition = {
   field: string;
@@ -23,8 +30,13 @@ type Condition = {
   value: string;
 };
 
-const CreateRulePage = () => {
-  const [product, setProduct] = useState("");
+const CreateRulePage = ({
+  products = [],
+  selectedProduct = "",
+  onClose,
+  onSave,
+}: CreateRulePageProps) => {
+  const [product, setProduct] = useState(selectedProduct);
   const [ruleName, setRuleName] = useState("");
   const [ruleDescription, setRuleDescription] = useState("");
   const [conditionLogic, setConditionLogic] = useState("all");
@@ -113,18 +125,44 @@ const CreateRulePage = () => {
     try {
       const payload = {
         product,
-        ruleName,
-        ruleDescription,
-        conditions,
-        conditionLogic,
-        outcome,
-        declineReason,
-        premiumOutcome,
-        overrideValue,
-        deltaValue,
+        name: ruleName,
+        description: ruleDescription,
+        reason: declineReason,
+        active: true,
+        rule_config: {
+          when: {
+            match: conditionLogic,
+            conditions: conditions.map((c) => ({
+              field: c.field,
+              operator: c.operator.toUpperCase(),
+              value: c.value,
+            })),
+          },
+          then: {
+            decision: outcome.toUpperCase(),
+            premiumOverride:
+              outcome === "accept" && premiumOutcome === "override" && overrideValue
+                ? parseFloat(overrideValue)
+                : null,
+            premiumDelta:
+              outcome === "accept" && premiumOutcome === "delta" && deltaValue
+                ? parseFloat(deltaValue) / 100
+                : null,
+          },
+          stop: false,
+        },
       };
-      console.log(payload);
-    } catch (err: any) {
+
+      const res = await fetch("/api/admin/rules", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) throw new Error("Failed to create rule");
+      onSave?.();
+      onClose?.();
+    } catch (err) {
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -141,7 +179,10 @@ const CreateRulePage = () => {
             <Typography variant="h4" sx={{ color: "text.primary" }}>
               Create New Rule
             </Typography>
-            <Typography sx={{ cursor: "pointer", color: "text.secondary", fontSize: "20px" }}>
+            <Typography
+              onClick={onClose}
+              sx={{ cursor: "pointer", color: "text.secondary", fontSize: "20px" }}
+            >
               ✕
             </Typography>
           </Box>
@@ -174,12 +215,11 @@ const CreateRulePage = () => {
                 error={!!errors.product}
               >
                 <MenuItem value="">Select product</MenuItem>
-                <MenuItem value="standard">Standard</MenuItem>
-                <MenuItem value="premium">Premium</MenuItem>
-                <MenuItem value="global">Global</MenuItem>
-                <MenuItem value="standardGreen">Standard Green</MenuItem>
-                <MenuItem value="premiumGreen">Premium Green</MenuItem>
-                <MenuItem value="globalGreen">Global Green</MenuItem>
+                {products.map((p) => (
+                  <MenuItem key={p.id} value={p.id}>
+                    {p.name}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
             {errors.product && (
@@ -509,7 +549,7 @@ const CreateRulePage = () => {
               }}
             />
             <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2 }}>
-              <Button variant="text" disabled={isLoading}>
+              <Button variant="text" disabled={isLoading} onClick={onClose}>
                 Cancel
               </Button>
               <Button

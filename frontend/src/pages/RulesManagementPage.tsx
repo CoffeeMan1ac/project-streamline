@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { Dialog } from "@mui/material";
 import EditRulePage from "../pages/EditRulePage";
+import CreateRulePage from "./CreateRulePage";
 
 type ProductOption = {
   id: string;
@@ -63,6 +64,7 @@ const RulesManagementPage = () => {
   const [selectedProduct, setSelectedProduct] = useState("");
   const [rules, setRules] = useState<Rule[]>([]);
   const [products, setProducts] = useState<ProductOption[]>([]);
+  const [createRuleOpen, setCreateRuleOpen] = useState(false);
 
   useEffect(() => {
     fetch("/api/backoffice/products/options")
@@ -147,9 +149,28 @@ const RulesManagementPage = () => {
             </Typography>
           </Box>
           <Box>
-            <Button variant="contained" color="primary" sx={{ mt: 2 }} startIcon={<AddIcon />}>
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{ mt: 2 }}
+              startIcon={<AddIcon />}
+              onClick={() => setCreateRuleOpen(true)}
+            >
               Create New Rule
             </Button>
+            <Dialog
+              open={createRuleOpen}
+              onClose={() => setCreateRuleOpen(false)}
+              maxWidth="md"
+              fullWidth
+            >
+              <CreateRulePage
+                products={products}
+                selectedProduct={selectedProduct}
+                onClose={() => setCreateRuleOpen(false)}
+                onSave={fetchRules}
+              />
+            </Dialog>
           </Box>
         </Box>
         <Box sx={{ my: 4 }}>
