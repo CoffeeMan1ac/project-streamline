@@ -131,9 +131,11 @@ const EditRulePage = ({ id, products = [], onClose }: EditRulePageProps) => {
     if (!ruleDescription) newErrors.ruleDescription = "Required";
     if (!product) newErrors.product = "Required";
     if (!outcome) newErrors.outcome = "Required";
-    // only validate the value field for whichever premium option is selected
-    if (premiumOutcome === "override" && !overrideValue) newErrors.overrideValue = "Required";
-    if (premiumOutcome === "delta" && !deltaValue) newErrors.deltaValue = "Required";
+    // only validate premium fields if outcome is accept
+    if (outcome === "accept" && premiumOutcome === "override" && !overrideValue)
+      newErrors.overrideValue = "Required";
+    if (outcome === "accept" && premiumOutcome === "delta" && !deltaValue)
+      newErrors.deltaValue = "Required";
 
     // validate each condition row has all fields filled
     const newConditionErrors = conditions.map(
@@ -156,19 +158,39 @@ const EditRulePage = ({ id, products = [], onClose }: EditRulePageProps) => {
 
     try {
       const payload = {
-        product,
-        ruleName,
-        ruleDescription,
-        conditions,
-        conditionLogic,
-        outcome,
-        declineReason,
-        premiumOutcome,
-        overrideValue,
-        deltaValue,
+        name: ruleName,
+        description: ruleDescription,
+        reason: declineReason,
+        rule_config: {
+          when: {
+            match: conditionLogic,
+            conditions: conditions.map((c) => ({
+              field: c.field,
+              operator: c.operator.toUpperCase(),
+              value: c.value,
+            })),
+          },
+          then: {
+            decision: outcome.toUpperCase(),
+            premiumOverride:
+              premiumOutcome === "override" && overrideValue ? parseFloat(overrideValue) : null,
+            premiumDelta:
+              premiumOutcome === "delta" && deltaValue ? parseFloat(deltaValue) / 100 : null,
+          },
+          stop: false,
+        },
       };
-      console.log(payload);
-    } catch (err: any) {
+
+      const res = await fetch(`/api/admin/rules/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) throw new Error("Failed to save rule");
+
+      onClose?.();
+    } catch (err) {
       console.error(err);
     } finally {
       setIsLoading(false);
