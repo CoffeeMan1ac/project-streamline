@@ -17,10 +17,6 @@ variables:
   GCP_REGION: "${GCP_REGION}"
   AR_REPO: "${AR_REPO}"
 
-  AR_HOST: "${GCP_REGION}-docker.pkg.dev"
-  BACKEND_SERVICE: "backend-prod"
-  FRONTEND_SERVICE: "frontend-prod"
-
   BACKEND_IMAGE_URI: "${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/backend-prod"
   FRONTEND_IMAGE_URI: "${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/frontend-prod"
 
@@ -134,6 +130,11 @@ docker:build:frontend:
     entrypoint: [""]
   needs: ["frontend:build"]
   script:
+    - export AR_HOST="${GCP_REGION}-docker.pkg.dev"
+    - export FRONTEND_IMAGE_URI="${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/frontend-prod"
+
+    - echo "$GCP_SA_KEY_B64" | base64 -d > /tmp/sa.json
+
     - mkdir -p /kaniko/.docker
     - |
       cat > /kaniko/.docker/config.json <<EOF
@@ -141,17 +142,18 @@ docker:build:frontend:
         "auths": {
           "${AR_HOST}": {
             "username": "_json_key",
-            "password": "$(echo "$GCP_SA_KEY_B64" | base64 -d | tr -d '\n')"
+            "password": "$(cat /tmp/sa.json | tr -d '\n')"
           }
         }
       }
       EOF
-    - /kaniko/executor
-      --context "${CI_PROJECT_DIR}/frontend"
-      --dockerfile "${CI_PROJECT_DIR}/frontend/Dockerfile"
-      --destination "${FRONTEND_IMAGE_URI}:${CI_COMMIT_SHA}"
-      --destination "${FRONTEND_IMAGE_URI}:latest"
 
+    - |
+      /kaniko/executor \
+        --context "${CI_PROJECT_DIR}/frontend" \
+        --dockerfile "${CI_PROJECT_DIR}/frontend/Dockerfile" \
+        --destination "${FRONTEND_IMAGE_URI}:${CI_COMMIT_SHA}" \
+        --destination "${FRONTEND_IMAGE_URI}:latest"
 
 # -----------------------------
 # Backend (Spring Boot / Maven)
@@ -260,6 +262,11 @@ docker:build:backend:
     entrypoint: [""]
   needs: ["backend:build"]
   script:
+    - export AR_HOST="${GCP_REGION}-docker.pkg.dev"
+    - export BACKEND_IMAGE_URI="${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/backend-prod"
+
+    - echo "$GCP_SA_KEY_B64" | base64 -d > /tmp/sa.json
+
     - mkdir -p /kaniko/.docker
     - |
       cat > /kaniko/.docker/config.json <<EOF
@@ -267,16 +274,18 @@ docker:build:backend:
         "auths": {
           "${AR_HOST}": {
             "username": "_json_key",
-            "password": "$(echo "$GCP_SA_KEY_B64" | base64 -d | tr -d '\n')"
+            "password": "$(cat /tmp/sa.json | tr -d '\n')"
           }
         }
       }
       EOF
-    - /kaniko/executor
-      --context "${CI_PROJECT_DIR}/backend"
-      --dockerfile "${CI_PROJECT_DIR}/backend/Dockerfile"
-      --destination "${BACKEND_IMAGE_URI}:${CI_COMMIT_SHA}"
-      --destination "${BACKEND_IMAGE_URI}:latest"
+
+    - |
+      /kaniko/executor \
+        --context "${CI_PROJECT_DIR}/backend" \
+        --dockerfile "${CI_PROJECT_DIR}/backend/Dockerfile" \
+        --destination "${BACKEND_IMAGE_URI}:${CI_COMMIT_SHA}" \
+        --destination "${BACKEND_IMAGE_URI}:latest"
 
 deploy:cloudrun:
   stage: deploy
