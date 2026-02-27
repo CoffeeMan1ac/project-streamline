@@ -12,7 +12,9 @@ const Footer = () => {
         mt: "auto",
       }}
     >
-      <Typography variant="body2">SPRINT 2 DEMO</Typography>
+      <Typography variant="body2">
+        © 2026 Phone Shield. Underwritten by leading global insurers.
+      </Typography>
     </Box>
   );
 };
