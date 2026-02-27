@@ -138,8 +138,12 @@ public class RuleService {
 
       Then newThen = new Then();
       newThen.setDecision((String) thenField.get("decision"));
-      newThen.setPremiumDelta((BigDecimal) thenField.get("premiumDelta"));
-      newThen.setPremiumOverride((BigDecimal) thenField.get("premiumOverride"));
+      Object premiumDelta = thenField.get("premiumDelta");
+      Object premiumOverride = thenField.get("premiumOverride");
+      newThen.setPremiumDelta(
+          premiumDelta != null ? new BigDecimal(premiumDelta.toString()) : null);
+      newThen.setPremiumOverride(
+          premiumOverride != null ? new BigDecimal(premiumOverride.toString()) : null);
 
       Boolean stop = (Boolean) ruleConfigFields.get("stop");
       rule.setRuleConfig(new RuleConfig(newWhen, newThen, stop));
