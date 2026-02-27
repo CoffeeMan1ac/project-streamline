@@ -214,17 +214,17 @@ const QuotesPage = () => {
 
   return (
     <>
-      <div style={{ backgroundColor: "#f7fbfc", padding: 50 }}>
-        <Container maxWidth="md" style={{ padding: 24, backgroundColor: "white", borderRadius: 8 }}>
-          <Typography variant="h4" gutterBottom style={{ color: "black" }}>
+      <Box sx={{ p: 6 }}>
+        <Container maxWidth="md" sx={{ p: 3, borderRadius: 2, bgcolor: "background.paper" }}>
+          <Typography variant="h4" gutterBottom sx={{ color: "text.primary" }}>
             Get Your Quote
           </Typography>
-          <Typography variant="body1" gutterBottom style={{ color: "black", marginBottom: 24 }}>
+          <Typography variant="body1" gutterBottom sx={{ color: "text.secondary", mb: 3 }}>
             Fill in your details below to receive an instant quote
           </Typography>
 
           <Box component="form" onSubmit={handleSubmit}>
-            <Typography variant="h6" gutterBottom style={{ color: "black" }}>
+            <Typography variant="h6" gutterBottom sx={{ color: "text.primary" }}>
               Personal Details
             </Typography>
 
@@ -233,6 +233,7 @@ const QuotesPage = () => {
                 fullWidth
                 label="First Name"
                 value={firstName}
+                slotProps={{ htmlInput: { "data-testid": "first-name-input" } }}
                 onChange={(e) => {
                   // required and red box go away after user enters something
                   setFirstName(e.target.value);
@@ -246,6 +247,7 @@ const QuotesPage = () => {
                 fullWidth
                 label="Last Name"
                 value={lastName}
+                slotProps={{ htmlInput: { "data-testid": "last-name-input" } }}
                 onChange={(e) => {
                   setLastName(e.target.value);
                   setErrors((prev) => ({ ...prev, lastName: "" }));
@@ -261,6 +263,7 @@ const QuotesPage = () => {
                 fullWidth
                 label="Email Address"
                 value={email}
+                slotProps={{ htmlInput: { "data-testid": "email-input" } }}
                 onChange={(e) => {
                   setEmail(e.target.value);
                   setErrors((prev) => ({ ...prev, email: "" }));
@@ -273,6 +276,7 @@ const QuotesPage = () => {
                 fullWidth
                 label="Phone Number"
                 value={phone}
+                slotProps={{ htmlInput: { "data-testid": "phone-number-input" } }}
                 onChange={(e) => {
                   setPhone(e.target.value);
                   setErrors((prev) => ({ ...prev, phone: "" }));
@@ -333,11 +337,12 @@ const QuotesPage = () => {
               label="Address Line 1"
               placeholder="Street number and name"
               value={address1}
+              slotProps={{ htmlInput: { "data-testid": "address-1-input" } }}
               onChange={(e) => {
                 setAddress1(e.target.value);
                 setErrors((prev) => ({ ...prev, address1: "" }));
               }}
-              style={{ marginBottom: "16px" }}
+              sx={{ marginBottom: "16px" }}
               error={!!errors.address1}
               helperText={errors.address1}
               disabled={isLoading}
@@ -348,8 +353,9 @@ const QuotesPage = () => {
               label="Address Line 2 (Optional)"
               placeholder="Apartment, suite, etc."
               value={address2}
+              slotProps={{ htmlInput: { "data-testid": "address-2-input" } }}
               onChange={(e) => setAddress2(e.target.value)}
-              style={{ marginBottom: "16px" }}
+              sx={{ marginBottom: "16px" }}
               disabled={isLoading}
             />
 
@@ -358,6 +364,7 @@ const QuotesPage = () => {
                 fullWidth
                 label="City"
                 value={city}
+                slotProps={{ htmlInput: { "data-testid": "city-input" } }}
                 onChange={(e) => {
                   setCity(e.target.value);
                   setErrors((prev) => ({ ...prev, city: "" }));
@@ -370,6 +377,7 @@ const QuotesPage = () => {
                 fullWidth
                 label="Postal Code"
                 value={postalCode}
+                slotProps={{ htmlInput: { "data-testid": "post-code-input" } }}
                 onChange={(e) => {
                   setPostalCode(e.target.value);
                   setErrors((prev) => ({ ...prev, postalCode: "" }));
@@ -383,13 +391,14 @@ const QuotesPage = () => {
                 <Select
                   labelId="country-label"
                   id="country"
+                  inputProps={{ "data-testid": "country-select" }}
                   value={country}
                   label="Country"
                   onChange={(e) => {
                     setCountry(e.target.value);
                     setErrors((prev) => ({ ...prev, country: "" }));
                   }}
-                  style={{ textAlign: "left" }}
+                  sx={{ textAlign: "left" }}
                 >
                   <MenuItem value="">Select country</MenuItem>
                   <MenuItem value="ireland">Ireland</MenuItem>
@@ -404,7 +413,7 @@ const QuotesPage = () => {
               </FormControl>
             </div>
 
-            <Typography variant="h6" gutterBottom style={{ color: "black", marginTop: "32px" }}>
+            <Typography variant="h6" gutterBottom sx={{ color: "text.primary", mt: 4 }}>
               Phone Details
             </Typography>
 
@@ -414,6 +423,7 @@ const QuotesPage = () => {
                 <Select
                   labelId="phone-make-label"
                   id="phone-make"
+                  inputProps={{ "data-testid": "phone-make-select" }}
                   value={phoneMake}
                   label="Phone Make"
                   onChange={handleMakeChange}
@@ -437,13 +447,14 @@ const QuotesPage = () => {
                 <Select
                   labelId="phone-model-label"
                   id="phone-model"
+                  inputProps={{ "data-testid": "phone-model-select" }}
                   value={phoneModel}
                   label="Phone Model"
                   onChange={(e) => {
                     setPhoneModel(e.target.value);
                     setErrors((prev) => ({ ...prev, phoneModel: "" }));
                   }}
-                  style={{ textAlign: "left" }}
+                  sx={{ textAlign: "left" }}
                 >
                   <MenuItem value="">{phoneMake ? "Select model" : "Select a make first"}</MenuItem>
                   {/* loop through models for the selected make and create dropdown option for each */}
@@ -520,19 +531,16 @@ const QuotesPage = () => {
             <Button
               type="submit"
               variant="contained"
+              color="primary"
               fullWidth
               disabled={isLoading}
-              style={{
-                marginTop: "10px",
-                padding: "12px",
-                backgroundColor: "#0167b2",
-              }}
+              sx={{ marginTop: 1, py: 1.5 }}
             >
               {isLoading ? "Submitting..." : "Get Quote"}
             </Button>
           </Box>
         </Container>
-      </div>
+      </Box>
     </>
   );
 };
