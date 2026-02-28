@@ -1,4 +1,4 @@
-package com.munichre.streamline.product.service.api.controller;
+package com.munichre.streamline.product.api.controller;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -6,7 +6,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.munichre.streamline.product.api.controller.BackofficeProductController;
 import com.munichre.streamline.product.api.dto.ProductOptionDto;
 import com.munichre.streamline.product.service.ProductService;
 import java.util.List;
