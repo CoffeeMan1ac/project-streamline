@@ -45,7 +45,8 @@ public class RuleService {
     //   if (existingPriority > priority) break;
     // }
     // newRule.setPriority(priority);
-    Integer nextPriority = currentRules.isEmpty() ? 1 : currentRules.get(currentRules.size() - 1).getPriority() + 1;
+    Integer nextPriority =
+        currentRules.isEmpty() ? 1 : currentRules.get(currentRules.size() - 1).getPriority() + 1;
     newRule.setPriority(nextPriority);
 
     newRule.setName((String) fields.get("name"));
@@ -84,7 +85,8 @@ public class RuleService {
     Object premiumDelta = thenField.get("premiumDelta");
     Object premiumOverride = thenField.get("premiumOverride");
     newThen.setPremiumDelta(premiumDelta != null ? new BigDecimal(premiumDelta.toString()) : null);
-    newThen.setPremiumOverride(premiumOverride != null ? new BigDecimal(premiumOverride.toString()) : null);
+    newThen.setPremiumOverride(
+        premiumOverride != null ? new BigDecimal(premiumOverride.toString()) : null);
 
     Boolean newStop = (Boolean) ruleConfigFields.get("stop");
 
