@@ -9,6 +9,9 @@ RUN npm run build
 # Serve stage
 FROM nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html
-COPY nginx.conf.template /etc/nginx/templates/default.conf
+
+# Cloud Run
+COPY nginx.conf /etc/nginx/templates/default.conf.template
+
 EXPOSE 8080
 CMD ["nginx", "-g", "daemon off;"]
