@@ -42,6 +42,11 @@ const AuthCard = () => {
       <Button fullWidth variant="contained" color="primary">
         Login
       </Button>
+      <Box borderTop={1} borderColor="divider" pt={2} >
+        <Typography fontSize="small" sx={{ color: "text.secondary" }}>
+            Demo credentials: admin@phoneshield / admin123
+        </Typography>
+      </Box>
     </Box>
   );
 };

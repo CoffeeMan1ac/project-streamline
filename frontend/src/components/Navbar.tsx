@@ -50,7 +50,7 @@ const Navbar = ({ mode, toggleTheme }: NavbarProps) => {
           <Button color="inherit" sx={{ mr: 2 }} onClick={handleGetQuoteClick}>
             Get a Quote
           </Button>
-          <IconButton color="inherit" onClick={() => navigate("/rules-management")} sx={{ p: 2 }}>
+          <IconButton color="inherit" onClick={() => navigate("/loginPage")} sx={{ p: 2 }}>
             <LoginIcon />
           </IconButton>
           <IconButton color="inherit" onClick={toggleTheme} sx={{ p: 2 }}>
