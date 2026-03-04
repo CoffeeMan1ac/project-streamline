@@ -1,3 +1,4 @@
+import { useSearchParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 import RuleTable from "../components/RuleTable";
 import SelectProduct from "../components/SelectProduct";
@@ -61,11 +62,15 @@ const mapRuleResponseToRule = (dto: RuleResponseDto): Rule => ({
 
 const RulesManagementPage = () => {
   const [editRuleId, setEditRuleId] = useState<string | null>(null);
-  const [selectedProduct, setSelectedProduct] = useState("");
+const [searchParams, setSearchParams] = useSearchParams();
+const selectedProduct = searchParams.get("product") ?? "";
   const [rules, setRules] = useState<Rule[]>([]);
   const [products, setProducts] = useState<ProductOption[]>([]);
   const [createRuleOpen, setCreateRuleOpen] = useState(false);
 
+  const handleProductChange = (productId: string) => {
+  setSearchParams({ product: productId });
+};
   useEffect(() => {
     fetch("/api/backoffice/products/options")
       .then((res) => res.json())
@@ -177,7 +182,7 @@ const RulesManagementPage = () => {
           <SelectProduct
             products={products}
             selectedProduct={selectedProduct}
-            onProductChange={setSelectedProduct}
+            onProductChange={handleProductChange}
           />
         </Box>
         <RuleTable
