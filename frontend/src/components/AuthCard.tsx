@@ -1,7 +1,7 @@
 import { Box, Typography, TextField, Button, Link, IconButton, InputAdornment} from "@mui/material";
 import { useState } from "react";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 
 const AuthCard = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -43,7 +43,7 @@ const AuthCard = () => {
                     onClick={() => setShowPassword((prev) => !prev)}
                     edge="end"
                     >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                    {showPassword ? <VisibilityOffOutlinedIcon /> : <VisibilityOutlinedIcon />}
                     </IconButton>
                 </InputAdornment>
                 ),
