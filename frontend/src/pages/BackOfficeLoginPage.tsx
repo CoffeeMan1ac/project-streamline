@@ -1,7 +1,7 @@
 import AuthCard from "../components/AuthCard";
 import Box from "@mui/material/Box";
 import { Typography, Button } from "@mui/material";
-
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 const BackOfficeLoginPage = () => {
   return (
     <>
@@ -31,6 +31,7 @@ const BackOfficeLoginPage = () => {
                 width: "100%",
                 height: "100%",
                 objectFit: "contain",
+                transform: "translateY(2px)",
                 }}
             />
             </Box>
@@ -41,7 +42,8 @@ const BackOfficeLoginPage = () => {
             Back Office Portal Login
             </Typography>
             <AuthCard />
-            <Button variant="text" size="small" sx={{ color: "text.secondary", mt: 3 }}>
+            <Button href="/" variant="text" size="small" sx={{ color: "text.secondary", mt: 3 }}>
+            <NavigateBeforeIcon />
             Back to Home
             </Button>
       </Box>

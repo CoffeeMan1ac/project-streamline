@@ -35,7 +35,7 @@ const AuthCard = () => {
         />
       </Box>
         <Box width="100%" display="flex" justifyContent="flex-end">
-        <Link href="/forgot-password" variant="body2" underline="none">
+        <Link href="" variant="body2" underline="none">
             Forgot password?
         </Link>
         </Box>
