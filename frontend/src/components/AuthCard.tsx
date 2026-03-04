@@ -1,6 +1,10 @@
-import { Box, Typography, TextField, Button, Link} from "@mui/material";
+import { Box, Typography, TextField, Button, Link, IconButton, InputAdornment} from "@mui/material";
+import { useState } from "react";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 const AuthCard = () => {
+  const [showPassword, setShowPassword] = useState(false);
   return (
     <Box
       sx={{ border: 1, borderColor: "divider", borderRadius: 2, width: "100%", maxWidth: 400 }}
@@ -12,7 +16,7 @@ const AuthCard = () => {
       alignItems="center"
     >
       <Box width="100%">
-        <Typography fontSize="small" sx={{ color: "text.secondary" }}>
+        <Typography fontSize="small" sx={{ color: "text.secondary" }} mb={1}>
           Email / Username
         </Typography>
         <TextField
@@ -23,15 +27,27 @@ const AuthCard = () => {
         />
       </Box>
       <Box width="100%">
-        <Typography fontSize="small" sx={{ color: "text.secondary" }}>
+        <Typography fontSize="small" sx={{ color: "text.secondary" }} mb={1}>
           Password
         </Typography>
         <TextField
-          fullWidth
-          id="outlined-password"
-          placeholder="Enter your password"
-          variant="outlined"
-          type="password"
+            fullWidth
+            id="outlined-password"
+            placeholder="Enter your password"
+            variant="outlined"
+            type={showPassword ? "text" : "password"}
+            InputProps={{
+                endAdornment: (
+                <InputAdornment position="end">
+                    <IconButton
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    edge="end"
+                    >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                </InputAdornment>
+                ),
+            }}
         />
       </Box>
         <Box width="100%" display="flex" justifyContent="flex-end">
