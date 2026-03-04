@@ -1,4 +1,4 @@
-import { Box, Typography, TextField, Button } from "@mui/material";
+import { Box, Typography, TextField, Button, Link} from "@mui/material";
 
 const AuthCard = () => {
   return (
@@ -34,10 +34,12 @@ const AuthCard = () => {
           type="password"
         />
       </Box>
-      <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-        Forgot password?
-      </Typography>
-      <Button fullWidth variant="contained" color="primary" sx={{ mt: 2 }}>
+        <Box width="100%" display="flex" justifyContent="flex-end">
+        <Link href="/forgot-password" variant="body2" underline="none">
+            Forgot password?
+        </Link>
+        </Box>
+      <Button fullWidth variant="contained" color="primary">
         Login
       </Button>
     </Box>
