@@ -62,15 +62,15 @@ const mapRuleResponseToRule = (dto: RuleResponseDto): Rule => ({
 
 const RulesManagementPage = () => {
   const [editRuleId, setEditRuleId] = useState<string | null>(null);
-const [searchParams, setSearchParams] = useSearchParams();
-const selectedProduct = searchParams.get("product") ?? "";
+  const [searchParams, setSearchParams] = useSearchParams();
+  const selectedProduct = searchParams.get("product") ?? "";
   const [rules, setRules] = useState<Rule[]>([]);
   const [products, setProducts] = useState<ProductOption[]>([]);
   const [createRuleOpen, setCreateRuleOpen] = useState(false);
 
   const handleProductChange = (productId: string) => {
-  setSearchParams({ product: productId });
-};
+    setSearchParams({ product: productId });
+  };
   useEffect(() => {
     fetch("/api/backoffice/products/options")
       .then((res) => res.json())
