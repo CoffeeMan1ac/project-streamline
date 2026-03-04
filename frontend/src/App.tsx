@@ -12,6 +12,7 @@ import CreateRulePage from "./pages/CreateRulePage";
 import { ThemeProvider, CssBaseline, Box } from "@mui/material";
 import { lightTheme, darkTheme } from "./theme/theme";
 import React from "react";
+import BackOfficeLoginPage from "./pages/BackOfficeLoginPage";
 
 function App() {
   // state to manage theme:
@@ -44,6 +45,7 @@ function App() {
             <Route path="/accepted" element={<AcceptPage />} />
             <Route path="/declined" element={<DeclinePage />} />
             <Route path="/createRule" element={<CreateRulePage />} />
+            <Route path="/loginPage" element={<BackOfficeLoginPage />} />
           </Routes>
           <Footer />
         </BrowserRouter>

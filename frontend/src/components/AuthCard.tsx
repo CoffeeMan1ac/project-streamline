@@ -2,18 +2,28 @@ import { Box, Typography, TextField, Button } from "@mui/material";
 
 const AuthCard = () => {
   return (
-    <Box>
+    <Box
+      sx={{ border: 1, borderColor: "divider", borderRadius: 2, width: "100%", maxWidth: 400 }}
+      bgcolor={"background.paper"}
+      p={4}
+      display="flex"
+      flexDirection="column"
+      gap={3}
+      alignItems="center"
+    >
       <Box>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Email / Username
-        </Typography>
-        <TextField id="outlined-basic" label="Email / Username" variant="outlined" />
+        <Typography>Email / Username</Typography>
+        <TextField fullWidth id="outlined-basic" label="Email / Username" variant="outlined" />
       </Box>
       <Box>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Password
-        </Typography>
-        <TextField id="outlined-password" label="Password" variant="outlined" />
+        <Typography>Password</Typography>
+        <TextField
+          fullWidth
+          id="outlined-password"
+          label="Password"
+          variant="outlined"
+          type="password"
+        />
       </Box>
       <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
         Forgot password?
