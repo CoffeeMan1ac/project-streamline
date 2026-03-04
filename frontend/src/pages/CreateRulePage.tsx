@@ -100,8 +100,10 @@ const CreateRulePage = ({
     if (!product) newErrors.product = "Required";
     if (!outcome) newErrors.outcome = "Required";
     // only validate the value field for whichever premium option is selected
-    if (premiumOutcome === "override" && !overrideValue) newErrors.overrideValue = "Required";
-    if (premiumOutcome === "delta" && !deltaValue) newErrors.deltaValue = "Required";
+    if (outcome === "accept" && premiumOutcome === "override" && !overrideValue)
+      newErrors.overrideValue = "Required";
+    if (outcome === "accept" && premiumOutcome === "delta" && !deltaValue)
+      newErrors.deltaValue = "Required";
 
     // validate each condition row has all fields filled
     const newConditionErrors = conditions.map(
