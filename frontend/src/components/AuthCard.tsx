@@ -1,7 +1,15 @@
-import { Box, Typography, TextField, Button, Link, IconButton, InputAdornment} from "@mui/material";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Link,
+  IconButton,
+  InputAdornment,
+} from "@mui/material";
 import { useState } from "react";
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 
 const AuthCard = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -31,36 +39,33 @@ const AuthCard = () => {
           Password
         </Typography>
         <TextField
-            fullWidth
-            id="outlined-password"
-            placeholder="Enter your password"
-            variant="outlined"
-            type={showPassword ? "text" : "password"}
-            InputProps={{
-                endAdornment: (
-                <InputAdornment position="end">
-                    <IconButton
-                    onClick={() => setShowPassword((prev) => !prev)}
-                    edge="end"
-                    >
-                    {showPassword ? <VisibilityOffOutlinedIcon /> : <VisibilityOutlinedIcon />}
-                    </IconButton>
-                </InputAdornment>
-                ),
-            }}
+          fullWidth
+          id="outlined-password"
+          placeholder="Enter your password"
+          variant="outlined"
+          type={showPassword ? "text" : "password"}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={() => setShowPassword((prev) => !prev)} edge="end">
+                  {showPassword ? <VisibilityOffOutlinedIcon /> : <VisibilityOutlinedIcon />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
         />
       </Box>
-        <Box width="100%" display="flex" justifyContent="flex-end">
+      <Box width="100%" display="flex" justifyContent="flex-end">
         <Link href="" variant="body2" underline="none">
-            Forgot password?
+          Forgot password?
         </Link>
-        </Box>
+      </Box>
       <Button fullWidth variant="contained" color="primary">
         Login
       </Button>
-      <Box borderTop={1} borderColor="divider" pt={2} >
+      <Box borderTop={1} borderColor="divider" pt={2}>
         <Typography fontSize="small" sx={{ color: "text.secondary" }}>
-            Demo credentials: admin@phoneshield / admin123
+          Demo credentials: admin@phoneshield / admin123
         </Typography>
       </Box>
     </Box>
