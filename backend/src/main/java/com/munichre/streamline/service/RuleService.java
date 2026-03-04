@@ -34,8 +34,7 @@ public class RuleService {
     Product product = productService.getProduct(productUUID);
     newRule.setProduct(product);
 
-    List<Rule> currentRules =
-        ruleRepository.findByProductIdAndActiveTrueOrderByPriorityAsc(productUUID);
+    List<Rule> currentRules = ruleRepository.findByProductIdOrderByPriorityAsc(productUUID);
 
     // Check for duplicate priorities in existing rules.
     // Integer priority = (Integer) fields.get("priority");
