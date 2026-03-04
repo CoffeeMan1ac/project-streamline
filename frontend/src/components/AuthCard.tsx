@@ -11,16 +11,25 @@ const AuthCard = () => {
       gap={3}
       alignItems="center"
     >
-      <Box>
-        <Typography>Email / Username</Typography>
-        <TextField fullWidth id="outlined-basic" label="Email / Username" variant="outlined" />
+      <Box width="100%">
+        <Typography fontSize="small" sx={{ color: "text.secondary" }}>
+          Email / Username
+        </Typography>
+        <TextField
+          fullWidth
+          id="outlined-basic"
+          placeholder="admin@phoneshield.com"
+          variant="outlined"
+        />
       </Box>
-      <Box>
-        <Typography>Password</Typography>
+      <Box width="100%">
+        <Typography fontSize="small" sx={{ color: "text.secondary" }}>
+          Password
+        </Typography>
         <TextField
           fullWidth
           id="outlined-password"
-          label="Password"
+          placeholder="Enter your password"
           variant="outlined"
           type="password"
         />
@@ -28,8 +37,8 @@ const AuthCard = () => {
       <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
         Forgot password?
       </Typography>
-      <Button variant="contained" color="primary" sx={{ mt: 2 }}>
-        Log In
+      <Button fullWidth variant="contained" color="primary" sx={{ mt: 2 }}>
+        Login
       </Button>
     </Box>
   );
