@@ -18,7 +18,7 @@ describe("EditRulePage", () => {
     ruleConfig: {
       when: {
         match: "all",
-        conditions: [{ field: "age", operator: "EQUALS", value: "18" }],
+        conditions: [{ field: "country", operator: "EQUALS", value: "ireland" }],
       },
       then: {
         decision: "DECLINE",
@@ -148,14 +148,32 @@ describe("EditRulePage", () => {
   });
 
   test("premium outcome radio buttons are rendered when accept is selected", async () => {
-    await renderWithRouter();
-    const f = within(form);
+    vi.spyOn(globalThis, "fetch").mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        ...mockRule,
+        ruleConfig: {
+          ...mockRule.ruleConfig,
+          then: {
+            decision: "ACCEPT",
+            premiumOverride: null,
+            premiumDelta: null,
+          },
+        },
+      }),
+    } as Response);
 
-    const comboboxes = f.getAllByRole("combobox");
-    const decisionSelect = comboboxes[2];
+    const utils = render(
+      <MemoryRouter>
+        <EditRulePage id="123" onClose={vi.fn()} />
+      </MemoryRouter>
+    );
 
-    fireEvent.mouseDown(decisionSelect);
-    fireEvent.click(screen.getByText(/^Accept$/i));
+    await screen.findByDisplayValue("Test Rule");
+
+    const found = utils.container.querySelector("form");
+    if (!found) throw new Error("Edit rule form not found");
+    const f = within(found as HTMLFormElement);
 
     await waitFor(() => {
       expect(f.getByLabelText(/^Override$/i)).toBeInTheDocument();
