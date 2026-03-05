@@ -328,10 +328,12 @@ const CreateRulePage = ({
                         sx={{ textAlign: "left" }}
                       >
                         <MenuItem value="">Select field</MenuItem>
-                        <MenuItem value="age">Age</MenuItem>
+                        <MenuItem value="country">Country</MenuItem>
+                        <MenuItem value="occupation">Occupation</MenuItem>
                         <MenuItem value="phoneMake">Phone Make</MenuItem>
                         <MenuItem value="phoneModel">Phone Model</MenuItem>
                         <MenuItem value="phoneCondition">Phone Condition</MenuItem>
+                        <MenuItem value="phoneAge">Phone Age</MenuItem>
                       </Select>
                     </FormControl>
                   </Box>
