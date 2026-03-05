@@ -30,6 +30,55 @@ type Condition = {
   value: string;
 };
 
+const fieldOptions: Record<string, { value: string; label: string }[]> = {
+  country: [
+    { value: "ireland", label: "Ireland" },
+    { value: "uk", label: "United Kingdom" },
+    { value: "usa", label: "United States" },
+  ],
+  occupation: [
+    { value: "teacher", label: "Teacher" },
+    { value: "doctor", label: "Doctor" },
+    { value: "pilot", label: "Pilot" },
+    { value: "engineer", label: "Engineer" },
+    { value: "student", label: "Student" },
+    { value: "other", label: "Other" },
+  ],
+  phoneMake: [
+    { value: "Apple", label: "Apple" },
+    { value: "Samsung", label: "Samsung" },
+    { value: "Google", label: "Google" },
+  ],
+  phoneModel: [
+    { value: "iPhone 16", label: "iPhone 16" },
+    { value: "iPhone 15", label: "iPhone 15" },
+    { value: "iPhone 14", label: "iPhone 14" },
+    { value: "iPhone 13", label: "iPhone 13" },
+    { value: "Galaxy S24", label: "Galaxy S24" },
+    { value: "Galaxy S23", label: "Galaxy S23" },
+    { value: "Galaxy S22", label: "Galaxy S22" },
+    { value: "Galaxy Note 7", label: "Galaxy Note 7" },
+    { value: "Pixel 9", label: "Pixel 9" },
+    { value: "Pixel 8", label: "Pixel 8" },
+    { value: "Pixel 7", label: "Pixel 7" },
+    { value: "Pixel 6", label: "Pixel 6" },
+  ],
+  phoneCondition: [
+    { value: "brand new", label: "Brand New" },
+    { value: "lightly used", label: "Lightly Used" },
+    { value: "good", label: "Good" },
+    { value: "heavily used", label: "Heavily Used" },
+    { value: "damaged", label: "Damaged" },
+  ],
+  phoneAge: [
+    { value: "less than 1 year", label: "Less than 1 year" },
+    { value: "1 year", label: "1 year" },
+    { value: "2 years", label: "2 years" },
+    { value: "3 years", label: "3 years" },
+    { value: "4+ years", label: "4+ years" },
+  ],
+};
+
 const CreateRulePage = ({
   products = [],
   selectedProduct = "",
@@ -324,7 +373,10 @@ const CreateRulePage = ({
                       <Select
                         value={condition.field}
                         displayEmpty
-                        onChange={(e) => updateCondition(index, "field", e.target.value)}
+                        onChange={(e) => {
+                          updateCondition(index, "field", e.target.value);
+                          updateCondition(index, "value", "");
+                        }}
                         sx={{ textAlign: "left" }}
                       >
                         <MenuItem value="">Select field</MenuItem>
@@ -362,13 +414,31 @@ const CreateRulePage = ({
                     <Typography variant="body2" sx={{ mb: 0.5, color: "text.secondary" }}>
                       Value
                     </Typography>
-                    <TextField
-                      fullWidth
-                      placeholder="Value"
-                      value={condition.value}
-                      onChange={(e) => updateCondition(index, "value", e.target.value)}
-                      disabled={isLoading}
-                    />
+                    {fieldOptions[condition.field] ? (
+                      <FormControl fullWidth disabled={isLoading}>
+                        <Select
+                          value={condition.value}
+                          displayEmpty
+                          onChange={(e) => updateCondition(index, "value", e.target.value)}
+                          sx={{ textAlign: "left" }}
+                        >
+                          <MenuItem value="">Select value</MenuItem>
+                          {fieldOptions[condition.field].map((opt) => (
+                            <MenuItem key={opt.value} value={opt.value}>
+                              {opt.label}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    ) : (
+                      <TextField
+                        fullWidth
+                        placeholder="Value"
+                        value={condition.value}
+                        onChange={(e) => updateCondition(index, "value", e.target.value)}
+                        disabled={isLoading}
+                      />
+                    )}
                   </Box>
 
                   {/* only show remove button if there is more than one condition */}
