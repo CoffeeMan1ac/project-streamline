@@ -376,6 +376,7 @@ const CreateRulePage = ({
                         onChange={(e) => {
                           updateCondition(index, "field", e.target.value);
                           updateCondition(index, "value", "");
+                          updateCondition(index, "operator", "");
                         }}
                         sx={{ textAlign: "left" }}
                       >
