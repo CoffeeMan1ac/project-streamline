@@ -8,6 +8,8 @@ backend/.mvn/wrapper/maven-wrapper.jar
 !backend/**/src/main/**/target/
 !backend/**/src/test/**/target/
 
+backend/src/main/resources/serviceAccountKey.json
+
 # --- Spring Tool Suite (STS) ---
 backend/.apt_generated
 backend/.classpath
