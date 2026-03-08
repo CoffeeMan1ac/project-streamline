@@ -23,6 +23,6 @@ public class BackofficeProductController {
 
   @GetMapping()
   public ResponseEntity<List<ProductDto>> getProducts() {
-    return ResponseEntity.ok(productService.getProducts());
+    return ResponseEntity.ok(productService.getAllProducts());
   }
 }

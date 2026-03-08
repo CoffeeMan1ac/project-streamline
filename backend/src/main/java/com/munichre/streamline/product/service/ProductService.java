@@ -49,13 +49,10 @@ public class ProductService {
   }
 
   /**
-   * Fetches active products and assembles them with their respective coverages and exclusions using
+   * Assembles products them with their respective coverages and exclusions using
    * a high-performance batching strategy.
    */
-  public List<ProductDto> getActiveProducts() {
-    LocalDateTime now = LocalDateTime.now();
-
-    List<ProductRowDto> productRows = productRepository.findActiveProductRows(now);
+  public List<ProductDto> assembleProducts(List<ProductRowDto> productRows) {
     if (productRows.isEmpty()) {
       return List.of();
     }
@@ -85,35 +82,22 @@ public class ProductService {
         .toList();
   }
 
-  public List<ProductDto> getProducts() {
+  /**
+   * Fetches active products and returns them assembled with coverages, exclusions, tags
+   */
+  public List<ProductDto> getActiveProducts() {
+    LocalDateTime now = LocalDateTime.now();
+
+    List<ProductRowDto> productRows = productRepository.findActiveProductRows(now);
+    return assembleProducts(productRows);
+  }
+
+  /**
+   * Fetches all products and returns them assembled with coverages, exclusions, tags
+   */
+  public List<ProductDto> getAllProducts() {
     List<ProductRowDto> productRows = productRepository.findProductRows();
-    if (productRows.isEmpty()) {
-      return List.of();
-    }
-
-    List<UUID> productIds = productRows.stream().map(ProductRowDto::id).toList();
-
-    Map<UUID, List<ProductCoverageRowDto>> coveragesByProduct =
-        productCoverageRepository.findCoverageRows(productIds).stream()
-            .collect(groupingBy(ProductCoverageRowDto::productId));
-
-    Map<UUID, List<ProductCoverageRowDto>> exclusionsByProduct =
-        productCoverageRepository.findExclusionRows(productIds).stream()
-            .collect(groupingBy(ProductCoverageRowDto::productId));
-
-    Map<UUID, List<ProductTagRowDto>> tagsByProduct =
-        productTagRepository.findTagRowsByProductIds(productIds).stream()
-            .collect(groupingBy(ProductTagRowDto::productId));
-
-    return productRows.stream()
-        .map(
-            row ->
-                ProductAssembler.toDto(
-                    row,
-                    coveragesByProduct.getOrDefault(row.id(), List.of()),
-                    exclusionsByProduct.getOrDefault(row.id(), List.of()),
-                    tagsByProduct.getOrDefault(row.id(), List.of())))
-        .toList();
+    return assembleProducts(productRows);
   }
 
   private static class ProductAssembler {
