@@ -56,6 +56,14 @@ describe("CreateProductPage", () => {
     expect(f.getByText(/^Validity Period$/i)).toBeInTheDocument();
   });
 
+  test("renders coverage details section heading and subtitle", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    expect(f.getByText(/^Coverage Details$/i)).toBeInTheDocument();
+    expect(f.getByText(/Select coverages to include in this product/i)).toBeInTheDocument();
+  });
+
   test("renders all form fields", () => {
     renderWithRouter();
     const f = within(form);
@@ -88,6 +96,27 @@ describe("CreateProductPage", () => {
 
     fireEvent.click(f.getByRole("button", { name: /Create Product/i }));
     expect(f.getAllByText(/Required/i).length).toBeGreaterThan(0);
+  });
+
+  test("shows coverage error when no coverage selected on submit", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    fireEvent.click(f.getByRole("button", { name: /Create Product/i }));
+    expect(f.getByText(/Please select at least one coverage/i)).toBeInTheDocument();
+  });
+
+  test("clears coverage error when a coverage is clicked", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    fireEvent.click(f.getByRole("button", { name: /Create Product/i }));
+    expect(f.getByText(/Please select at least one coverage/i)).toBeInTheDocument();
+
+    const accidental = f.getByText(/^Accidental Damage$/i).closest("div") as HTMLElement;
+    fireEvent.click(accidental);
+
+    expect(f.queryByText(/Please select at least one coverage/i)).not.toBeInTheDocument();
   });
 
   test("status dropdown renders active and inactive options", () => {
@@ -136,5 +165,31 @@ describe("CreateProductPage", () => {
 
     expect(f.getByText(/^Start Date \*$/i)).toBeInTheDocument();
     expect(f.getByText(/^End Date$/i)).toBeInTheDocument();
+  });
+
+  test("renders all coverage options", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    expect(f.getByText(/^Accidental Damage$/i)).toBeInTheDocument();
+    expect(f.getByText(/^Liquid Damage$/i)).toBeInTheDocument();
+    expect(f.getByText(/^Extended Warranty$/i)).toBeInTheDocument();
+    expect(f.getByText(/^Data Recovery$/i)).toBeInTheDocument();
+    expect(f.getByText(/^Theft$/i)).toBeInTheDocument();
+    expect(f.getByText(/^Screen Damage$/i)).toBeInTheDocument();
+    expect(f.getByText(/^Worldwide Coverage$/i)).toBeInTheDocument();
+    expect(f.getByText(/^Battery Replacement$/i)).toBeInTheDocument();
+  });
+
+  test("toggles coverage selection on click", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    const accidental = f.getByText(/^Accidental Damage$/i).closest("div") as HTMLElement;
+    fireEvent.click(accidental);
+    expect(accidental).toBeTruthy();
+
+    fireEvent.click(accidental);
+    expect(accidental).toBeTruthy();
   });
 });

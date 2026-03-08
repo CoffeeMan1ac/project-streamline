@@ -11,6 +11,19 @@ import {
   Button,
 } from "@mui/material";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+
+const coverageOptions = [
+  "Accidental Damage",
+  "Liquid Damage",
+  "Extended Warranty",
+  "Data Recovery",
+  "Theft",
+  "Screen Damage",
+  "Worldwide Coverage",
+  "Battery Replacement",
+];
 
 const CreateProductPage = () => {
   const [productName, setProductName] = useState("");
@@ -19,6 +32,7 @@ const CreateProductPage = () => {
   const [monthlyPrice, setMonthlyPrice] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [selectedCoverages, setSelectedCoverages] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const [errors, setErrors] = useState({
@@ -27,7 +41,15 @@ const CreateProductPage = () => {
     description: "",
     monthlyPrice: "",
     startDate: "",
+    coverages: "",
   });
+
+  const toggleCoverage = (coverage: string) => {
+    setSelectedCoverages((prev) =>
+      prev.includes(coverage) ? prev.filter((c) => c !== coverage) : [...prev, coverage]
+    );
+    setErrors((prev) => ({ ...prev, coverages: "" }));
+  };
 
   const validateForm = () => {
     const newErrors = {
@@ -36,6 +58,7 @@ const CreateProductPage = () => {
       description: "",
       monthlyPrice: "",
       startDate: "",
+      coverages: "",
     };
 
     if (!productName) newErrors.productName = "Required";
@@ -43,6 +66,7 @@ const CreateProductPage = () => {
     if (!description) newErrors.description = "Required";
     if (!monthlyPrice) newErrors.monthlyPrice = "Required";
     if (!startDate) newErrors.startDate = "Required";
+    if (selectedCoverages.length === 0) newErrors.coverages = "Please select at least one coverage";
 
     setErrors(newErrors);
 
@@ -63,6 +87,7 @@ const CreateProductPage = () => {
         monthlyPrice,
         startDate,
         endDate,
+        selectedCoverages,
       };
       console.log(payload);
     } catch (err) {
@@ -97,12 +122,7 @@ const CreateProductPage = () => {
 
             <Box sx={{ display: "flex", gap: 2, alignItems: "flex-start" }}>
               <Box sx={{ flex: 1 }}>
-                <Typography
-                  variant="body1"
-                  fontWeight="bold"
-                  gutterBottom
-                  sx={{ color: "text.primary" }}
-                >
+                <Typography variant="body1" gutterBottom sx={{ color: "text.primary" }}>
                   Product Name *
                 </Typography>
                 <TextField
@@ -121,12 +141,7 @@ const CreateProductPage = () => {
               </Box>
 
               <Box sx={{ flex: 1 }}>
-                <Typography
-                  variant="body1"
-                  fontWeight="bold"
-                  gutterBottom
-                  sx={{ color: "text.primary" }}
-                >
+                <Typography variant="body1" gutterBottom sx={{ color: "text.primary" }}>
                   Status *
                 </Typography>
                 <FormControl
@@ -165,12 +180,7 @@ const CreateProductPage = () => {
               </Box>
             </Box>
 
-            <Typography
-              variant="body1"
-              fontWeight="bold"
-              gutterBottom
-              sx={{ color: "text.primary" }}
-            >
+            <Typography variant="body1" gutterBottom sx={{ color: "text.primary" }}>
               Description *
             </Typography>
             <TextField
@@ -196,12 +206,7 @@ const CreateProductPage = () => {
               Base monthly price. Final price will be calculated based on rules.
             </Typography>
 
-            <Typography
-              variant="body1"
-              fontWeight="bold"
-              gutterBottom
-              sx={{ color: "text.primary" }}
-            >
+            <Typography variant="body1" gutterBottom sx={{ color: "text.primary" }}>
               Monthly Price *
             </Typography>
             <TextField
@@ -223,12 +228,7 @@ const CreateProductPage = () => {
 
             <Box sx={{ display: "flex", gap: 2, alignItems: "flex-start" }}>
               <Box sx={{ flex: 1 }}>
-                <Typography
-                  variant="body1"
-                  fontWeight="bold"
-                  gutterBottom
-                  sx={{ color: "text.primary" }}
-                >
+                <Typography variant="body1" gutterBottom sx={{ color: "text.primary" }}>
                   Start Date *
                 </Typography>
                 <TextField
@@ -248,12 +248,7 @@ const CreateProductPage = () => {
               </Box>
 
               <Box sx={{ flex: 1 }}>
-                <Typography
-                  variant="body1"
-                  fontWeight="bold"
-                  gutterBottom
-                  sx={{ color: "text.primary" }}
-                >
+                <Typography variant="body1" gutterBottom sx={{ color: "text.primary" }}>
                   End Date
                 </Typography>
                 <TextField
@@ -268,6 +263,74 @@ const CreateProductPage = () => {
                 />
               </Box>
             </Box>
+
+            <Typography variant="h6" fontWeight="bold" sx={{ color: "text.primary", mb: 1, mt: 1 }}>
+              Coverage Details
+            </Typography>
+            <Typography variant="body2" sx={{ color: "text.secondary", mb: 2 }}>
+              Select coverages to include in this product. These will be displayed on the product
+              cards.
+            </Typography>
+
+            <Box
+              sx={{
+                border: "1px solid #e0e0e0",
+                borderRadius: 2,
+                p: 2,
+                mb: errors.coverages ? 0.5 : 3,
+              }}
+            >
+              <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1.5 }}>
+                {coverageOptions.map((coverage) => {
+                  const selected = selectedCoverages.includes(coverage);
+                  return (
+                    <Box
+                      key={coverage}
+                      onClick={() => toggleCoverage(coverage)}
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1.5,
+                        p: 1.5,
+                        borderRadius: 1.5,
+                        border: selected ? "1.5px solid #0167b2" : "1.5px solid #e0e0e0",
+                        bgcolor: selected ? "#e8f1fb" : "background.paper",
+                        cursor: "pointer",
+                        transition: "all 0.15s ease",
+                        "&:hover": {
+                          bgcolor: selected ? "#e8f1fb" : "action.hover",
+                        },
+                      }}
+                    >
+                      {selected ? (
+                        <CheckCircleOutlineIcon sx={{ color: "#0167b2", fontSize: 22 }} />
+                      ) : (
+                        <HighlightOffIcon sx={{ color: "#c0c0c0", fontSize: 22 }} />
+                      )}
+                      <Typography
+                        variant="body2"
+                        sx={{ color: selected ? "text.primary" : "#6e6d6d" }}
+                      >
+                        {coverage}
+                      </Typography>
+                    </Box>
+                  );
+                })}
+              </Box>
+            </Box>
+
+            {errors.coverages && (
+              <div
+                style={{
+                  color: "#d32f2f",
+                  fontSize: "12px",
+                  marginTop: "4px",
+                  marginBottom: "24px",
+                }}
+              >
+                {errors.coverages}
+              </div>
+            )}
 
             <hr
               style={{
