@@ -4,18 +4,20 @@ import { Typography, Button } from "@mui/material";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
+import { useNavigate } from "react-router-dom";
 
 const BackOfficeLoginPage = () => {
-
+  const navigate = useNavigate();
   const handleLogin = async (email: string, password: string) => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       console.log("Logged in:", userCredential.user);
+      navigate("/rules-management");
     } catch (error) {
       console.error("Login failed:", error);
     }
   };
-  
+
   return (
     <>
       <Box

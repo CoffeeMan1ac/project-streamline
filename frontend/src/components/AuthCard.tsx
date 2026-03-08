@@ -12,8 +12,8 @@ import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 
 type AuthCardProps = {
-    onSubmit: (email: string, password: string) => Promise<void> | void;
-}
+  onSubmit: (email: string, password: string) => Promise<void> | void;
+};
 
 const AuthCard = ({ onSubmit }: AuthCardProps) => {
   const [showPassword, setShowPassword] = useState(false);
