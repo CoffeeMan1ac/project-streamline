@@ -16,12 +16,14 @@ const CreateProductPage = () => {
   const [productName, setProductName] = useState("");
   const [status, setStatus] = useState("");
   const [description, setDescription] = useState("");
+  const [monthlyPrice, setMonthlyPrice] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const [errors, setErrors] = useState({
     productName: "",
     status: "",
     description: "",
+    monthlyPrice: "",
   });
 
   const validateForm = () => {
@@ -29,11 +31,13 @@ const CreateProductPage = () => {
       productName: "",
       status: "",
       description: "",
+      monthlyPrice: "",
     };
 
     if (!productName) newErrors.productName = "Required";
     if (!status) newErrors.status = "Required";
     if (!description) newErrors.description = "Required";
+    if (!monthlyPrice) newErrors.monthlyPrice = "Required";
 
     setErrors(newErrors);
 
@@ -51,6 +55,7 @@ const CreateProductPage = () => {
         productName,
         status,
         description,
+        monthlyPrice,
       };
       console.log(payload);
     } catch (err) {
@@ -175,6 +180,35 @@ const CreateProductPage = () => {
               multiline
               rows={4}
               sx={{ mb: 3 }}
+            />
+
+            <Typography variant="h6" fontWeight="bold" sx={{ color: "text.primary", mb: 1 }}>
+              Pricing
+            </Typography>
+            <Typography variant="body2" sx={{ color: "text.secondary", mb: 2 }}>
+              Base monthly price. Final price will be calculated based on rules.
+            </Typography>
+
+            <Typography
+              variant="body1"
+              fontWeight="bold"
+              gutterBottom
+              sx={{ color: "text.primary" }}
+            >
+              Monthly Price *
+            </Typography>
+            <TextField
+              fullWidth
+              placeholder="e.g., €14.99/month"
+              value={monthlyPrice}
+              onChange={(e) => {
+                setMonthlyPrice(e.target.value);
+                setErrors((prev) => ({ ...prev, monthlyPrice: "" }));
+              }}
+              error={!!errors.monthlyPrice}
+              helperText={errors.monthlyPrice}
+              disabled={isLoading}
+              sx={{ mb: 3, width: "50%" }}
             />
 
             <hr

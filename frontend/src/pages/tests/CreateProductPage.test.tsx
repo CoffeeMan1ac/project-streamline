@@ -36,7 +36,17 @@ describe("CreateProductPage", () => {
     renderWithRouter();
     const f = within(form);
 
-    expect(f.getByText(/Basic Information/i)).toBeInTheDocument();
+    expect(f.getByText(/^Basic Information$/i)).toBeInTheDocument();
+  });
+
+  test("renders pricing section heading and subtitle", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    expect(f.getByText(/^Pricing$/i)).toBeInTheDocument();
+    expect(
+      f.getByText(/Base monthly price. Final price will be calculated based on rules./i)
+    ).toBeInTheDocument();
   });
 
   test("renders all form fields", () => {
@@ -46,6 +56,7 @@ describe("CreateProductPage", () => {
     expect(f.getByText(/^Product Name \*$/i)).toBeInTheDocument();
     expect(f.getByText(/^Status \*$/i)).toBeInTheDocument();
     expect(f.getByText(/^Description \*$/i)).toBeInTheDocument();
+    expect(f.getByText(/^Monthly Price \*$/i)).toBeInTheDocument();
   });
 
   test("renders create product button", () => {
@@ -91,6 +102,20 @@ describe("CreateProductPage", () => {
     fireEvent.change(input, { target: { value: "My Product" } });
 
     const remainingErrors = f.queryAllByText(/Required/i);
-    expect(remainingErrors.length).toBeLessThan(3);
+    expect(remainingErrors.length).toBeLessThan(4);
+  });
+
+  test("clears monthly price error when user types", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    fireEvent.click(f.getByRole("button", { name: /Create Product/i }));
+    expect(f.getAllByText(/Required/i).length).toBeGreaterThan(0);
+
+    const input = f.getByPlaceholderText(/€14.99\/month/i);
+    fireEvent.change(input, { target: { value: "9.99" } });
+
+    const remainingErrors = f.queryAllByText(/Required/i);
+    expect(remainingErrors.length).toBeLessThan(4);
   });
 });
