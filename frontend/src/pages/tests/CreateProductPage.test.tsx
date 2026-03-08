@@ -72,6 +72,25 @@ describe("CreateProductPage", () => {
     expect(f.getByText(/Select exclusions to apply to this product/i)).toBeInTheDocument();
   });
 
+  test("renders product tags section heading and subtitle", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    expect(f.getByText(/^Product Tags$/i)).toBeInTheDocument();
+    expect(
+      f.getByText(/Tags affect how the product is displayed on the website/i)
+    ).toBeInTheDocument();
+  });
+
+  test("renders all tag options", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    expect(f.getByText(/^None$/i)).toBeInTheDocument();
+    expect(f.getByText(/^Green$/i)).toBeInTheDocument();
+    expect(f.getByText(/^Popular$/i)).toBeInTheDocument();
+  });
+
   test("renders all form fields", () => {
     renderWithRouter();
     const f = within(form);
@@ -104,6 +123,54 @@ describe("CreateProductPage", () => {
 
     fireEvent.click(f.getByRole("button", { name: /Create Product/i }));
     expect(f.getAllByText(/Required/i).length).toBeGreaterThan(0);
+  });
+
+  test("shows tag error when no tag selected on submit", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    fireEvent.click(f.getByRole("button", { name: /Create Product/i }));
+    expect(f.getByText(/Please select at least one tag/i)).toBeInTheDocument();
+  });
+
+  test("clears tag error when a tag is clicked", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    fireEvent.click(f.getByRole("button", { name: /Create Product/i }));
+    expect(f.getByText(/Please select at least one tag/i)).toBeInTheDocument();
+
+    const noneBox = f.getByText(/^None$/i).closest("div") as HTMLElement;
+    fireEvent.click(noneBox);
+
+    expect(f.queryByText(/Please select at least one tag/i)).not.toBeInTheDocument();
+  });
+
+  test("selecting None deselects Green and Popular", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    const greenBox = f.getByText(/^Green$/i).closest("div") as HTMLElement;
+    fireEvent.click(greenBox);
+
+    const noneBox = f.getByText(/^None$/i).closest("div") as HTMLElement;
+    fireEvent.click(noneBox);
+
+    expect(f.getByText(/^None$/i)).toBeInTheDocument();
+    expect(f.getByText(/^Green$/i)).toBeInTheDocument();
+  });
+
+  test("selecting Green or Popular deselects None", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    const noneBox = f.getByText(/^None$/i).closest("div") as HTMLElement;
+    fireEvent.click(noneBox);
+
+    const greenBox = f.getByText(/^Green$/i).closest("div") as HTMLElement;
+    fireEvent.click(greenBox);
+
+    expect(f.getByText(/^Green$/i)).toBeInTheDocument();
   });
 
   test("shows coverage error when no coverage selected on submit", () => {

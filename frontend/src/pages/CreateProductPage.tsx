@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {
   TextField,
   Container,
@@ -9,11 +9,16 @@ import {
   MenuItem,
   InputLabel,
   Button,
+  InputAdornment,
 } from "@mui/material";
-import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CloseIcon from "@mui/icons-material/Close";
 import RemoveIcon from "@mui/icons-material/Remove";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
+import SpaOutlinedIcon from "@mui/icons-material/SpaOutlined";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 
 const coverageOptions = [
   "Accidental Damage",
@@ -37,7 +42,11 @@ const exclusionOptions = [
   "Battery Replacement",
 ];
 
-const CreateProductPage = () => {
+interface CreateProductPageProps {
+  onClose?: () => void;
+}
+
+const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
   const [productName, setProductName] = useState("");
   const [status, setStatus] = useState("");
   const [description, setDescription] = useState("");
@@ -46,7 +55,11 @@ const CreateProductPage = () => {
   const [endDate, setEndDate] = useState("");
   const [selectedCoverages, setSelectedCoverages] = useState<string[]>([]);
   const [selectedExclusions, setSelectedExclusions] = useState<string[]>([]);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  const startDateRef = useRef<HTMLInputElement>(null);
+  const endDateRef = useRef<HTMLInputElement>(null);
 
   const [errors, setErrors] = useState({
     productName: "",
@@ -56,6 +69,7 @@ const CreateProductPage = () => {
     startDate: "",
     coverages: "",
     exclusions: "",
+    tags: "",
   });
 
   const toggleCoverage = (coverage: string) => {
@@ -72,6 +86,18 @@ const CreateProductPage = () => {
     setErrors((prev) => ({ ...prev, exclusions: "" }));
   };
 
+  const toggleTag = (tag: string) => {
+    setErrors((prev) => ({ ...prev, tags: "" }));
+    if (tag === "None") {
+      setSelectedTags((prev) => (prev.includes("None") ? [] : ["None"]));
+    } else {
+      setSelectedTags((prev) => {
+        const without = prev.filter((t) => t !== "None");
+        return without.includes(tag) ? without.filter((t) => t !== tag) : [...without, tag];
+      });
+    }
+  };
+
   const validateForm = () => {
     const newErrors = {
       productName: "",
@@ -81,6 +107,7 @@ const CreateProductPage = () => {
       startDate: "",
       coverages: "",
       exclusions: "",
+      tags: "",
     };
 
     if (!productName) newErrors.productName = "Required";
@@ -91,6 +118,7 @@ const CreateProductPage = () => {
     if (selectedCoverages.length === 0) newErrors.coverages = "Please select at least one coverage";
     if (selectedExclusions.length === 0)
       newErrors.exclusions = "Please select at least one exclusion";
+    if (selectedTags.length === 0) newErrors.tags = "Please select at least one tag";
 
     setErrors(newErrors);
 
@@ -113,6 +141,7 @@ const CreateProductPage = () => {
         endDate,
         selectedCoverages,
         selectedExclusions,
+        selectedTags,
       };
       console.log(payload);
     } catch (err) {
@@ -121,6 +150,36 @@ const CreateProductPage = () => {
       setIsLoading(false);
     }
   };
+
+  const tagConfig = [
+    {
+      key: "None",
+      label: "None",
+      subtitle: "Standard product display.",
+      icon: <LocalOfferIcon sx={{ fontSize: 16 }} />,
+      selectedColor: "#616161",
+      selectedBorder: "#616161",
+      selectedBg: "#f0f0f0",
+    },
+    {
+      key: "Green",
+      label: "Green",
+      subtitle: "Renders with green styling and sustainability features.",
+      icon: <SpaOutlinedIcon sx={{ fontSize: 16 }} />,
+      selectedColor: "#2e7d32",
+      selectedBorder: "#2e7d32",
+      selectedBg: "#f0faf0",
+    },
+    {
+      key: "Popular",
+      label: "Popular",
+      subtitle: "Renders with thicker border to highlight popularity.",
+      icon: <LocalOfferIcon sx={{ fontSize: 16 }} />,
+      selectedColor: "#0167b2",
+      selectedBorder: "#0167b2",
+      selectedBg: "#e8f1fb",
+    },
+  ];
 
   return (
     <>
@@ -131,6 +190,12 @@ const CreateProductPage = () => {
           >
             <Typography variant="h4" sx={{ color: "text.primary" }}>
               Create New Product
+            </Typography>
+            <Typography
+              onClick={onClose}
+              sx={{ cursor: "pointer", color: "text.secondary", fontSize: "20px" }}
+            >
+              ✕
             </Typography>
           </Box>
           <hr
@@ -175,10 +240,10 @@ const CreateProductPage = () => {
                   sx={{ mb: errors.status ? 0 : 3 }}
                   error={!!errors.status}
                 >
-                  <InputLabel>Status</InputLabel>
+                  <InputLabel>Select Status</InputLabel>
                   <Select
                     value={status}
-                    label="Status"
+                    label="Select Status"
                     onChange={(e) => {
                       setStatus(e.target.value);
                       setErrors((prev) => ({ ...prev, status: "" }));
@@ -267,7 +332,25 @@ const CreateProductPage = () => {
                   error={!!errors.startDate}
                   helperText={errors.startDate}
                   disabled={isLoading}
-                  slotProps={{ htmlInput: { max: endDate || undefined } }}
+                  inputRef={startDateRef}
+                  slotProps={{
+                    htmlInput: { max: endDate || undefined },
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <CalendarTodayOutlinedIcon
+                            onClick={() => startDateRef.current?.showPicker?.()}
+                            sx={{ fontSize: 18, color: "text.primary", cursor: "pointer" }}
+                          />
+                        </InputAdornment>
+                      ),
+                      sx: {
+                        "& input[type='date']::-webkit-calendar-picker-indicator": {
+                          display: "none",
+                        },
+                      },
+                    },
+                  }}
                   sx={{ mb: 3 }}
                 />
               </Box>
@@ -283,7 +366,25 @@ const CreateProductPage = () => {
                   onChange={(e) => setEndDate(e.target.value)}
                   disabled={isLoading}
                   helperText="Optional - leave blank for no expiration"
-                  slotProps={{ htmlInput: { min: startDate || undefined } }}
+                  inputRef={endDateRef}
+                  slotProps={{
+                    htmlInput: { min: startDate || undefined },
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <CalendarTodayOutlinedIcon
+                            onClick={() => endDateRef.current?.showPicker?.()}
+                            sx={{ fontSize: 18, color: "text.primary", cursor: "pointer" }}
+                          />
+                        </InputAdornment>
+                      ),
+                      sx: {
+                        "& input[type='date']::-webkit-calendar-picker-indicator": {
+                          display: "none",
+                        },
+                      },
+                    },
+                  }}
                   sx={{ mb: 3 }}
                 />
               </Box>
@@ -420,6 +521,89 @@ const CreateProductPage = () => {
               </div>
             )}
 
+            <Typography variant="h6" fontWeight="bold" sx={{ color: "text.primary", mb: 1, mt: 1 }}>
+              Product Tags
+            </Typography>
+            <Typography variant="body2" sx={{ color: "text.secondary", mb: 2 }}>
+              Tags affect how the product is displayed on the website.
+            </Typography>
+
+            <Box
+              sx={{ display: "flex", flexDirection: "column", gap: 1.5, mb: errors.tags ? 0.5 : 3 }}
+            >
+              {tagConfig.map((tag) => {
+                const selected = selectedTags.includes(tag.key);
+                return (
+                  <Box
+                    key={tag.key}
+                    onClick={() => toggleTag(tag.key)}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 2,
+                      p: 2,
+                      borderRadius: 1.5,
+                      border: selected
+                        ? `1.5px solid ${tag.selectedBorder}`
+                        : "1.5px solid #e0e0e0",
+                      bgcolor: selected ? tag.selectedBg : "background.paper",
+                      cursor: "pointer",
+                      transition: "all 0.15s ease",
+                      "&:hover": {
+                        bgcolor: selected ? tag.selectedBg : "action.hover",
+                      },
+                    }}
+                  >
+                    {selected ? (
+                      <CheckBoxIcon sx={{ color: tag.selectedColor, fontSize: 22 }} />
+                    ) : (
+                      <CheckBoxOutlineBlankIcon sx={{ color: "#c0c0c0", fontSize: 22 }} />
+                    )}
+                    <Box sx={{ flex: 1 }}>
+                      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                        <Box
+                          sx={{
+                            color: selected ? tag.selectedColor : "#c0c0c0",
+                            display: "flex",
+                            alignItems: "center",
+                            mt: "3px",
+                          }}
+                        >
+                          {tag.icon}
+                        </Box>
+                        <Typography
+                          variant="body2"
+                          fontWeight="bold"
+                          sx={{ color: selected ? tag.selectedColor : "#6e6d6d" }}
+                        >
+                          {tag.label}
+                        </Typography>
+                      </Box>
+                      <Typography
+                        variant="caption"
+                        sx={{ color: selected ? tag.selectedColor : "#9e9e9e", display: "block" }}
+                      >
+                        {tag.subtitle}
+                      </Typography>
+                    </Box>
+                  </Box>
+                );
+              })}
+            </Box>
+
+            {errors.tags && (
+              <div
+                style={{
+                  color: "#d32f2f",
+                  fontSize: "12px",
+                  marginTop: "4px",
+                  marginBottom: "24px",
+                }}
+              >
+                {errors.tags}
+              </div>
+            )}
+
             <hr
               style={{
                 borderColor: "#d0d0d0f9",
@@ -428,14 +612,23 @@ const CreateProductPage = () => {
               }}
             />
             <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2 }}>
-              <Button variant="text" disabled={isLoading}>
+              <Button
+                variant="outlined"
+                disabled={isLoading}
+                onClick={onClose}
+                sx={{
+                  borderColor: "#d0d0d0",
+                  color: "#424242",
+                  fontWeight: "bold",
+                  "&:hover": { borderColor: "#bdbdbd", bgcolor: "transparent" },
+                }}
+              >
                 Cancel
               </Button>
               <Button
                 type="submit"
                 variant="contained"
                 disabled={isLoading}
-                startIcon={<SaveOutlinedIcon />}
                 sx={{ backgroundColor: "#0167b2" }}
               >
                 {isLoading ? "Creating..." : "Create Product"}
