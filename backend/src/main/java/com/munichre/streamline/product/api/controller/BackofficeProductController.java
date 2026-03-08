@@ -7,6 +7,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/backoffice/products")
@@ -22,7 +23,8 @@ public class BackofficeProductController {
   }
 
   @GetMapping()
-  public ResponseEntity<List<ProductDto>> getProducts() {
-    return ResponseEntity.ok(productService.getAllProducts());
+  public ResponseEntity<List<ProductDto>> getProducts(
+      @RequestParam(required = false) Boolean active) {
+    return ResponseEntity.ok(productService.getProducts(active));
   }
 }

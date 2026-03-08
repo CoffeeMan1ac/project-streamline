@@ -104,6 +104,18 @@ public class ProductService {
     return assembleProducts(productRows);
   }
 
+  /**
+   * Fetches all products and returns them assembled with coverages, exclusions, tags
+   *
+   * @param active true returns just active products, false returns just inactive products. null
+   *     returns all products.
+   */
+  public List<ProductDto> getProducts(Boolean active) {
+    if (active == null) return getAllProducts();
+    else if (active.booleanValue() == true) return getActiveProducts();
+    else return getInactiveProducts();
+  }
+
   private static class ProductAssembler {
 
     static ProductDto toDto(
