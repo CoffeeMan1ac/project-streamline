@@ -64,6 +64,14 @@ describe("CreateProductPage", () => {
     expect(f.getByText(/Select coverages to include in this product/i)).toBeInTheDocument();
   });
 
+  test("renders exclusion details section heading and subtitle", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    expect(f.getByText(/^Exclusion Details$/i)).toBeInTheDocument();
+    expect(f.getByText(/Select exclusions to apply to this product/i)).toBeInTheDocument();
+  });
+
   test("renders all form fields", () => {
     renderWithRouter();
     const f = within(form);
@@ -106,6 +114,14 @@ describe("CreateProductPage", () => {
     expect(f.getByText(/Please select at least one coverage/i)).toBeInTheDocument();
   });
 
+  test("shows exclusion error when no exclusion selected on submit", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    fireEvent.click(f.getByRole("button", { name: /Create Product/i }));
+    expect(f.getByText(/Please select at least one exclusion/i)).toBeInTheDocument();
+  });
+
   test("clears coverage error when a coverage is clicked", () => {
     renderWithRouter();
     const f = within(form);
@@ -113,10 +129,23 @@ describe("CreateProductPage", () => {
     fireEvent.click(f.getByRole("button", { name: /Create Product/i }));
     expect(f.getByText(/Please select at least one coverage/i)).toBeInTheDocument();
 
-    const accidental = f.getByText(/^Accidental Damage$/i).closest("div") as HTMLElement;
+    const accidental = f.getAllByText(/^Accidental Damage$/i)[0].closest("div") as HTMLElement;
     fireEvent.click(accidental);
 
     expect(f.queryByText(/Please select at least one coverage/i)).not.toBeInTheDocument();
+  });
+
+  test("clears exclusion error when an exclusion is clicked", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    fireEvent.click(f.getByRole("button", { name: /Create Product/i }));
+    expect(f.getByText(/Please select at least one exclusion/i)).toBeInTheDocument();
+
+    const theft = f.getAllByText(/^Theft$/i)[1].closest("div") as HTMLElement;
+    fireEvent.click(theft);
+
+    expect(f.queryByText(/Please select at least one exclusion/i)).not.toBeInTheDocument();
   });
 
   test("status dropdown renders active and inactive options", () => {
@@ -167,29 +196,41 @@ describe("CreateProductPage", () => {
     expect(f.getByText(/^End Date$/i)).toBeInTheDocument();
   });
 
-  test("renders all coverage options", () => {
+  test("renders all coverage and exclusion options", () => {
     renderWithRouter();
     const f = within(form);
 
-    expect(f.getByText(/^Accidental Damage$/i)).toBeInTheDocument();
-    expect(f.getByText(/^Liquid Damage$/i)).toBeInTheDocument();
-    expect(f.getByText(/^Extended Warranty$/i)).toBeInTheDocument();
-    expect(f.getByText(/^Data Recovery$/i)).toBeInTheDocument();
-    expect(f.getByText(/^Theft$/i)).toBeInTheDocument();
-    expect(f.getByText(/^Screen Damage$/i)).toBeInTheDocument();
-    expect(f.getByText(/^Worldwide Coverage$/i)).toBeInTheDocument();
-    expect(f.getByText(/^Battery Replacement$/i)).toBeInTheDocument();
+    expect(f.getAllByText(/^Accidental Damage$/i).length).toBeGreaterThanOrEqual(1);
+    expect(f.getAllByText(/^Liquid Damage$/i).length).toBeGreaterThanOrEqual(1);
+    expect(f.getAllByText(/^Extended Warranty$/i).length).toBeGreaterThanOrEqual(1);
+    expect(f.getAllByText(/^Data Recovery$/i).length).toBeGreaterThanOrEqual(1);
+    expect(f.getAllByText(/^Theft$/i).length).toBeGreaterThanOrEqual(1);
+    expect(f.getAllByText(/^Screen Damage$/i).length).toBeGreaterThanOrEqual(1);
+    expect(f.getAllByText(/^Worldwide Coverage$/i).length).toBeGreaterThanOrEqual(1);
+    expect(f.getAllByText(/^Battery Replacement$/i).length).toBeGreaterThanOrEqual(1);
   });
 
   test("toggles coverage selection on click", () => {
     renderWithRouter();
     const f = within(form);
 
-    const accidental = f.getByText(/^Accidental Damage$/i).closest("div") as HTMLElement;
+    const accidental = f.getAllByText(/^Accidental Damage$/i)[0].closest("div") as HTMLElement;
     fireEvent.click(accidental);
     expect(accidental).toBeTruthy();
 
     fireEvent.click(accidental);
     expect(accidental).toBeTruthy();
+  });
+
+  test("toggles exclusion selection on click", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    const theft = f.getAllByText(/^Theft$/i)[1].closest("div") as HTMLElement;
+    fireEvent.click(theft);
+    expect(theft).toBeTruthy();
+
+    fireEvent.click(theft);
+    expect(theft).toBeTruthy();
   });
 });

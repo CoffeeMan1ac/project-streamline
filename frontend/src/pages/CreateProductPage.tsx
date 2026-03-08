@@ -12,9 +12,21 @@ import {
 } from "@mui/material";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import CloseIcon from "@mui/icons-material/Close";
+import RemoveIcon from "@mui/icons-material/Remove";
 
 const coverageOptions = [
+  "Accidental Damage",
+  "Liquid Damage",
+  "Extended Warranty",
+  "Data Recovery",
+  "Theft",
+  "Screen Damage",
+  "Worldwide Coverage",
+  "Battery Replacement",
+];
+
+const exclusionOptions = [
   "Accidental Damage",
   "Liquid Damage",
   "Extended Warranty",
@@ -33,6 +45,7 @@ const CreateProductPage = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [selectedCoverages, setSelectedCoverages] = useState<string[]>([]);
+  const [selectedExclusions, setSelectedExclusions] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const [errors, setErrors] = useState({
@@ -42,6 +55,7 @@ const CreateProductPage = () => {
     monthlyPrice: "",
     startDate: "",
     coverages: "",
+    exclusions: "",
   });
 
   const toggleCoverage = (coverage: string) => {
@@ -49,6 +63,13 @@ const CreateProductPage = () => {
       prev.includes(coverage) ? prev.filter((c) => c !== coverage) : [...prev, coverage]
     );
     setErrors((prev) => ({ ...prev, coverages: "" }));
+  };
+
+  const toggleExclusion = (exclusion: string) => {
+    setSelectedExclusions((prev) =>
+      prev.includes(exclusion) ? prev.filter((e) => e !== exclusion) : [...prev, exclusion]
+    );
+    setErrors((prev) => ({ ...prev, exclusions: "" }));
   };
 
   const validateForm = () => {
@@ -59,6 +80,7 @@ const CreateProductPage = () => {
       monthlyPrice: "",
       startDate: "",
       coverages: "",
+      exclusions: "",
     };
 
     if (!productName) newErrors.productName = "Required";
@@ -67,6 +89,8 @@ const CreateProductPage = () => {
     if (!monthlyPrice) newErrors.monthlyPrice = "Required";
     if (!startDate) newErrors.startDate = "Required";
     if (selectedCoverages.length === 0) newErrors.coverages = "Please select at least one coverage";
+    if (selectedExclusions.length === 0)
+      newErrors.exclusions = "Please select at least one exclusion";
 
     setErrors(newErrors);
 
@@ -88,6 +112,7 @@ const CreateProductPage = () => {
         startDate,
         endDate,
         selectedCoverages,
+        selectedExclusions,
       };
       console.log(payload);
     } catch (err) {
@@ -305,7 +330,7 @@ const CreateProductPage = () => {
                       {selected ? (
                         <CheckCircleOutlineIcon sx={{ color: "#0167b2", fontSize: 22 }} />
                       ) : (
-                        <HighlightOffIcon sx={{ color: "#c0c0c0", fontSize: 22 }} />
+                        <CloseIcon sx={{ color: "#c0c0c0", fontSize: 22 }} />
                       )}
                       <Typography
                         variant="body2"
@@ -329,6 +354,69 @@ const CreateProductPage = () => {
                 }}
               >
                 {errors.coverages}
+              </div>
+            )}
+
+            <Typography variant="h6" fontWeight="bold" sx={{ color: "text.primary", mb: 1, mt: 1 }}>
+              Exclusion Details
+            </Typography>
+            <Typography variant="body2" sx={{ color: "text.secondary", mb: 2 }}>
+              Select exclusions to apply to this product. These items will NOT be covered.
+            </Typography>
+
+            <Box
+              sx={{
+                border: "1px solid #e0e0e0",
+                borderRadius: 2,
+                p: 2,
+                mb: errors.exclusions ? 0.5 : 3,
+              }}
+            >
+              <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1.5 }}>
+                {exclusionOptions.map((exclusion) => {
+                  const selected = selectedExclusions.includes(exclusion);
+                  return (
+                    <Box
+                      key={exclusion}
+                      onClick={() => toggleExclusion(exclusion)}
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1.5,
+                        p: 1.5,
+                        borderRadius: 1.5,
+                        border: selected ? "1.5px solid #d32f2f" : "1.5px solid #e0e0e0",
+                        bgcolor: selected ? "#fdf1f1" : "background.paper",
+                        cursor: "pointer",
+                        transition: "all 0.15s ease",
+                        "&:hover": {
+                          bgcolor: selected ? "#fdf1f1" : "action.hover",
+                        },
+                      }}
+                    >
+                      <RemoveIcon sx={{ color: selected ? "#d32f2f" : "#c0c0c0", fontSize: 22 }} />
+                      <Typography
+                        variant="body2"
+                        sx={{ color: selected ? "text.primary" : "#6e6d6d" }}
+                      >
+                        {exclusion}
+                      </Typography>
+                    </Box>
+                  );
+                })}
+              </Box>
+            </Box>
+
+            {errors.exclusions && (
+              <div
+                style={{
+                  color: "#d32f2f",
+                  fontSize: "12px",
+                  marginTop: "4px",
+                  marginBottom: "24px",
+                }}
+              >
+                {errors.exclusions}
               </div>
             )}
 
