@@ -51,6 +51,29 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
               )
               FROM Product p
               JOIN p.type t
+              WHERE NOT (p.active = true
+                AND p.startDate <= :now
+                AND (p.endDate is null or p.endDate >= :now))
+              ORDER BY p.baseRate asc
+            """)
+  List<ProductRowDto> findInactiveProductRows(@Param("now") LocalDateTime now);
+
+  @Query(
+      """
+              SELECT new com.munichre.streamline.product.repository.dto.ProductRowDto(
+                p.id,
+                p.baseRate,
+                p.name,
+                p.description,
+                p.startDate,
+                p.endDate,
+                p.active,
+                t.id,
+                t.code,
+                t.label
+              )
+              FROM Product p
+              JOIN p.type t
               ORDER BY p.baseRate asc
             """)
   List<ProductRowDto> findProductRows();

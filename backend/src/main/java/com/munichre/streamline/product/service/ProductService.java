@@ -90,6 +90,14 @@ public class ProductService {
     return assembleProducts(productRows);
   }
 
+  /** Fetches inactive products and returns them assembled with coverages, exclusions, tags */
+  public List<ProductDto> getInactiveProducts() {
+    LocalDateTime now = LocalDateTime.now();
+
+    List<ProductRowDto> productRows = productRepository.findInactiveProductRows(now);
+    return assembleProducts(productRows);
+  }
+
   /** Fetches all products and returns them assembled with coverages, exclusions, tags */
   public List<ProductDto> getAllProducts() {
     List<ProductRowDto> productRows = productRepository.findProductRows();
