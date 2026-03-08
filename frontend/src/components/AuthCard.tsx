@@ -11,10 +11,23 @@ import { useState } from "react";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 
-const AuthCard = () => {
+type AuthCardProps = {
+    onSubmit: (email: string, password: string) => Promise<void> | void;
+}
+
+const AuthCard = ({ onSubmit }: AuthCardProps) => {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    onSubmit(email, password);
+  };
   return (
     <Box
+      component="form"
+      onSubmit={handleSubmit}
       sx={{ border: 1, borderColor: "divider", borderRadius: 2, width: "100%", maxWidth: 400 }}
       bgcolor={"background.paper"}
       p={4}
@@ -32,6 +45,8 @@ const AuthCard = () => {
           id="outlined-basic"
           placeholder="admin@phoneshield.com"
           variant="outlined"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
       </Box>
       <Box width="100%">
