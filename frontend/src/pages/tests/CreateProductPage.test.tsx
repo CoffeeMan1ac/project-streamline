@@ -49,6 +49,13 @@ describe("CreateProductPage", () => {
     ).toBeInTheDocument();
   });
 
+  test("renders validity period section heading", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    expect(f.getByText(/^Validity Period$/i)).toBeInTheDocument();
+  });
+
   test("renders all form fields", () => {
     renderWithRouter();
     const f = within(form);
@@ -57,6 +64,8 @@ describe("CreateProductPage", () => {
     expect(f.getByText(/^Status \*$/i)).toBeInTheDocument();
     expect(f.getByText(/^Description \*$/i)).toBeInTheDocument();
     expect(f.getByText(/^Monthly Price \*$/i)).toBeInTheDocument();
+    expect(f.getByText(/^Start Date \*$/i)).toBeInTheDocument();
+    expect(f.getByText(/^End Date$/i)).toBeInTheDocument();
   });
 
   test("renders create product button", () => {
@@ -102,7 +111,7 @@ describe("CreateProductPage", () => {
     fireEvent.change(input, { target: { value: "My Product" } });
 
     const remainingErrors = f.queryAllByText(/Required/i);
-    expect(remainingErrors.length).toBeLessThan(4);
+    expect(remainingErrors.length).toBeLessThan(5);
   });
 
   test("clears monthly price error when user types", () => {
@@ -116,6 +125,16 @@ describe("CreateProductPage", () => {
     fireEvent.change(input, { target: { value: "9.99" } });
 
     const remainingErrors = f.queryAllByText(/Required/i);
-    expect(remainingErrors.length).toBeLessThan(4);
+    expect(remainingErrors.length).toBeLessThan(5);
+  });
+
+  test("end date field is optional and has no required error", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    fireEvent.click(f.getByRole("button", { name: /Create Product/i }));
+
+    expect(f.getByText(/^Start Date \*$/i)).toBeInTheDocument();
+    expect(f.getByText(/^End Date$/i)).toBeInTheDocument();
   });
 });

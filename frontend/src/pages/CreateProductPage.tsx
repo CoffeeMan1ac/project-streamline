@@ -17,6 +17,8 @@ const CreateProductPage = () => {
   const [status, setStatus] = useState("");
   const [description, setDescription] = useState("");
   const [monthlyPrice, setMonthlyPrice] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const [errors, setErrors] = useState({
@@ -24,6 +26,7 @@ const CreateProductPage = () => {
     status: "",
     description: "",
     monthlyPrice: "",
+    startDate: "",
   });
 
   const validateForm = () => {
@@ -32,12 +35,14 @@ const CreateProductPage = () => {
       status: "",
       description: "",
       monthlyPrice: "",
+      startDate: "",
     };
 
     if (!productName) newErrors.productName = "Required";
     if (!status) newErrors.status = "Required";
     if (!description) newErrors.description = "Required";
     if (!monthlyPrice) newErrors.monthlyPrice = "Required";
+    if (!startDate) newErrors.startDate = "Required";
 
     setErrors(newErrors);
 
@@ -56,6 +61,8 @@ const CreateProductPage = () => {
         status,
         description,
         monthlyPrice,
+        startDate,
+        endDate,
       };
       console.log(payload);
     } catch (err) {
@@ -198,7 +205,6 @@ const CreateProductPage = () => {
               Monthly Price *
             </Typography>
             <TextField
-              fullWidth
               placeholder="e.g., €14.99/month"
               value={monthlyPrice}
               onChange={(e) => {
@@ -210,6 +216,58 @@ const CreateProductPage = () => {
               disabled={isLoading}
               sx={{ mb: 3, width: "50%" }}
             />
+
+            <Typography variant="h6" fontWeight="bold" sx={{ color: "text.primary", mb: 2, mt: 1 }}>
+              Validity Period
+            </Typography>
+
+            <Box sx={{ display: "flex", gap: 2, alignItems: "flex-start" }}>
+              <Box sx={{ flex: 1 }}>
+                <Typography
+                  variant="body1"
+                  fontWeight="bold"
+                  gutterBottom
+                  sx={{ color: "text.primary" }}
+                >
+                  Start Date *
+                </Typography>
+                <TextField
+                  fullWidth
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => {
+                    setStartDate(e.target.value);
+                    setErrors((prev) => ({ ...prev, startDate: "" }));
+                  }}
+                  error={!!errors.startDate}
+                  helperText={errors.startDate}
+                  disabled={isLoading}
+                  slotProps={{ htmlInput: { max: endDate || undefined } }}
+                  sx={{ mb: 3 }}
+                />
+              </Box>
+
+              <Box sx={{ flex: 1 }}>
+                <Typography
+                  variant="body1"
+                  fontWeight="bold"
+                  gutterBottom
+                  sx={{ color: "text.primary" }}
+                >
+                  End Date
+                </Typography>
+                <TextField
+                  fullWidth
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  disabled={isLoading}
+                  helperText="Optional - leave blank for no expiration"
+                  slotProps={{ htmlInput: { min: startDate || undefined } }}
+                  sx={{ mb: 3 }}
+                />
+              </Box>
+            </Box>
 
             <hr
               style={{
