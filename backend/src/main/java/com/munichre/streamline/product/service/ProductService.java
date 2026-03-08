@@ -85,6 +85,37 @@ public class ProductService {
         .toList();
   }
 
+  public List<ProductDto> getProducts() {
+    List<ProductRowDto> productRows = productRepository.findProductRows();
+    if (productRows.isEmpty()) {
+      return List.of();
+    }
+
+    List<UUID> productIds = productRows.stream().map(ProductRowDto::id).toList();
+
+    Map<UUID, List<ProductCoverageRowDto>> coveragesByProduct =
+        productCoverageRepository.findCoverageRows(productIds).stream()
+            .collect(groupingBy(ProductCoverageRowDto::productId));
+
+    Map<UUID, List<ProductCoverageRowDto>> exclusionsByProduct =
+        productCoverageRepository.findExclusionRows(productIds).stream()
+            .collect(groupingBy(ProductCoverageRowDto::productId));
+
+    Map<UUID, List<ProductTagRowDto>> tagsByProduct =
+        productTagRepository.findTagRowsByProductIds(productIds).stream()
+            .collect(groupingBy(ProductTagRowDto::productId));
+
+    return productRows.stream()
+        .map(
+            row ->
+                ProductAssembler.toDto(
+                    row,
+                    coveragesByProduct.getOrDefault(row.id(), List.of()),
+                    exclusionsByProduct.getOrDefault(row.id(), List.of()),
+                    tagsByProduct.getOrDefault(row.id(), List.of())))
+        .toList();
+  }
+
   private static class ProductAssembler {
 
     static ProductDto toDto(
