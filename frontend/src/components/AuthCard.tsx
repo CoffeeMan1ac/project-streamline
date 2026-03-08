@@ -59,6 +59,8 @@ const AuthCard = ({ onSubmit }: AuthCardProps) => {
           placeholder="Enter your password"
           variant="outlined"
           type={showPassword ? "text" : "password"}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -75,7 +77,7 @@ const AuthCard = ({ onSubmit }: AuthCardProps) => {
           Forgot password?
         </Link>
       </Box>
-      <Button fullWidth variant="contained" color="primary">
+      <Button fullWidth variant="contained" color="primary" type="submit">
         Login
       </Button>
       <Box borderTop={1} borderColor="divider" pt={2}>
