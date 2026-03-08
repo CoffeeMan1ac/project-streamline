@@ -2,7 +2,20 @@ import AuthCard from "../components/AuthCard";
 import Box from "@mui/material/Box";
 import { Typography, Button } from "@mui/material";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase";
+
 const BackOfficeLoginPage = () => {
+
+  const handleLogin = async (email: string, password: string) => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      console.log("Logged in:", userCredential.user);
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
+  };
+  
   return (
     <>
       <Box
@@ -42,7 +55,7 @@ const BackOfficeLoginPage = () => {
         <Typography gutterBottom mb={5} sx={{ color: "text.secondary" }}>
           Back Office Portal Login
         </Typography>
-        <AuthCard />
+        <AuthCard onSubmit={handleLogin} />
         <Button href="/" variant="text" size="small" sx={{ color: "text.secondary", mt: 3 }}>
           <NavigateBeforeIcon />
           Back to Home
