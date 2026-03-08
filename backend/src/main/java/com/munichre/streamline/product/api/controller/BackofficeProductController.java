@@ -1,5 +1,6 @@
 package com.munichre.streamline.product.api.controller;
 
+import com.munichre.streamline.product.api.dto.ProductDto;
 import com.munichre.streamline.product.api.dto.ProductOptionDto;
 import com.munichre.streamline.product.service.ProductService;
 import java.util.List;
@@ -18,5 +19,10 @@ public class BackofficeProductController {
   public ResponseEntity<List<ProductOptionDto>> getProductOptions() {
     List<ProductOptionDto> productOptions = productService.getAllProductOptions();
     return ResponseEntity.ok(productOptions);
+  }
+
+  @GetMapping()
+  public ResponseEntity<List<ProductDto>> getProducts() {
+    return ResponseEntity.ok(productService.getProducts());
   }
 }
