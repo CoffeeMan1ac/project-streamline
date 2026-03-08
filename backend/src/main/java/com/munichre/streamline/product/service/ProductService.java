@@ -49,8 +49,8 @@ public class ProductService {
   }
 
   /**
-   * Assembles products them with their respective coverages and exclusions using
-   * a high-performance batching strategy.
+   * Assembles products them with their respective coverages and exclusions using a high-performance
+   * batching strategy.
    */
   public List<ProductDto> assembleProducts(List<ProductRowDto> productRows) {
     if (productRows.isEmpty()) {
@@ -82,9 +82,7 @@ public class ProductService {
         .toList();
   }
 
-  /**
-   * Fetches active products and returns them assembled with coverages, exclusions, tags
-   */
+  /** Fetches active products and returns them assembled with coverages, exclusions, tags */
   public List<ProductDto> getActiveProducts() {
     LocalDateTime now = LocalDateTime.now();
 
@@ -92,9 +90,7 @@ public class ProductService {
     return assembleProducts(productRows);
   }
 
-  /**
-   * Fetches all products and returns them assembled with coverages, exclusions, tags
-   */
+  /** Fetches all products and returns them assembled with coverages, exclusions, tags */
   public List<ProductDto> getAllProducts() {
     List<ProductRowDto> productRows = productRepository.findProductRows();
     return assembleProducts(productRows);
