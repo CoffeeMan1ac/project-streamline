@@ -13,6 +13,8 @@ variables:
   FRONTEND_DIR: "frontend"
   BACKEND_DIR: "backend"
   MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
+  SAST_EXCLUDED_PATHS: "spec,test,tests,tmp,frontend/coverage/**,backend/target/site/jacoco/**"
+
 
 workflow:
   rules:
