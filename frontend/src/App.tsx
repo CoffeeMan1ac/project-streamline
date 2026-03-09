@@ -14,6 +14,7 @@ import { lightTheme, darkTheme } from "./theme/theme";
 import React from "react";
 import BackOfficeLoginPage from "./pages/BackOfficeLoginPage";
 import CreateProductPage from "./pages/CreateProductPage";
+import EditProductPage from "./pages/EditProductPage";
 
 function App() {
   // state to manage theme:
@@ -48,6 +49,7 @@ function App() {
             <Route path="/createRule" element={<CreateRulePage />} />
             <Route path="/loginPage" element={<BackOfficeLoginPage />} />
             <Route path="/createProduct" element={<CreateProductPage />} />
+            <Route path="/editProduct" element={<EditProductPage />} />
           </Routes>
           <Footer />
         </BrowserRouter>
