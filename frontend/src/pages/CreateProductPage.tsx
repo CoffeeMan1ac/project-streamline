@@ -59,6 +59,7 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const startDateRef = useRef<HTMLInputElement>(null);
+  const today = new Date().toISOString().split("T")[0];
   const endDateRef = useRef<HTMLInputElement>(null);
 
   const [errors, setErrors] = useState({
@@ -331,7 +332,7 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
                   disabled={isLoading}
                   inputRef={startDateRef}
                   slotProps={{
-                    htmlInput: { max: endDate || undefined },
+                    htmlInput: { min: today, max: endDate || undefined },
                     input: {
                       endAdornment: (
                         <InputAdornment position="end">
@@ -365,7 +366,7 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
                   helperText="Optional - leave blank for no expiration"
                   inputRef={endDateRef}
                   slotProps={{
-                    htmlInput: { min: startDate || undefined },
+                    htmlInput: { min: startDate || today },
                     input: {
                       endAdornment: (
                         <InputAdornment position="end">
