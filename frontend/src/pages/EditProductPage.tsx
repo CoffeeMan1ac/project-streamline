@@ -71,7 +71,6 @@ const EditProductPage = ({ id, onClose, onSave }: EditProductPageProps) => {
     monthlyPrice: "",
     startDate: "",
     coverages: "",
-    exclusions: "",
     tags: "",
   });
 
@@ -107,7 +106,6 @@ const EditProductPage = ({ id, onClose, onSave }: EditProductPageProps) => {
     setSelectedExclusions((prev) =>
       prev.includes(exclusion) ? prev.filter((e) => e !== exclusion) : [...prev, exclusion]
     );
-    setErrors((prev) => ({ ...prev, exclusions: "" }));
   };
 
   const toggleTag = (tag: string) => {
@@ -513,7 +511,6 @@ const EditProductPage = ({ id, onClose, onSave }: EditProductPageProps) => {
                 border: "1px solid #e0e0e0",
                 borderRadius: 2,
                 p: 2,
-                mb: errors.exclusions ? 0.5 : 3,
               }}
             >
               <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1.5 }}>
@@ -560,19 +557,6 @@ const EditProductPage = ({ id, onClose, onSave }: EditProductPageProps) => {
                 })}
               </Box>
             </Box>
-
-            {errors.exclusions && (
-              <div
-                style={{
-                  color: "#d32f2f",
-                  fontSize: "12px",
-                  marginTop: "4px",
-                  marginBottom: "24px",
-                }}
-              >
-                {errors.exclusions}
-              </div>
-            )}
 
             <Typography variant="h6" fontWeight="bold" sx={{ color: "text.primary", mb: 1, mt: 1 }}>
               Product Tags

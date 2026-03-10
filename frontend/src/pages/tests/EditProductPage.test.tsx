@@ -151,13 +151,6 @@ describe("EditProductPage", () => {
     expect(f.getByText(/Please select at least one coverage/i)).toBeInTheDocument();
   });
 
-  test("shows exclusion error when no exclusion selected on submit", () => {
-    renderEmptyForm();
-    const f = within(form);
-    fireEvent.click(f.getByRole("button", { name: /Save Changes/i }));
-    expect(f.getByText(/Please select at least one exclusion/i)).toBeInTheDocument();
-  });
-
   test("shows tag error when no tag selected on submit", () => {
     renderEmptyForm();
     const f = within(form);
@@ -186,17 +179,6 @@ describe("EditProductPage", () => {
     const accidental = f.getAllByText(/^Accidental Damage$/i)[0].closest("div") as HTMLElement;
     fireEvent.click(accidental);
     expect(f.queryByText(/Please select at least one coverage/i)).toBeNull();
-  });
-
-  test("clears exclusion error when an exclusion is clicked", () => {
-    renderEmptyForm();
-    const f = within(form);
-    fireEvent.click(f.getByRole("button", { name: /Save Changes/i }));
-    expect(f.getByText(/Please select at least one exclusion/i)).toBeInTheDocument();
-
-    const liquid = f.getAllByText(/^Liquid Damage$/i)[1].closest("div") as HTMLElement;
-    fireEvent.click(liquid);
-    expect(f.queryByText(/Please select at least one exclusion/i)).toBeNull();
   });
 
   test("clears tag error when a tag is clicked", () => {
