@@ -95,6 +95,7 @@ const EditProductPage = ({ id, onClose, onSave }: EditProductPageProps) => {
   }, [id]);
 
   const toggleCoverage = (coverage: string) => {
+    if (selectedExclusions.includes(coverage)) return;
     setSelectedCoverages((prev) =>
       prev.includes(coverage) ? prev.filter((c) => c !== coverage) : [...prev, coverage]
     );
@@ -102,6 +103,7 @@ const EditProductPage = ({ id, onClose, onSave }: EditProductPageProps) => {
   };
 
   const toggleExclusion = (exclusion: string) => {
+    if (selectedCoverages.includes(exclusion)) return;
     setSelectedExclusions((prev) =>
       prev.includes(exclusion) ? prev.filter((e) => e !== exclusion) : [...prev, exclusion]
     );
@@ -440,6 +442,7 @@ const EditProductPage = ({ id, onClose, onSave }: EditProductPageProps) => {
               <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1.5 }}>
                 {coverageOptions.map((coverage) => {
                   const selected = selectedCoverages.includes(coverage);
+                  const disabled = selectedExclusions.includes(coverage);
                   return (
                     <Box
                       key={coverage}
@@ -451,11 +454,20 @@ const EditProductPage = ({ id, onClose, onSave }: EditProductPageProps) => {
                         p: 1.5,
                         borderRadius: 1.5,
                         border: selected ? "1.5px solid #0167b2" : "1.5px solid #e0e0e0",
-                        bgcolor: selected ? "#e8f1fb" : "background.paper",
-                        cursor: "pointer",
+                        bgcolor: disabled
+                          ? "action.disabledBackground"
+                          : selected
+                            ? "#e8f1fb"
+                            : "background.paper",
+                        cursor: disabled ? "not-allowed" : "pointer",
+                        opacity: disabled ? 0.5 : 1,
                         transition: "all 0.15s ease",
                         "&:hover": {
-                          bgcolor: selected ? "#e8f1fb" : "action.hover",
+                          bgcolor: disabled
+                            ? "action.disabledBackground"
+                            : selected
+                              ? "#e8f1fb"
+                              : "action.hover",
                         },
                       }}
                     >
@@ -507,6 +519,7 @@ const EditProductPage = ({ id, onClose, onSave }: EditProductPageProps) => {
               <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1.5 }}>
                 {exclusionOptions.map((exclusion) => {
                   const selected = selectedExclusions.includes(exclusion);
+                  const disabled = selectedCoverages.includes(exclusion);
                   return (
                     <Box
                       key={exclusion}
@@ -518,11 +531,20 @@ const EditProductPage = ({ id, onClose, onSave }: EditProductPageProps) => {
                         p: 1.5,
                         borderRadius: 1.5,
                         border: selected ? "1.5px solid #d32f2f" : "1.5px solid #e0e0e0",
-                        bgcolor: selected ? "#fdf1f1" : "background.paper",
-                        cursor: "pointer",
+                        bgcolor: disabled
+                          ? "action.disabledBackground"
+                          : selected
+                            ? "#fdf1f1"
+                            : "background.paper",
+                        cursor: disabled ? "not-allowed" : "pointer",
+                        opacity: disabled ? 0.5 : 1,
                         transition: "all 0.15s ease",
                         "&:hover": {
-                          bgcolor: selected ? "#fdf1f1" : "action.hover",
+                          bgcolor: disabled
+                            ? "action.disabledBackground"
+                            : selected
+                              ? "#fdf1f1"
+                              : "action.hover",
                         },
                       }}
                     >
