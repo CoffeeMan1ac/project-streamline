@@ -68,7 +68,6 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
     monthlyPrice: "",
     startDate: "",
     coverages: "",
-    exclusions: "",
     tags: "",
   });
 
@@ -85,7 +84,6 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
     setSelectedExclusions((prev) =>
       prev.includes(exclusion) ? prev.filter((e) => e !== exclusion) : [...prev, exclusion]
     );
-    setErrors((prev) => ({ ...prev, exclusions: "" }));
   };
 
   const toggleTag = (tag: string) => {
@@ -108,7 +106,6 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
       monthlyPrice: "",
       startDate: "",
       coverages: "",
-      exclusions: "",
       tags: "",
     };
 
@@ -118,8 +115,6 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
     if (!monthlyPrice) newErrors.monthlyPrice = "Required";
     if (!startDate) newErrors.startDate = "Required";
     if (selectedCoverages.length === 0) newErrors.coverages = "Please select at least one coverage";
-    if (selectedExclusions.length === 0)
-      newErrors.exclusions = "Please select at least one exclusion";
     if (selectedTags.length === 0) newErrors.tags = "Please select at least one tag";
 
     setErrors(newErrors);
@@ -482,7 +477,6 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
                 border: "1px solid #e0e0e0",
                 borderRadius: 2,
                 p: 2,
-                mb: errors.exclusions ? 0.5 : 3,
               }}
             >
               <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1.5 }}>
@@ -529,19 +523,6 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
                 })}
               </Box>
             </Box>
-
-            {errors.exclusions && (
-              <div
-                style={{
-                  color: "#d32f2f",
-                  fontSize: "12px",
-                  marginTop: "4px",
-                  marginBottom: "24px",
-                }}
-              >
-                {errors.exclusions}
-              </div>
-            )}
 
             <Typography variant="h6" fontWeight="bold" sx={{ color: "text.primary", mb: 1, mt: 1 }}>
               Product Tags
