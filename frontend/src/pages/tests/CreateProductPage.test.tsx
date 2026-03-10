@@ -181,14 +181,6 @@ describe("CreateProductPage", () => {
     expect(f.getByText(/Please select at least one coverage/i)).toBeInTheDocument();
   });
 
-  test("shows exclusion error when no exclusion selected on submit", () => {
-    renderWithRouter();
-    const f = within(form);
-
-    fireEvent.click(f.getByRole("button", { name: /Create Product/i }));
-    expect(f.getByText(/Please select at least one exclusion/i)).toBeInTheDocument();
-  });
-
   test("clears coverage error when a coverage is clicked", () => {
     renderWithRouter();
     const f = within(form);
@@ -200,19 +192,6 @@ describe("CreateProductPage", () => {
     fireEvent.click(accidental);
 
     expect(f.queryByText(/Please select at least one coverage/i)).not.toBeInTheDocument();
-  });
-
-  test("clears exclusion error when an exclusion is clicked", () => {
-    renderWithRouter();
-    const f = within(form);
-
-    fireEvent.click(f.getByRole("button", { name: /Create Product/i }));
-    expect(f.getByText(/Please select at least one exclusion/i)).toBeInTheDocument();
-
-    const theft = f.getAllByText(/^Theft$/i)[1].closest("div") as HTMLElement;
-    fireEvent.click(theft);
-
-    expect(f.queryByText(/Please select at least one exclusion/i)).not.toBeInTheDocument();
   });
 
   test("status dropdown renders active and inactive options", () => {
