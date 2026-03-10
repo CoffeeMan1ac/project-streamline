@@ -107,20 +107,17 @@ public class DecisionService {
             reasons.add(rule.getReason());
           }
 
-          // Check stop flag
-          if (config.getStop()) {
-            log.info("Rule '{}' has stop=true. Stopping.", rule.getName());
-            EvaluationResult result =
-                buildResult(
-                    DecisionStatus.DECLINED,
-                    BigDecimal.ZERO,
-                    String.join("; ", reasons),
-                    rulesApplied,
-                    startTime);
-            result.setEvaluationStopped(true);
-            result.setStoppedByRule(rule.getName());
-            return result;
-          }
+          log.info("Rule '{}' has stop=true. Stopping.", rule.getName());
+          EvaluationResult result =
+              buildResult(
+                  DecisionStatus.DECLINED,
+                  BigDecimal.ZERO,
+                  String.join("; ", reasons),
+                  rulesApplied,
+                  startTime);
+          result.setEvaluationStopped(true);
+          result.setStoppedByRule(rule.getName());
+          return result;
         }
 
         case "ACCEPT" -> {
@@ -159,18 +156,16 @@ public class DecisionService {
             reasons.add(rule.getReason());
           }
 
-          if (config.getStop()) {
-            EvaluationResult result =
-                buildResult(
-                    DecisionStatus.REFER,
-                    premium.multiply(delta),
-                    String.join("; ", reasons),
-                    rulesApplied,
-                    startTime);
-            result.setEvaluationStopped(true);
-            result.setStoppedByRule(rule.getName());
-            return result;
-          }
+          EvaluationResult result =
+              buildResult(
+                  DecisionStatus.REFER,
+                  premium.multiply(delta),
+                  String.join("; ", reasons),
+                  rulesApplied,
+                  startTime);
+          result.setEvaluationStopped(true);
+          result.setStoppedByRule(rule.getName());
+          return result;
         }
       }
     }
