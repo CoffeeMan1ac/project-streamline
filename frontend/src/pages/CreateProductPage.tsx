@@ -423,12 +423,20 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
                         p: 1.5,
                         borderRadius: 1.5,
                         border: selected ? "1.5px solid #0167b2" : "1.5px solid #e0e0e0",
-                        bgcolor: disabled ? "action.disabledBackground" : selected ? "#e8f1fb" : "background.paper",
+                        bgcolor: disabled
+                          ? "action.disabledBackground"
+                          : selected
+                            ? "#e8f1fb"
+                            : "background.paper",
                         cursor: disabled ? "not-allowed" : "pointer",
                         opacity: disabled ? 0.5 : 1,
                         transition: "all 0.15s ease",
                         "&:hover": {
-                          bgcolor: disabled ? "action.disabledBackground" : selected ? "#e8f1fb" : "action.hover",
+                          bgcolor: disabled
+                            ? "action.disabledBackground"
+                            : selected
+                              ? "#e8f1fb"
+                              : "action.hover",
                         },
                       }}
                     >
@@ -492,12 +500,20 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
                         p: 1.5,
                         borderRadius: 1.5,
                         border: selected ? "1.5px solid #d32f2f" : "1.5px solid #e0e0e0",
-                        bgcolor: disabled ? "action.disabledBackground" : selected ? "#fdf1f1" : "background.paper",
+                        bgcolor: disabled
+                          ? "action.disabledBackground"
+                          : selected
+                            ? "#fdf1f1"
+                            : "background.paper",
                         cursor: disabled ? "not-allowed" : "pointer",
                         opacity: disabled ? 0.5 : 1,
                         transition: "all 0.15s ease",
                         "&:hover": {
-                          bgcolor: disabled ? "action.disabledBackground" : selected ? "#fdf1f1" : "action.hover",
+                          bgcolor: disabled
+                            ? "action.disabledBackground"
+                            : selected
+                              ? "#fdf1f1"
+                              : "action.hover",
                         },
                       }}
                     >
