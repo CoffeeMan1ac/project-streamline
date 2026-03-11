@@ -1,7 +1,7 @@
 package com.munichre.streamline.product.api.dto;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import lombok.Builder;
@@ -15,8 +15,8 @@ public class CreateProductRequestDto {
   String description;
   BigDecimal baseRate;
   UUID typeId;
-  LocalDate startDate;
-  LocalDate endDate;
+  LocalDateTime startDate;
+  LocalDateTime endDate;
 
   List<UUID> coverageIds;
   List<UUID> exclusionIds;
