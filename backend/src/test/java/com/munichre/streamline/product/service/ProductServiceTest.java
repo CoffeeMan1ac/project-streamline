@@ -19,6 +19,7 @@ import com.munichre.streamline.product.model.Product;
 import com.munichre.streamline.product.repository.ProductCoverageRepository;
 import com.munichre.streamline.product.repository.ProductRepository;
 import com.munichre.streamline.product.repository.ProductTagRepository;
+import com.munichre.streamline.product.repository.ProductTypeRepository;
 import com.munichre.streamline.product.repository.dto.ProductCoverageRowDto;
 import com.munichre.streamline.product.repository.dto.ProductRowDto;
 import com.munichre.streamline.product.repository.dto.ProductTagRowDto;
@@ -45,6 +46,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 public class ProductServiceTest {
   @Mock private ProductRepository productRepository;
   @Mock private ProductTagRepository productTagRepository;
+  @Mock private ProductTypeRepository productTypeRepository;
   @Mock private ProductCoverageRepository productCoverageRepository;
 
   private Clock clock;
@@ -56,7 +58,11 @@ public class ProductServiceTest {
     clock = Clock.fixed(Instant.parse("2026-02-24T12:34:56Z"), ZoneId.of("Europe/Dublin"));
     productService =
         new ProductService(
-            productRepository, productCoverageRepository, productTagRepository, clock);
+            productRepository,
+            productCoverageRepository,
+            productTagRepository,
+            productTypeRepository,
+            clock);
   }
 
   @Nested
