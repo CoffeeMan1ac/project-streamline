@@ -9,7 +9,8 @@ import org.springframework.data.repository.query.Param;
 public interface ProductTypeRepository extends Repository<ProductType, UUID> {
   @Query(
       """
-    SELECT pt FROM ProductType pt
+    SELECT pt
+    FROM ProductType pt
     WHERE pt.id = :typeId
   """)
   ProductType findProductTypeById(@Param("typeId") UUID typeId);

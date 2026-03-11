@@ -43,15 +43,19 @@ public interface ProductCoverageRepository extends Repository<Product, UUID> {
 
   @Query(
       """
-    SELECT cv FROM Coverage cv
-    WHERE cv.id IN :coverageIds
+    SELECT cv
+    FROM Coverage cv
+    WHERE cv.id
+    IN :coverageIds
   """)
   Set<Coverage> findCoverageModels(@Param("coverageIds") Collection<UUID> coverageIds);
 
   @Query(
       """
-    SELECT cv FROM Coverage cv
-    WHERE cv.id IN :coverageIds
+    SELECT cv
+    FROM Coverage cv
+    WHERE cv.id
+    IN :coverageIds
   """)
   Set<Coverage> findExclusionModels(@Param("coverageIds") Collection<UUID> coverageIds);
 }

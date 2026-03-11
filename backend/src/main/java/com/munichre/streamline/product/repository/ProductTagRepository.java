@@ -27,8 +27,10 @@ public interface ProductTagRepository extends Repository<Product, UUID> {
 
   @Query(
       """
-    SELECT pt FROM ProductTag pt
-    WHERE pt.id IN :tagIds
+    SELECT pt
+    FROM ProductTag pt
+    WHERE pt.id
+    IN :tagIds
   """)
   Set<ProductTag> findTagModelsByIds(@Param("tagIds") Collection<UUID> tagIds);
 }
