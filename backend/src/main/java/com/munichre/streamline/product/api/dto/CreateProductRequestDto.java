@@ -14,11 +14,11 @@ public class CreateProductRequestDto {
   String name;
   String description;
   BigDecimal baseRate;
-  UUID typeId;
+  UUID type;
   LocalDateTime startDate;
   LocalDateTime endDate;
 
-  List<UUID> coverageIds;
-  List<UUID> exclusionIds;
-  List<UUID> tagIds;
+  List<UUID> coverages;
+  List<UUID> exclusions;
+  List<UUID> tags;
 }

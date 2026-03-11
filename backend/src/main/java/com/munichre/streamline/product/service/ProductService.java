@@ -136,7 +136,7 @@ public class ProductService {
     product.setEndDate(productRequest.getEndDate());
 
     // Type
-    UUID typeId = productRequest.getTypeId();
+    UUID typeId = productRequest.getType();
     ProductType productType = getProductType(typeId);
     if (productType == null) throw new ProductTypeNotFoundException();
     product.setType(productType);
