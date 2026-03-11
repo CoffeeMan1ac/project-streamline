@@ -1,10 +1,12 @@
 package com.munichre.streamline.product.api.controller;
 
+import com.munichre.streamline.product.api.dto.CreateProductRequestDto;
 import com.munichre.streamline.product.api.dto.ProductDto;
 import com.munichre.streamline.product.api.dto.ProductOptionDto;
 import com.munichre.streamline.product.service.ProductService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,5 +28,11 @@ public class BackofficeProductController {
   public ResponseEntity<List<ProductDto>> getProducts(
       @RequestParam(required = false) Boolean active) {
     return ResponseEntity.ok(productService.getProducts(active));
+  }
+  
+  @PostMapping()
+  public ResponseEntity<ProductDto> createProduct(@RequestBody CreateProductRequestDto payload) {
+    productService.createProduct(payload);
+    return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 }
