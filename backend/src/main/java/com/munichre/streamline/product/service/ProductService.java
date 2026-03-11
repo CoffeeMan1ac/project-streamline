@@ -4,22 +4,32 @@ import static java.util.stream.Collectors.groupingBy;
 
 import com.munichre.streamline.product.api.dto.CoverageCategoryDto;
 import com.munichre.streamline.product.api.dto.CoverageDto;
+import com.munichre.streamline.product.api.dto.CreateProductRequestDto;
 import com.munichre.streamline.product.api.dto.ProductDto;
 import com.munichre.streamline.product.api.dto.ProductOptionDto;
 import com.munichre.streamline.product.api.dto.ProductTagDto;
 import com.munichre.streamline.product.api.dto.ProductTypeDto;
+import com.munichre.streamline.product.exception.CoverageNotFoundException;
 import com.munichre.streamline.product.exception.ProductNotFoundException;
+import com.munichre.streamline.product.exception.ProductTagNotFoundException;
+import com.munichre.streamline.product.exception.ProductTypeNotFoundException;
+import com.munichre.streamline.product.model.Coverage;
 import com.munichre.streamline.product.model.Product;
+import com.munichre.streamline.product.model.ProductTag;
+import com.munichre.streamline.product.model.ProductType;
 import com.munichre.streamline.product.repository.ProductCoverageRepository;
 import com.munichre.streamline.product.repository.ProductRepository;
 import com.munichre.streamline.product.repository.ProductTagRepository;
+import com.munichre.streamline.product.repository.ProductTypeRepository;
 import com.munichre.streamline.product.repository.dto.ProductCoverageRowDto;
 import com.munichre.streamline.product.repository.dto.ProductRowDto;
 import com.munichre.streamline.product.repository.dto.ProductTagRowDto;
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +42,7 @@ public class ProductService {
   private final ProductRepository productRepository;
   private final ProductCoverageRepository productCoverageRepository;
   private final ProductTagRepository productTagRepository;
+  private final ProductTypeRepository productTypeRepository;
   private final Clock clock;
 
   public List<ProductOptionDto> getActiveProductOptions() {
@@ -114,6 +125,45 @@ public class ProductService {
     if (active == null) return getAllProducts();
     else if (active.booleanValue() == true) return getActiveProducts();
     else return getInactiveProducts();
+  }
+  
+  public void createProduct(CreateProductRequestDto productRequest) {
+    Product product = new Product();
+    product.setName(productRequest.getName());
+    product.setDescription(productRequest.getDescription());
+    product.setBaseRate(productRequest.getBaseRate());
+    product.setStartDate(productRequest.getStartDate());
+    product.setEndDate(productRequest.getEndDate());
+
+    // Type
+    UUID typeId = productRequest.getTypeId();
+    ProductType productType = getProductType(typeId);
+    if (productType == null) throw new ProductTypeNotFoundException();
+    product.setType(productType);
+
+    // Tags
+    Set<UUID> tagIds = new HashSet<>(productRequest.getTagIds());
+    Set<ProductTag> tags = productTagRepository.findTagModelsByIds(tagIds);
+    if (tagIds.size() != tags.size()) throw new ProductTagNotFoundException();
+    product.setTags(tags);
+
+    // Coverages
+    Set<UUID> coverageIds = new HashSet<>(productRequest.getCoverageIds());
+    Set<Coverage> coverages = productCoverageRepository.findCoverageModels(coverageIds);
+    if (coverageIds.size() != coverages.size()) throw new CoverageNotFoundException();
+    product.setCoverages(coverages);
+
+    // Exclusions
+    Set<UUID> exclusionsIds = new HashSet<>(productRequest.getExclusionIds());
+    Set<Coverage> exclusions = productCoverageRepository.findExclusionModels(exclusionsIds);
+    if (exclusionsIds.size() != exclusions.size()) throw new CoverageNotFoundException();
+    product.setExclusions(exclusions);
+
+    productRepository.saveAndFlush(product);
+  }
+
+  public ProductType getProductType(UUID productTypeId) {
+    return productTypeRepository.findProductTypeById(productTypeId);
   }
 
   private static class ProductAssembler {
