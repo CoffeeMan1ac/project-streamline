@@ -142,19 +142,19 @@ public class ProductService {
     product.setType(productType);
 
     // Tags
-    Set<UUID> tagIds = new HashSet<>(productRequest.getTagIds());
+    Set<UUID> tagIds = new HashSet<>(productRequest.getTags());
     Set<ProductTag> tags = productTagRepository.findTagModelsByIds(tagIds);
     if (tagIds.size() != tags.size()) throw new ProductTagNotFoundException();
     product.setTags(tags);
 
     // Coverages
-    Set<UUID> coverageIds = new HashSet<>(productRequest.getCoverageIds());
+    Set<UUID> coverageIds = new HashSet<>(productRequest.getCoverages());
     Set<Coverage> coverages = productCoverageRepository.findCoverageModels(coverageIds);
     if (coverageIds.size() != coverages.size()) throw new CoverageNotFoundException();
     product.setCoverages(coverages);
 
     // Exclusions
-    Set<UUID> exclusionsIds = new HashSet<>(productRequest.getExclusionIds());
+    Set<UUID> exclusionsIds = new HashSet<>(productRequest.getExclusions());
     Set<Coverage> exclusions = productCoverageRepository.findExclusionModels(exclusionsIds);
     if (exclusionsIds.size() != exclusions.size()) throw new CoverageNotFoundException();
     product.setExclusions(exclusions);
