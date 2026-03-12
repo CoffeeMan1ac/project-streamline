@@ -292,7 +292,8 @@ public class ProductServiceTest {
           tags,
           new ProductTypeDto(productRow.typeId(), productRow.typeCode(), productRow.typeLabel()),
           coverages,
-          exclusions);
+          exclusions,
+          List.of());
     }
 
     private static CoverageDto expectedCoverage(ProductCoverageRowDto r) {

@@ -46,6 +46,7 @@ class CustomerProductControllerTest {
               List.of(),
               null,
               List.of(),
+              List.of(),
               List.of());
 
       ProductDto p2 =
@@ -56,6 +57,7 @@ class CustomerProductControllerTest {
               "Desc 2",
               List.of(),
               null,
+              List.of(),
               List.of(),
               List.of());
 
