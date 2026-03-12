@@ -1,11 +1,13 @@
 package com.munichre.streamline.product.service;
 
 import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toMap;
 
 import com.munichre.streamline.product.api.dto.CoverageCategoryDto;
 import com.munichre.streamline.product.api.dto.CoverageDto;
 import com.munichre.streamline.product.api.dto.CreateProductRequestDto;
 import com.munichre.streamline.product.api.dto.ProductDto;
+import com.munichre.streamline.product.api.dto.ProductFieldDto;
 import com.munichre.streamline.product.api.dto.ProductOptionDto;
 import com.munichre.streamline.product.api.dto.ProductTagDto;
 import com.munichre.streamline.product.api.dto.ProductTypeDto;
@@ -17,6 +19,7 @@ import com.munichre.streamline.product.model.Coverage;
 import com.munichre.streamline.product.model.Product;
 import com.munichre.streamline.product.model.ProductTag;
 import com.munichre.streamline.product.model.ProductType;
+import com.munichre.streamline.product.model.ProductField;
 import com.munichre.streamline.product.repository.ProductCoverageRepository;
 import com.munichre.streamline.product.repository.ProductRepository;
 import com.munichre.streamline.product.repository.ProductTagRepository;
@@ -82,6 +85,13 @@ public class ProductService {
         productTagRepository.findTagRowsByProductIds(productIds).stream()
             .collect(groupingBy(ProductTagRowDto::productId));
 
+    Map<UUID, List<ProductField>> fieldsByProduct =
+        productRepository.findAllById(productIds).stream()
+            .collect(
+                toMap(
+                    Product::getId,
+                    p -> p.getProductFields() != null ? p.getProductFields() : List.of()));
+
     return productRows.stream()
         .map(
             row ->
@@ -89,7 +99,8 @@ public class ProductService {
                     row,
                     coveragesByProduct.getOrDefault(row.id(), List.of()),
                     exclusionsByProduct.getOrDefault(row.id(), List.of()),
-                    tagsByProduct.getOrDefault(row.id(), List.of())))
+                    tagsByProduct.getOrDefault(row.id(), List.of()),
+                    fieldsByProduct.getOrDefault(row.id(), List.of())))
         .toList();
   }
 
@@ -172,7 +183,8 @@ public class ProductService {
         ProductRowDto row,
         List<ProductCoverageRowDto> coverageRows,
         List<ProductCoverageRowDto> exclusionRows,
-        List<ProductTagRowDto> tags) {
+        List<ProductTagRowDto> tags,
+        List<ProductField> productFields) {
       return new ProductDto(
           row.id(),
           row.baseRate(),
@@ -182,7 +194,16 @@ public class ProductService {
           new ProductTypeDto(row.typeId(), row.typeCode(), row.typeLabel()),
           mapCoverages(coverageRows),
           mapCoverages(exclusionRows),
-          List.of());
+          mapProductFields(productFields));
+    }
+
+    private static List<ProductFieldDto> mapProductFields(List<ProductField> fields) {
+      return fields.stream()
+          .map(
+              f ->
+                  new ProductFieldDto(
+                      f.getName(), f.getType(), f.getLabel(), f.getRequired(), f.getOptions()))
+          .toList();
     }
 
     private static List<CoverageDto> mapCoverages(List<ProductCoverageRowDto> rows) {
