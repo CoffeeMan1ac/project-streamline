@@ -181,7 +181,8 @@ public class ProductService {
           mapTags(tags),
           new ProductTypeDto(row.typeId(), row.typeCode(), row.typeLabel()),
           mapCoverages(coverageRows),
-          mapCoverages(exclusionRows));
+          mapCoverages(exclusionRows),
+          List.of());
     }
 
     private static List<CoverageDto> mapCoverages(List<ProductCoverageRowDto> rows) {
