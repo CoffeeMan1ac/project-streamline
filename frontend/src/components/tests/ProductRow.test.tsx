@@ -12,6 +12,7 @@ describe("ProductRow", () => {
   const renderRow = (overrides = {}) => {
     const props = {
       productName: "Standard Shield",
+      modifiedBy: "Michael Brown",
       status: "active",
       price: "€9.99/month",
       coverageSummary: "Accidental Damage, Theft",
@@ -31,6 +32,11 @@ describe("ProductRow", () => {
   test("renders product name", () => {
     renderRow();
     expect(screen.getByText("Standard Shield")).toBeInTheDocument();
+  });
+
+  test("renders modified by text", () => {
+    renderRow();
+    expect(screen.getByText("Modified by Michael Brown")).toBeInTheDocument();
   });
 
   test("renders status chip", () => {

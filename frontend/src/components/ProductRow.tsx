@@ -1,10 +1,11 @@
 import React from "react";
-import { TableRow, TableCell, Chip, IconButton } from "@mui/material";
+import { TableRow, TableCell, Chip, IconButton, Typography } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 interface ProductRowProps {
   productName: string;
+  modifiedBy: string;
   status: string;
   price: string;
   coverageSummary: string;
@@ -13,6 +14,7 @@ interface ProductRowProps {
 
 const ProductRow: React.FC<ProductRowProps> = ({
   productName,
+  modifiedBy,
   status,
   price,
   coverageSummary,
@@ -20,7 +22,14 @@ const ProductRow: React.FC<ProductRowProps> = ({
 }) => {
   return (
     <TableRow>
-      <TableCell>{productName}</TableCell>
+      <TableCell>
+        <Typography variant="body2" fontWeight="bold">
+          {productName}
+        </Typography>
+        <Typography variant="caption" color="text.secondary">
+          Modified by {modifiedBy}
+        </Typography>
+      </TableCell>
 
       <TableCell>
         <Chip
@@ -34,7 +43,11 @@ const ProductRow: React.FC<ProductRowProps> = ({
         />
       </TableCell>
 
-      <TableCell>{price}</TableCell>
+      <TableCell>
+        <Typography variant="body2" fontWeight="bold">
+          {price}
+        </Typography>
+      </TableCell>
 
       <TableCell>{coverageSummary}</TableCell>
 
