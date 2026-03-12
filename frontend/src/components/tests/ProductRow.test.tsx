@@ -16,6 +16,7 @@ describe("ProductRow", () => {
       status: "active",
       price: "€9.99/month",
       coverageSummary: "Accidental Damage, Theft",
+      tags: [],
       onEdit: vi.fn(),
       ...overrides,
     };
@@ -64,5 +65,27 @@ describe("ProductRow", () => {
   test("renders inactive chip without success styling", () => {
     renderRow({ status: "inactive" });
     expect(screen.getByText("inactive")).toBeInTheDocument();
+  });
+
+  test("renders green tag when tags includes Green", () => {
+    renderRow({ tags: ["Green"] });
+    expect(screen.getByText("Green")).toBeInTheDocument();
+  });
+
+  test("renders retired tag when tags includes Retired", () => {
+    renderRow({ tags: ["Retired"] });
+    expect(screen.getByText("Retired")).toBeInTheDocument();
+  });
+
+  test("renders no tags when tags is empty", () => {
+    renderRow({ tags: [] });
+    expect(screen.queryByText("Green")).not.toBeInTheDocument();
+    expect(screen.queryByText("Retired")).not.toBeInTheDocument();
+  });
+
+  test("renders multiple tags", () => {
+    renderRow({ tags: ["Green", "Retired"] });
+    expect(screen.getByText("Green")).toBeInTheDocument();
+    expect(screen.getByText("Retired")).toBeInTheDocument();
   });
 });

@@ -1,7 +1,9 @@
 import React from "react";
-import { TableRow, TableCell, Chip, IconButton, Typography } from "@mui/material";
+import { TableRow, TableCell, Chip, IconButton, Typography, Box } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import SpaOutlinedIcon from "@mui/icons-material/SpaOutlined";
+import ArchiveOutlinedIcon from "@mui/icons-material/ArchiveOutlined";
 
 interface ProductRowProps {
   productName: string;
@@ -9,8 +11,29 @@ interface ProductRowProps {
   status: string;
   price: string;
   coverageSummary: string;
+  tags?: string[];
   onEdit: () => void;
 }
+
+const tagConfig: Record<
+  string,
+  { label: string; color: string; bg: string; border: string; icon: React.ReactNode }
+> = {
+  Green: {
+    label: "Green",
+    color: "#2e7d32",
+    bg: "#f0faf0",
+    border: "#2e7d32",
+    icon: <SpaOutlinedIcon sx={{ fontSize: 12 }} />,
+  },
+  Retired: {
+    label: "Retired",
+    color: "#616161",
+    bg: "#f0f0f0",
+    border: "#616161",
+    icon: <ArchiveOutlinedIcon sx={{ fontSize: 12 }} />,
+  },
+};
 
 const ProductRow: React.FC<ProductRowProps> = ({
   productName,
@@ -18,14 +41,41 @@ const ProductRow: React.FC<ProductRowProps> = ({
   status,
   price,
   coverageSummary,
+  tags = [],
   onEdit,
 }) => {
   return (
     <TableRow>
       <TableCell>
-        <Typography variant="body2" fontWeight="bold">
-          {productName}
-        </Typography>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap" }}>
+          <Typography variant="body2" fontWeight="bold">
+            {productName}
+          </Typography>
+          {tags.map((tag) => {
+            const config = tagConfig[tag];
+            if (!config) return null;
+            return (
+              <Box
+                key={tag}
+                sx={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 0.5,
+                  px: 1,
+                  py: 0.25,
+                  borderRadius: 10,
+                  bgcolor: config.bg,
+                  color: config.color,
+                }}
+              >
+                {config.icon}
+                <Typography variant="caption" sx={{ color: config.color, fontWeight: 500 }}>
+                  {config.label}
+                </Typography>
+              </Box>
+            );
+          })}
+        </Box>
         <Typography variant="caption" color="text.secondary">
           Modified by {modifiedBy}
         </Typography>

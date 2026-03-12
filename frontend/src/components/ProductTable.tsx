@@ -19,6 +19,7 @@ interface ProductTableProps {
     status: string;
     price: string;
     coverageSummary: string;
+    tags?: string[];
   }[];
   onEditProduct: (id: string) => void;
 }
@@ -46,6 +47,7 @@ const ProductTable: React.FC<ProductTableProps> = ({ products, onEditProduct }) 
                 status={product.status}
                 price={product.price}
                 coverageSummary={product.coverageSummary}
+                tags={product.tags}
                 onEdit={() => onEditProduct(product.id)}
               />
             ))}
