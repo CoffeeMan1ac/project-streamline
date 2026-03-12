@@ -12,4 +12,5 @@ public record ProductDto(
     List<ProductTagDto> tags,
     ProductTypeDto type,
     List<CoverageDto> coverages,
-    List<CoverageDto> exclusions) {}
+    List<CoverageDto> exclusions,
+    List<ProductFieldDto> productFields) {}
