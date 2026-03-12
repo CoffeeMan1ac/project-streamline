@@ -3,13 +3,16 @@ package com.munichre.streamline.product.model;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "products")
@@ -53,6 +56,10 @@ public class Product {
       joinColumns = @JoinColumn(name = "product_id"),
       inverseJoinColumns = @JoinColumn(name = "coverage_id"))
   private Set<Coverage> exclusions;
+
+  @JdbcTypeCode(SqlTypes.JSON)
+  @Column(name = "product_fields", columnDefinition = "jsonb")
+  private List<ProductField> productFields;
 
   /** When the product was launched, or when it should be launched. */
   @Column(nullable = false)
