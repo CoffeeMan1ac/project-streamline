@@ -126,7 +126,7 @@ public class ProductService {
     else if (active.booleanValue() == true) return getActiveProducts();
     else return getInactiveProducts();
   }
-  
+
   public void createProduct(CreateProductRequestDto productRequest) {
     Product product = new Product();
     product.setName(productRequest.getName());

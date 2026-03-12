@@ -29,7 +29,7 @@ public class BackofficeProductController {
       @RequestParam(required = false) Boolean active) {
     return ResponseEntity.ok(productService.getProducts(active));
   }
-  
+
   @PostMapping()
   public ResponseEntity<ProductDto> createProduct(@RequestBody CreateProductRequestDto payload) {
     productService.createProduct(payload);
