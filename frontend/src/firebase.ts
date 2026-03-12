@@ -2,12 +2,13 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBREjk7pV-3ZcUvwJjPqmNGF9lJ_4RB7ZU",
-  authDomain: "project-streamline-auth.firebaseapp.com",
-  projectId: "project-streamline-auth",
-  storageBucket: "project-streamline-auth.firebasestorage.app",
-  messagingSenderId: "1071331161645",
-  appId: "1:1071331161645:web:31bd1aacedb3262b9c6aa4",
+  apiKey: "AIzaSyDWDlTDJYs_uczHgSGCQA1t8KfWzs737bY",
+  authDomain: "streamline-77320.firebaseapp.com",
+  projectId: "streamline-77320",
+  storageBucket: "streamline-77320.firebasestorage.app",
+  messagingSenderId: "744908411681",
+  appId: "1:744908411681:web:4dcfbd29cb6f92f9c2a460",
+  measurementId: "G-K53PKKFXB6",
 };
 
 const app = initializeApp(firebaseConfig);
