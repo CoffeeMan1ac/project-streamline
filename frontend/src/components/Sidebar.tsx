@@ -31,8 +31,11 @@ const Sidebar = () => {
             <Box component="img" src={"shield_logo.png"} alt="logo" sx={{ height: 40, mr: 1 }} />
 
             <Box flexGrow={1}>
-              <Typography fontWeight={600} fontSize={16}>
-                Phone Shield
+              <Typography fontWeight={600} fontSize={16} color="primary.main">
+                Phone
+              </Typography>
+              <Typography fontWeight={600} fontSize={16} color="primary.main">
+                Shield
               </Typography>
               <Typography fontSize={12} color="text.secondary">
                 Admin Portal
@@ -81,20 +84,37 @@ const Sidebar = () => {
         </Box>
 
         {/* footer */}
-        <Box borderTop={1} borderColor="divider" mt="auto" pt={2}>
-          <Box display="flex" flexDirection="column" alignItems="center" gap={1}>
-            <Typography variant="h6">Admin User</Typography>
-            <Typography variant="body2">Underwriter</Typography>
-          </Box>
+      <Box
+        mt="auto"
+        pt={2}
+        borderTop="1px solid #e0e0e0">
+          <Box display="flex" alignItems="center" gap={1} px={1}>
 
-          <Box display="flex" justifyContent="center" mt={2}>
+          <Box
+            sx={{
+              width: 36,
+              height: 36,
+              borderRadius: "50%",
+              backgroundColor: "primary.main",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontWeight: 600,
+            }}
+          >
+            A
+          </Box>
+            <Typography fontWeight={600} fontSize={14}>Admin User</Typography>
+            <Typography fontSize={12} color="text.secondary">Underwriter</Typography>
+          </Box>
+        </Box>
+          <Box display="flex" justifyContent="space-between" mt={2} px={1}>
             <Button startIcon={<DarkModeOutlinedIcon />}>Theme</Button>
             <Button startIcon={<LogoutOutlinedIcon />} color="error">
               Logout
             </Button>
           </Box>
         </Box>
-      </Box>
     </Drawer>
   );
 };
