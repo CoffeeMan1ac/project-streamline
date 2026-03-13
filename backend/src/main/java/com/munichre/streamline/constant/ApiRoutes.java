@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 public final class ApiRoutes {
   public static final String CUSTOMER_API_ROOT = "/customer/**";
   public static final String BACKOFFICE_API_ROOT = "/backoffice/**";
-  public static final String SWAGGER_API_ROOT = "/swagger-ui/**";
+  public static final String SWAGGER_API_ROOT = "/swagger-ui/";
 
   public static final String CUSTOMER_API_BASE = "/customer";
   public static final String BACKOFFICE_API_BASE = "/backoffice";
