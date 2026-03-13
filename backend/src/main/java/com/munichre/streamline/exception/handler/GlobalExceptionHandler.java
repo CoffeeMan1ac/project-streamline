@@ -31,5 +31,10 @@ public class GlobalExceptionHandler {
       final BaseApplicationException ex, final HttpServletRequest request) {
     return response(ex.getStatus(), ex.getMessage(), request);
   }
-  
+
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<ErrorResponseDto> handleGeneralException(
+      final Exception ex, final HttpServletRequest request) {
+    return response(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occured", request);
+  }
 }
