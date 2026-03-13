@@ -56,9 +56,7 @@ describe("QuotesPage", () => {
   test("renders main heading and subtitle", () => {
     renderWithRouter();
 
-    expect(
-      screen.getAllByRole("heading", { name: /Get Your Quote/i })[0]
-    ).toBeInTheDocument();
+    expect(screen.getAllByRole("heading", { name: /Get Your Quote/i })[0]).toBeInTheDocument();
 
     expect(
       screen.getAllByText(/Fill in your details below to receive an instant quote/i)[0]
@@ -140,62 +138,61 @@ describe("QuotesPage", () => {
   });
 });
 
-  // test("shows loading text when form is submitted", async () => {
-  //   renderWithRouter();
-  //   const f = within(form);
+// test("shows loading text when form is submitted", async () => {
+//   renderWithRouter();
+//   const f = within(form);
 
-  //   fireEvent.change(f.getByLabelText(/First Name/i), { target: { value: "Joe" } });
-  //   fireEvent.change(f.getByLabelText(/Last Name/i), { target: { value: "Mama" } });
-  //   fireEvent.change(f.getByLabelText(/Email Address/i), { target: { value: "joe@example.com" } });
-  //   fireEvent.change(f.getByLabelText(/Phone Number/i), { target: { value: "1234567890" } });
-  //   fireEvent.change(f.getByLabelText(/Date of Birth/i), { target: { value: "01/01/1790" } });
-  //   fireEvent.change(f.getByLabelText(/Address Line 1/i), { target: { value: "123 o'connell st" } });
-  //   fireEvent.change(f.getByLabelText(/City/i), { target: { value: "Dublin" } });
-  //   fireEvent.change(f.getByLabelText(/Postal Code/i), { target: { value: "12345" } });
+//   fireEvent.change(f.getByLabelText(/First Name/i), { target: { value: "Joe" } });
+//   fireEvent.change(f.getByLabelText(/Last Name/i), { target: { value: "Mama" } });
+//   fireEvent.change(f.getByLabelText(/Email Address/i), { target: { value: "joe@example.com" } });
+//   fireEvent.change(f.getByLabelText(/Phone Number/i), { target: { value: "1234567890" } });
+//   fireEvent.change(f.getByLabelText(/Date of Birth/i), { target: { value: "01/01/1790" } });
+//   fireEvent.change(f.getByLabelText(/Address Line 1/i), { target: { value: "123 o'connell st" } });
+//   fireEvent.change(f.getByLabelText(/City/i), { target: { value: "Dublin" } });
+//   fireEvent.change(f.getByLabelText(/Postal Code/i), { target: { value: "12345" } });
 
-  //   fireEvent.mouseDown(f.getByLabelText(/Country/i));
-  //   fireEvent.click(f.getByText(/Ireland/i));
+//   fireEvent.mouseDown(f.getByLabelText(/Country/i));
+//   fireEvent.click(f.getByText(/Ireland/i));
 
-  //   fireEvent.mouseDown(f.getByLabelText(/Phone Make/i));
-  //   fireEvent.click(f.getByText(/Apple/i));
+//   fireEvent.mouseDown(f.getByLabelText(/Phone Make/i));
+//   fireEvent.click(f.getByText(/Apple/i));
 
-  //   fireEvent.mouseDown(f.getByLabelText(/Phone Model/i));
-  //   fireEvent.click(f.getByText(/iPhone 15/i));
+//   fireEvent.mouseDown(f.getByLabelText(/Phone Model/i));
+//   fireEvent.click(f.getByText(/iPhone 15/i));
 
-  //   fireEvent.click(f.getByRole("button", { name: /Get Quote/i }));
+//   fireEvent.click(f.getByRole("button", { name: /Get Quote/i }));
 
-  //   await waitFor(() => {
-  //     // depends on your UI; if button text changes, keep it scoped
-  //     expect(f.getByText(/Submitting.../i)).toBeInTheDocument();
-  //   });
-  // });
+//   await waitFor(() => {
+//     // depends on your UI; if button text changes, keep it scoped
+//     expect(f.getByText(/Submitting.../i)).toBeInTheDocument();
+//   });
+// });
 
-  // test("disables form fields during submission", async () => {
-  //   renderWithRouter();
-  //   const f = within(form);
+// test("disables form fields during submission", async () => {
+//   renderWithRouter();
+//   const f = within(form);
 
-  //   fireEvent.change(f.getByLabelText(/First Name/i), { target: { value: "Test" } });
-  //   fireEvent.change(f.getByLabelText(/Last Name/i), { target: { value: "User" } });
-  //   fireEvent.change(f.getByLabelText(/Email Address/i), { target: { value: "test@test.com" } });
-  //   fireEvent.change(f.getByLabelText(/Phone Number/i), { target: { value: "1234567890" } });
-  //   fireEvent.change(f.getByLabelText(/Date of Birth/i), { target: { value: "01/01/2000" } });
-  //   fireEvent.change(f.getByLabelText(/Address Line 1/i), { target: { value: "123 Street" } });
-  //   fireEvent.change(f.getByLabelText(/City/i), { target: { value: "Dublin" } });
-  //   fireEvent.change(f.getByLabelText(/Postal Code/i), { target: { value: "D01 ABC" } });
+//   fireEvent.change(f.getByLabelText(/First Name/i), { target: { value: "Test" } });
+//   fireEvent.change(f.getByLabelText(/Last Name/i), { target: { value: "User" } });
+//   fireEvent.change(f.getByLabelText(/Email Address/i), { target: { value: "test@test.com" } });
+//   fireEvent.change(f.getByLabelText(/Phone Number/i), { target: { value: "1234567890" } });
+//   fireEvent.change(f.getByLabelText(/Date of Birth/i), { target: { value: "01/01/2000" } });
+//   fireEvent.change(f.getByLabelText(/Address Line 1/i), { target: { value: "123 Street" } });
+//   fireEvent.change(f.getByLabelText(/City/i), { target: { value: "Dublin" } });
+//   fireEvent.change(f.getByLabelText(/Postal Code/i), { target: { value: "D01 ABC" } });
 
-  //   fireEvent.mouseDown(f.getByLabelText(/Country/i));
-  //   fireEvent.click(screen.getByText(/Ireland/i));
+//   fireEvent.mouseDown(f.getByLabelText(/Country/i));
+//   fireEvent.click(screen.getByText(/Ireland/i));
 
-  //   fireEvent.mouseDown(f.getByLabelText(/Phone Make/i));
-  //   fireEvent.click(screen.getByText(/Apple/i));
+//   fireEvent.mouseDown(f.getByLabelText(/Phone Make/i));
+//   fireEvent.click(screen.getByText(/Apple/i));
 
-  //   fireEvent.mouseDown(f.getByLabelText(/Phone Model/i));
-  //   fireEvent.click(screen.getByText(/iPhone 15/i));
+//   fireEvent.mouseDown(f.getByLabelText(/Phone Model/i));
+//   fireEvent.click(screen.getByText(/iPhone 15/i));
 
-  //   fireEvent.click(f.getByRole("button", { name: /Get Quote/i }));
+//   fireEvent.click(f.getByRole("button", { name: /Get Quote/i }));
 
-  //   await waitFor(() => {
-  //     expect(f.getByRole("button", { name: /Submitting.../i })).toBeDisabled();
-  //   });
-  // });
-
+//   await waitFor(() => {
+//     expect(f.getByRole("button", { name: /Submitting.../i })).toBeDisabled();
+//   });
+// });
