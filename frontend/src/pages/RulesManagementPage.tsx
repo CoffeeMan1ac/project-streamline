@@ -9,7 +9,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { Dialog } from "@mui/material";
 import EditRulePage from "../pages/EditRulePage";
 import CreateRulePage from "./CreateRulePage";
-import api from "../api/api";
+import { http } from "../api/http";
 
 type ProductOption = {
   id: string;
@@ -61,6 +61,8 @@ const mapRuleResponseToRule = (dto: RuleResponseDto): Rule => ({
           : "-",
 });
 
+const API_BASE = import.meta.env.VITE_API_URL;
+
 const RulesManagementPage = () => {
   const [editRuleId, setEditRuleId] = useState<string | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -73,16 +75,16 @@ const RulesManagementPage = () => {
     setSearchParams({ product: productId });
   };
   useEffect(() => {
-    api
-      .get<ProductOption[]>("/api/backoffice/products/options")
+    http
+      .get<ProductOption[]>("/backoffice/products/options")
       .then((res) => setProducts(res.data))
       .catch((err) => console.error("Failed to fetch products:", err));
   }, []);
 
   const fetchRules = useCallback(() => {
     if (!selectedProduct) return;
-    api
-      .get<RuleResponseDto[]>(`/api/backoffice/rules?product=${selectedProduct}`)
+    http
+      .get<RuleResponseDto[]>(`/backoffice/rules?product=${selectedProduct}`)
       .then((res) => setRules(res.data.map(mapRuleResponseToRule)))
       .catch((err) => console.error("Failed to fetch rules:", err));
   }, [selectedProduct]);
@@ -96,7 +98,7 @@ const RulesManagementPage = () => {
     if (!rule) return;
 
     try {
-      await api.patch(`/api/backoffice/rules/${rule.id}/active`, {
+      await http.patch(`/backoffice/rules/${rule.id}/active`, {
         active: !rule.active,
       });
 
@@ -110,7 +112,7 @@ const RulesManagementPage = () => {
 
   const handleReorderRule = async (ruleId: string, newPriority: number) => {
     try {
-      await api.put("/api/backoffice/rules/reorder", {
+      await http.put("/backoffice/rules/reorder", {
         product: selectedProduct,
         rule: ruleId,
         priority: newPriority,

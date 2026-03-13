@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import { http } from "../api/http";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   TextField,
@@ -188,7 +188,7 @@ const QuotesPage = () => {
         productId: productId,
       };
 
-      const res = await axios.post("/api/customer/quote", payload);
+      const res = await http.post("/customer/quote", payload);
       const result = res.data;
 
       const status = String(result?.status ?? "").toUpperCase();

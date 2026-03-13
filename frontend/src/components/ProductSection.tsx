@@ -2,6 +2,7 @@ import { Box, Container, Typography, Grid, Skeleton } from "@mui/material";
 import ProductCard, { type CoverageDetail, type Product, type ProductTag } from "./ProductCard";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { http } from "../api/http";
 
 export interface ApiProduct {
   id: string;
@@ -23,7 +24,7 @@ const ProductSection = () => {
       try {
         setLoading(true);
 
-        const response = await axios.get("api/customer/products", {
+        const response = await http.get("/customer/products", {
           signal: controller.signal,
         });
 

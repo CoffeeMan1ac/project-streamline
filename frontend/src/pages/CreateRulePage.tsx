@@ -30,6 +30,8 @@ type Condition = {
   value: string;
 };
 
+const API_BASE = import.meta.env.VITE_API_URL;
+
 const fieldOptions: Record<string, { value: string; label: string }[]> = {
   country: [
     { value: "ireland", label: "Ireland" },
@@ -204,7 +206,7 @@ const CreateRulePage = ({
         },
       };
 
-      const res = await fetch("/api/admin/rules", {
+      const res = await fetch(`${API_BASE}/admin/rules`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
