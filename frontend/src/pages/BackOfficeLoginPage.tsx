@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import { Typography, Button } from "@mui/material";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth } from "../config/firebase";
 import { useNavigate } from "react-router-dom";
 
 const BackOfficeLoginPage = () => {
