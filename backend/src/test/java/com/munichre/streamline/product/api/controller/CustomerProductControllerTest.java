@@ -31,7 +31,7 @@ class CustomerProductControllerTest {
   @MockitoBean private ProductService productService;
 
   @Nested
-  @DisplayName("GET /api/customer/products")
+  @DisplayName("GET /customer/products")
   class GetProducts {
 
     @Test
@@ -66,7 +66,7 @@ class CustomerProductControllerTest {
       when(productService.getActiveProducts()).thenReturn(List.of(p1, p2));
 
       mockMvc
-          .perform(get("/api/customer/products").accept(MediaType.APPLICATION_JSON))
+          .perform(get("/customer/products").accept(MediaType.APPLICATION_JSON))
           .andExpect(status().isOk())
           .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
           .andExpect(jsonPath("$.length()").value(2))
@@ -86,7 +86,7 @@ class CustomerProductControllerTest {
       when(productService.getActiveProducts()).thenReturn(List.of());
 
       mockMvc
-          .perform(get("/api/customer/products").accept(MediaType.APPLICATION_JSON))
+          .perform(get("/customer/products").accept(MediaType.APPLICATION_JSON))
           .andExpect(status().isOk())
           .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
           .andExpect(jsonPath("$.length()").value(0));
@@ -97,7 +97,7 @@ class CustomerProductControllerTest {
   }
 
   @Nested
-  @DisplayName("GET /api/customer/products/options")
+  @DisplayName("GET /customer/products/options")
   class GetProductOptions {
     @Test
     void returns200AndOptions() throws Exception {
@@ -110,7 +110,7 @@ class CustomerProductControllerTest {
       when(productService.getActiveProductOptions()).thenReturn(List.of(o1, o2));
 
       mockMvc
-          .perform(get("/api/customer/products/options").accept(MediaType.APPLICATION_JSON))
+          .perform(get("/customer/products/options").accept(MediaType.APPLICATION_JSON))
           .andExpect(status().isOk())
           .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
           .andExpect(jsonPath("$.length()").value(2));
@@ -124,7 +124,7 @@ class CustomerProductControllerTest {
       when(productService.getActiveProductOptions()).thenReturn(List.of());
 
       mockMvc
-          .perform(get("/api/customer/products/options").accept(MediaType.APPLICATION_JSON))
+          .perform(get("/customer/products/options").accept(MediaType.APPLICATION_JSON))
           .andExpect(status().isOk())
           .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
           .andExpect(jsonPath("$.length()").value(0));

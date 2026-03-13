@@ -29,7 +29,7 @@ class BackofficeProductControllerTest {
   @MockitoBean private ProductService productService;
 
   @Nested
-  @DisplayName("GET /api/backoffice/products/options")
+  @DisplayName("GET /backoffice/products/options")
   class GetProductOptions {
     @Test
     void returns200AndOptions() throws Exception {
@@ -42,7 +42,7 @@ class BackofficeProductControllerTest {
       when(productService.getAllProductOptions()).thenReturn(List.of(o1, o2));
 
       mockMvc
-          .perform(get("/api/backoffice/products/options").accept(MediaType.APPLICATION_JSON))
+          .perform(get("/backoffice/products/options").accept(MediaType.APPLICATION_JSON))
           .andExpect(status().isOk())
           .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
           .andExpect(jsonPath("$.length()").value(2));
@@ -56,7 +56,7 @@ class BackofficeProductControllerTest {
       when(productService.getAllProductOptions()).thenReturn(List.of());
 
       mockMvc
-          .perform(get("/api/backoffice/products/options").accept(MediaType.APPLICATION_JSON))
+          .perform(get("/backoffice/products/options").accept(MediaType.APPLICATION_JSON))
           .andExpect(status().isOk())
           .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
           .andExpect(jsonPath("$.length()").value(0));
