@@ -45,12 +45,12 @@ function App() {
         >
           <BrowserRouter>
             <Navbar
-            mode={mode}
-            toggleTheme={toggleTheme}
-            toggleSidebar={toggleSidebar}
-            admin={true}
-          />
-          {sidebarOpen && <Sidebar toggleSidebar={toggleSidebar} />}
+              mode={mode}
+              toggleTheme={toggleTheme}
+              toggleSidebar={toggleSidebar}
+              admin={true}
+            />
+            {sidebarOpen && <Sidebar toggleSidebar={toggleSidebar} />}
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/quote" element={<QuotesPage />} />
@@ -61,7 +61,7 @@ function App() {
                 <Route path="/rules" element={<RulesManagementPage />} />
               </Route>
               <Route path="/sandbox" element={<Sandbox />} />
-          </Routes>
+            </Routes>
             <Footer />
           </BrowserRouter>
         </Box>
