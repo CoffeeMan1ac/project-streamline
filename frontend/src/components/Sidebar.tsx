@@ -5,8 +5,6 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import FeedOutlinedIcon from "@mui/icons-material/FeedOutlined";
 import ViewInArOutlinedIcon from "@mui/icons-material/ViewInArOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
-import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
-import WbSunnyOutlinedIcon from "@mui/icons-material/WbSunnyOutlined";
 
 const Sidebar = () => {
   return (
@@ -19,7 +17,6 @@ const Sidebar = () => {
         "& .MuiDrawer-paper": {
           width: 260,
           boxSizing: "border-box",
-          backgroundColor: "#f7f8fa",
           borderRight: "1px solid #e0e0e0",
         },
       }}
@@ -28,7 +25,7 @@ const Sidebar = () => {
         {/* header */}
         <Box pb={2} borderBottom="1px solid #e0e0e0">
           <Box display="flex" alignItems="center">
-            <Box component="img" src={"shield_logo.png"} alt="logo" sx={{ height: 40, mr: 1 }} />
+            <Box component="img" src={"shield_logo.png"} alt="logo" sx={{ height: 70, mr: 1 }} />
 
             <Box flexGrow={1}>
               <Typography fontWeight={600} fontSize={16} color="primary.main">
@@ -87,7 +84,8 @@ const Sidebar = () => {
       <Box
         mt="auto"
         pt={2}
-        borderTop="1px solid #e0e0e0">
+        borderTop={1}
+        borderColor="divider">
           <Box display="flex" alignItems="center" gap={1} px={1}>
 
           <Box
@@ -100,6 +98,7 @@ const Sidebar = () => {
               alignItems: "center",
               justifyContent: "center",
               fontWeight: 600,
+              color: "white",
             }}
           >
             A
@@ -109,7 +108,6 @@ const Sidebar = () => {
           </Box>
         </Box>
           <Box display="flex" justifyContent="space-between" mt={2} px={1}>
-            <Button startIcon={<DarkModeOutlinedIcon />}>Theme</Button>
             <Button startIcon={<LogoutOutlinedIcon />} color="error">
               Logout
             </Button>
