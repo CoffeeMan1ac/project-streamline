@@ -188,7 +188,7 @@ const QuotesPage = () => {
         productId: productId,
       };
 
-      const res = await axios.post("/api/quotes", payload);
+      const res = await axios.post("/api/customer/quote", payload);
       const result = res.data;
 
       const status = String(result?.status ?? "").toUpperCase();

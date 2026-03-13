@@ -1,5 +1,7 @@
 package com.munichre.streamline.controller;
 
+import static com.munichre.streamline.constant.ApiRoutes.CUSTOMER_API_BASE;
+
 import com.munichre.streamline.dto.EvaluationResult;
 import com.munichre.streamline.service.QuotationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/quotes")
+@RequestMapping(CUSTOMER_API_BASE + "/quote")
 @RequiredArgsConstructor
 @Tag(name = "Quotes", description = "Quote evaluation & pricing")
 public class QuotationController {

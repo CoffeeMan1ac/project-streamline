@@ -81,7 +81,7 @@ const RulesManagementPage = () => {
   useEffect(() => {
     if (!selectedProduct) return;
 
-    fetch(`/api/admin/rules?product=${selectedProduct}`)
+    fetch(`/api/backoffice/rules?product=${selectedProduct}`)
       .then((res) => res.json())
       .then((data: RuleResponseDto[]) => setRules(data.map(mapRuleResponseToRule)))
       .catch((err) => {
@@ -92,7 +92,7 @@ const RulesManagementPage = () => {
 
   const fetchRules = () => {
     if (!selectedProduct) return;
-    fetch(`/api/admin/rules?product=${selectedProduct}`)
+    fetch(`/api/backoffice/rules?product=${selectedProduct}`)
       .then((res) => res.json())
       .then((data: RuleResponseDto[]) => setRules(data.map(mapRuleResponseToRule)))
       .catch((err) => console.error("Failed to fetch rules:", err));
@@ -103,7 +103,7 @@ const RulesManagementPage = () => {
     if (!rule) return;
 
     try {
-      await fetch(`/api/admin/rules/${rule.id}/active`, {
+      await fetch(`/api/backoffice/rules/${rule.id}/active`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ active: !rule.active }),
@@ -119,7 +119,7 @@ const RulesManagementPage = () => {
 
   const handleReorderRule = async (ruleId: string, newPriority: number) => {
     try {
-      await fetch("/api/admin/rules/reorder", {
+      await fetch("/api/backoffice/rules/reorder", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

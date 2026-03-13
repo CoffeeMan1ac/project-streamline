@@ -1,5 +1,7 @@
 package com.munichre.streamline.product.api.controller;
 
+import static com.munichre.streamline.constant.ApiRoutes.BACKOFFICE_API_BASE;
+
 import com.munichre.streamline.product.api.dto.CreateProductRequestDto;
 import com.munichre.streamline.product.api.dto.ProductDto;
 import com.munichre.streamline.product.api.dto.ProductOptionDto;
@@ -12,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
-@RequestMapping("/api/backoffice/products")
+@RequestMapping(BACKOFFICE_API_BASE + "/products")
 @RequiredArgsConstructor
 public class BackofficeProductController {
 

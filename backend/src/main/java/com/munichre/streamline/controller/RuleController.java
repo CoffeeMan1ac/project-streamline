@@ -1,5 +1,7 @@
 package com.munichre.streamline.controller;
 
+import static com.munichre.streamline.constant.ApiRoutes.BACKOFFICE_API_BASE;
+
 import com.munichre.streamline.dto.RuleResponseDto;
 import com.munichre.streamline.service.RuleService;
 import java.util.List;
@@ -11,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/admin/rules")
+@RequestMapping(BACKOFFICE_API_BASE + "/rules")
 @RequiredArgsConstructor
 public class RuleController {
 

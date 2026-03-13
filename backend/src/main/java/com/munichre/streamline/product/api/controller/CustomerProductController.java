@@ -1,5 +1,7 @@
 package com.munichre.streamline.product.api.controller;
 
+import static com.munichre.streamline.constant.ApiRoutes.CUSTOMER_API_BASE;
+
 import com.munichre.streamline.product.api.dto.ProductDto;
 import com.munichre.streamline.product.api.dto.ProductOptionDto;
 import com.munichre.streamline.product.service.ProductService;
@@ -13,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/customer/products")
+@RequestMapping(CUSTOMER_API_BASE + "/products")
 @RequiredArgsConstructor
 @Tag(name = "Customer Products", description = "Endpoints used by customers to browse products")
 public class CustomerProductController {
