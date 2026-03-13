@@ -1,9 +1,7 @@
-import Sidebar from "../components/Sidebar";
-
 const Sandbox = () => {
   return (
     <>
-      <Sidebar />
+      <h1>Sandbox for viewing components</h1>
     </>
   );
 };
