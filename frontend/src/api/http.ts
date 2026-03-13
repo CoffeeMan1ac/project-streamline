@@ -1,9 +1,8 @@
 import axios, { type InternalAxiosRequestConfig } from "axios";
 import { auth } from "../config/firebase";
 
-export const http = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8080",
-  headers: { "Content-Type": "application/json" },
+const http = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:8080",
 });
 
 http.interceptors.request.use(

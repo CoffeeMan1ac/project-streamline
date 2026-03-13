@@ -2,31 +2,42 @@ import "@testing-library/jest-dom/vitest";
 import { render, screen } from "@testing-library/react";
 import { describe, test, expect, vi, beforeEach } from "vitest";
 import { MemoryRouter } from "react-router-dom";
-import axios from "axios";
 import ProductSection, { type ApiProduct } from "../ProductSection";
 
-vi.mock("axios", () => {
-  const mockHttp = {
-    get: vi.fn(),
-    post: vi.fn(),
-    put: vi.fn(),
-    patch: vi.fn(),
-    delete: vi.fn(),
+const { mockHttp } = vi.hoisted(() => ({
+  mockHttp: {
     interceptors: {
+      request: {
+        use: vi.fn(),
+      },
       response: {
         use: vi.fn(),
       },
     },
-  };
+    get: vi.fn(),
+    post: vi.fn(),
+    put: vi.fn(),
+    delete: vi.fn(),
+    patch: vi.fn(),
+  },
+}));
 
-  return {
-    default: {
-      create: vi.fn(() => mockHttp),
-      isCancel: vi.fn(() => false),
-      __mockHttp: mockHttp,
-    },
-  };
-});
+vi.mock("axios", () => ({
+  default: {
+    create: vi.fn(() => mockHttp),
+    get: vi.fn(),
+    post: vi.fn(),
+    put: vi.fn(),
+    delete: vi.fn(),
+    patch: vi.fn(),
+  },
+}));
+
+vi.mock("../../config/firebase", () => ({
+  auth: {
+    currentUser: null,
+  },
+}));
 
 const mockProducts: ApiProduct[] = [
   {
@@ -41,7 +52,13 @@ const mockProducts: ApiProduct[] = [
     id: "uuid-2",
     name: "Premium Shield",
     baseRate: 14.99,
-    tags: [{ label: "Most Popular", id: "", code: "POPULAR" }],
+    tags: [
+      {
+        label: "Most Popular",
+        id: "",
+        code: "POPULAR",
+      },
+    ],
     coverages: [],
     exclusions: [],
   },
@@ -58,7 +75,7 @@ const mockProducts: ApiProduct[] = [
 describe("ProductSection", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    (axios as any).__mockHttp.get.mockResolvedValue({ data: mockProducts });
+    mockHttp.get.mockResolvedValue({ data: mockProducts });
   });
 
   test("renders section heading and subtitle", async () => {

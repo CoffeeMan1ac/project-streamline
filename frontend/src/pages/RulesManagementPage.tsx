@@ -9,7 +9,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { Dialog } from "@mui/material";
 import EditRulePage from "../pages/EditRulePage";
 import CreateRulePage from "./CreateRulePage";
-import { http } from "../api/http";
+import http from "../api/http";
 
 type ProductOption = {
   id: string;
