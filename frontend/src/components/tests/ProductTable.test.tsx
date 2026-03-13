@@ -32,6 +32,7 @@ describe("ProductTable", () => {
     const props = {
       products: testProducts,
       onEditProduct: vi.fn(),
+      onToggleProductActive: vi.fn(),
       ...overrides,
     };
 
