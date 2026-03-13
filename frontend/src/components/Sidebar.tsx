@@ -2,47 +2,82 @@ import { Box, Drawer, Typography, IconButton, Button } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import SettingsIcon from "@mui/icons-material/Settings";
-import FeedOutlinedIcon from '@mui/icons-material/FeedOutlined';
-import ViewInArOutlinedIcon from '@mui/icons-material/ViewInArOutlined';
+import FeedOutlinedIcon from "@mui/icons-material/FeedOutlined";
+import ViewInArOutlinedIcon from "@mui/icons-material/ViewInArOutlined";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
+import WbSunnyOutlinedIcon from "@mui/icons-material/WbSunnyOutlined";
 
 const Sidebar = () => {
   return (
-    <Drawer variant="permanent" anchor="left">
+    <Drawer
+      variant="permanent"
+      anchor="left"
+      sx={{
+        width: 260,
+        flexShrink: 0,
+        "& .MuiDrawer-paper": {
+          width: 260,
+          boxSizing: "border-box",
+          backgroundColor: "#f7f8fa",
+          borderRight: "1px solid #e0e0e0",
+        },
+      }}
+    >
       <Box p={2} display="flex" flexDirection="column" height="100%">
         {/* header */}
-        <Box pb={1} borderBottom={1} borderColor="divider">
-          <Box display="flex" alignItems="center" gap={2}>
-            <Box
-              component="img"
-              src={"shield_logo.png"}
-              alt="Phone Shield logo"
-              sx={{ height: 60 }}
-            />
+        <Box pb={2} borderBottom="1px solid #e0e0e0">
+          <Box display="flex" alignItems="center">
+            <Box component="img" src={"shield_logo.png"} alt="logo" sx={{ height: 40, mr: 1 }} />
 
-            <Box>
-              <Typography variant="h6" color="textPrimary">
-                Phone
+            <Box flexGrow={1}>
+              <Typography fontWeight={600} fontSize={16}>
+                Phone Shield
               </Typography>
-              <Typography variant="h6" color="textPrimary">
-                Shield
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
+              <Typography fontSize={12} color="text.secondary">
                 Admin Portal
               </Typography>
             </Box>
 
-            <IconButton>
+            <IconButton size="small">
               <MenuIcon />
             </IconButton>
           </Box>
         </Box>
 
         {/* buttons */}
-        <Box mt={2} display="flex" alignItems="center" gap={2} flexDirection="column">
-          <Button startIcon={<DashboardIcon />}>Dashboard</Button>
-          <Button startIcon={<FeedOutlinedIcon />}>Rules Management</Button>
-          <Button startIcon={<ViewInArOutlinedIcon />}>Products Management</Button>
-          <Button startIcon={<SettingsIcon />}>Settings</Button>
+        <Box mt={2} display="flex" gap={2} flexDirection="column">
+          <Button
+            fullWidth
+            sx={{ justifyContent: "flex-start", color: "grey" }}
+            startIcon={<DashboardIcon />}
+          >
+            Dashboard
+          </Button>
+
+          <Button
+            fullWidth
+            sx={{ justifyContent: "flex-start", color: "grey" }}
+            startIcon={<FeedOutlinedIcon />}
+          >
+            Rules Management
+          </Button>
+
+          <Button
+            fullWidth
+            sx={{ justifyContent: "flex-start", color: "grey" }}
+            startIcon={<ViewInArOutlinedIcon />}
+          >
+            Products Management
+          </Button>
+
+          <Button
+            fullWidth
+            sx={{ justifyContent: "flex-start", color: "grey" }}
+            startIcon={<SettingsIcon />}
+          >
+            Settings
+          </Button>
         </Box>
 
         {/* footer */}
@@ -53,8 +88,10 @@ const Sidebar = () => {
           </Box>
 
           <Box display="flex" justifyContent="center" mt={2}>
-            <Button>Theme</Button>
-            <Button color="error">Logout</Button>
+            <Button startIcon={<DarkModeOutlinedIcon />}>Theme</Button>
+            <Button startIcon={<LogoutOutlinedIcon />} color="error">
+              Logout
+            </Button>
           </Box>
         </Box>
       </Box>
