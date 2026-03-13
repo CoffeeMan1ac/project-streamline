@@ -1,20 +1,45 @@
 import "@testing-library/jest-dom/vitest";
 import { render, screen, fireEvent, within } from "@testing-library/react";
-import { describe, test, expect, vi } from "vitest";
+import { describe, test, expect, vi, beforeEach } from "vitest";
 import { MemoryRouter } from "react-router-dom";
-import axios from "axios";
 import QuotesPage from "../QuotesPage";
 
-vi.mock("axios");
+const mockHttp = {
+  get: vi.fn(),
+  post: vi.fn(),
+  put: vi.fn(),
+  patch: vi.fn(),
+  delete: vi.fn(),
+  interceptors: {
+    response: {
+      use: vi.fn(),
+    },
+  },
+};
+
+vi.mock("axios", () => ({
+  default: {
+    create: vi.fn(() => mockHttp),
+    isCancel: vi.fn(() => false),
+  },
+}));
 
 describe("QuotesPage", () => {
   let form: HTMLFormElement;
 
-  const renderWithRouter = () => {
-    (axios.get as any).mockResolvedValue({
+  beforeEach(() => {
+    vi.clearAllMocks();
+
+    mockHttp.get.mockResolvedValue({
       data: { name: "Basic", baseRate: 9.99 },
     });
 
+    mockHttp.post.mockResolvedValue({
+      data: {},
+    });
+  });
+
+  const renderWithRouter = () => {
     const utils = render(
       <MemoryRouter>
         <QuotesPage />
@@ -30,8 +55,11 @@ describe("QuotesPage", () => {
 
   test("renders main heading and subtitle", () => {
     renderWithRouter();
-    // If StrictMode / double render exists, this avoids "multiple elements" errors
-    expect(screen.getAllByRole("heading", { name: /Get Your Quote/i })[0]).toBeInTheDocument();
+
+    expect(
+      screen.getAllByRole("heading", { name: /Get Your Quote/i })[0]
+    ).toBeInTheDocument();
+
     expect(
       screen.getAllByText(/Fill in your details below to receive an instant quote/i)[0]
     ).toBeInTheDocument();
@@ -43,7 +71,6 @@ describe("QuotesPage", () => {
 
     expect(f.getByRole("heading", { name: /Personal Details/i })).toBeInTheDocument();
     expect(f.getByRole("heading", { name: /Phone Details/i })).toBeInTheDocument();
-    // expect(f.getByRole("heading", { name: /Coverage Type/i })).toBeInTheDocument();
   });
 
   test("renders all personal detail form fields", () => {
@@ -68,7 +95,6 @@ describe("QuotesPage", () => {
     expect(f.getByLabelText(/Country/i)).toBeInTheDocument();
     expect(f.getByLabelText(/Phone Make/i)).toBeInTheDocument();
     expect(f.getByLabelText(/Phone Model/i)).toBeInTheDocument();
-    // expect(f.getByRole("combobox", { name: /Select Coverage/i })).toBeInTheDocument();
   });
 
   test("renders submit button with correct text", () => {
@@ -99,8 +125,6 @@ describe("QuotesPage", () => {
     fireEvent.change(f.getByLabelText(/City/i), { target: { value: "Dublin" } });
     fireEvent.change(f.getByLabelText(/Postal Code/i), { target: { value: "D01 ABC" } });
 
-    // MUI Select menus render in a portal (outside the form), so open via scoped label,
-    // but click options via screen
     fireEvent.mouseDown(f.getByLabelText(/Country/i));
     fireEvent.click(screen.getByText(/Ireland/i));
 
@@ -114,6 +138,7 @@ describe("QuotesPage", () => {
 
     expect(f.getByText(/Valid email required/i)).toBeInTheDocument();
   });
+});
 
   // test("shows loading text when form is submitted", async () => {
   //   renderWithRouter();
