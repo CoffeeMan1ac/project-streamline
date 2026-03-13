@@ -60,7 +60,12 @@ const BackOfficeLoginPage = () => {
           Back Office Portal Login
         </Typography>
         <AuthCard onSubmit={handleLogin} />
-        <Button onClick={() => navigate("/")} variant="text" size="small" sx={{ color: "text.secondary", mt: 3 }}>
+        <Button
+          onClick={() => navigate("/")}
+          variant="text"
+          size="small"
+          sx={{ color: "text.secondary", mt: 3 }}
+        >
           <NavigateBeforeIcon />
           Back to Home
         </Button>
