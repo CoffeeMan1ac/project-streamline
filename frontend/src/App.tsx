@@ -16,6 +16,7 @@ import { AuthProvider } from "./components/AuthProvider";
 import Sandbox from "./dev/Sandbox";
 import Sidebar from "./components/Sidebar";
 import { useAuth } from "./context/AuthContext";
+import ProductManagementPage from "./pages/ProductManagementPage";
 
 function AppContent() {
   const { user } = useAuth();
@@ -56,6 +57,7 @@ function AppContent() {
             <Route path="/rules" element={<RulesManagementPage />} />
           </Route>
           <Route path="/sandbox" element={<Sandbox />} />
+            <Route path="/products-management" element={<ProductManagementPage />} />
         </Routes>
         <Footer />
       </Box>
