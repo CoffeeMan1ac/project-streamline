@@ -1,8 +1,8 @@
 package com.munichre.streamline.service;
 
+import com.munichre.streamline.decision.exception.FieldNotFoundException;
 import com.munichre.streamline.dto.DecisionStatus;
 import com.munichre.streamline.dto.EvaluationResult;
-import com.munichre.streamline.exception.FieldNotFoundException;
 import com.munichre.streamline.model.Rule;
 import com.munichre.streamline.model.RuleConfig;
 import com.munichre.streamline.model.RuleConfig.Condition;
