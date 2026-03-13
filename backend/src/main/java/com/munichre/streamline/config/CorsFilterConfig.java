@@ -20,7 +20,11 @@ public class CorsFilterConfig {
     config.setAllowCredentials(true);
     config.setAllowedOrigins(
         Arrays.asList(
-            "http://localhost:5173", "https://sit.phone-shield.com", "https://phone-shield.com"));
+            "http://localhost:5173",
+            "https://sit.phone-shield.com",
+            "https://phone-shield.com",
+            "https://api.sit.phone-shield.com",
+            "https://api.phone-shield.com"));
     config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
     config.setAllowedHeaders(
         Arrays.asList("Authorization", "Content-Type", "X-Requested-With", "Accept"));
