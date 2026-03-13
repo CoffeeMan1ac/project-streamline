@@ -5,8 +5,23 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import FeedOutlinedIcon from "@mui/icons-material/FeedOutlined";
 import ViewInArOutlinedIcon from "@mui/icons-material/ViewInArOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import { useState } from "react";
 
 const Sidebar = () => {
+  const [active, setActive] = useState("dashboard");
+
+  const getButtonStyle = (name) => ({
+  justifyContent: "flex-start",
+  textTransform: "none",
+  color: active === name ? "primary.contrastText" : "text.secondary",
+  backgroundColor: active === name ? "primary.main" : "transparent",
+
+  "&:hover": {
+    backgroundColor:
+      active === name ? "primary.dark" : "action.hover",
+  },
+});
+
   return (
     <Drawer
       variant="permanent"
@@ -23,16 +38,13 @@ const Sidebar = () => {
     >
       <Box p={2} display="flex" flexDirection="column" height="100%">
         {/* header */}
-        <Box pb={2} borderBottom="1px solid #e0e0e0">
+        <Box pb={2} borderBottom={1} borderColor="divider">
           <Box display="flex" alignItems="center">
             <Box component="img" src={"shield_logo.png"} alt="logo" sx={{ height: 70, mr: 1 }} />
 
             <Box flexGrow={1}>
               <Typography fontWeight={600} fontSize={16} color="primary.main">
-                Phone
-              </Typography>
-              <Typography fontWeight={600} fontSize={16} color="primary.main">
-                Shield
+                Phone Shield
               </Typography>
               <Typography fontSize={12} color="text.secondary">
                 Admin Portal
@@ -49,32 +61,36 @@ const Sidebar = () => {
         <Box mt={2} display="flex" gap={2} flexDirection="column">
           <Button
             fullWidth
-            sx={{ justifyContent: "flex-start", color: "grey" }}
+            sx={getButtonStyle("dashboard")}
             startIcon={<DashboardIcon />}
+            onClick={() => setActive("dashboard")}
           >
             Dashboard
           </Button>
 
           <Button
             fullWidth
-            sx={{ justifyContent: "flex-start", color: "grey" }}
+            sx={getButtonStyle("rules")}
             startIcon={<FeedOutlinedIcon />}
+            onClick={() => setActive("rules")}
           >
             Rules Management
           </Button>
 
           <Button
             fullWidth
-            sx={{ justifyContent: "flex-start", color: "grey" }}
+            sx={getButtonStyle("products")}
             startIcon={<ViewInArOutlinedIcon />}
+            onClick={() => setActive("products")}
           >
             Products Management
           </Button>
 
           <Button
             fullWidth
-            sx={{ justifyContent: "flex-start", color: "grey" }}
+            sx={getButtonStyle("settings")}
             startIcon={<SettingsIcon />}
+            onClick={() => setActive("settings")}
           >
             Settings
           </Button>
