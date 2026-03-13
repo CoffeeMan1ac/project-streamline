@@ -6,22 +6,27 @@ import FeedOutlinedIcon from "@mui/icons-material/FeedOutlined";
 import ViewInArOutlinedIcon from "@mui/icons-material/ViewInArOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const Sidebar = () => {
+type SidebarProps = {
+  toggleSidebar: () => void;
+};
+
+const Sidebar = ({ toggleSidebar }: SidebarProps) => {
   const [active, setActive] = useState("dashboard");
+  const navigate = useNavigate();
 
-  const getButtonStyle = (name) => ({
-  justifyContent: "flex-start",
-  textTransform: "none",
-  color: active === name ? "primary.contrastText" : "text.secondary",
-  backgroundColor: active === name ? "primary.main" : "transparent",
+  const getButtonStyle = (name: string) => ({
+    justifyContent: "flex-start",
+    textTransform: "none",
+    color: active === name ? "primary.contrastText" : "text.secondary",
+    backgroundColor: active === name ? "primary.main" : "transparent",
 
-  "&:hover": {
-    backgroundColor:
-      active === name ? "primary.dark" : "action.hover",
-  },
-});
-
+    "&:hover": {
+      backgroundColor: active === name ? "primary.dark" : "action.hover",
+    },
+  });
+  if (!open) return null;
   return (
     <Drawer
       variant="permanent"
@@ -51,7 +56,7 @@ const Sidebar = () => {
               </Typography>
             </Box>
 
-            <IconButton size="small">
+            <IconButton size="small" onClick={toggleSidebar}>
               <MenuIcon />
             </IconButton>
           </Box>
@@ -63,7 +68,10 @@ const Sidebar = () => {
             fullWidth
             sx={getButtonStyle("dashboard")}
             startIcon={<DashboardIcon />}
-            onClick={() => setActive("dashboard")}
+            onClick={() => {
+              setActive("dashboard");
+              navigate("/");
+            }}
           >
             Dashboard
           </Button>
@@ -72,7 +80,10 @@ const Sidebar = () => {
             fullWidth
             sx={getButtonStyle("rules")}
             startIcon={<FeedOutlinedIcon />}
-            onClick={() => setActive("rules")}
+            onClick={() => {
+              setActive("rules");
+              navigate("/rules-management");
+            }}
           >
             Rules Management
           </Button>
@@ -81,7 +92,9 @@ const Sidebar = () => {
             fullWidth
             sx={getButtonStyle("products")}
             startIcon={<ViewInArOutlinedIcon />}
-            onClick={() => setActive("products")}
+            onClick={() => {
+              setActive("products");
+            }}
           >
             Products Management
           </Button>
@@ -97,38 +110,39 @@ const Sidebar = () => {
         </Box>
 
         {/* footer */}
-      <Box
-        mt="auto"
-        pt={2}
-        borderTop={1}
-        borderColor="divider">
+        <Box mt="auto" pt={2} borderTop={1} borderColor="divider">
           <Box display="flex" alignItems="center" gap={1} px={1}>
-
-          <Box
-            sx={{
-              width: 36,
-              height: 36,
-              borderRadius: "50%",
-              backgroundColor: "primary.main",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontWeight: 600,
-              color: "white",
-            }}
-          >
-            A
-          </Box>
-            <Typography fontWeight={600} fontSize={14}>Admin User</Typography>
-            <Typography fontSize={12} color="text.secondary">Underwriter</Typography>
+            <Box
+              sx={{
+                width: 36,
+                height: 36,
+                borderRadius: "50%",
+                backgroundColor: "primary.main",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontWeight: 600,
+                color: "white",
+              }}
+            >
+              A
+            </Box>
+            <Box display="flex" flexDirection="column">
+              <Typography fontWeight={600} fontSize={14}>
+                Admin User
+              </Typography>
+              <Typography fontSize={12} color="text.secondary">
+                Underwriter
+              </Typography>
+            </Box>
           </Box>
         </Box>
-          <Box display="flex" justifyContent="space-between" mt={2} px={1}>
-            <Button startIcon={<LogoutOutlinedIcon />} color="error">
-              Logout
-            </Button>
-          </Box>
+        <Box display="flex" justifyContent="space-between" mt={2} px={1}>
+          <Button startIcon={<LogoutOutlinedIcon />} color="error">
+            Logout
+          </Button>
         </Box>
+      </Box>
     </Drawer>
   );
 };

@@ -6,13 +6,16 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { useAuth } from "../context/AuthContext";
 import { signOut } from "firebase/auth";
 import { auth } from "../config/firebase";
+import MenuIcon from "@mui/icons-material/Menu";
 
 type NavbarProps = {
   mode: "light" | "dark";
   toggleTheme: () => void;
+  toggleSidebar: () => void;
+  admin: boolean;
 };
 
-const Navbar = ({ mode, toggleTheme }: NavbarProps) => {
+const Navbar = ({ mode, toggleTheme, toggleSidebar, admin }: NavbarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
@@ -44,19 +47,28 @@ const Navbar = ({ mode, toggleTheme }: NavbarProps) => {
     >
       <Toolbar sx={{ justifyContent: "space-between" }}>
         {/* Logo and Title */}
-        <Box
-          sx={{ display: "flex", alignItems: "center", gap: 2, cursor: "pointer" }}
-          onClick={() => navigate("/")}
-        >
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          {/* sidebar button only appears when admin is logged in*/}
+          {admin && (
+            <IconButton color="inherit" onClick={toggleSidebar}>
+              <MenuIcon />
+            </IconButton>
+          )}
+
           <Box
-            component="img"
-            src={"shield_logo.png"}
-            alt="Phone Shield logo"
-            sx={{ height: 80 }}
-          />
-          <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
-            Phone Shield
-          </Typography>
+            sx={{ display: "flex", alignItems: "center", gap: 2, cursor: "pointer" }}
+            onClick={() => navigate("/")}
+          >
+            <Box
+              component="img"
+              src={"shield_logo.png"}
+              alt="Phone Shield logo"
+              sx={{ height: 80 }}
+            />
+            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+              Phone Shield
+            </Typography>
+          </Box>
         </Box>
 
         {/* Right: Navigation and Theme Toggle */}
