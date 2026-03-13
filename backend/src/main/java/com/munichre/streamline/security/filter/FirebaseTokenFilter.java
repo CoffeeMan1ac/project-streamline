@@ -3,12 +3,12 @@ package com.munichre.streamline.security.filter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
-import com.munichre.streamline.security.exception.UnauthenticatedException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collections;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,7 +19,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class FirebaseTokenFilter extends OncePerRequestFilter {
 
   private static final String BEARER_PREFIX = "Bearer ";
-  private static final String INVAILD_TOKEN_MESSAGE = "Invalid Firebase Token";
 
   @Override
   protected void doFilterInternal(
@@ -33,12 +32,12 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
         final FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
 
         final UsernamePasswordAuthenticationToken authenication =
-            new UsernamePasswordAuthenticationToken(decodedToken.getUid(), null);
+            new UsernamePasswordAuthenticationToken(
+                decodedToken.getUid(), null, Collections.emptyList());
 
         SecurityContextHolder.getContext().setAuthentication(authenication);
       } catch (FirebaseAuthException e) {
         SecurityContextHolder.clearContext();
-        throw new UnauthenticatedException(INVAILD_TOKEN_MESSAGE);
       }
     }
     chain.doFilter(request, response);

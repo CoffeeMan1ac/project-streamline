@@ -13,7 +13,7 @@ public class IdentityService {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
     if (isUnauthenticated(auth)) {
-      throw new UnauthenticatedException("Action requires an authenticated user.");
+      throw new UnauthenticatedException();
     }
 
     return (String) auth.getPrincipal();
