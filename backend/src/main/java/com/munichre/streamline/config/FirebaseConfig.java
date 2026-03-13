@@ -16,6 +16,9 @@ public class FirebaseConfig {
   @Value("${google.application.credentials:}")
   private String credentialsPath;
 
+  @Value("${firebase.project-id}")
+  private String projectId;
+
   @PostConstruct
   public void initialize() throws IOException {
     if (!FirebaseApp.getApps().isEmpty()) {
@@ -38,6 +41,7 @@ public class FirebaseConfig {
 
     FirebaseOptions options = FirebaseOptions.builder()
         .setCredentials(credentials)
+        .setProjectId(projectId)
         .build();
 
     FirebaseApp.initializeApp(options);
