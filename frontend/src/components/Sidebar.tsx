@@ -47,6 +47,11 @@ const Sidebar = () => {
             <Typography variant="h6">Admin User</Typography>
             <Typography variant="body2">Underwriter</Typography>
           </Box>
+
+          <Box display="flex" justifyContent="center" mt={2}>
+            <Button>Theme</Button>
+            <Button>Logout</Button>
+          </Box>
         </Box>
       </Box>
     </Drawer>
