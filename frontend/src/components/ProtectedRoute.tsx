@@ -3,10 +3,10 @@ import { useAuth } from "../context/AuthContext";
 import { CircularProgress, Box } from "@mui/material";
 
 const ProtectedRoute = () => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const location = useLocation();
 
-  if (user === undefined) {
+  if (loading && !user) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
         <CircularProgress />
