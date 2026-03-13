@@ -2,7 +2,6 @@ package com.munichre.streamline.config;
 
 import static com.munichre.streamline.constant.ApiRoutes.BACKOFFICE_API_ROOT;
 import static com.munichre.streamline.constant.ApiRoutes.CUSTOMER_API_ROOT;
-import static com.munichre.streamline.constant.ApiRoutes.SWAGGER_API_ROOT;
 
 import com.munichre.streamline.security.exception.UnauthenticatedException;
 import com.munichre.streamline.security.filter.FirebaseTokenFilter;
@@ -53,7 +52,8 @@ public class SecurityConfig {
                     .permitAll()
                     .requestMatchers(BACKOFFICE_API_ROOT)
                     .authenticated()
-                    .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs*/**").permitAll()
+                    .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs*/**")
+                    .permitAll()
                     .anyRequest()
                     .authenticated())
         .addFilterBefore(firebaseTokenFilter, UsernamePasswordAuthenticationFilter.class)
