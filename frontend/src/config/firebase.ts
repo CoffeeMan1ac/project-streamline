@@ -1,16 +1,6 @@
 import { initializeApp, type FirebaseApp } from "firebase/app";
 import { getAuth, type Auth } from "firebase/auth";
 
-interface FirebaseConfig {
-  apiKey: string;
-  authDomain: string;
-  projectId: string;
-  storageBucket: string;
-  messagingSenderId: string;
-  appId: string;
-  measurementId: string;
-}
-
 const firebaseConfig = {
   apiKey: "AIzaSyDIowfi9XS-bYj9L4Igd5l7UasvbA7taK0",
   authDomain: "streamline-488500.firebaseapp.com",
