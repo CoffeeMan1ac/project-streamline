@@ -301,6 +301,7 @@ deploy:sit:
     url: https://sit.phone-shield.com
   rules:
     - if: '$CI_COMMIT_BRANCH == "dev"'
+    - if: '$CI_COMMIT_BRANCH == "360-sit-environment-deployment"'
       when: on_success
   script:
     - SA_JSON="$CI_PROJECT_DIR/sa.json"
