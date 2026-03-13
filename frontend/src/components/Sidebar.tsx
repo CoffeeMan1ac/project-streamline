@@ -1,4 +1,4 @@
-import { Box, Drawer, Typography, IconButton } from "@mui/material";
+import { Box, Drawer, Typography, IconButton, Button } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 
 const Sidebar = () => {
@@ -31,6 +31,14 @@ const Sidebar = () => {
               <MenuIcon />
             </IconButton>
           </Box>
+        </Box>
+
+        {/* buttons */}
+        <Box mt={2} display="flex" alignItems="center" gap={2} flexDirection="column">
+          <Button>Dashboard</Button>
+          <Button>Rules Management</Button>
+          <Button>Dashboard</Button>
+          <Button>Dashboard</Button>
         </Box>
       </Box>
     </Drawer>
