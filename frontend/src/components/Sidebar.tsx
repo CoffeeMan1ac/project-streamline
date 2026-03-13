@@ -1,6 +1,14 @@
+import { Box, Toolbar, Drawer } from "@mui/material";
 const Sidebar = () => {
   return (
-    <div></div>
+    <Drawer variant="permanent" anchor="left" sx={{ position: "fixed" }}>
+      <Toolbar>
+        <Box>''</Box>
+        <Box></Box>
+
+        <Box></Box>
+      </Toolbar>
+    </Drawer>
   );
 };
 

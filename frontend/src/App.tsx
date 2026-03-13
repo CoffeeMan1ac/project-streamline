@@ -14,6 +14,7 @@ import React from "react";
 import BackOfficeLoginPage from "./pages/BackOfficeLoginPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./components/AuthProvider";
+import Sandbox from "./dev/sandbox";
 
 function App() {
   // state to manage theme:
@@ -49,7 +50,8 @@ function App() {
               <Route element={<ProtectedRoute />}>
                 <Route path="/rules" element={<RulesManagementPage />} />
               </Route>
-            </Routes>
+              <Route path="/sandbox" element={<Sandbox />} />
+          </Routes>
             <Footer />
           </BrowserRouter>
         </Box>
