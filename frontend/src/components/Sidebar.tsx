@@ -74,7 +74,7 @@ const Sidebar = ({ toggleSidebar }: SidebarProps) => {
                 Phone Shield
               </Typography>
               <Typography fontSize={12} color="text.secondary">
-                Admin Portal
+                Backoffice Portal
               </Typography>
             </Box>
 
@@ -91,8 +91,8 @@ const Sidebar = ({ toggleSidebar }: SidebarProps) => {
             sx={getButtonStyle("dashboard")}
             startIcon={<DashboardIcon />}
             onClick={() => {
-              setActive("dashboard");
-              navigate("/");
+              setActive("rules");
+              navigate("/rules");
             }}
           >
             Dashboard
@@ -104,7 +104,7 @@ const Sidebar = ({ toggleSidebar }: SidebarProps) => {
             startIcon={<FeedOutlinedIcon />}
             onClick={() => {
               setActive("rules");
-              navigate("/rules-management");
+              navigate("/rules");
             }}
           >
             Rules Management
