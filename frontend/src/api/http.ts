@@ -1,19 +1,25 @@
-import axios from "axios";
+import axios, { type InternalAxiosRequestConfig } from "axios";
+import { auth } from "../config/firebase";
 
 export const http = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8080",
   headers: { "Content-Type": "application/json" },
 });
 
-// Optional: nicer error messages
-http.interceptors.response.use(
-  (res) => res,
-  (err) => {
-    const msg =
-      err?.response?.data?.message ??
-      err?.response?.data?.error ??
-      err?.message ??
-      "Request failed";
-    return Promise.reject(new Error(msg));
+http.interceptors.request.use(
+  async (config: InternalAxiosRequestConfig) => {
+    const user = auth.currentUser;
+
+    if (user) {
+      const token = await user.getIdToken();
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
 );
+
+export default http;

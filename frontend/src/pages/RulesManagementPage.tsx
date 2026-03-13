@@ -61,8 +61,6 @@ const mapRuleResponseToRule = (dto: RuleResponseDto): Rule => ({
           : "-",
 });
 
-const API_BASE = import.meta.env.VITE_API_URL;
-
 const RulesManagementPage = () => {
   const [editRuleId, setEditRuleId] = useState<string | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
