@@ -1,4 +1,4 @@
-spring:
+﻿spring:
   application:
     name: streamline
     
@@ -28,6 +28,9 @@ server:
 google:
     application:
       credentials: ${GOOGLE_APPLICATION_CREDENTIALS:src/main/resources/serviceAccountKey.json}    
+
+firebase:
+  project-id: ${FIREBASE_PROJECT_ID:streamline-488500}
 
 logging:
   level:
