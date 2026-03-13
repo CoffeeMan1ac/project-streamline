@@ -127,20 +127,16 @@ frontend:containerise:
   needs: ["frontend:build"]
   variables:
     VITE_API_URL: "https://api.phone-shield.com"
-    BUILD_MODE: "prod"
   rules:
     - if: '$CI_COMMIT_BRANCH == "dev"'
       variables:
         VITE_API_URL: "https://api.sit.phone-shield.com"
-        BUILD_MODE: "sit"
     - if: '$CI_COMMIT_BRANCH == "360-sit-environment-deployment"'
       variables:
         VITE_API_URL: "https://api.sit.phone-shield.com"
-        BUILD_MODE: "sit"
     - if: '$CI_COMMIT_BRANCH == "main"'
       variables:
         VITE_API_URL: "https://api.phone-shield.com"
-        BUILD_MODE: "prod"
     - when: on_success
   script:
     - export AR_HOST="${GCP_REGION}-docker.pkg.dev"
@@ -166,7 +162,6 @@ frontend:containerise:
       /kaniko/executor \
         --context "${CI_PROJECT_DIR}/frontend" \
         --dockerfile "${CI_PROJECT_DIR}/frontend/Dockerfile" \
-        --build-arg BUILD_MODE="${BUILD_MODE}" \
         --build-arg VITE_API_URL="${VITE_API_URL}" \
         --destination "${FRONTEND_IMAGE_URI}:${CI_COMMIT_SHA}" \
         --destination "${FRONTEND_IMAGE_URI}:latest"
