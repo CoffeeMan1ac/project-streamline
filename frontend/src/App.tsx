@@ -8,13 +8,12 @@ import Footer from "./components/Footer";
 import AcceptPage from "./pages/AcceptPage";
 import DeclinePage from "./pages/DeclinePage";
 import RulesManagementPage from "./pages/RulesManagementPage";
-import CreateRulePage from "./pages/CreateRulePage";
 import { ThemeProvider, CssBaseline, Box } from "@mui/material";
 import { lightTheme, darkTheme } from "./theme/theme";
 import React from "react";
 import BackOfficeLoginPage from "./pages/BackOfficeLoginPage";
-import CreateProductPage from "./pages/CreateProductPage";
-import EditProductPage from "./pages/EditProductPage";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { AuthProvider } from "./components/AuthProvider";
 
 function App() {
   // state to manage theme:
@@ -28,33 +27,34 @@ function App() {
   const theme = mode === "light" ? lightTheme : darkTheme;
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          minHeight: "100vh",
-          bgcolor: "background.default",
-        }}
-      >
-        <BrowserRouter>
-          <Navbar mode={mode} toggleTheme={toggleTheme} />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/quote" element={<QuotesPage />} />
-            <Route path="/rules-management" element={<RulesManagementPage />} />
-            <Route path="/accepted" element={<AcceptPage />} />
-            <Route path="/declined" element={<DeclinePage />} />
-            <Route path="/createRule" element={<CreateRulePage />} />
-            <Route path="/loginPage" element={<BackOfficeLoginPage />} />
-            <Route path="/createProduct" element={<CreateProductPage />} />
-            <Route path="/editProduct" element={<EditProductPage />} />
-          </Routes>
-          <Footer />
-        </BrowserRouter>
-      </Box>
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            minHeight: "100vh",
+            bgcolor: "background.default",
+          }}
+        >
+          <BrowserRouter>
+            <Navbar mode={mode} toggleTheme={toggleTheme} />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/quote" element={<QuotesPage />} />
+              <Route path="/accepted" element={<AcceptPage />} />
+              <Route path="/declined" element={<DeclinePage />} />
+              <Route path="/login" element={<BackOfficeLoginPage />} />
+              <Route element={<ProtectedRoute />}>
+                <Route path="/rules" element={<RulesManagementPage />} />
+              </Route>
+            </Routes>
+            <Footer />
+          </BrowserRouter>
+        </Box>
+      </ThemeProvider>
+    </AuthProvider>
   );
 }
 

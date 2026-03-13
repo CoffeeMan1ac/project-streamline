@@ -4,11 +4,12 @@ import RuleTable from "../components/RuleTable";
 import SelectProduct from "../components/SelectProduct";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { Dialog } from "@mui/material";
 import EditRulePage from "../pages/EditRulePage";
 import CreateRulePage from "./CreateRulePage";
+import api from "../api/api";
 
 type ProductOption = {
   id: string;
@@ -72,43 +73,33 @@ const RulesManagementPage = () => {
     setSearchParams({ product: productId });
   };
   useEffect(() => {
-    fetch("/api/backoffice/products/options")
-      .then((res) => res.json())
-      .then((data: ProductOption[]) => setProducts(data))
+    api
+      .get<ProductOption[]>("/api/backoffice/products/options")
+      .then((res) => setProducts(res.data))
       .catch((err) => console.error("Failed to fetch products:", err));
   }, []);
 
-  useEffect(() => {
+  const fetchRules = useCallback(() => {
     if (!selectedProduct) return;
-
-    fetch(`/api/backoffice/rules?product=${selectedProduct}`)
-      .then((res) => res.json())
-      .then((data: RuleResponseDto[]) => setRules(data.map(mapRuleResponseToRule)))
-      .catch((err) => {
-        console.error("Failed to fetch rules:", err);
-        setRules([]);
-      });
+    api
+      .get<RuleResponseDto[]>(`/api/backoffice/rules?product=${selectedProduct}`)
+      .then((res) => setRules(res.data.map(mapRuleResponseToRule)))
+      .catch((err) => console.error("Failed to fetch rules:", err));
   }, [selectedProduct]);
 
-  const fetchRules = () => {
-    if (!selectedProduct) return;
-    fetch(`/api/backoffice/rules?product=${selectedProduct}`)
-      .then((res) => res.json())
-      .then((data: RuleResponseDto[]) => setRules(data.map(mapRuleResponseToRule)))
-      .catch((err) => console.error("Failed to fetch rules:", err));
-  };
+  useEffect(() => {
+    fetchRules();
+  }, [fetchRules]);
 
   const handleToggleRuleActive = async (order: number) => {
     const rule = rules.find((r) => r.order === order);
     if (!rule) return;
 
     try {
-      await fetch(`/api/backoffice/rules/${rule.id}/active`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ active: !rule.active }),
+      await api.patch(`/api/backoffice/rules/${rule.id}/active`, {
+        active: !rule.active,
       });
-      // only update local state if the backend call succeeded
+
       setRules((prevRules) =>
         prevRules.map((r) => (r.order === order ? { ...r, active: !r.active } : r))
       );
@@ -119,14 +110,10 @@ const RulesManagementPage = () => {
 
   const handleReorderRule = async (ruleId: string, newPriority: number) => {
     try {
-      await fetch("/api/backoffice/rules/reorder", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          product: selectedProduct,
-          rule: ruleId,
-          priority: newPriority,
-        }),
+      await api.put("/api/backoffice/rules/reorder", {
+        product: selectedProduct,
+        rule: ruleId,
+        priority: newPriority,
       });
       fetchRules();
     } catch (err) {
