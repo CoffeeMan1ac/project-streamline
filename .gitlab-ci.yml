@@ -119,7 +119,7 @@ frontend:build:
       - $FRONTEND_DIR/dist/
     expire_in: 1 week
 
-docker:build:frontend:
+frontend:containerise:
   stage: build
   image:
     name: gcr.io/kaniko-project/executor:debug
@@ -244,25 +244,26 @@ backend:build:
   image: maven:3.9.6-eclipse-temurin-21
   needs: ["backend:test"]
   cache:
-    key:
-      files:
-        - $BACKEND_DIR/pom.xml
+    key: "backend-jar-$CI_COMMIT_REF_SLUG"
     paths:
+      - $BACKEND_DIR/target/*.jar
       - .m2/repository/
+    policy: push
   script:
     - cd $BACKEND_DIR
     - mvn -B -DskipTests package
-  artifacts:
-    paths:
-      - $BACKEND_DIR/target/*.jar
-    expire_in: 1 week
 
-docker:build:backend:
+backend:containerise:
   stage: build
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]
   needs: ["backend:build"]
+  cache:
+    key: "backend-jar-$CI_COMMIT_REF_SLUG"
+    paths:
+      - $BACKEND_DIR/target/*.jar
+    policy: pull
   script:
     - export AR_HOST="${GCP_REGION}-docker.pkg.dev"
     - export BACKEND_IMAGE_URI="${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/backend-prod"
@@ -291,15 +292,39 @@ docker:build:backend:
         --destination "${BACKEND_IMAGE_URI}:${CI_COMMIT_SHA}" \
         --destination "${BACKEND_IMAGE_URI}:latest"
 
-deploy:cloudrun:
+deploy:sit:
   stage: deploy
   image: google/cloud-sdk:slim
-  needs: ["docker:build:backend", "docker:build:frontend"]
+  needs: ["backend:containerise", "frontend:containerise"]
+  environment:
+    name: sit
+    url: https://sit.phone-shield.com
   rules:
-    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+    - if: '$CI_COMMIT_BRANCH == "dev"'
       when: on_success
-    - when: manual
-      allow_failure: true
+  script:
+    - SA_JSON="$CI_PROJECT_DIR/sa.json"
+    - printf '%s' "$GCP_SA_KEY_B64" | tr -d '\n\r ' | base64 -d > "$SA_JSON"
+    - gcloud auth activate-service-account --key-file="$SA_JSON"
+    - gcloud config set project "$GCP_PROJECT_ID"
+
+    - export AR_HOST="${GCP_REGION}-docker.pkg.dev"
+    - export BACKEND_IMAGE_URI="${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/backend-prod"
+    - export FRONTEND_IMAGE_URI="${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/frontend-prod"
+
+    - gcloud run deploy "$BACKEND_SERVICE" --image "${BACKEND_IMAGE_URI}:${CI_COMMIT_SHA}" --region "$GCP_REGION" --platform managed --quiet
+    - gcloud run deploy "$FRONTEND_SERVICE" --image "${FRONTEND_IMAGE_URI}:${CI_COMMIT_SHA}" --region "$GCP_REGION" --platform managed --quiet
+  
+deploy:production:
+  stage: deploy
+  image: google/cloud-sdk:slim
+  needs: ["backend:containerise", "frontend:containerise"]
+  environment:
+    name: production
+    url: https://phone-shield.com
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: on_success
   script:
     - SA_JSON="$CI_PROJECT_DIR/sa.json"
     - printf '%s' "$GCP_SA_KEY_B64" | tr -d '\n\r ' | base64 -d > "$SA_JSON"
