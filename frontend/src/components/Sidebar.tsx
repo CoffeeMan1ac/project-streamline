@@ -7,6 +7,8 @@ import ViewInArOutlinedIcon from "@mui/icons-material/ViewInArOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { auth } from "../config/firebase";
 
 type SidebarProps = {
   toggleSidebar: () => void;
@@ -160,7 +162,14 @@ const Sidebar = ({ toggleSidebar }: SidebarProps) => {
           </Box>
         </Box>
         <Box display="flex" justifyContent="space-between" mt={2} px={1}>
-          <Button startIcon={<LogoutOutlinedIcon />} color="error">
+          <Button
+            startIcon={<LogoutOutlinedIcon />}
+            color="error"
+            onClick={async () => {
+              await signOut(auth);
+              navigate("/login");
+            }}
+          >
             Logout
           </Button>
         </Box>
