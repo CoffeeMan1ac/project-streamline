@@ -14,7 +14,7 @@ import React from "react";
 import BackOfficeLoginPage from "./pages/BackOfficeLoginPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./components/AuthProvider";
-import Sandbox from "./dev/sandbox";
+import Sandbox from "./dev/Sandbox";
 
 function App() {
   // state to manage theme:
