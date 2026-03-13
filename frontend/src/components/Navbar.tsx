@@ -2,6 +2,10 @@ import { AppBar, Toolbar, Typography, Button, Box, IconButton } from "@mui/mater
 import { useLocation, useNavigate } from "react-router-dom";
 import { Brightness4, Brightness7 } from "@mui/icons-material";
 import LoginIcon from "@mui/icons-material/Login";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { useAuth } from "../context/AuthContext";
+import { signOut } from "firebase/auth";
+import { auth } from "../config/firebase";
 
 type NavbarProps = {
   mode: "light" | "dark";
@@ -11,6 +15,16 @@ type NavbarProps = {
 const Navbar = ({ mode, toggleTheme }: NavbarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
   const handleGetQuoteClick = () => {
     if (location.pathname === "/" && location.hash === "#quotes") {
@@ -50,9 +64,15 @@ const Navbar = ({ mode, toggleTheme }: NavbarProps) => {
           <Button color="inherit" sx={{ mr: 2 }} onClick={handleGetQuoteClick}>
             Get a Quote
           </Button>
-          <IconButton color="inherit" onClick={() => navigate("/login")} sx={{ p: 2 }}>
-            <LoginIcon />
-          </IconButton>
+          {!user ? (
+            <IconButton color="inherit" onClick={() => navigate("/login")} sx={{ p: 2 }}>
+              <LoginIcon />
+            </IconButton>
+          ) : (
+            <IconButton color="inherit" onClick={handleLogout} sx={{ p: 2 }}>
+              <LogoutIcon />
+            </IconButton>
+          )}
           <IconButton color="inherit" onClick={toggleTheme} sx={{ p: 2 }}>
             {mode === "dark" ? <Brightness7 /> : <Brightness4 />}
           </IconButton>
