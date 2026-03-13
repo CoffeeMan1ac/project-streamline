@@ -11,14 +11,13 @@ interface FirebaseConfig {
   measurementId: string;
 }
 
-const firebaseConfig: FirebaseConfig = {
-  apiKey: "AIzaSyDWDlTDJYs_uczHgSGCQA1t8KfWzs737bY",
-  authDomain: "streamline-77320.firebaseapp.com",
-  projectId: "streamline-77320",
-  storageBucket: "streamline-77320.firebasestorage.app",
-  messagingSenderId: "744908411681",
-  appId: "1:744908411681:web:4dcfbd29cb6f92f9c2a460",
-  measurementId: "G-K53PKKFXB6",
+const firebaseConfig = {
+  apiKey: "AIzaSyDIowfi9XS-bYj9L4Igd5l7UasvbA7taK0",
+  authDomain: "streamline-488500.firebaseapp.com",
+  projectId: "streamline-488500",
+  storageBucket: "streamline-488500.firebasestorage.app",
+  messagingSenderId: "312037930726",
+  appId: "1:312037930726:web:090f8814d6045b9e6d6d27",
 };
 
 const app: FirebaseApp = initializeApp(firebaseConfig);
