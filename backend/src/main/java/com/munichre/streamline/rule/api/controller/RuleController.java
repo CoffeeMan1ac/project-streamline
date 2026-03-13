@@ -1,9 +1,9 @@
-package com.munichre.streamline.controller;
+package com.munichre.streamline.rule.api.controller;
 
 import static com.munichre.streamline.constant.ApiRoutes.BACKOFFICE_API_BASE;
 
-import com.munichre.streamline.dto.RuleResponseDto;
-import com.munichre.streamline.service.RuleService;
+import com.munichre.streamline.rule.api.dto.RuleResponseDto;
+import com.munichre.streamline.rule.service.RuleService;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;

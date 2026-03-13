@@ -1,8 +1,9 @@
-package com.munichre.streamline.service;
+package com.munichre.streamline.quote.service;
 
-import com.munichre.streamline.dto.EvaluationResult;
-import com.munichre.streamline.model.Quotation;
-import com.munichre.streamline.repository.QuotationRepository;
+import com.munichre.streamline.decision.dto.Decision;
+import com.munichre.streamline.decision.service.DecisionService;
+import com.munichre.streamline.quote.model.Quotation;
+import com.munichre.streamline.quote.repository.QuotationRepository;
 import java.security.SecureRandom;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +21,8 @@ public class QuotationService {
   private final DecisionService decisionService;
   private final QuotationRepository quotationRepository;
 
-  public EvaluationResult createQuote(Map<String, Object> payload) {
-    EvaluationResult evaluation = decisionService.evaluate(payload);
+  public Decision createQuote(Map<String, Object> payload) {
+    Decision evaluation = decisionService.evaluate(payload);
 
     Quotation quotation =
         Quotation.builder()
@@ -39,14 +40,14 @@ public class QuotationService {
     return evaluation;
   }
 
-  public EvaluationResult getQuoteByReference(String reference) {
+  public Decision getQuoteByReference(String reference) {
     Quotation quotation =
         quotationRepository
             .findByReference(reference)
             .orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Quote not found"));
 
-    return EvaluationResult.builder()
+    return Decision.builder()
         .reference(quotation.getReference())
         .status(quotation.getStatus())
         .reason(quotation.getReason())

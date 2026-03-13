@@ -1,6 +1,6 @@
-package com.munichre.streamline.model;
+package com.munichre.streamline.quote.model;
 
-import com.munichre.streamline.dto.DecisionStatus;
+import com.munichre.streamline.decision.model.DecisionStatus;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;

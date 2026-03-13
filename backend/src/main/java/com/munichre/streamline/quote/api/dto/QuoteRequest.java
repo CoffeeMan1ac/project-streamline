@@ -1,4 +1,4 @@
-package com.munichre.streamline.dto;
+package com.munichre.streamline.quote.api.dto;
 
 import java.util.Map;
 import lombok.AllArgsConstructor;

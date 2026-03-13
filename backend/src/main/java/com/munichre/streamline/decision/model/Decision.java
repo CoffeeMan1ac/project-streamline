@@ -1,4 +1,4 @@
-package com.munichre.streamline.model;
+package com.munichre.streamline.decision.model;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;

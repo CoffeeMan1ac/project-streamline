@@ -1,9 +1,9 @@
-package com.munichre.streamline.controller;
+package com.munichre.streamline.quote.api.controller;
 
 import static com.munichre.streamline.constant.ApiRoutes.CUSTOMER_API_BASE;
 
-import com.munichre.streamline.dto.EvaluationResult;
-import com.munichre.streamline.service.QuotationService;
+import com.munichre.streamline.decision.dto.Decision;
+import com.munichre.streamline.quote.service.QuotationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -31,19 +31,19 @@ public class QuotationController {
         @ApiResponse(
             responseCode = "200",
             description = "Quote successfully evaluated",
-            content = @Content(schema = @Schema(implementation = EvaluationResult.class))),
+            content = @Content(schema = @Schema(implementation = Decision.class))),
         @ApiResponse(responseCode = "400", description = "Invalid request payload"),
         @ApiResponse(responseCode = "500", description = "Internal server error")
       })
   @PostMapping
-  public ResponseEntity<EvaluationResult> createQuote(@RequestBody Map<String, Object> payload) {
-    EvaluationResult result = quotationService.createQuote(payload);
+  public ResponseEntity<Decision> createQuote(@RequestBody Map<String, Object> payload) {
+    Decision result = quotationService.createQuote(payload);
     return ResponseEntity.ok(result);
   }
 
   @GetMapping("/{reference}")
-  public ResponseEntity<EvaluationResult> getQuoteByReference(@PathVariable String reference) {
-    EvaluationResult quote = quotationService.getQuoteByReference(reference);
+  public ResponseEntity<Decision> getQuoteByReference(@PathVariable String reference) {
+    Decision quote = quotationService.getQuoteByReference(reference);
     return ResponseEntity.ok(quote);
   }
 }

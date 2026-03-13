@@ -1,5 +1,6 @@
-package com.munichre.streamline.dto;
+package com.munichre.streamline.decision.dto;
 
+import com.munichre.streamline.decision.model.DecisionStatus;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EvaluationResult {
+public class Decision {
   private String reference;
   private DecisionStatus status;
   private String reason;
@@ -22,24 +23,24 @@ public class EvaluationResult {
   @Builder.Default private boolean evaluationStopped = false;
   private String stoppedByRule;
 
-  public static EvaluationResult accepted(BigDecimal premium) {
-    return EvaluationResult.builder()
+  public static Decision accepted(BigDecimal premium) {
+    return Decision.builder()
         .status(DecisionStatus.ACCEPTED)
         .premium(premium)
         .rulesApplied(new ArrayList<>())
         .build();
   }
 
-  public static EvaluationResult declined(String reason, String ruleName) {
-    return EvaluationResult.builder()
+  public static Decision declined(String reason, String ruleName) {
+    return Decision.builder()
         .status(DecisionStatus.DECLINED)
         .reason(reason)
         .rulesApplied(List.of(ruleName))
         .build();
   }
 
-  public static EvaluationResult refer(String reason, String ruleName) {
-    return EvaluationResult.builder()
+  public static Decision refer(String reason, String ruleName) {
+    return Decision.builder()
         .status(DecisionStatus.REFER)
         .reason(reason)
         .rulesApplied(List.of(ruleName))

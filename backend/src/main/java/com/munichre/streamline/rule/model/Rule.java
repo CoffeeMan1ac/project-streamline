@@ -1,4 +1,4 @@
-package com.munichre.streamline.model;
+package com.munichre.streamline.rule.model;
 
 import com.munichre.streamline.product.model.Product;
 import jakarta.persistence.*;

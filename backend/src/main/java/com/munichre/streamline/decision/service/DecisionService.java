@@ -1,16 +1,16 @@
-package com.munichre.streamline.service;
+package com.munichre.streamline.decision.service;
 
+import com.munichre.streamline.decision.dto.Decision;
 import com.munichre.streamline.decision.exception.FieldNotFoundException;
-import com.munichre.streamline.dto.DecisionStatus;
-import com.munichre.streamline.dto.EvaluationResult;
-import com.munichre.streamline.model.Rule;
-import com.munichre.streamline.model.RuleConfig;
-import com.munichre.streamline.model.RuleConfig.Condition;
-import com.munichre.streamline.model.RuleConfig.Then;
-import com.munichre.streamline.model.RuleConfig.When;
+import com.munichre.streamline.decision.model.DecisionStatus;
 import com.munichre.streamline.product.model.Product;
 import com.munichre.streamline.product.service.ProductService;
-import com.munichre.streamline.repository.RuleRepository;
+import com.munichre.streamline.rule.model.Rule;
+import com.munichre.streamline.rule.model.RuleConfig;
+import com.munichre.streamline.rule.model.RuleConfig.Condition;
+import com.munichre.streamline.rule.model.RuleConfig.Then;
+import com.munichre.streamline.rule.model.RuleConfig.When;
+import com.munichre.streamline.rule.repository.RuleRepository;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,16 +43,13 @@ public class DecisionService {
   private final RuleRepository ruleRepository;
   private final ProductService productService;
 
-  // // TODO: FieldNotFoundException not implemented.
-  // private static final BigDecimal BASE_PREMIUM = new BigDecimal("10.00");
-
   /**
    * The one function. Takes the hashmap, returns the decision.
    *
    * @param fields hashmap of ALL fields from the incoming request
    * @return EvaluationResult with status (ACCEPTED/DECLINED/REFER), premium, reason, rules applied
    */
-  public EvaluationResult evaluate(Map<String, Object> fields) {
+  public Decision evaluate(Map<String, Object> fields) {
     long startTime = System.currentTimeMillis();
     BigDecimal delta = BigDecimal.ONE;
     log.info("Starting rule evaluation with {} fields", fields.size());
@@ -108,7 +105,7 @@ public class DecisionService {
           }
 
           log.info("Rule '{}' has stop=true. Stopping.", rule.getName());
-          EvaluationResult result =
+          Decision result =
               buildResult(
                   DecisionStatus.DECLINED,
                   BigDecimal.ZERO,
@@ -138,7 +135,7 @@ public class DecisionService {
 
           if (config.getStop()) {
             log.info("Rule '{}' has stop=true. Stopping.", rule.getName());
-            EvaluationResult result =
+            Decision result =
                 buildResult(
                     DecisionStatus.ACCEPTED,
                     premium.multiply(delta),
@@ -156,7 +153,7 @@ public class DecisionService {
             reasons.add(rule.getReason());
           }
 
-          EvaluationResult result =
+          Decision result =
               buildResult(
                   DecisionStatus.REFER,
                   premium.multiply(delta),
@@ -280,13 +277,13 @@ public class DecisionService {
   // Result builder
   // ──────────────────────────────────────────────────────────
 
-  private EvaluationResult buildResult(
+  private Decision buildResult(
       DecisionStatus status,
       BigDecimal premium,
       String reason,
       List<String> rulesApplied,
       long startTime) {
-    EvaluationResult result = new EvaluationResult();
+    Decision result = new Decision();
     result.setStatus(status);
     result.setPremium(premium);
     result.setReason(reason);

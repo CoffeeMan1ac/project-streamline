@@ -1,6 +1,6 @@
-package com.munichre.streamline.repository;
+package com.munichre.streamline.rule.repository;
 
-import com.munichre.streamline.model.Rule;
+import com.munichre.streamline.rule.model.Rule;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;

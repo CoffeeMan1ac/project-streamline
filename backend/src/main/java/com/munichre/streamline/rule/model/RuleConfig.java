@@ -1,4 +1,4 @@
-package com.munichre.streamline.model;
+package com.munichre.streamline.rule.model;
 
 import java.math.BigDecimal;
 import java.util.List;

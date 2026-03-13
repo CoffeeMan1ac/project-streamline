@@ -1,6 +1,6 @@
-package com.munichre.streamline.dto;
+package com.munichre.streamline.rule.api.dto;
 
-import com.munichre.streamline.model.Rule;
+import com.munichre.streamline.rule.model.Rule;
 import java.time.LocalDateTime;
 import java.util.UUID;
 

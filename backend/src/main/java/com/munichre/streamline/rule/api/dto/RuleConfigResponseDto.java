@@ -1,6 +1,6 @@
-package com.munichre.streamline.dto;
+package com.munichre.streamline.rule.api.dto;
 
-import com.munichre.streamline.model.RuleConfig;
+import com.munichre.streamline.rule.model.RuleConfig;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
