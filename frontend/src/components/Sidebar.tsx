@@ -1,5 +1,9 @@
 import { Box, Drawer, Typography, IconButton, Button } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import SettingsIcon from "@mui/icons-material/Settings";
+import FeedOutlinedIcon from '@mui/icons-material/FeedOutlined';
+import ViewInArOutlinedIcon from '@mui/icons-material/ViewInArOutlined';
 
 const Sidebar = () => {
   return (
@@ -35,10 +39,10 @@ const Sidebar = () => {
 
         {/* buttons */}
         <Box mt={2} display="flex" alignItems="center" gap={2} flexDirection="column">
-          <Button>Dashboard</Button>
-          <Button>Rules Management</Button>
-          <Button>Dashboard</Button>
-          <Button>Dashboard</Button>
+          <Button startIcon={<DashboardIcon />}>Dashboard</Button>
+          <Button startIcon={<FeedOutlinedIcon />}>Rules Management</Button>
+          <Button startIcon={<ViewInArOutlinedIcon />}>Products Management</Button>
+          <Button startIcon={<SettingsIcon />}>Settings</Button>
         </Box>
 
         {/* footer */}
@@ -50,7 +54,7 @@ const Sidebar = () => {
 
           <Box display="flex" justifyContent="center" mt={2}>
             <Button>Theme</Button>
-            <Button>Logout</Button>
+            <Button color="error">Logout</Button>
           </Box>
         </Box>
       </Box>
