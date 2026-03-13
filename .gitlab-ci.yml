@@ -346,8 +346,19 @@ deploy:production:
     - gcloud config set project "$GCP_PROJECT_ID"
 
     - export AR_HOST="${GCP_REGION}-docker.pkg.dev"
-    - export BACKEND_IMAGE_URI="${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/backend-prod"
-    - export FRONTEND_IMAGE_URI="${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/frontend-prod"
+    - export BACKEND_IMAGE_URI="${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/backend"
+    - export FRONTEND_IMAGE_URI="${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/frontend"
 
-    - gcloud run deploy "$BACKEND_SERVICE" --image "${BACKEND_IMAGE_URI}:${CI_COMMIT_SHA}" --region "$GCP_REGION" --platform managed --quiet
-    - gcloud run deploy "$FRONTEND_SERVICE" --image "${FRONTEND_IMAGE_URI}:${CI_COMMIT_SHA}" --region "$GCP_REGION" --platform managed --quiet
+    - gcloud run deploy backend-prod \
+        --image "${BACKEND_IMAGE_URI}:${CI_COMMIT_SHA}" \
+        --region "$GCP_REGION" \
+        --platform managed \
+        --allow-unauthenticated \
+        --quiet
+
+    - gcloud run deploy frontend-prod \
+        --image "${FRONTEND_IMAGE_URI}:${CI_COMMIT_SHA}" \
+        --region "$GCP_REGION" \
+        --platform managed \
+        --allow-unauthenticated \
+        --quiet
