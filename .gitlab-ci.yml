@@ -318,7 +318,8 @@ deploy:sit:
         --region "$GCP_REGION" \
         --platform managed \
         --add-cloudsql-instances "${GCP_PROJECT_ID}:${GCP_REGION}:streamline-sit" \
-        --set-env-vars "SPRING_PROFILES_ACTIVE=sit,SPRING_DATASOURCE_URL=jdbc:postgresql:///streamline_sit" \
+        --set-env-vars "SPRING_PROFILES_ACTIVE=sit" \
+        --set-env-vars "SPRING_DATASOURCE_URL=jdbc:postgresql:///streamline_sit?socketFactory=com.google.cloud.sql.postgres.SocketFactory&cloudSqlInstance=${GCP_PROJECT_ID}:${GCP_REGION}:streamline-sit" \
         --set-secrets "SPRING_DATASOURCE_USERNAME=DB_USER_SIT:latest,SPRING_DATASOURCE_PASSWORD=DB_PASS_SIT:latest" \
         --allow-unauthenticated \
         --quiet
