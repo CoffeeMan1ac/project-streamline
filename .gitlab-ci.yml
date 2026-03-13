@@ -197,6 +197,10 @@ backend:test:
     SPRING_DATASOURCE_PASSWORD: password
 
     SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+
+
+    GOOGLE_APPLICATION_CREDENTIALS: "$FIREBASE_SERVICE_ACCOUNT"
+    
   cache:
     key:
       files:

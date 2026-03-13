@@ -4,9 +4,9 @@ spring:
     
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/streamline}
-    username: ${SPRING_DATASOURCE_USERNAME:app_user}
-    password: ${SPRING_DATASOURCE_PASSWORD:app_pass}
-    
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+  
   jpa:
     hibernate:
       ddl-auto: update
@@ -24,6 +24,10 @@ spring:
 
 server:
   port: 8080
+
+google:
+    application:
+      credentials: ${GOOGLE_APPLICATION_CREDENTIALS:src/main/resources/serviceAccountKey.json}    
 
 logging:
   level:
