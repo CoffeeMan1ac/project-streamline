@@ -2,10 +2,27 @@ import "@testing-library/jest-dom/vitest";
 import { render, screen } from "@testing-library/react";
 import { describe, test, expect, vi, beforeEach } from "vitest";
 import { MemoryRouter } from "react-router-dom";
-import axios from "axios";
 import ProductSection, { type ApiProduct } from "../ProductSection";
 
-vi.mock("axios");
+const mockHttp = {
+  get: vi.fn(),
+  post: vi.fn(),
+  put: vi.fn(),
+  patch: vi.fn(),
+  delete: vi.fn(),
+  interceptors: {
+    response: {
+      use: vi.fn(),
+    },
+  },
+};
+
+vi.mock("axios", () => ({
+  default: {
+    create: vi.fn(() => mockHttp),
+    isCancel: vi.fn(() => false),
+  },
+}));
 
 const mockProducts: ApiProduct[] = [
   {
@@ -42,8 +59,8 @@ const mockProducts: ApiProduct[] = [
 
 describe("ProductSection", () => {
   beforeEach(() => {
-    vi.resetAllMocks();
-    (axios.get as any).mockResolvedValue({ data: mockProducts });
+    vi.clearAllMocks();
+    mockHttp.get.mockResolvedValue({ data: mockProducts });
   });
 
   test("renders section heading and subtitle", async () => {
@@ -52,12 +69,15 @@ describe("ProductSection", () => {
         <ProductSection />
       </MemoryRouter>
     );
+
     expect(
       screen.getByRole("heading", { name: /Choose Your Protection Plan/i })
     ).toBeInTheDocument();
+
     expect(
       screen.getByText(/Select the coverage that best fits your lifestyle/i)
     ).toBeInTheDocument();
+
     await screen.findAllByText(/Get a Quote/i);
   });
 
