@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -24,6 +25,12 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain chain)
       throws ServletException, IOException {
+
+    if (HttpMethod.OPTIONS.matches(request.getMethod())) {
+      chain.doFilter(request, response);
+      return;
+    }
+
     final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
     if (header != null && header.startsWith(BEARER_PREFIX)) {
