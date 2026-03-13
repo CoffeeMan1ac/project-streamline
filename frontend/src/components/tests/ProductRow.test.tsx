@@ -14,9 +14,11 @@ describe("ProductRow", () => {
       productName: "Standard Shield",
       modifiedBy: "Michael Brown",
       status: "active",
+      active: true,
       price: "€9.99/month",
       coverageSummary: "Accidental Damage, Theft",
       tags: [],
+      onToggleActive: vi.fn(),
       onEdit: vi.fn(),
       ...overrides,
     };
@@ -55,6 +57,13 @@ describe("ProductRow", () => {
     expect(screen.getAllByText("Accidental Damage, Theft")[0]).toBeInTheDocument();
   });
 
+  test("calls onToggleActive when power button is clicked", () => {
+    const onToggleActive = vi.fn();
+    renderRow({ onToggleActive });
+    fireEvent.click(screen.getByTestId("toggle-button"));
+    expect(onToggleActive).toHaveBeenCalledTimes(1);
+  });
+
   test("calls onEdit when edit button is clicked", () => {
     const onEdit = vi.fn();
     renderRow({ onEdit });
@@ -63,7 +72,7 @@ describe("ProductRow", () => {
   });
 
   test("renders inactive chip without success styling", () => {
-    renderRow({ status: "inactive" });
+    renderRow({ status: "inactive", active: false });
     expect(screen.getByText("inactive")).toBeInTheDocument();
   });
 

@@ -17,14 +17,20 @@ interface ProductTableProps {
     productName: string;
     modifiedBy: string;
     status: string;
+    active: boolean;
     price: string;
     coverageSummary: string;
     tags?: string[];
   }[];
   onEditProduct: (id: string) => void;
+  onToggleProductActive: (id: string) => void;
 }
 
-const ProductTable: React.FC<ProductTableProps> = ({ products, onEditProduct }) => {
+const ProductTable: React.FC<ProductTableProps> = ({
+  products,
+  onEditProduct,
+  onToggleProductActive,
+}) => {
   return (
     <Box border={1} borderColor="divider" borderRadius={2} bgcolor={"background.paper"}>
       <TableContainer component={Paper}>
@@ -45,9 +51,11 @@ const ProductTable: React.FC<ProductTableProps> = ({ products, onEditProduct }) 
                 productName={product.productName}
                 modifiedBy={product.modifiedBy}
                 status={product.status}
+                active={product.active}
                 price={product.price}
                 coverageSummary={product.coverageSummary}
                 tags={product.tags}
+                onToggleActive={() => onToggleProductActive(product.id)}
                 onEdit={() => onEditProduct(product.id)}
               />
             ))}
