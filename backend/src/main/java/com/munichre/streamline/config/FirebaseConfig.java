@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class FirebaseConfig {
 
-  @Value("${google.application.credentials:#{null}}")
+  @Value("${google.application.credentials:}")
   private String credentialsPath;
 
   @PostConstruct
@@ -24,12 +24,16 @@ public class FirebaseConfig {
 
     GoogleCredentials credentials;
 
-    if (credentialsPath != null && !credentialsPath.isEmpty()) {
-      try (InputStream is = new FileInputStream(credentialsPath)) {
-        credentials = GoogleCredentials.fromStream(is);
-      }
-    } else {
+    try {
       credentials = GoogleCredentials.getApplicationDefault();
+    } catch (IOException adcException) {
+      if (credentialsPath != null && !credentialsPath.isBlank()) {
+        try (InputStream is = new FileInputStream(credentialsPath)) {
+          credentials = GoogleCredentials.fromStream(is);
+        }
+      } else {
+        throw new RuntimeException("Failed to load Google credentials", adcException);
+      }
     }
 
     FirebaseOptions options = FirebaseOptions.builder()
