@@ -127,7 +127,7 @@ frontend:containerise:
   needs: ["frontend:build"]
   script:
     - export AR_HOST="${GCP_REGION}-docker.pkg.dev"
-    - export FRONTEND_IMAGE_URI="${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/frontend-prod"
+    - export FRONTEND_IMAGE_URI="${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/frontend"
 
     # Write SA json somewhere guaranteed to exist + be writable
     - SA_JSON="${CI_PROJECT_DIR}/sa.json"
@@ -266,7 +266,7 @@ backend:containerise:
     policy: pull
   script:
     - export AR_HOST="${GCP_REGION}-docker.pkg.dev"
-    - export BACKEND_IMAGE_URI="${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/backend-prod"
+    - export BACKEND_IMAGE_URI="${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/backend"
 
     # Write SA json somewhere guaranteed to exist + be writable
     - SA_JSON="${CI_PROJECT_DIR}/sa.json"
@@ -309,11 +309,25 @@ deploy:sit:
     - gcloud config set project "$GCP_PROJECT_ID"
 
     - export AR_HOST="${GCP_REGION}-docker.pkg.dev"
-    - export BACKEND_IMAGE_URI="${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/backend-prod"
-    - export FRONTEND_IMAGE_URI="${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/frontend-prod"
+    - export BACKEND_IMAGE_URI="${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/backend"
+    - export FRONTEND_IMAGE_URI="${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/frontend"
 
-    - gcloud run deploy "$BACKEND_SERVICE" --image "${BACKEND_IMAGE_URI}:${CI_COMMIT_SHA}" --region "$GCP_REGION" --platform managed --quiet
-    - gcloud run deploy "$FRONTEND_SERVICE" --image "${FRONTEND_IMAGE_URI}:${CI_COMMIT_SHA}" --region "$GCP_REGION" --platform managed --quiet
+    - gcloud run deploy backend-sit \
+        --image "${BACKEND_IMAGE_URI}:${CI_COMMIT_SHA}" \
+        --region "$GCP_REGION" \
+        --platform managed \
+        --add-cloudsql-instances "${GCP_PROJECT_ID}:${GCP_REGION}:streamline-sit" \
+        --set-env-vars "SPRING_PROFILES_ACTIVE=sit,SPRING_DATASOURCE_URL=jdbc:postgresql:///streamline_sit" \
+        --set-secrets "SPRING_DATASOURCE_USERNAME=DB_USER_SIT:latest,SPRING_DATASOURCE_PASSWORD=DB_PASS_SIT:latest" \
+        --allow-unauthenticated \
+        --quiet
+
+    - gcloud run deploy frontend-sit \
+        --image "${FRONTEND_IMAGE_URI}:${CI_COMMIT_SHA}" \
+        --region "$GCP_REGION" \
+        --platform managed \
+        --allow-unauthenticated \
+        --quiet
   
 deploy:production:
   stage: deploy
