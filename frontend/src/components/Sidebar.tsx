@@ -44,8 +44,30 @@ const Sidebar = ({ toggleSidebar }: SidebarProps) => {
       <Box p={2} display="flex" flexDirection="column" height="100%">
         {/* header */}
         <Box pb={2} borderBottom={1} borderColor="divider">
-          <Box display="flex" alignItems="center">
-            <Box component="img" src={"shield_logo.png"} alt="logo" sx={{ height: 70, mr: 1 }} />
+          <Box display="flex" alignItems="center" gap={2}>
+            <Box
+              sx={{
+                width: 50,
+                height: 50,
+                borderRadius: "50%",
+                backgroundColor: "primary.main",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                overflow: "hidden",
+              }}
+            >
+              <img
+                src="shield_logo.png"
+                alt="Logo"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "contain",
+                  transform: "translateY(2px)",
+                }}
+              />
+            </Box>
 
             <Box flexGrow={1}>
               <Typography fontWeight={600} fontSize={16} color="primary.main">
