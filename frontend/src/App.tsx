@@ -57,7 +57,7 @@ function AppContent() {
             <Route path="/rules" element={<RulesManagementPage />} />
           </Route>
           <Route path="/sandbox" element={<Sandbox />} />
-            <Route path="/products-management" element={<ProductManagementPage />} />
+          <Route path="/products-management" element={<ProductManagementPage />} />
         </Routes>
         <Footer />
       </Box>
