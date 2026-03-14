@@ -166,6 +166,7 @@ frontend:containerise:
       /kaniko/executor \
         --context "${CI_PROJECT_DIR}/frontend" \
         --dockerfile "${CI_PROJECT_DIR}/frontend/Dockerfile" \
+        --custom-platform linux/amd64 \
         --build-arg BUILD_MODE="${BUILD_MODE}" \
         --build-arg VITE_API_URL="${VITE_API_URL}" \
         --destination "${FRONTEND_IMAGE_URI}:${CI_COMMIT_SHA}" \
@@ -307,6 +308,7 @@ backend:containerise:
       /kaniko/executor \
         --context "${CI_PROJECT_DIR}/backend" \
         --dockerfile "${CI_PROJECT_DIR}/backend/Dockerfile" \
+        --custom-platform linux/amd64 \
         --destination "${BACKEND_IMAGE_URI}:${CI_COMMIT_SHA}" \
         --destination "${BACKEND_IMAGE_URI}:latest"
 
