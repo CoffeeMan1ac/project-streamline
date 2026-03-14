@@ -9,6 +9,7 @@ public record ProductDto(
     BigDecimal baseRate,
     String name,
     String description,
+    boolean active,
     List<ProductTagDto> tags,
     ProductTypeDto type,
     List<CoverageDto> coverages,

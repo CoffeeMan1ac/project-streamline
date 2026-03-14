@@ -173,6 +173,14 @@ public class ProductService {
     productRepository.saveAndFlush(product);
   }
 
+  @Transactional
+  public void toggleProductActive(UUID id) {
+    Product product =
+        productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
+    product.setActive(!product.getActive());
+    productRepository.save(product);
+  }
+
   public ProductType getProductType(UUID productTypeId) {
     return productTypeRepository.findProductTypeById(productTypeId);
   }
@@ -190,6 +198,7 @@ public class ProductService {
           row.baseRate(),
           row.name(),
           row.description(),
+          row.active(),
           mapTags(tags),
           new ProductTypeDto(row.typeId(), row.typeCode(), row.typeLabel()),
           mapCoverages(coverageRows),

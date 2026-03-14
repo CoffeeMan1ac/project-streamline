@@ -289,6 +289,7 @@ public class ProductServiceTest {
           productRow.baseRate(),
           productRow.name(),
           productRow.description(),
+          productRow.active(),
           tags,
           new ProductTypeDto(productRow.typeId(), productRow.typeCode(), productRow.typeLabel()),
           coverages,
