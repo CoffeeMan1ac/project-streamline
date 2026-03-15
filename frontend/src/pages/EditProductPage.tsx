@@ -10,38 +10,17 @@ import {
   InputLabel,
   Button,
   InputAdornment,
+  Alert,
+  CircularProgress,
 } from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CloseIcon from "@mui/icons-material/Close";
 import RemoveIcon from "@mui/icons-material/Remove";
-import LocalOfferIcon from "@mui/icons-material/LocalOffer";
-import SpaOutlinedIcon from "@mui/icons-material/SpaOutlined";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
-
-const coverageOptions = [
-  "Accidental Damage",
-  "Liquid Damage",
-  "Extended Warranty",
-  "Data Recovery",
-  "Theft",
-  "Screen Damage",
-  "Worldwide Coverage",
-  "Battery Replacement",
-];
-
-const exclusionOptions = [
-  "Accidental Damage",
-  "Liquid Damage",
-  "Extended Warranty",
-  "Data Recovery",
-  "Theft",
-  "Screen Damage",
-  "Worldwide Coverage",
-  "Battery Replacement",
-];
+import { productService, type CoverageOption, type TagOption } from "../services/productService";
 
 interface EditProductPageProps {
   id?: string | null;
@@ -60,6 +39,10 @@ const EditProductPage = ({ id, onClose, onSave }: EditProductPageProps) => {
   const [selectedExclusions, setSelectedExclusions] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [coverageOptions, setCoverageOptions] = useState<CoverageOption[]>([]);
+  const [tagOptions, setTagOptions] = useState<TagOption[]>([]);
 
   const startDateRef = useRef<HTMLInputElement>(null);
   const endDateRef = useRef<HTMLInputElement>(null);
@@ -75,142 +58,105 @@ const EditProductPage = ({ id, onClose, onSave }: EditProductPageProps) => {
   });
 
   useEffect(() => {
-    if (!id) return;
+    const fetchAll = async () => {
+      if (!id) return;
+      try {
+        const [productRes, coveragesRes, tagsRes] = await Promise.all([
+          productService.getProduct(id),
+          productService.getCoverages(),
+          productService.getTags(),
+        ]);
 
-    fetch(`/api/admin/products/${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setProductName(data.productName ?? "");
-        setStatus(data.status ?? "");
-        setDescription(data.description ?? "");
-        setMonthlyPrice(data.monthlyPrice ?? "");
-        setStartDate(data.startDate ?? "");
-        setEndDate(data.endDate ?? "");
-        setSelectedCoverages(data.selectedCoverages ?? []);
-        setSelectedExclusions(data.selectedExclusions ?? []);
-        setSelectedTags(data.selectedTags ?? []);
-      })
-      .catch((err) => console.error("Failed to fetch product:", err));
+        const p = productRes.data;
+        setProductName(p.name);
+        setStatus(p.active ? "active" : "inactive");
+        setDescription(p.description);
+        setMonthlyPrice(p.baseRate.toString());
+        setStartDate(p.startDate ? p.startDate.split("T")[0] : "");
+        setEndDate(p.endDate ? p.endDate.split("T")[0] : "");
+        setSelectedCoverages(p.coverages.map((c) => c.id));
+        setSelectedExclusions(p.exclusions.map((e) => e.id));
+        setSelectedTags(p.tags.map((t) => t.id));
+
+        setCoverageOptions(coveragesRes.data);
+        setTagOptions(tagsRes.data);
+      } catch {
+        setSubmitError("Failed to load product. Please try again.");
+      } finally {
+        setIsFetching(false);
+      }
+    };
+    fetchAll();
   }, [id]);
 
-  const toggleCoverage = (coverage: string) => {
-    if (selectedExclusions.includes(coverage)) return;
+  const toggleCoverage = (id: string) => {
+    if (selectedExclusions.includes(id)) return;
     setSelectedCoverages((prev) =>
-      prev.includes(coverage) ? prev.filter((c) => c !== coverage) : [...prev, coverage]
+      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]
     );
     setErrors((prev) => ({ ...prev, coverages: "" }));
   };
 
-  const toggleExclusion = (exclusion: string) => {
-    if (selectedCoverages.includes(exclusion)) return;
+  const toggleExclusion = (id: string) => {
+    if (selectedCoverages.includes(id)) return;
     setSelectedExclusions((prev) =>
-      prev.includes(exclusion) ? prev.filter((e) => e !== exclusion) : [...prev, exclusion]
+      prev.includes(id) ? prev.filter((e) => e !== id) : [...prev, id]
     );
   };
 
-  const toggleTag = (tag: string) => {
+  const toggleTag = (id: string) => {
+    setSelectedTags((prev) => (prev.includes(id) ? prev.filter((t) => t !== id) : [...prev, id]));
     setErrors((prev) => ({ ...prev, tags: "" }));
-    if (tag === "None") {
-      setSelectedTags((prev) => (prev.includes("None") ? [] : ["None"]));
-    } else {
-      setSelectedTags((prev) => {
-        const without = prev.filter((t) => t !== "None");
-        return without.includes(tag) ? without.filter((t) => t !== tag) : [...without, tag];
-      });
-    }
   };
 
   const validateForm = () => {
     const newErrors = {
-      productName: "",
-      status: "",
-      description: "",
-      monthlyPrice: "",
-      startDate: "",
-      coverages: "",
-      exclusions: "",
+      productName: !productName ? "Required" : "",
+      status: !status ? "Required" : "",
+      description: !description ? "Required" : "",
+      monthlyPrice: !monthlyPrice ? "Required" : "",
+      startDate: !startDate ? "Required" : "",
+      coverages: selectedCoverages.length === 0 ? "Please select at least one coverage" : "",
       tags: "",
     };
-
-    if (!productName) newErrors.productName = "Required";
-    if (!status) newErrors.status = "Required";
-    if (!description) newErrors.description = "Required";
-    if (!monthlyPrice) newErrors.monthlyPrice = "Required";
-    if (!startDate) newErrors.startDate = "Required";
-    if (selectedCoverages.length === 0) newErrors.coverages = "Please select at least one coverage";
-    if (selectedExclusions.length === 0)
-      newErrors.exclusions = "Please select at least one exclusion";
-    if (selectedTags.length === 0) newErrors.tags = "Please select at least one tag";
-
     setErrors(newErrors);
-
-    return Object.values(newErrors).every((error) => error === "");
+    return Object.values(newErrors).every((e) => e === "");
   };
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    if (!validateForm()) return;
+    if (!validateForm() || !id) return;
 
     setIsLoading(true);
+    setSubmitError(null);
 
     try {
-      const payload = {
-        productName,
-        status,
+      await productService.updateProduct(id, {
+        name: productName,
         description,
-        monthlyPrice,
-        startDate,
-        endDate,
-        selectedCoverages,
-        selectedExclusions,
-        selectedTags,
-      };
-
-      const res = await fetch(`/api/admin/products/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        baseRate: parseFloat(monthlyPrice),
+        startDate: new Date(startDate).toISOString(),
+        endDate: endDate ? new Date(endDate).toISOString() : null,
+        coverages: selectedCoverages,
+        exclusions: selectedExclusions,
+        tags: selectedTags,
       });
-
-      if (!res.ok) throw new Error("Failed to save product");
       onSave?.();
       onClose?.();
-    } catch (err) {
-      console.error(err);
+    } catch {
+      setSubmitError("Failed to save product. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const tagConfig = [
-    {
-      key: "None",
-      label: "None",
-      subtitle: "Standard product display.",
-      icon: <LocalOfferIcon sx={{ fontSize: 16 }} />,
-      selectedColor: "#616161",
-      selectedBorder: "#616161",
-      selectedBg: "#f0f0f0",
-    },
-    {
-      key: "Green",
-      label: "Green",
-      subtitle: "Renders with green styling and sustainability features.",
-      icon: <SpaOutlinedIcon sx={{ fontSize: 16 }} />,
-      selectedColor: "#2e7d32",
-      selectedBorder: "#2e7d32",
-      selectedBg: "#f0faf0",
-    },
-    {
-      key: "Popular",
-      label: "Popular",
-      subtitle: "Renders with thicker border to highlight popularity.",
-      icon: <LocalOfferIcon sx={{ fontSize: 16 }} />,
-      selectedColor: "#0167b2",
-      selectedBorder: "#0167b2",
-      selectedBg: "#e8f1fb",
-    },
-  ];
+  if (isFetching) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight={400}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <>
@@ -236,6 +182,13 @@ const EditProductPage = ({ id, onClose, onSave }: EditProductPageProps) => {
               margin: "0 -24px 16px -24px",
             }}
           />
+
+          {submitError && (
+            <Alert severity="error" sx={{ mb: 2 }} onClose={() => setSubmitError(null)}>
+              {submitError}
+            </Alert>
+          )}
+
           <Box component="form" onSubmit={handleSubmit}>
             <Typography variant="h6" fontWeight="bold" sx={{ color: "text.primary", mb: 2 }}>
               Basic Information
@@ -260,7 +213,6 @@ const EditProductPage = ({ id, onClose, onSave }: EditProductPageProps) => {
                   sx={{ mb: 3 }}
                 />
               </Box>
-
               <Box sx={{ flex: 1 }}>
                 <Typography variant="body1" gutterBottom sx={{ color: "text.primary" }}>
                   Status *
@@ -326,12 +278,11 @@ const EditProductPage = ({ id, onClose, onSave }: EditProductPageProps) => {
             <Typography variant="body2" sx={{ color: "text.secondary", mb: 2 }}>
               Base monthly price. Final price will be calculated based on rules.
             </Typography>
-
             <Typography variant="body1" gutterBottom sx={{ color: "text.primary" }}>
               Monthly Price *
             </Typography>
             <TextField
-              placeholder="e.g., €14.99/month"
+              placeholder="e.g., 14.99"
               value={monthlyPrice}
               onChange={(e) => {
                 setMonthlyPrice(e.target.value);
@@ -341,12 +292,12 @@ const EditProductPage = ({ id, onClose, onSave }: EditProductPageProps) => {
               helperText={errors.monthlyPrice}
               disabled={isLoading}
               sx={{ mb: 3, width: "50%" }}
+              InputProps={{ startAdornment: <InputAdornment position="start">€</InputAdornment> }}
             />
 
             <Typography variant="h6" fontWeight="bold" sx={{ color: "text.primary", mb: 2, mt: 1 }}>
               Validity Period
             </Typography>
-
             <Box sx={{ display: "flex", gap: 2, alignItems: "flex-start" }}>
               <Box sx={{ flex: 1 }}>
                 <Typography variant="body1" gutterBottom sx={{ color: "text.primary" }}>
@@ -385,7 +336,6 @@ const EditProductPage = ({ id, onClose, onSave }: EditProductPageProps) => {
                   sx={{ mb: 3 }}
                 />
               </Box>
-
               <Box sx={{ flex: 1 }}>
                 <Typography variant="body1" gutterBottom sx={{ color: "text.primary" }}>
                   End Date
@@ -425,10 +375,8 @@ const EditProductPage = ({ id, onClose, onSave }: EditProductPageProps) => {
               Coverage Details
             </Typography>
             <Typography variant="body2" sx={{ color: "text.secondary", mb: 2 }}>
-              Select coverages to include in this product. These will be displayed on the product
-              cards.
+              Select coverages to include in this product.
             </Typography>
-
             <Box
               sx={{
                 border: "1px solid #e0e0e0",
@@ -439,12 +387,12 @@ const EditProductPage = ({ id, onClose, onSave }: EditProductPageProps) => {
             >
               <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1.5 }}>
                 {coverageOptions.map((coverage) => {
-                  const selected = selectedCoverages.includes(coverage);
-                  const disabled = selectedExclusions.includes(coverage);
+                  const selected = selectedCoverages.includes(coverage.id);
+                  const disabled = selectedExclusions.includes(coverage.id);
                   return (
                     <Box
-                      key={coverage}
-                      onClick={() => toggleCoverage(coverage)}
+                      key={coverage.id}
+                      onClick={() => toggleCoverage(coverage.id)}
                       sx={{
                         display: "flex",
                         alignItems: "center",
@@ -478,14 +426,13 @@ const EditProductPage = ({ id, onClose, onSave }: EditProductPageProps) => {
                         variant="body2"
                         sx={{ color: selected ? "text.primary" : "#6e6d6d" }}
                       >
-                        {coverage}
+                        {coverage.label}
                       </Typography>
                     </Box>
                   );
                 })}
               </Box>
             </Box>
-
             {errors.coverages && (
               <div
                 style={{
@@ -505,22 +452,15 @@ const EditProductPage = ({ id, onClose, onSave }: EditProductPageProps) => {
             <Typography variant="body2" sx={{ color: "text.secondary", mb: 2 }}>
               Select exclusions to apply to this product. These items will NOT be covered.
             </Typography>
-
-            <Box
-              sx={{
-                border: "1px solid #e0e0e0",
-                borderRadius: 2,
-                p: 2,
-              }}
-            >
+            <Box sx={{ border: "1px solid #e0e0e0", borderRadius: 2, p: 2, mb: 3 }}>
               <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1.5 }}>
-                {exclusionOptions.map((exclusion) => {
-                  const selected = selectedExclusions.includes(exclusion);
-                  const disabled = selectedCoverages.includes(exclusion);
+                {coverageOptions.map((exclusion) => {
+                  const selected = selectedExclusions.includes(exclusion.id);
+                  const disabled = selectedCoverages.includes(exclusion.id);
                   return (
                     <Box
-                      key={exclusion}
-                      onClick={() => toggleExclusion(exclusion)}
+                      key={exclusion.id}
+                      onClick={() => toggleExclusion(exclusion.id)}
                       sx={{
                         display: "flex",
                         alignItems: "center",
@@ -550,7 +490,7 @@ const EditProductPage = ({ id, onClose, onSave }: EditProductPageProps) => {
                         variant="body2"
                         sx={{ color: selected ? "text.primary" : "#6e6d6d" }}
                       >
-                        {exclusion}
+                        {exclusion.label}
                       </Typography>
                     </Box>
                   );
@@ -562,84 +502,50 @@ const EditProductPage = ({ id, onClose, onSave }: EditProductPageProps) => {
               Product Tags
             </Typography>
             <Typography variant="body2" sx={{ color: "text.secondary", mb: 2 }}>
-              Tags affect how the product is displayed on the website.
+              Tags affect how the product is displayed on the website. Optional — leave unselected
+              for standard display.
             </Typography>
-
-            <Box
-              sx={{ display: "flex", flexDirection: "column", gap: 1.5, mb: errors.tags ? 0.5 : 3 }}
-            >
-              {tagConfig.map((tag) => {
-                const selected = selectedTags.includes(tag.key);
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5, mb: 3 }}>
+              {tagOptions.map((tag) => {
+                const selected = selectedTags.includes(tag.id);
+                const isGreen = tag.code === "GREEN";
+                const selectedColor = isGreen ? "#2e7d32" : "#0167b2";
+                const selectedBg = isGreen ? "#f0faf0" : "#e8f1fb";
                 return (
                   <Box
-                    key={tag.key}
-                    onClick={() => toggleTag(tag.key)}
+                    key={tag.id}
+                    onClick={() => toggleTag(tag.id)}
                     sx={{
                       display: "flex",
                       alignItems: "center",
                       gap: 2,
                       p: 2,
                       borderRadius: 1.5,
-                      border: selected
-                        ? `1.5px solid ${tag.selectedBorder}`
-                        : "1.5px solid #e0e0e0",
-                      bgcolor: selected ? tag.selectedBg : "background.paper",
+                      border: selected ? `1.5px solid ${selectedColor}` : "1.5px solid #e0e0e0",
+                      bgcolor: selected ? selectedBg : "background.paper",
                       cursor: "pointer",
                       transition: "all 0.15s ease",
-                      "&:hover": {
-                        bgcolor: selected ? tag.selectedBg : "action.hover",
-                      },
+                      "&:hover": { bgcolor: selected ? selectedBg : "action.hover" },
                     }}
                   >
                     {selected ? (
-                      <CheckBoxIcon sx={{ color: tag.selectedColor, fontSize: 22 }} />
+                      <CheckBoxIcon sx={{ color: selectedColor, fontSize: 22 }} />
                     ) : (
                       <CheckBoxOutlineBlankIcon sx={{ color: "#c0c0c0", fontSize: 22 }} />
                     )}
                     <Box sx={{ flex: 1 }}>
-                      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                        <Box
-                          sx={{
-                            color: selected ? tag.selectedColor : "#c0c0c0",
-                            display: "flex",
-                            alignItems: "center",
-                            mt: "3px",
-                          }}
-                        >
-                          {tag.icon}
-                        </Box>
-                        <Typography
-                          variant="body2"
-                          fontWeight="bold"
-                          sx={{ color: selected ? tag.selectedColor : "#6e6d6d" }}
-                        >
-                          {tag.label}
-                        </Typography>
-                      </Box>
                       <Typography
-                        variant="caption"
-                        sx={{ color: selected ? tag.selectedColor : "#9e9e9e", display: "block" }}
+                        variant="body2"
+                        fontWeight="bold"
+                        sx={{ color: selected ? selectedColor : "#6e6d6d" }}
                       >
-                        {tag.subtitle}
+                        {tag.label}
                       </Typography>
                     </Box>
                   </Box>
                 );
               })}
             </Box>
-
-            {errors.tags && (
-              <div
-                style={{
-                  color: "#d32f2f",
-                  fontSize: "12px",
-                  marginTop: "4px",
-                  marginBottom: "24px",
-                }}
-              >
-                {errors.tags}
-              </div>
-            )}
 
             <hr
               style={{
