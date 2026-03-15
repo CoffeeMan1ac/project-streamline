@@ -2,8 +2,16 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-import { useState } from "react";
-import { Dialog, FormControl, Select, MenuItem, Paper } from "@mui/material";
+import { useState, useEffect } from "react";
+import {
+  Dialog,
+  FormControl,
+  Select,
+  MenuItem,
+  Paper,
+  CircularProgress,
+  Alert,
+} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
 import TuneIcon from "@mui/icons-material/Tune";
@@ -11,69 +19,66 @@ import InputAdornment from "@mui/material/InputAdornment";
 import EditProductPage from "./EditProductPage";
 import CreateProductPage from "./CreateProductPage";
 import ProductTable from "../components/ProductTable";
-
-const MOCK_PRODUCTS = [
-  {
-    id: "1",
-    productName: "Basic Health Cover",
-    modifiedBy: "admin@example.com",
-    status: "active",
-    active: true,
-    price: "€49.99/mo",
-    coverageSummary: "GP visits, prescriptions, outpatient",
-    tags: ["health", "basic"],
-  },
-  {
-    id: "2",
-    productName: "Comprehensive Life Insurance",
-    modifiedBy: "admin@example.com",
-    status: "retired",
-    active: true,
-    price: "€89.99/mo",
-    coverageSummary: "Life cover up to €500k, critical illness",
-    tags: ["life", "premium"],
-  },
-  {
-    id: "3",
-    productName: "Travel Insurance Plus",
-    modifiedBy: "ops@example.com",
-    status: "inactive",
-    active: false,
-    price: "€12.99/mo",
-    coverageSummary: "Worldwide cover, cancellation, medical",
-    tags: ["travel"],
-  },
-];
+import { productService, type ProductDto } from "../services/productService";
 
 const ProductManagementPage = () => {
   const [editProductId, setEditProductId] = useState<string | null>(null);
   const [createProductOpen, setCreateProductOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [products, setProducts] = useState<ProductDto[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const filteredProducts = MOCK_PRODUCTS.filter((product) => {
-    const matchesSearch = product.productName.toLowerCase().includes(searchQuery.toLowerCase());
-
-    const matchesStatus = statusFilter === "all" || product.status === statusFilter;
-
-    return matchesSearch && matchesStatus;
-  });
-
-  const handleToggleProductActive = (id: string) => {
-    // TODO: wire up to API
-    console.log("Toggle active for product", id);
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const { data } = await productService.getProducts();
+      setProducts(data);
+    } catch {
+      setError("Failed to load products. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const handleToggleProductActive = async (id: string) => {
+    try {
+      await productService.toggleProductActive(id);
+      setProducts((prev) => prev.map((p) => (p.id === id ? { ...p, active: !p.active } : p)));
+    } catch {
+      setError("Failed to update product. Please try again.");
+    }
+  };
+
+  const filteredProducts = products
+    .filter((p) => p.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    .filter((p) => {
+      if (statusFilter === "all") return true;
+      if (statusFilter === "active") return p.active;
+      if (statusFilter === "inactive") return !p.active;
+      return true;
+    })
+    .map((p) => ({
+      id: p.id,
+      productName: p.name,
+      modifiedBy: "-",
+      status: p.active ? "active" : "inactive",
+      active: p.active,
+      price: `€${p.baseRate.toFixed(2)}/mo`,
+      coverageSummary: p.description,
+      tags: p.tags.map((t) => t.label),
+    }));
 
   return (
     <>
       <Box sx={{ mx: 20, my: 4 }}>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-          }}
-        >
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
           <Box>
             <Typography variant="h4" sx={{ fontWeight: 700 }}>
               Products Management
@@ -140,11 +145,23 @@ const ProductManagementPage = () => {
           </Paper>
         </Box>
 
-        <ProductTable
-          products={filteredProducts}
-          onEditProduct={(id) => setEditProductId(id)}
-          onToggleProductActive={handleToggleProductActive}
-        />
+        {error && (
+          <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
+            {error}
+          </Alert>
+        )}
+
+        {loading ? (
+          <Box display="flex" justifyContent="center" py={8}>
+            <CircularProgress />
+          </Box>
+        ) : (
+          <ProductTable
+            products={filteredProducts}
+            onEditProduct={(id) => setEditProductId(id)}
+            onToggleProductActive={handleToggleProductActive}
+          />
+        )}
       </Box>
 
       <Dialog
@@ -153,7 +170,12 @@ const ProductManagementPage = () => {
         maxWidth="md"
         fullWidth
       >
-        <CreateProductPage onClose={() => setCreateProductOpen(false)} />
+        <CreateProductPage
+          onClose={() => {
+            setCreateProductOpen(false);
+            fetchProducts();
+          }}
+        />
       </Dialog>
 
       <Dialog
@@ -162,7 +184,13 @@ const ProductManagementPage = () => {
         maxWidth="md"
         fullWidth
       >
-        <EditProductPage id={editProductId} onClose={() => setEditProductId(null)} />
+        <EditProductPage
+          id={editProductId}
+          onClose={() => {
+            setEditProductId(null);
+            fetchProducts();
+          }}
+        />
       </Dialog>
     </>
   );

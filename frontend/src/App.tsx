@@ -55,9 +55,9 @@ function AppContent() {
           <Route path="/login" element={<BackOfficeLoginPage />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/rules" element={<RulesManagementPage />} />
+            <Route path="/products-management" element={<ProductManagementPage />} />
           </Route>
           <Route path="/sandbox" element={<Sandbox />} />
-          <Route path="/products-management" element={<ProductManagementPage />} />
         </Routes>
         <Footer />
       </Box>
