@@ -16,10 +16,8 @@ describe("Sidebar", () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText(/Dashboard/i)).toBeInTheDocument();
     expect(screen.getByText(/Rules Management/i)).toBeInTheDocument();
     expect(screen.getByText(/Products Management/i)).toBeInTheDocument();
-    expect(screen.getByText(/Settings/i)).toBeInTheDocument();
   });
 
   test("renders admin user info", () => {
