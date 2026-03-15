@@ -26,7 +26,6 @@ function AppContent() {
   const [sidebarOpen, setSidebarOpen] = React.useState(true);
 
   const toggleTheme = () => setMode((prev) => (prev === "light" ? "dark" : "light"));
-  const toggleSidebar = () => setSidebarOpen((prev) => !prev);
   const theme = mode === "light" ? lightTheme : darkTheme;
   const isBackOffice = ["/rules", "/products-management"].some((path) =>
     location.pathname.startsWith(path)
@@ -35,60 +34,41 @@ function AppContent() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          minHeight: "100vh",
-          bgcolor: "background.default",
-          ml: isBackOffice && !!user && sidebarOpen ? "260px" : 0,
-          transition: "margin-left 0.3s ease",
-        }}
-      >
+      <Box sx={{ display: "flex", minHeight: "100vh", bgcolor: "background.default" }}>
         {isBackOffice && !!user && (
           <Sidebar toggleSidebar={() => setSidebarOpen((prev) => !prev)} open={sidebarOpen} />
         )}
-        {!isBackOffice && (
-          <Navbar
-            mode={mode}
-            toggleTheme={toggleTheme}
-            toggleSidebar={toggleSidebar}
-            admin={isBackOffice}
-          />
-        )}
-
-        {isBackOffice && !!user && !sidebarOpen && (
-          <IconButton
-            onClick={toggleSidebar}
-            sx={{
-              position: "fixed",
-              top: 16,
-              left: 16,
-              zIndex: 1300,
-              bgcolor: "primary.main",
-              color: "white",
-              "&:hover": { bgcolor: "primary.dark" },
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-        )}
-        {isBackOffice && !!user && sidebarOpen && (
-          <Sidebar toggleSidebar={() => setSidebarOpen(false)} />
-        )}
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/quote" element={<QuotesPage />} />
-          <Route path="/accepted" element={<AcceptPage />} />
-          <Route path="/declined" element={<DeclinePage />} />
-          <Route path="/login" element={<BackOfficeLoginPage />} />
-          <Route element={<ProtectedRoute />}>
-            <Route path="/rules" element={<RulesManagementPage />} />
-            <Route path="/products-management" element={<ProductManagementPage />} />
-          </Route>
-          <Route path="/sandbox" element={<Sandbox />} />
-        </Routes>
-        <Footer />
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            flexGrow: 1,
+            minWidth: 0,
+            transition: "margin-left 0.3s ease",
+          }}
+        >
+          {!isBackOffice && (
+            <Navbar
+              mode={mode}
+              toggleTheme={toggleTheme}
+              toggleSidebar={() => setSidebarOpen((prev) => !prev)}
+              admin={isBackOffice}
+            />
+          )}
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/quote" element={<QuotesPage />} />
+            <Route path="/accepted" element={<AcceptPage />} />
+            <Route path="/declined" element={<DeclinePage />} />
+            <Route path="/login" element={<BackOfficeLoginPage />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="/rules" element={<RulesManagementPage />} />
+              <Route path="/products-management" element={<ProductManagementPage />} />
+            </Route>
+            <Route path="/sandbox" element={<Sandbox />} />
+          </Routes>
+          {!isBackOffice && <Footer />}
+        </Box>
       </Box>
     </ThemeProvider>
   );

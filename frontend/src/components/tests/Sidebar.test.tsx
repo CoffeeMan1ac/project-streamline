@@ -12,7 +12,7 @@ describe("Sidebar", () => {
   test("renders sidebar buttons", () => {
     render(
       <MemoryRouter>
-        <Sidebar toggleSidebar={vi.fn()} />
+        <Sidebar toggleSidebar={vi.fn()} open={true} />
       </MemoryRouter>
     );
 
@@ -23,7 +23,7 @@ describe("Sidebar", () => {
   test("renders admin user info", () => {
     render(
       <MemoryRouter>
-        <Sidebar toggleSidebar={vi.fn()} />
+        <Sidebar toggleSidebar={vi.fn()} open={true} />
       </MemoryRouter>
     );
 
@@ -34,7 +34,7 @@ describe("Sidebar", () => {
   test("renders logout button", () => {
     render(
       <MemoryRouter>
-        <Sidebar toggleSidebar={vi.fn()} />
+        <Sidebar toggleSidebar={vi.fn()} open={true} />
       </MemoryRouter>
     );
 
