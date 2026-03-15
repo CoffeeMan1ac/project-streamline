@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../config/firebase";
+import { Brightness4, Brightness7 } from "@mui/icons-material";
 
 const EXPANDED_WIDTH = 260;
 const COLLAPSED_WIDTH = 64;
@@ -14,9 +15,11 @@ const COLLAPSED_WIDTH = 64;
 type SidebarProps = {
   toggleSidebar: () => void;
   open: boolean;
+  toggleTheme: () => void;
+  mode: "light" | "dark";
 };
 
-const Sidebar = ({ toggleSidebar, open }: SidebarProps) => {
+const Sidebar = ({ toggleSidebar, open, toggleTheme, mode }: SidebarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -107,7 +110,7 @@ const Sidebar = ({ toggleSidebar, open }: SidebarProps) => {
                   />
                 </Box>
                 <Box>
-                  <Typography fontWeight={600} fontSize={14} color="primary.main">
+                  <Typography fontWeight={600} fontSize={14} color="text.primary">
                     Phone Shield
                   </Typography>
                   <Typography fontSize={11} color="text.secondary">
@@ -193,7 +196,7 @@ const Sidebar = ({ toggleSidebar, open }: SidebarProps) => {
           ) : null}
 
           {open ? (
-            <Box px={1}>
+            <Box px={1} display="flex" alignItems="center" justifyContent="space-between">
               <Button
                 startIcon={<LogoutOutlinedIcon />}
                 color="error"
@@ -204,19 +207,31 @@ const Sidebar = ({ toggleSidebar, open }: SidebarProps) => {
               >
                 Logout
               </Button>
+              <Tooltip title={mode === "dark" ? "Light mode" : "Dark mode"}>
+                <IconButton onClick={toggleTheme} size="small">
+                  {mode === "dark" ? <Brightness7 /> : <Brightness4 />}
+                </IconButton>
+              </Tooltip>
             </Box>
           ) : (
-            <Tooltip title="Logout" placement="right">
-              <IconButton
-                color="error"
-                onClick={async () => {
-                  await signOut(auth);
-                  navigate("/login");
-                }}
-              >
-                <LogoutOutlinedIcon />
-              </IconButton>
-            </Tooltip>
+            <Box display="flex" flexDirection="column" alignItems="center" gap={1}>
+              <Tooltip title="Logout" placement="right">
+                <IconButton
+                  color="error"
+                  onClick={async () => {
+                    await signOut(auth);
+                    navigate("/login");
+                  }}
+                >
+                  <LogoutOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title={mode === "dark" ? "Light mode" : "Dark mode"} placement="right">
+                <IconButton onClick={toggleTheme} size="small">
+                  {mode === "dark" ? <Brightness7 /> : <Brightness4 />}
+                </IconButton>
+              </Tooltip>
+            </Box>
           )}
         </Box>
       </Box>

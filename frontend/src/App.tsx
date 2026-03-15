@@ -7,7 +7,7 @@ import Footer from "./components/Footer";
 import AcceptPage from "./pages/AcceptPage";
 import DeclinePage from "./pages/DeclinePage";
 import RulesManagementPage from "./pages/RulesManagementPage";
-import { ThemeProvider, CssBaseline, Box, IconButton } from "@mui/material";
+import { ThemeProvider, CssBaseline, Box } from "@mui/material";
 import { lightTheme, darkTheme } from "./theme/theme";
 import React from "react";
 import BackOfficeLoginPage from "./pages/BackOfficeLoginPage";
@@ -17,15 +17,21 @@ import Sandbox from "./dev/Sandbox";
 import Sidebar from "./components/Sidebar";
 import { useAuth } from "./context/AuthContext";
 import ProductManagementPage from "./pages/ProductManagementPage";
-import MenuIcon from "@mui/icons-material/Menu";
 
 function AppContent() {
   const { user } = useAuth();
   const location = useLocation();
-  const [mode, setMode] = React.useState<"light" | "dark">("light");
+  const [mode, setMode] = React.useState<"light" | "dark">(() => {
+    return (localStorage.getItem("themeMode") as "light" | "dark") || "light";
+  });
   const [sidebarOpen, setSidebarOpen] = React.useState(true);
 
-  const toggleTheme = () => setMode((prev) => (prev === "light" ? "dark" : "light"));
+  const toggleTheme = () =>
+    setMode((prev) => {
+      const next = prev === "light" ? "dark" : "light";
+      localStorage.setItem("themeMode", next);
+      return next;
+    });
   const theme = mode === "light" ? lightTheme : darkTheme;
   const isBackOffice = ["/rules", "/products-management"].some((path) =>
     location.pathname.startsWith(path)
@@ -36,7 +42,12 @@ function AppContent() {
       <CssBaseline />
       <Box sx={{ display: "flex", minHeight: "100vh", bgcolor: "background.default" }}>
         {isBackOffice && !!user && (
-          <Sidebar toggleSidebar={() => setSidebarOpen((prev) => !prev)} open={sidebarOpen} />
+          <Sidebar
+            toggleSidebar={() => setSidebarOpen((prev) => !prev)}
+            open={sidebarOpen}
+            toggleTheme={toggleTheme}
+            mode={mode}
+          />
         )}
         <Box
           sx={{

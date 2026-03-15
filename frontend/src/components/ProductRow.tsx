@@ -113,8 +113,7 @@ const ProductRow: React.FC<ProductRowProps> = ({
         >
           <PowerSettingsNewIcon fontSize="small" />
         </IconButton>
-
-        <IconButton size="small" color="primary" onClick={onEdit} data-testid="edit-button">
+        <IconButton size="small" color="inherit" onClick={onEdit} data-testid="edit-button">
           <EditIcon fontSize="small" />
         </IconButton>
 
