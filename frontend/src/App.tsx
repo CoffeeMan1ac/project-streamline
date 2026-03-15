@@ -7,7 +7,7 @@ import Footer from "./components/Footer";
 import AcceptPage from "./pages/AcceptPage";
 import DeclinePage from "./pages/DeclinePage";
 import RulesManagementPage from "./pages/RulesManagementPage";
-import { ThemeProvider, CssBaseline, Box } from "@mui/material";
+import { ThemeProvider, CssBaseline, Box, IconButton } from "@mui/material";
 import { lightTheme, darkTheme } from "./theme/theme";
 import React from "react";
 import BackOfficeLoginPage from "./pages/BackOfficeLoginPage";
@@ -17,6 +17,7 @@ import Sandbox from "./dev/Sandbox";
 import Sidebar from "./components/Sidebar";
 import { useAuth } from "./context/AuthContext";
 import ProductManagementPage from "./pages/ProductManagementPage";
+import MenuIcon from "@mui/icons-material/Menu";
 
 function AppContent() {
   const { user } = useAuth();
@@ -42,12 +43,31 @@ function AppContent() {
           bgcolor: "background.default",
         }}
       >
-        <Navbar
-          mode={mode}
-          toggleTheme={toggleTheme}
-          toggleSidebar={toggleSidebar}
-          admin={isBackOffice}
-        />
+        {!isBackOffice && (
+          <Navbar
+            mode={mode}
+            toggleTheme={toggleTheme}
+            toggleSidebar={toggleSidebar}
+            admin={isBackOffice}
+          />
+        )}
+
+        {isBackOffice && !!user && !sidebarOpen && (
+          <IconButton
+            onClick={toggleSidebar}
+            sx={{
+              position: "fixed",
+              top: 16,
+              left: 16,
+              zIndex: 1300,
+              bgcolor: "primary.main",
+              color: "white",
+              "&:hover": { bgcolor: "primary.dark" },
+            }}
+          >
+            <MenuIcon />
+          </IconButton>
+        )}
         {isBackOffice && !!user && sidebarOpen && (
           <Sidebar toggleSidebar={() => setSidebarOpen(false)} />
         )}
