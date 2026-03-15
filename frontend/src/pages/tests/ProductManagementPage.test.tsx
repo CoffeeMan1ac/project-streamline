@@ -22,6 +22,13 @@ vi.mock("../CreateProductPage", () => ({
   ),
 }));
 
+vi.mock("../../services/productService", () => ({
+  productService: {
+    getProducts: vi.fn().mockResolvedValue({ data: [] }),
+    toggleProductActive: vi.fn().mockResolvedValue({}),
+  },
+}));
+
 describe("ProductManagementPage", () => {
   beforeEach(() => {
     cleanup();
