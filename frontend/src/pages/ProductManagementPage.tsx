@@ -10,6 +10,40 @@ import TuneIcon from "@mui/icons-material/Tune";
 import InputAdornment from "@mui/material/InputAdornment";
 import EditProductPage from "./EditProductPage";
 import CreateProductPage from "./CreateProductPage";
+import ProductTable from "../components/ProductTable";
+
+const MOCK_PRODUCTS = [
+  {
+    id: "1",
+    productName: "Basic Health Cover",
+    modifiedBy: "admin@example.com",
+    status: "active",
+    active: true,
+    price: "€49.99/mo",
+    coverageSummary: "GP visits, prescriptions, outpatient",
+    tags: ["health", "basic"],
+  },
+  {
+    id: "2",
+    productName: "Comprehensive Life Insurance",
+    modifiedBy: "admin@example.com",
+    status: "retired",
+    active: true,
+    price: "€89.99/mo",
+    coverageSummary: "Life cover up to €500k, critical illness",
+    tags: ["life", "premium"],
+  },
+  {
+    id: "3",
+    productName: "Travel Insurance Plus",
+    modifiedBy: "ops@example.com",
+    status: "inactive",
+    active: false,
+    price: "€12.99/mo",
+    coverageSummary: "Worldwide cover, cancellation, medical",
+    tags: ["travel"],
+  },
+];
 
 const ProductManagementPage = () => {
   const [editProductId, setEditProductId] = useState<string | null>(null);
@@ -17,10 +51,32 @@ const ProductManagementPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 
+  const filteredProducts = MOCK_PRODUCTS.filter((product) => {
+    const matchesSearch = product.productName
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+
+    const matchesStatus =
+      statusFilter === "all" || product.status === statusFilter;
+
+    return matchesSearch && matchesStatus;
+  });
+
+  const handleToggleProductActive = (id: string) => {
+    // TODO: wire up to API
+    console.log("Toggle active for product", id);
+  };
+
   return (
     <>
       <Box sx={{ mx: 20, my: 4 }}>
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+          }}
+        >
           <Box>
             <Typography variant="h4" sx={{ fontWeight: 700 }}>
               Products Management
@@ -86,6 +142,12 @@ const ProductManagementPage = () => {
             </Button>
           </Paper>
         </Box>
+
+        <ProductTable
+          products={filteredProducts}
+          onEditProduct={(id) => setEditProductId(id)}
+          onToggleProductActive={handleToggleProductActive}
+        />
       </Box>
 
       <Dialog
