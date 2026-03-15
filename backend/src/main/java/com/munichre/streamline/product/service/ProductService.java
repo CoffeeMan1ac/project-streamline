@@ -13,6 +13,7 @@ import com.munichre.streamline.product.api.dto.ProductOptionDto;
 import com.munichre.streamline.product.api.dto.ProductTagDto;
 import com.munichre.streamline.product.api.dto.ProductTypeDto;
 import com.munichre.streamline.product.api.dto.TagOptionDto;
+import com.munichre.streamline.product.api.dto.UpdateProductRequestDto;
 import com.munichre.streamline.product.exception.CoverageNotFoundException;
 import com.munichre.streamline.product.exception.ProductNotFoundException;
 import com.munichre.streamline.product.exception.ProductTagNotFoundException;
@@ -197,6 +198,42 @@ public class ProductService {
 
   public ProductType getProductType(UUID productTypeId) {
     return productTypeRepository.findProductTypeById(productTypeId);
+  }
+
+  public ProductDto getProductDto(@NonNull UUID id) {
+    List<ProductRowDto> rows = productRepository.findProductRowById(id);
+    List<ProductDto> assembled = assembleProducts(rows);
+    if (assembled.isEmpty()) throw new ProductNotFoundException(id);
+    return assembled.get(0);
+  }
+
+  @Transactional
+  public void updateProduct(UUID id, UpdateProductRequestDto request) {
+    Product product =
+        productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
+
+    product.setName(request.getName());
+    product.setDescription(request.getDescription());
+    product.setBaseRate(request.getBaseRate());
+    product.setStartDate(request.getStartDate());
+    product.setEndDate(request.getEndDate());
+
+    Set<UUID> coverageIds = new HashSet<>(request.getCoverages());
+    Set<Coverage> coverages = productCoverageRepository.findCoverageModels(coverageIds);
+    if (coverageIds.size() != coverages.size()) throw new CoverageNotFoundException();
+    product.setCoverages(coverages);
+
+    Set<UUID> exclusionIds = new HashSet<>(request.getExclusions());
+    Set<Coverage> exclusions = productCoverageRepository.findExclusionModels(exclusionIds);
+    if (exclusionIds.size() != exclusions.size()) throw new CoverageNotFoundException();
+    product.setExclusions(exclusions);
+
+    Set<UUID> tagIds = new HashSet<>(request.getTags());
+    Set<ProductTag> tags = productTagRepository.findTagModelsByIds(tagIds);
+    if (tagIds.size() != tags.size()) throw new ProductTagNotFoundException();
+    product.setTags(tags);
+
+    productRepository.save(product);
   }
 
   private static class ProductAssembler {

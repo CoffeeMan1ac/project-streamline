@@ -102,4 +102,17 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
               ORDER BY p.baseRate ASC
             """)
   List<ProductOptionDto> findProductOptions();
+
+  @Query(
+      """
+    SELECT new com.munichre.streamline.product.repository.dto.ProductRowDto(
+      p.id, p.baseRate, p.name, p.description,
+      p.startDate, p.endDate, p.active,
+      t.id, t.code, t.label
+    )
+    FROM Product p
+    JOIN p.type t
+    WHERE p.id = :id
+    """)
+  List<ProductRowDto> findProductRowById(@Param("id") UUID id);
 }

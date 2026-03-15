@@ -7,6 +7,7 @@ import com.munichre.streamline.product.api.dto.CreateProductRequestDto;
 import com.munichre.streamline.product.api.dto.ProductDto;
 import com.munichre.streamline.product.api.dto.ProductOptionDto;
 import com.munichre.streamline.product.api.dto.TagOptionDto;
+import com.munichre.streamline.product.api.dto.UpdateProductRequestDto;
 import com.munichre.streamline.product.service.ProductService;
 import java.util.List;
 import java.util.UUID;
@@ -54,5 +55,17 @@ public class BackofficeProductController {
   @GetMapping("/tags")
   public ResponseEntity<List<TagOptionDto>> getTags() {
     return ResponseEntity.ok(productService.getAllTags());
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<ProductDto> getProduct(@PathVariable UUID id) {
+    return ResponseEntity.ok(productService.getProductDto(id));
+  }
+
+  @PutMapping("/{id}")
+  public ResponseEntity<Void> updateProduct(
+      @PathVariable UUID id, @RequestBody UpdateProductRequestDto payload) {
+    productService.updateProduct(id, payload);
+    return ResponseEntity.ok().build();
   }
 }
