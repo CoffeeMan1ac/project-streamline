@@ -58,4 +58,7 @@ public interface ProductCoverageRepository extends Repository<Product, UUID> {
     IN :coverageIds
   """)
   Set<Coverage> findExclusionModels(@Param("coverageIds") Collection<UUID> coverageIds);
+
+  @Query("SELECT cv FROM Coverage cv ORDER BY cv.label ASC")
+  List<Coverage> findAllCoverages();
 }

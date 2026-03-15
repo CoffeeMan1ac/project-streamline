@@ -5,12 +5,14 @@ import static java.util.stream.Collectors.toMap;
 
 import com.munichre.streamline.product.api.dto.CoverageCategoryDto;
 import com.munichre.streamline.product.api.dto.CoverageDto;
+import com.munichre.streamline.product.api.dto.CoverageOptionDto;
 import com.munichre.streamline.product.api.dto.CreateProductRequestDto;
 import com.munichre.streamline.product.api.dto.ProductDto;
 import com.munichre.streamline.product.api.dto.ProductFieldDto;
 import com.munichre.streamline.product.api.dto.ProductOptionDto;
 import com.munichre.streamline.product.api.dto.ProductTagDto;
 import com.munichre.streamline.product.api.dto.ProductTypeDto;
+import com.munichre.streamline.product.api.dto.TagOptionDto;
 import com.munichre.streamline.product.exception.CoverageNotFoundException;
 import com.munichre.streamline.product.exception.ProductNotFoundException;
 import com.munichre.streamline.product.exception.ProductTagNotFoundException;
@@ -171,6 +173,18 @@ public class ProductService {
     product.setExclusions(exclusions);
 
     productRepository.saveAndFlush(product);
+  }
+
+  public List<TagOptionDto> getAllTags() {
+    return productTagRepository.findAllTags().stream()
+        .map(t -> new TagOptionDto(t.getId(), t.getCode(), t.getLabel()))
+        .toList();
+  }
+
+  public List<CoverageOptionDto> getAllCoverages() {
+    return productCoverageRepository.findAllCoverages().stream()
+        .map(c -> new CoverageOptionDto(c.getId(), c.getCode(), c.getLabel()))
+        .toList();
   }
 
   @Transactional

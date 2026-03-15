@@ -33,4 +33,7 @@ public interface ProductTagRepository extends Repository<Product, UUID> {
     IN :tagIds
   """)
   Set<ProductTag> findTagModelsByIds(@Param("tagIds") Collection<UUID> tagIds);
+
+  @Query("SELECT pt FROM ProductTag pt ORDER BY pt.label ASC")
+  List<ProductTag> findAllTags();
 }

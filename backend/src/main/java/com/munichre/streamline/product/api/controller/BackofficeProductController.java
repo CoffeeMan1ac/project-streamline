@@ -2,9 +2,11 @@ package com.munichre.streamline.product.api.controller;
 
 import static com.munichre.streamline.constant.ApiRoutes.BACKOFFICE_API_BASE;
 
+import com.munichre.streamline.product.api.dto.CoverageOptionDto;
 import com.munichre.streamline.product.api.dto.CreateProductRequestDto;
 import com.munichre.streamline.product.api.dto.ProductDto;
 import com.munichre.streamline.product.api.dto.ProductOptionDto;
+import com.munichre.streamline.product.api.dto.TagOptionDto;
 import com.munichre.streamline.product.service.ProductService;
 import java.util.List;
 import java.util.UUID;
@@ -42,5 +44,15 @@ public class BackofficeProductController {
   public ResponseEntity<Void> toggleProductActive(@PathVariable UUID id) {
     productService.toggleProductActive(id);
     return ResponseEntity.ok().build();
+  }
+
+  @GetMapping("/coverages")
+  public ResponseEntity<List<CoverageOptionDto>> getCoverages() {
+    return ResponseEntity.ok(productService.getAllCoverages());
+  }
+
+  @GetMapping("/tags")
+  public ResponseEntity<List<TagOptionDto>> getTags() {
+    return ResponseEntity.ok(productService.getAllTags());
   }
 }
