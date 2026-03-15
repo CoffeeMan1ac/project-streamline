@@ -52,12 +52,9 @@ const ProductManagementPage = () => {
   const [statusFilter, setStatusFilter] = useState("all");
 
   const filteredProducts = MOCK_PRODUCTS.filter((product) => {
-    const matchesSearch = product.productName
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
+    const matchesSearch = product.productName.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesStatus =
-      statusFilter === "all" || product.status === statusFilter;
+    const matchesStatus = statusFilter === "all" || product.status === statusFilter;
 
     return matchesSearch && matchesStatus;
   });
