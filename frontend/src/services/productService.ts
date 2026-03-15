@@ -46,6 +46,30 @@ export interface ProductDto {
   productFields: ProductFieldDto[];
 }
 
+export interface CreateProductRequest {
+  name: string;
+  description: string;
+  baseRate: number;
+  type: string;
+  startDate: string;
+  endDate: string | null;
+  coverages: string[];
+  exclusions: string[];
+  tags: string[];
+}
+
+export interface CoverageOption {
+  id: string;
+  code: string;
+  label: string;
+}
+
+export interface TagOption {
+  id: string;
+  code: string;
+  label: string;
+}
+
 export const productService = {
   getProducts: (active?: boolean) =>
     http.get<ProductDto[]>("/backoffice/products", {
@@ -53,4 +77,11 @@ export const productService = {
     }),
 
   toggleProductActive: (id: string) => http.patch<void>(`/backoffice/products/${id}/active`),
+
+  createProduct: (payload: CreateProductRequest) =>
+    http.post<void>("/backoffice/products", payload),
+
+  getCoverages: () => http.get<CoverageOption[]>("/backoffice/products/coverages"),
+
+  getTags: () => http.get<TagOption[]>("/backoffice/products/tags"),
 };
