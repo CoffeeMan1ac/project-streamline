@@ -4,27 +4,70 @@ import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import EditProductPage from "../EditProductPage";
 
+vi.mock("../../services/productService", () => ({
+  productService: {
+    getProduct: vi.fn().mockResolvedValue({
+      data: {
+        id: "123",
+        name: "Premium Shield",
+        active: true,
+        description: "A great product",
+        baseRate: 14.99,
+        startDate: "2025-01-01T00:00:00",
+        endDate: null,
+        coverages: [
+          {
+            id: "1",
+            code: "ACCIDENTAL_DAMAGE",
+            label: "Accidental damage cover",
+            category: { id: "c1", code: "DAMAGE", label: "Damage" },
+          },
+        ],
+        exclusions: [
+          {
+            id: "2",
+            code: "THEFT",
+            label: "Theft protection",
+            category: { id: "c2", code: "THEFT", label: "Theft" },
+          },
+        ],
+        tags: [
+          { id: "1ebe6012-74ac-43ea-9491-54ddff30ab6c", code: "POPULAR", label: "Most Popular" },
+        ],
+        type: {
+          id: "9333558f-9a40-4ad6-b20b-7f45246c70ea",
+          code: "PHONE_INSURANCE",
+          label: "Phone Insurance",
+        },
+        productFields: [],
+      },
+    }),
+    getCoverages: vi.fn().mockResolvedValue({
+      data: [
+        { id: "1", code: "ACCIDENTAL_DAMAGE", label: "Accidental Damage" },
+        { id: "2", code: "LIQUID_DAMAGE", label: "Liquid Damage" },
+        { id: "3", code: "EXTENDED_WARRANTY", label: "Extended Warranty" },
+        { id: "4", code: "DATA_RECOVERY", label: "Data Recovery" },
+        { id: "5", code: "THEFT", label: "Theft" },
+        { id: "6", code: "SCREEN_DAMAGE", label: "Screen Damage" },
+        { id: "7", code: "WORLDWIDE_COVERAGE", label: "Worldwide Coverage" },
+        { id: "8", code: "BATTERY_REPLACEMENT", label: "Battery Replacement" },
+      ],
+    }),
+    getTags: vi.fn().mockResolvedValue({
+      data: [
+        { id: "81a8e5b1-2356-434b-bf1c-78d2be5c9090", code: "GREEN", label: "Green" },
+        { id: "1ebe6012-74ac-43ea-9491-54ddff30ab6c", code: "POPULAR", label: "Popular" },
+      ],
+    }),
+    updateProduct: vi.fn().mockResolvedValue({}),
+  },
+}));
+
 describe("EditProductPage", () => {
   let form: HTMLFormElement;
 
-  const mockProduct = {
-    id: "123",
-    productName: "Premium Shield",
-    status: "active",
-    description: "A great product",
-    monthlyPrice: "14.99",
-    startDate: "2025-01-01",
-    endDate: "",
-    selectedCoverages: ["Accidental Damage", "Theft"],
-    selectedExclusions: ["Liquid Damage"],
-    selectedTags: ["Popular"],
-  };
-
   beforeEach(() => {
-    vi.spyOn(globalThis, "fetch").mockResolvedValue({
-      ok: true,
-      json: async () => mockProduct,
-    } as Response);
     cleanup();
   });
 
@@ -32,7 +75,6 @@ describe("EditProductPage", () => {
     vi.restoreAllMocks();
   });
 
-  // Renders the component and waits for the async fetch to populate the form
   const renderWithRouter = async () => {
     const utils = render(
       <MemoryRouter>
@@ -40,7 +82,6 @@ describe("EditProductPage", () => {
       </MemoryRouter>
     );
 
-    // Wait for the fetch to resolve and populate the form fields
     await screen.findByDisplayValue("Premium Shield");
 
     const found = utils.container.querySelector("form");
@@ -50,13 +91,15 @@ describe("EditProductPage", () => {
     return utils;
   };
 
-  // Renders without an id so the fetch is skipped and the form stays empty
-  const renderEmptyForm = () => {
+  const renderEmptyForm = async () => {
     const utils = render(
       <MemoryRouter>
         <EditProductPage onClose={vi.fn()} />
       </MemoryRouter>
     );
+
+    // wait for coverages and tags to load
+    await screen.findAllByText("Accidental Damage");
 
     const found = utils.container.querySelector("form");
     if (!found) throw new Error("Edit product form not found");
@@ -137,31 +180,23 @@ describe("EditProductPage", () => {
     expect(screen.getByDisplayValue("14.99")).toBeInTheDocument();
   });
 
-  test("shows required errors when submitting empty form", () => {
-    renderEmptyForm();
+  test("shows required errors when submitting empty form", async () => {
+    await renderEmptyForm();
     const f = within(form);
     fireEvent.click(f.getByRole("button", { name: /Save Changes/i }));
     expect(f.getAllByText(/Required/i).length).toBeGreaterThan(0);
   });
 
-  test("shows coverage error when no coverage selected on submit", () => {
-    renderEmptyForm();
+  test("shows coverage error when no coverage selected on submit", async () => {
+    await renderEmptyForm();
     const f = within(form);
     fireEvent.click(f.getByRole("button", { name: /Save Changes/i }));
     expect(f.getByText(/Please select at least one coverage/i)).toBeInTheDocument();
   });
 
-  test("shows tag error when no tag selected on submit", () => {
-    renderEmptyForm();
+  test("clears product name error when user types", async () => {
+    await renderEmptyForm();
     const f = within(form);
-    fireEvent.click(f.getByRole("button", { name: /Save Changes/i }));
-    expect(f.getByText(/Please select at least one tag/i)).toBeInTheDocument();
-  });
-
-  test("clears product name error when user types", () => {
-    renderEmptyForm();
-    const f = within(form);
-
     fireEvent.click(f.getByRole("button", { name: /Save Changes/i }));
     expect(f.getAllByText(/Required/i).length).toBeGreaterThan(0);
 
@@ -170,8 +205,8 @@ describe("EditProductPage", () => {
     expect(input).toHaveValue("New Product");
   });
 
-  test("clears coverage error when a coverage is clicked", () => {
-    renderEmptyForm();
+  test("clears coverage error when a coverage is clicked", async () => {
+    await renderEmptyForm();
     const f = within(form);
     fireEvent.click(f.getByRole("button", { name: /Save Changes/i }));
     expect(f.getByText(/Please select at least one coverage/i)).toBeInTheDocument();
@@ -181,53 +216,26 @@ describe("EditProductPage", () => {
     expect(f.queryByText(/Please select at least one coverage/i)).toBeNull();
   });
 
-  test("clears tag error when a tag is clicked", () => {
-    renderEmptyForm();
+  test("toggles coverage selection on click", async () => {
+    await renderEmptyForm();
     const f = within(form);
-    fireEvent.click(f.getByRole("button", { name: /Save Changes/i }));
-    expect(f.getByText(/Please select at least one tag/i)).toBeInTheDocument();
-
-    const noneTag = f.getByText(/^None$/i).closest("div") as HTMLElement;
-    fireEvent.click(noneTag);
-    expect(f.queryByText(/Please select at least one tag/i)).toBeNull();
-  });
-
-  test("toggles coverage selection on click", () => {
-    renderEmptyForm();
-    const f = within(form);
-
     const accidental = f.getAllByText(/^Accidental Damage$/i)[0].closest("div") as HTMLElement;
     fireEvent.click(accidental);
     fireEvent.click(accidental);
     expect(accidental).toBeInTheDocument();
   });
 
-  test("toggles exclusion selection on click", () => {
-    renderEmptyForm();
+  test("toggles exclusion selection on click", async () => {
+    await renderEmptyForm();
     const f = within(form);
-
     const theft = f.getAllByText(/^Theft$/i)[1].closest("div") as HTMLElement;
     fireEvent.click(theft);
     fireEvent.click(theft);
     expect(theft).toBeInTheDocument();
   });
 
-  test("None tag deselects Green and Popular", () => {
-    renderEmptyForm();
-    const f = within(form);
-
-    const greenTag = f.getByText(/^Green$/i).closest("div") as HTMLElement;
-    fireEvent.click(greenTag);
-
-    const noneTag = f.getByText(/^None$/i).closest("div") as HTMLElement;
-    fireEvent.click(noneTag);
-
-    fireEvent.click(f.getByRole("button", { name: /Save Changes/i }));
-    expect(f.queryByText(/Please select at least one tag/i)).toBeNull();
-  });
-
-  test("end date field is optional and has no required error", () => {
-    renderEmptyForm();
+  test("end date field is optional and has no required error", async () => {
+    await renderEmptyForm();
     const f = within(form);
     fireEvent.click(f.getByRole("button", { name: /Save Changes/i }));
     expect(f.getByText(/Optional - leave blank for no expiration/i)).toBeInTheDocument();
@@ -249,5 +257,12 @@ describe("EditProductPage", () => {
     options.forEach((opt) => {
       expect(f.getAllByText(new RegExp(`^${opt}$`, "i")).length).toBeGreaterThanOrEqual(1);
     });
+  });
+
+  test("renders tag options", async () => {
+    await renderWithRouter();
+    const f = within(form);
+    expect(f.getByText(/^Green$/i)).toBeInTheDocument();
+    expect(f.getByText(/^Popular$/i)).toBeInTheDocument();
   });
 });

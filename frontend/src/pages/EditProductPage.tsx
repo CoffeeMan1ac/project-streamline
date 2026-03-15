@@ -59,27 +59,27 @@ const EditProductPage = ({ id, onClose, onSave }: EditProductPageProps) => {
 
   useEffect(() => {
     const fetchAll = async () => {
-      if (!id) return;
       try {
-        const [productRes, coveragesRes, tagsRes] = await Promise.all([
-          productService.getProduct(id),
+        const [coveragesRes, tagsRes] = await Promise.all([
           productService.getCoverages(),
           productService.getTags(),
         ]);
-
-        const p = productRes.data;
-        setProductName(p.name);
-        setStatus(p.active ? "active" : "inactive");
-        setDescription(p.description);
-        setMonthlyPrice(p.baseRate.toString());
-        setStartDate(p.startDate ? p.startDate.split("T")[0] : "");
-        setEndDate(p.endDate ? p.endDate.split("T")[0] : "");
-        setSelectedCoverages(p.coverages.map((c) => c.id));
-        setSelectedExclusions(p.exclusions.map((e) => e.id));
-        setSelectedTags(p.tags.map((t) => t.id));
-
         setCoverageOptions(coveragesRes.data);
         setTagOptions(tagsRes.data);
+
+        if (id) {
+          const productRes = await productService.getProduct(id);
+          const p = productRes.data;
+          setProductName(p.name);
+          setStatus(p.active ? "active" : "inactive");
+          setDescription(p.description);
+          setMonthlyPrice(p.baseRate.toString());
+          setStartDate(p.startDate ? p.startDate.split("T")[0] : "");
+          setEndDate(p.endDate ? p.endDate.split("T")[0] : "");
+          setSelectedCoverages(p.coverages.map((c) => c.id));
+          setSelectedExclusions(p.exclusions.map((e) => e.id));
+          setSelectedTags(p.tags.map((t) => t.id));
+        }
       } catch {
         setSubmitError("Failed to load product. Please try again.");
       } finally {
