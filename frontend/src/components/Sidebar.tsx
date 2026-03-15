@@ -98,6 +98,7 @@ const Sidebar = ({ toggleSidebar }: SidebarProps) => {
             onClick={() => {
               setActive("rules");
               navigate("/rules");
+              toggleSidebar();
             }}
           >
             Rules Management
@@ -110,6 +111,7 @@ const Sidebar = ({ toggleSidebar }: SidebarProps) => {
             onClick={() => {
               setActive("products");
               navigate("/products-management");
+              toggleSidebar();
             }}
           >
             Products Management

@@ -48,7 +48,9 @@ function AppContent() {
           toggleSidebar={toggleSidebar}
           admin={isBackOffice}
         />
-        {isBackOffice && !!user && sidebarOpen && <Sidebar toggleSidebar={toggleSidebar} />}
+        {isBackOffice && !!user && sidebarOpen && (
+          <Sidebar toggleSidebar={() => setSidebarOpen(false)} />
+        )}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/quote" element={<QuotesPage />} />
