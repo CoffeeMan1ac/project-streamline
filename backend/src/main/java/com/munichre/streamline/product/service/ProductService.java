@@ -250,6 +250,8 @@ public class ProductService {
           row.name(),
           row.description(),
           row.active(),
+          row.startDate(),
+          row.endDate(),
           mapTags(tags),
           new ProductTypeDto(row.typeId(), row.typeCode(), row.typeLabel()),
           mapCoverages(coverageRows),

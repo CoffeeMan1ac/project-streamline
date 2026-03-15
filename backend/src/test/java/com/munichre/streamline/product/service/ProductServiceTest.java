@@ -290,6 +290,8 @@ public class ProductServiceTest {
           productRow.name(),
           productRow.description(),
           productRow.active(),
+          productRow.startDate(),
+          productRow.endDate(),
           tags,
           new ProductTypeDto(productRow.typeId(), productRow.typeCode(), productRow.typeLabel()),
           coverages,
