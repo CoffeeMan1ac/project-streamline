@@ -27,7 +27,9 @@ function AppContent() {
   const toggleTheme = () => setMode((prev) => (prev === "light" ? "dark" : "light"));
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
   const theme = mode === "light" ? lightTheme : darkTheme;
-  const isBackOffice = ["/rules"].some((path) => location.pathname.startsWith(path));
+  const isBackOffice = ["/rules", "/products-management"].some((path) =>
+    location.pathname.startsWith(path)
+  );
 
   return (
     <ThemeProvider theme={theme}>

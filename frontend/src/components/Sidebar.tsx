@@ -1,12 +1,10 @@
 import { Box, Drawer, Typography, IconButton, Button } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import SettingsIcon from "@mui/icons-material/Settings";
 import FeedOutlinedIcon from "@mui/icons-material/FeedOutlined";
 import ViewInArOutlinedIcon from "@mui/icons-material/ViewInArOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../config/firebase";
 
@@ -15,20 +13,27 @@ type SidebarProps = {
 };
 
 const Sidebar = ({ toggleSidebar }: SidebarProps) => {
-  const [active, setActive] = useState("dashboard");
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const getActiveFromPath = (path: string) => {
+    if (path.startsWith("/rules")) return "rules";
+    if (path.startsWith("/products-management")) return "products";
+    return "rules";
+  };
+
+  const [active, setActive] = useState(getActiveFromPath(location.pathname));
 
   const getButtonStyle = (name: string) => ({
     justifyContent: "flex-start",
     textTransform: "none",
     color: active === name ? "primary.contrastText" : "text.secondary",
     backgroundColor: active === name ? "primary.main" : "transparent",
-
     "&:hover": {
       backgroundColor: active === name ? "primary.dark" : "action.hover",
     },
   });
-  if (!open) return null;
+
   return (
     <Drawer
       variant="permanent"
@@ -70,7 +75,6 @@ const Sidebar = ({ toggleSidebar }: SidebarProps) => {
                 }}
               />
             </Box>
-
             <Box flexGrow={1}>
               <Typography fontWeight={600} fontSize={16} color="primary.main">
                 Phone Shield
@@ -79,7 +83,6 @@ const Sidebar = ({ toggleSidebar }: SidebarProps) => {
                 Backoffice Portal
               </Typography>
             </Box>
-
             <IconButton size="small" onClick={toggleSidebar}>
               <MenuIcon />
             </IconButton>
@@ -88,18 +91,6 @@ const Sidebar = ({ toggleSidebar }: SidebarProps) => {
 
         {/* buttons */}
         <Box mt={2} display="flex" gap={2} flexDirection="column">
-          <Button
-            fullWidth
-            sx={getButtonStyle("dashboard")}
-            startIcon={<DashboardIcon />}
-            onClick={() => {
-              setActive("rules");
-              navigate("/rules");
-            }}
-          >
-            Dashboard
-          </Button>
-
           <Button
             fullWidth
             sx={getButtonStyle("rules")}
@@ -118,18 +109,10 @@ const Sidebar = ({ toggleSidebar }: SidebarProps) => {
             startIcon={<ViewInArOutlinedIcon />}
             onClick={() => {
               setActive("products");
+              navigate("/products-management");
             }}
           >
             Products Management
-          </Button>
-
-          <Button
-            fullWidth
-            sx={getButtonStyle("settings")}
-            startIcon={<SettingsIcon />}
-            onClick={() => setActive("settings")}
-          >
-            Settings
           </Button>
         </Box>
 
