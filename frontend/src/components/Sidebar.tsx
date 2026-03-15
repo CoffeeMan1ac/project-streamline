@@ -10,9 +10,10 @@ import { auth } from "../config/firebase";
 
 type SidebarProps = {
   toggleSidebar: () => void;
+  open: boolean;
 };
 
-const Sidebar = ({ toggleSidebar }: SidebarProps) => {
+const Sidebar = ({ toggleSidebar, open }: SidebarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -36,8 +37,9 @@ const Sidebar = ({ toggleSidebar }: SidebarProps) => {
 
   return (
     <Drawer
-      variant="permanent"
+      variant="persistent"
       anchor="left"
+      open={open}
       sx={{
         width: 260,
         flexShrink: 0,

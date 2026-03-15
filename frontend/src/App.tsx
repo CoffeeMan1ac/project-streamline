@@ -23,7 +23,7 @@ function AppContent() {
   const { user } = useAuth();
   const location = useLocation();
   const [mode, setMode] = React.useState<"light" | "dark">("light");
-  const [sidebarOpen, setSidebarOpen] = React.useState(false);
+  const [sidebarOpen, setSidebarOpen] = React.useState(true);
 
   const toggleTheme = () => setMode((prev) => (prev === "light" ? "dark" : "light"));
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
@@ -41,8 +41,13 @@ function AppContent() {
           flexDirection: "column",
           minHeight: "100vh",
           bgcolor: "background.default",
+          ml: isBackOffice && !!user && sidebarOpen ? "260px" : 0,
+          transition: "margin-left 0.3s ease",
         }}
       >
+        {isBackOffice && !!user && (
+          <Sidebar toggleSidebar={() => setSidebarOpen((prev) => !prev)} open={sidebarOpen} />
+        )}
         {!isBackOffice && (
           <Navbar
             mode={mode}
