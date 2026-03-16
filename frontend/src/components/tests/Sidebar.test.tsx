@@ -3,6 +3,11 @@ import { render, screen, cleanup } from "@testing-library/react";
 import { describe, test, expect, vi, afterEach } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import Sidebar from "../Sidebar";
+import { useAuth } from "../../context/AuthContext";
+
+vi.mock("../../context/AuthContext", () => ({
+  useAuth: vi.fn(),
+}));
 
 afterEach(() => {
   cleanup();
@@ -10,6 +15,8 @@ afterEach(() => {
 
 describe("Sidebar", () => {
   test("renders sidebar buttons", () => {
+    vi.mocked(useAuth).mockReturnValue({ user: null, loading: false });
+
     render(
       <MemoryRouter>
         <Sidebar toggleSidebar={vi.fn()} open={true} toggleTheme={vi.fn()} mode="light" />
@@ -21,6 +28,8 @@ describe("Sidebar", () => {
   });
 
   test("renders admin user info", () => {
+    vi.mocked(useAuth).mockReturnValue({ user: null, loading: false });
+
     render(
       <MemoryRouter>
         <Sidebar toggleSidebar={vi.fn()} open={true} toggleTheme={vi.fn()} mode="light" />
@@ -32,6 +41,8 @@ describe("Sidebar", () => {
   });
 
   test("renders logout button", () => {
+    vi.mocked(useAuth).mockReturnValue({ user: null, loading: false });
+
     render(
       <MemoryRouter>
         <Sidebar toggleSidebar={vi.fn()} open={true} toggleTheme={vi.fn()} mode="light" />
