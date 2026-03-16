@@ -1,11 +1,8 @@
 import "@testing-library/jest-dom/vitest";
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
-import { describe, test, expect, vi, beforeEach } from "vitest";
+import { describe, test, expect, beforeEach } from "vitest";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import OutcomePage from "../OutcomePage";
-
-vi.mock("../assets/checkmark.png", () => ({ default: "checkmark.png" }));
-vi.mock("../assets/decline.png", () => ({ default: "decline.png" }));
 
 const renderWithState = (state: object) => {
   return render(
@@ -33,6 +30,12 @@ describe("OutcomePage", () => {
       expect(screen.getByText(/29.99/)).toBeInTheDocument();
     });
 
+    test("renders reference card when reference is provided", () => {
+      renderWithState({ decision: "accept", premium: 29.99, reference: "ABC123" });
+      expect(screen.getByText("ABC123")).toBeInTheDocument();
+      expect(screen.getByText(/Decision Reference/i)).toBeInTheDocument();
+    });
+
     test("renders proceed to purchase button", () => {
       renderWithState({ decision: "accept", premium: 29.99 });
       expect(screen.getByRole("button", { name: /Proceed to Purchase/i })).toBeInTheDocument();
@@ -43,7 +46,7 @@ describe("OutcomePage", () => {
       expect(screen.getByRole("button", { name: /Back to Home/i })).toBeInTheDocument();
     });
 
-    test("proceed to purchase button shows loading state when clicked", async () => {
+    test("proceed to purchase button shows loading state when clicked", () => {
       renderWithState({ decision: "accept", premium: 29.99 });
       fireEvent.click(screen.getByRole("button", { name: /Proceed to Purchase/i }));
       expect(screen.getByRole("button", { name: /Proceeding.../i })).toBeInTheDocument();
@@ -54,6 +57,12 @@ describe("OutcomePage", () => {
     test("renders declined title", () => {
       renderWithState({ decision: "decline" });
       expect(screen.getByText(/Application Declined/i)).toBeInTheDocument();
+    });
+
+    test("renders reference card when reference is provided", () => {
+      renderWithState({ decision: "decline", reference: "ABC123" });
+      expect(screen.getByText("ABC123")).toBeInTheDocument();
+      expect(screen.getByText(/Decision Reference/i)).toBeInTheDocument();
     });
 
     test("renders common reasons section", () => {
@@ -81,48 +90,66 @@ describe("OutcomePage", () => {
       expect(screen.getByRole("button", { name: /Back to Home/i })).toBeInTheDocument();
     });
 
-    test("call us button shows loading state when clicked", async () => {
+    test("call us button shows loading state when clicked", () => {
       renderWithState({ decision: "decline" });
       fireEvent.click(screen.getByRole("button", { name: /Call Us/i }));
       expect(screen.getByRole("button", { name: /Calling.../i })).toBeInTheDocument();
     });
 
-    test("email support button shows loading state when clicked", async () => {
+    test("email support button shows loading state when clicked", () => {
       renderWithState({ decision: "decline" });
       fireEvent.click(screen.getByRole("button", { name: /Email Support/i }));
       expect(screen.getByRole("button", { name: /Sending.../i })).toBeInTheDocument();
     });
+  });
 
-    describe("Refer outcome", () => {
-      test("renders referred title", () => {
-        renderWithState({ decision: "refer", reason: "Manual review required" });
-        expect(screen.getByText(/Application Referred/i)).toBeInTheDocument();
-      });
+  describe("Refer outcome", () => {
+    test("renders referred title", () => {
+      renderWithState({ decision: "refer" });
+      expect(screen.getAllByText(/Application Referred/i)[0]).toBeInTheDocument();
+    });
 
-      test("renders the reason when provided", () => {
-        renderWithState({ decision: "refer", reason: "Manual review required" });
-        expect(screen.getByText(/Manual review required/i)).toBeInTheDocument();
-      });
+    test("renders reference card when reference is provided", () => {
+      renderWithState({ decision: "refer", reference: "ABC123" });
+      expect(screen.getByText("ABC123")).toBeInTheDocument();
+      expect(screen.getByText(/Decision Reference/i)).toBeInTheDocument();
+    });
 
-      test("renders what happens next section", () => {
-        renderWithState({ decision: "refer", reason: "Manual review required" });
-        expect(screen.getByText(/What happens next/i)).toBeInTheDocument();
-      });
+    test("renders what happens next section", () => {
+      renderWithState({ decision: "refer" });
+      expect(screen.getByText(/What happens next/i)).toBeInTheDocument();
+    });
 
-      test("renders call us button", () => {
-        renderWithState({ decision: "refer", reason: "Manual review required" });
-        expect(screen.getByRole("button", { name: /Call Us/i })).toBeInTheDocument();
-      });
+    test("renders why was my application referred section", () => {
+      renderWithState({ decision: "refer" });
+      expect(screen.getByText(/Why was my application referred/i)).toBeInTheDocument();
+    });
 
-      test("renders email support button", () => {
-        renderWithState({ decision: "refer", reason: "Manual review required" });
-        expect(screen.getByRole("button", { name: /Email Support/i })).toBeInTheDocument();
-      });
+    test("renders call us button", () => {
+      renderWithState({ decision: "refer" });
+      expect(screen.getByRole("button", { name: /Call Us/i })).toBeInTheDocument();
+    });
 
-      test("renders back to home button", () => {
-        renderWithState({ decision: "refer", reason: "Manual review required" });
-        expect(screen.getByRole("button", { name: /Back to Home/i })).toBeInTheDocument();
-      });
+    test("renders email support button", () => {
+      renderWithState({ decision: "refer" });
+      expect(screen.getByRole("button", { name: /Email Support/i })).toBeInTheDocument();
+    });
+
+    test("renders back to home button", () => {
+      renderWithState({ decision: "refer" });
+      expect(screen.getByRole("button", { name: /Back to Home/i })).toBeInTheDocument();
+    });
+
+    test("call us button shows loading state when clicked", () => {
+      renderWithState({ decision: "refer" });
+      fireEvent.click(screen.getByRole("button", { name: /Call Us/i }));
+      expect(screen.getByRole("button", { name: /Calling.../i })).toBeInTheDocument();
+    });
+
+    test("email support button shows loading state when clicked", () => {
+      renderWithState({ decision: "refer" });
+      fireEvent.click(screen.getByRole("button", { name: /Email Support/i }));
+      expect(screen.getByRole("button", { name: /Sending.../i })).toBeInTheDocument();
     });
   });
 });

@@ -1,9 +1,13 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button, Container, Typography, Box, Paper } from "@mui/material";
-import { PhoneOutlined, EmailOutlined } from "@mui/icons-material";
-import checkmark from "../assets/checkmark.png";
-import decline from "../assets/decline.png";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined";
+import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
 
 const OutcomePage = () => {
   const navigate = useNavigate();
@@ -12,6 +16,8 @@ const OutcomePage = () => {
   const quoteResult = location.state;
   const decision = quoteResult?.decision?.toLowerCase();
   const premium = quoteResult?.premium ?? 0.0;
+  const reference = quoteResult?.reference;
+  const reason = quoteResult?.reason;
 
   const [callIsLoading, setCallIsLoading] = useState(false);
   const [emailIsLoading, setEmailIsLoading] = useState(false);
@@ -39,7 +45,36 @@ const OutcomePage = () => {
 
   const isAccepted = decision === "accept";
   const isReferred = decision === "refer";
-  const reason = quoteResult?.reason;
+
+  const ReferenceCard = ({
+    color,
+    bgColor,
+    referenceText,
+    subText,
+  }: {
+    color: string;
+    bgColor: string;
+    referenceText: string;
+    subText: string;
+  }) => (
+    <Paper
+      elevation={0}
+      sx={{ bgcolor: bgColor, p: 3, borderRadius: 2, mb: 3, textAlign: "center" }}
+    >
+      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 1, mb: 1 }}>
+        <ArticleOutlinedIcon sx={{ color, fontSize: 20 }} />
+        <Typography variant="body1" fontWeight="bold" sx={{ color: "text.primary" }}>
+          Decision Reference
+        </Typography>
+      </Box>
+      <Typography variant="h6" fontWeight="bold" sx={{ color, letterSpacing: 1, mb: 0.5 }}>
+        {referenceText}
+      </Typography>
+      <Typography variant="body2" sx={{ color: "text.secondary" }}>
+        {subText}
+      </Typography>
+    </Paper>
+  );
 
   return (
     <Box sx={{ bgcolor: "background.default", p: 3 }}>
@@ -55,12 +90,7 @@ const OutcomePage = () => {
         >
           {isAccepted ? (
             <>
-              <Box
-                component="img"
-                src={checkmark}
-                alt="Checkmark"
-                sx={{ width: 140, height: 120, mx: "auto" }}
-              />
+              <CheckCircleOutlineIcon sx={{ fontSize: 80, color: "#2e7d32", mb: 1 }} />
               <Typography
                 variant="h4"
                 gutterBottom
@@ -68,11 +98,8 @@ const OutcomePage = () => {
               >
                 Accepted!
               </Typography>
-              <Typography variant="body1" sx={{ color: "text.secondary" }}>
-                Your quote has been approved with a
-              </Typography>
               <Typography variant="body1" sx={{ color: "text.secondary", mb: 3 }}>
-                premium of{" "}
+                Your quote has been approved with a premium of{" "}
                 <Box
                   component="span"
                   sx={{ fontSize: "1.5rem", color: "primary.main", fontWeight: "bold" }}
@@ -81,6 +108,16 @@ const OutcomePage = () => {
                 </Box>{" "}
                 per month.
               </Typography>
+
+              {reference && (
+                <ReferenceCard
+                  color="#2e7d32"
+                  bgColor="#f0faf0"
+                  referenceText={reference}
+                  subText="Please save this reference for your records"
+                />
+              )}
+
               <Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
                 <Button
                   variant="contained"
@@ -95,6 +132,7 @@ const OutcomePage = () => {
                     fontWeight: "bold",
                     width: 200,
                     height: 45,
+                    borderRadius: 2,
                   }}
                 >
                   {purchaseIsLoading ? "Proceeding..." : "Proceed to Purchase"}
@@ -110,8 +148,10 @@ const OutcomePage = () => {
                     fontWeight: "bold",
                     width: 160,
                     height: 45,
-                    bgcolor: "background.default",
+                    borderRadius: 2,
+                    bgcolor: "#e0e0e0",
                     color: "text.primary",
+                    "&:hover": { bgcolor: "#d0d0d0" },
                   }}
                 >
                   Back to Home
@@ -120,6 +160,7 @@ const OutcomePage = () => {
             </>
           ) : isReferred ? (
             <>
+              <ErrorOutlineIcon sx={{ fontSize: 80, color: "#e65100", mb: 1 }} />
               <Typography
                 variant="h4"
                 gutterBottom
@@ -128,31 +169,101 @@ const OutcomePage = () => {
                 Application Referred
               </Typography>
               <Typography variant="body1" sx={{ color: "text.secondary", mb: 3 }}>
-                Your application requires further review by our team.
+                Your application requires additional review by our underwriting team.
               </Typography>
 
-              {reason && (
-                <Paper
-                  elevation={0}
-                  sx={{
-                    bgcolor: "background.default",
-                    p: 3,
-                    borderRadius: 2,
-                    mb: 3,
-                    textAlign: "left",
-                  }}
-                >
-                  <Typography
-                    variant="h6"
-                    sx={{ color: "text.primary", fontWeight: "bold", mb: 1 }}
-                  >
-                    Reason for referral:
-                  </Typography>
-                  <Typography variant="body1" sx={{ color: "text.secondary" }}>
-                    {reason}
-                  </Typography>
-                </Paper>
+              {reference && (
+                <ReferenceCard
+                  color="#e65100"
+                  bgColor="#fff8f0"
+                  referenceText={reference}
+                  subText="Please save this reference for your records"
+                />
               )}
+
+              <Paper
+                elevation={0}
+                sx={{
+                  bgcolor: "background.default",
+                  p: 3,
+                  borderRadius: 2,
+                  mb: 3,
+                  textAlign: "left",
+                }}
+              >
+                <Typography variant="body1" fontWeight="bold" sx={{ color: "text.primary", mb: 2 }}>
+                  What happens next?
+                </Typography>
+                {[
+                  {
+                    icon: (
+                      <AccessTimeIcon sx={{ fontSize: 20, color: "text.secondary", mt: 0.3 }} />
+                    ),
+                    text: (
+                      <>
+                        Our underwriting team will review your application within{" "}
+                        <strong>2-3 business days</strong>
+                      </>
+                    ),
+                  },
+                  {
+                    icon: (
+                      <EmailOutlinedIcon sx={{ fontSize: 20, color: "text.secondary", mt: 0.3 }} />
+                    ),
+                    text: <>You will receive an email with our decision</>,
+                  },
+                  {
+                    icon: (
+                      <PhoneOutlinedIcon sx={{ fontSize: 20, color: "text.secondary", mt: 0.3 }} />
+                    ),
+                    text: <>We may contact you if additional information is needed</>,
+                  },
+                ].map((item, i) => (
+                  <Box
+                    key={i}
+                    sx={{ display: "flex", gap: 1.5, mb: 1.5, alignItems: "flex-start" }}
+                  >
+                    {item.icon}
+                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                      {item.text}
+                    </Typography>
+                  </Box>
+                ))}
+              </Paper>
+
+              <Paper
+                elevation={0}
+                sx={{ bgcolor: "#f0f4f8", p: 3, borderRadius: 2, mb: 3, textAlign: "left" }}
+              >
+                <Typography variant="body1" fontWeight="bold" sx={{ color: "text.primary", mb: 1 }}>
+                  Why was my application referred?
+                </Typography>
+                <Typography variant="body2" sx={{ color: "text.secondary", mb: 1.5 }}>
+                  Applications are referred for manual review when:
+                </Typography>
+                {[
+                  "Additional verification of information is required",
+                  "Your application falls outside standard underwriting criteria",
+                  "The device or coverage selected requires specialist assessment",
+                  "A manual review may result in a better outcome for your application",
+                ].map((item) => (
+                  <Box key={item} sx={{ display: "flex", gap: 1, mb: 1, alignItems: "flex-start" }}>
+                    <Box
+                      sx={{
+                        width: 6,
+                        height: 6,
+                        borderRadius: "50%",
+                        bgcolor: "primary.main",
+                        mt: 0.8,
+                        flexShrink: 0,
+                      }}
+                    />
+                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                      {item}
+                    </Typography>
+                  </Box>
+                ))}
+              </Paper>
 
               <Paper
                 elevation={0}
@@ -166,10 +277,10 @@ const OutcomePage = () => {
                 }}
               >
                 <Typography variant="h6" sx={{ color: "text.primary", fontWeight: "bold", mb: 1 }}>
-                  What happens next?
+                  Need to speak with us?
                 </Typography>
                 <Typography variant="body1" sx={{ color: "text.secondary", mb: 2 }}>
-                  Our underwriting team will be in touch within 2 business days.
+                  Our customer service team is available to answer any questions
                 </Typography>
                 <Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
                   <Button
@@ -178,14 +289,13 @@ const OutcomePage = () => {
                     disableElevation
                     disabled={callIsLoading}
                     onClick={handleCall}
-                    startIcon={<PhoneOutlined />}
+                    startIcon={<PhoneOutlinedIcon />}
                     sx={{
                       px: 3,
                       py: 1,
                       textTransform: "none",
                       fontWeight: "bold",
-                      width: 125,
-                      height: 40,
+                      borderRadius: 2,
                     }}
                   >
                     {callIsLoading ? "Calling..." : "Call Us"}
@@ -196,14 +306,13 @@ const OutcomePage = () => {
                     disableElevation
                     disabled={emailIsLoading}
                     onClick={handleEmail}
-                    startIcon={<EmailOutlined />}
+                    startIcon={<EmailOutlinedIcon />}
                     sx={{
                       px: 3,
                       py: 1,
                       textTransform: "none",
                       fontWeight: "bold",
-                      width: 175,
-                      height: 40,
+                      borderRadius: 2,
                     }}
                   >
                     {emailIsLoading ? "Sending..." : "Email Support"}
@@ -221,8 +330,10 @@ const OutcomePage = () => {
                   textTransform: "none",
                   fontWeight: "bold",
                   width: 150,
-                  bgcolor: "background.default",
+                  borderRadius: 2,
+                  bgcolor: "#e0e0e0",
                   color: "text.primary",
+                  "&:hover": { bgcolor: "#d0d0d0" },
                 }}
               >
                 Back to Home
@@ -230,12 +341,7 @@ const OutcomePage = () => {
             </>
           ) : (
             <>
-              <Box
-                component="img"
-                src={decline}
-                alt="Decline"
-                sx={{ width: 100, height: 100, mb: 2 }}
-              />
+              <CancelOutlinedIcon sx={{ fontSize: 80, color: "#c62828", mb: 1 }} />
               <Typography
                 variant="h4"
                 gutterBottom
@@ -247,6 +353,15 @@ const OutcomePage = () => {
                 Unfortunately, we are unable to provide coverage at this time.
               </Typography>
 
+              {reference && (
+                <ReferenceCard
+                  color="#c62828"
+                  bgColor="#fff5f5"
+                  referenceText={reference}
+                  subText="Please quote this reference when contacting support"
+                />
+              )}
+
               <Paper
                 elevation={0}
                 sx={{
@@ -257,24 +372,48 @@ const OutcomePage = () => {
                   textAlign: "left",
                 }}
               >
-                <Typography variant="h6" sx={{ color: "text.primary", fontWeight: "bold", mb: 2 }}>
+                {reason && (
+                  <Paper
+                    elevation={0}
+                    sx={{ bgcolor: "#fff5f5", p: 3, borderRadius: 2, mb: 3, textAlign: "left" }}
+                  >
+                    <Typography
+                      variant="body1"
+                      fontWeight="bold"
+                      sx={{ color: "text.primary", mb: 1 }}
+                    >
+                      Reason for decline:
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                      {reason}
+                    </Typography>
+                  </Paper>
+                )}
+                <Typography variant="body1" fontWeight="bold" sx={{ color: "text.primary", mb: 2 }}>
                   Common reasons for decline:
                 </Typography>
-                <Box
-                  component="ul"
-                  sx={{ color: "text.secondary", listStyleType: "none", p: 0, m: 0 }}
-                >
-                  {[
-                    "Device is older than our coverage eligibility criteria",
-                    "Pre-existing damage detected on the device",
-                    "Device model not currently covered under our policies",
-                    "Information provided could not be verified",
-                  ].map((reason) => (
-                    <Box component="li" key={reason} sx={{ mb: 1 }}>
-                      • {reason}
-                    </Box>
-                  ))}
-                </Box>
+                {[
+                  "Device is older than our coverage eligibility criteria",
+                  "Pre-existing damage detected on the device",
+                  "Device model not currently covered under our policies",
+                  "Information provided could not be verified",
+                ].map((item) => (
+                  <Box key={item} sx={{ display: "flex", gap: 1, mb: 1, alignItems: "flex-start" }}>
+                    <Box
+                      sx={{
+                        width: 6,
+                        height: 6,
+                        borderRadius: "50%",
+                        bgcolor: "primary.main",
+                        mt: 0.8,
+                        flexShrink: 0,
+                      }}
+                    />
+                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                      {item}
+                    </Typography>
+                  </Box>
+                ))}
               </Paper>
 
               <Paper
@@ -301,14 +440,13 @@ const OutcomePage = () => {
                     disableElevation
                     disabled={callIsLoading}
                     onClick={handleCall}
-                    startIcon={<PhoneOutlined />}
+                    startIcon={<PhoneOutlinedIcon />}
                     sx={{
                       px: 3,
                       py: 1,
                       textTransform: "none",
                       fontWeight: "bold",
-                      width: 125,
-                      height: 40,
+                      borderRadius: 2,
                     }}
                   >
                     {callIsLoading ? "Calling..." : "Call Us"}
@@ -319,14 +457,13 @@ const OutcomePage = () => {
                     disableElevation
                     disabled={emailIsLoading}
                     onClick={handleEmail}
-                    startIcon={<EmailOutlined />}
+                    startIcon={<EmailOutlinedIcon />}
                     sx={{
                       px: 3,
                       py: 1,
                       textTransform: "none",
                       fontWeight: "bold",
-                      width: 175,
-                      height: 40,
+                      borderRadius: 2,
                     }}
                   >
                     {emailIsLoading ? "Sending..." : "Email Support"}
@@ -344,8 +481,10 @@ const OutcomePage = () => {
                   textTransform: "none",
                   fontWeight: "bold",
                   width: 150,
-                  bgcolor: "background.default",
+                  borderRadius: 2,
+                  bgcolor: "#e0e0e0",
                   color: "text.primary",
+                  "&:hover": { bgcolor: "#d0d0d0" },
                 }}
               >
                 Back to Home
