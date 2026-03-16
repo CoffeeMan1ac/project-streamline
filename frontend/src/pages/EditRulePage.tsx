@@ -15,6 +15,7 @@ import {
   Button,
 } from "@mui/material";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
+import http from "../api/http";
 
 // each condition row has a field, operator, and value
 type Condition = {
@@ -116,9 +117,10 @@ const EditRulePage = ({ id, products = [], onClose, onSave }: EditRulePageProps)
   useEffect(() => {
     if (!id) return;
 
-    fetch(`/api/admin/rules/${id}`)
-      .then((res) => res.json())
-      .then((data) => {
+    http
+      .get(`/backoffice/rules/${id}`)
+      .then((res) => {
+        const data = res.data;
         setProduct(data.productId);
         setRuleName(data.name);
         setRuleDescription(data.description ?? "");
@@ -231,13 +233,8 @@ const EditRulePage = ({ id, products = [], onClose, onSave }: EditRulePageProps)
         },
       };
 
-      const res = await fetch(`/api/admin/rules/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      await http.put(`/backoffice/rules/${id}`, payload);
 
-      if (!res.ok) throw new Error("Failed to save rule");
       onSave?.();
       onClose?.();
     } catch (err) {

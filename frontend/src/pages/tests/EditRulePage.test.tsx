@@ -3,6 +3,7 @@ import { render, screen, fireEvent, within, cleanup, waitFor } from "@testing-li
 import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import EditRulePage from "../EditRulePage";
+import http from "../../api/http";
 
 describe("EditRulePage", () => {
   let form: HTMLFormElement;
@@ -30,10 +31,8 @@ describe("EditRulePage", () => {
   };
 
   beforeEach(() => {
-    vi.spyOn(globalThis, "fetch").mockResolvedValue({
-      ok: true,
-      json: async () => mockRule,
-    } as Response);
+    vi.spyOn(http, "get").mockResolvedValue({ data: mockRule });
+    vi.spyOn(http, "put").mockResolvedValue({ data: {} });
     cleanup();
   });
 
@@ -41,7 +40,6 @@ describe("EditRulePage", () => {
     vi.restoreAllMocks();
   });
 
-  // Renders the component and waits for the async fetch to populate the form
   const renderWithRouter = async () => {
     const utils = render(
       <MemoryRouter>
@@ -49,7 +47,6 @@ describe("EditRulePage", () => {
       </MemoryRouter>
     );
 
-    // Wait for the fetch to resolve and populate the form fields
     await screen.findByDisplayValue("Test Rule");
 
     const found = utils.container.querySelector("form");
@@ -59,7 +56,6 @@ describe("EditRulePage", () => {
     return utils;
   };
 
-  // Renders without an id so the fetch is skipped and the form stays empty
   const renderEmptyForm = () => {
     const utils = render(
       <MemoryRouter>
@@ -105,7 +101,6 @@ describe("EditRulePage", () => {
   });
 
   test("shows required errors when submitting empty form", () => {
-    // Use renderEmptyForm so no fetch fires and all fields stay blank
     renderEmptyForm();
     const f = within(form);
 
@@ -117,7 +112,6 @@ describe("EditRulePage", () => {
     await renderWithRouter();
     const f = within(form);
 
-    // Mock data pre-sets outcome to "decline", so the field is already visible after fetch.
     expect(f.getByText(/Reason for Decline/i)).toBeInTheDocument();
   });
 
@@ -148,9 +142,8 @@ describe("EditRulePage", () => {
   });
 
   test("premium outcome radio buttons are rendered when accept is selected", async () => {
-    vi.spyOn(globalThis, "fetch").mockResolvedValue({
-      ok: true,
-      json: async () => ({
+    vi.spyOn(http, "get").mockResolvedValue({
+      data: {
         ...mockRule,
         ruleConfig: {
           ...mockRule.ruleConfig,
@@ -160,8 +153,8 @@ describe("EditRulePage", () => {
             premiumDelta: null,
           },
         },
-      }),
-    } as Response);
+      },
+    });
 
     const utils = render(
       <MemoryRouter>
