@@ -8,6 +8,8 @@ import PhoneOutlinedIcon from "@mui/icons-material/PhoneOutlined";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import { Tooltip } from "@mui/material";
 
 const ReferenceCard = ({
   color,
@@ -19,22 +21,50 @@ const ReferenceCard = ({
   bgColor: string;
   referenceText: string;
   subText: string;
-}) => (
-  <Paper elevation={0} sx={{ bgcolor: bgColor, p: 3, borderRadius: 2, mb: 3, textAlign: "center" }}>
-    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 1, mb: 1 }}>
-      <ArticleOutlinedIcon sx={{ color, fontSize: 20 }} />
-      <Typography variant="body1" fontWeight="bold" sx={{ color: "text.primary" }}>
-        Decision Reference
+}) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(referenceText);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <Paper
+      elevation={0}
+      sx={{ bgcolor: bgColor, p: 3, borderRadius: 2, mb: 3, textAlign: "center" }}
+    >
+      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 1, mb: 1 }}>
+        <ArticleOutlinedIcon sx={{ color, fontSize: 20 }} />
+        <Typography variant="body1" fontWeight="bold" sx={{ color: "text.primary" }}>
+          Decision Reference
+        </Typography>
+      </Box>
+      <Box
+        sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 1, mb: 0.5 }}
+      >
+        <Typography variant="h6" fontWeight="bold" sx={{ color, letterSpacing: 1 }}>
+          {referenceText}
+        </Typography>
+        <Tooltip title={copied ? "Copied!" : "Copy"} placement="top">
+          <ContentCopyIcon
+            onClick={handleCopy}
+            sx={{
+              fontSize: 16,
+              color: copied ? "success.main" : color,
+              cursor: "pointer",
+              "&:hover": { opacity: 0.7 },
+            }}
+          />
+        </Tooltip>
+      </Box>
+      <Typography variant="body2" sx={{ color: "text.secondary" }}>
+        {subText}
       </Typography>
-    </Box>
-    <Typography variant="h6" fontWeight="bold" sx={{ color, letterSpacing: 1, mb: 0.5 }}>
-      {referenceText}
-    </Typography>
-    <Typography variant="body2" sx={{ color: "text.secondary" }}>
-      {subText}
-    </Typography>
-  </Paper>
-);
+    </Paper>
+  );
+};
 
 const OutcomePage = () => {
   const navigate = useNavigate();
