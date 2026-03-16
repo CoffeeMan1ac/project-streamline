@@ -8,6 +8,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../config/firebase";
 import { Brightness4, Brightness7 } from "@mui/icons-material";
+import { useAuth } from "../context/AuthContext";
 
 const EXPANDED_WIDTH = 260;
 const COLLAPSED_WIDTH = 64;
@@ -22,6 +23,7 @@ type SidebarProps = {
 const Sidebar = ({ toggleSidebar, open, toggleTheme, mode }: SidebarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useAuth();
 
   const getActiveFromPath = (path: string) => {
     if (path.startsWith("/rules")) return "rules";
@@ -182,11 +184,11 @@ const Sidebar = ({ toggleSidebar, open, toggleTheme, mode }: SidebarProps) => {
                   flexShrink: 0,
                 }}
               >
-                A
+                {user?.email?.[0]?.toUpperCase() ?? "A"}
               </Box>
               <Box display="flex" flexDirection="column">
                 <Typography fontWeight={600} fontSize={14}>
-                  Admin User
+                  {user?.email ?? "Admin User"}
                 </Typography>
                 <Typography fontSize={12} color="text.secondary">
                   Underwriter
