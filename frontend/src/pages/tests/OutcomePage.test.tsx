@@ -92,5 +92,37 @@ describe("OutcomePage", () => {
       fireEvent.click(screen.getByRole("button", { name: /Email Support/i }));
       expect(screen.getByRole("button", { name: /Sending.../i })).toBeInTheDocument();
     });
+
+    describe("Refer outcome", () => {
+      test("renders referred title", () => {
+        renderWithState({ decision: "refer", reason: "Manual review required" });
+        expect(screen.getByText(/Application Referred/i)).toBeInTheDocument();
+      });
+
+      test("renders the reason when provided", () => {
+        renderWithState({ decision: "refer", reason: "Manual review required" });
+        expect(screen.getByText(/Manual review required/i)).toBeInTheDocument();
+      });
+
+      test("renders what happens next section", () => {
+        renderWithState({ decision: "refer", reason: "Manual review required" });
+        expect(screen.getByText(/What happens next/i)).toBeInTheDocument();
+      });
+
+      test("renders call us button", () => {
+        renderWithState({ decision: "refer", reason: "Manual review required" });
+        expect(screen.getByRole("button", { name: /Call Us/i })).toBeInTheDocument();
+      });
+
+      test("renders email support button", () => {
+        renderWithState({ decision: "refer", reason: "Manual review required" });
+        expect(screen.getByRole("button", { name: /Email Support/i })).toBeInTheDocument();
+      });
+
+      test("renders back to home button", () => {
+        renderWithState({ decision: "refer", reason: "Manual review required" });
+        expect(screen.getByRole("button", { name: /Back to Home/i })).toBeInTheDocument();
+      });
+    });
   });
 });

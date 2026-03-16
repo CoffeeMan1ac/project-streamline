@@ -38,6 +38,8 @@ const OutcomePage = () => {
   const handleBack = () => navigate("/");
 
   const isAccepted = decision === "accept";
+  const isReferred = decision === "refer";
+  const reason = quoteResult?.reason;
 
   return (
     <Box sx={{ bgcolor: "background.default", p: 3 }}>
@@ -115,6 +117,116 @@ const OutcomePage = () => {
                   Back to Home
                 </Button>
               </Box>
+            </>
+          ) : isReferred ? (
+            <>
+              <Typography
+                variant="h4"
+                gutterBottom
+                sx={{ color: "text.primary", fontWeight: "bold" }}
+              >
+                Application Referred
+              </Typography>
+              <Typography variant="body1" sx={{ color: "text.secondary", mb: 3 }}>
+                Your application requires further review by our team.
+              </Typography>
+
+              {reason && (
+                <Paper
+                  elevation={0}
+                  sx={{
+                    bgcolor: "background.default",
+                    p: 3,
+                    borderRadius: 2,
+                    mb: 3,
+                    textAlign: "left",
+                  }}
+                >
+                  <Typography
+                    variant="h6"
+                    sx={{ color: "text.primary", fontWeight: "bold", mb: 1 }}
+                  >
+                    Reason for referral:
+                  </Typography>
+                  <Typography variant="body1" sx={{ color: "text.secondary" }}>
+                    {reason}
+                  </Typography>
+                </Paper>
+              )}
+
+              <Paper
+                elevation={0}
+                sx={{
+                  bgcolor: "background.default",
+                  p: 3,
+                  borderRadius: 2,
+                  mb: 3,
+                  border: "1px solid",
+                  borderColor: "divider",
+                }}
+              >
+                <Typography variant="h6" sx={{ color: "text.primary", fontWeight: "bold", mb: 1 }}>
+                  What happens next?
+                </Typography>
+                <Typography variant="body1" sx={{ color: "text.secondary", mb: 2 }}>
+                  Our underwriting team will be in touch within 2 business days.
+                </Typography>
+                <Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disableElevation
+                    disabled={callIsLoading}
+                    onClick={handleCall}
+                    startIcon={<PhoneOutlined />}
+                    sx={{
+                      px: 3,
+                      py: 1,
+                      textTransform: "none",
+                      fontWeight: "bold",
+                      width: 125,
+                      height: 40,
+                    }}
+                  >
+                    {callIsLoading ? "Calling..." : "Call Us"}
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disableElevation
+                    disabled={emailIsLoading}
+                    onClick={handleEmail}
+                    startIcon={<EmailOutlined />}
+                    sx={{
+                      px: 3,
+                      py: 1,
+                      textTransform: "none",
+                      fontWeight: "bold",
+                      width: 175,
+                      height: 40,
+                    }}
+                  >
+                    {emailIsLoading ? "Sending..." : "Email Support"}
+                  </Button>
+                </Box>
+              </Paper>
+
+              <Button
+                variant="contained"
+                disableElevation
+                onClick={handleBack}
+                sx={{
+                  px: 3,
+                  py: 1,
+                  textTransform: "none",
+                  fontWeight: "bold",
+                  width: 150,
+                  bgcolor: "background.default",
+                  color: "text.primary",
+                }}
+              >
+                Back to Home
+              </Button>
             </>
           ) : (
             <>

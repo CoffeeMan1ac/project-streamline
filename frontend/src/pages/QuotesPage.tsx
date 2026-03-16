@@ -193,10 +193,12 @@ const QuotesPage = () => {
 
       const status = String(result?.status ?? "").toUpperCase();
 
-      if (status === "ACCEPTED" || status === "APPROVED") {
+      if (status === "ACCEPTED") {
         navigate("/outcome", { state: { decision: "accept", premium: result.premium } });
+      } else if (status === "REFER") {
+        navigate("/outcome", { state: { decision: "refer", reason: result.reason } });
       } else {
-        navigate("/outcome", { state: { decision: "decline" } });
+        navigate("/outcome", { state: { decision: "decline", reason: result.reason } });
       }
     } catch (err: any) {
       const msg =
