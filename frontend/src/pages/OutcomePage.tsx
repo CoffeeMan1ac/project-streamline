@@ -9,6 +9,33 @@ import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
 
+const ReferenceCard = ({
+  color,
+  bgColor,
+  referenceText,
+  subText,
+}: {
+  color: string;
+  bgColor: string;
+  referenceText: string;
+  subText: string;
+}) => (
+  <Paper elevation={0} sx={{ bgcolor: bgColor, p: 3, borderRadius: 2, mb: 3, textAlign: "center" }}>
+    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 1, mb: 1 }}>
+      <ArticleOutlinedIcon sx={{ color, fontSize: 20 }} />
+      <Typography variant="body1" fontWeight="bold" sx={{ color: "text.primary" }}>
+        Decision Reference
+      </Typography>
+    </Box>
+    <Typography variant="h6" fontWeight="bold" sx={{ color, letterSpacing: 1, mb: 0.5 }}>
+      {referenceText}
+    </Typography>
+    <Typography variant="body2" sx={{ color: "text.secondary" }}>
+      {subText}
+    </Typography>
+  </Paper>
+);
+
 const OutcomePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -45,36 +72,6 @@ const OutcomePage = () => {
 
   const isAccepted = decision === "accept";
   const isReferred = decision === "refer";
-
-  const ReferenceCard = ({
-    color,
-    bgColor,
-    referenceText,
-    subText,
-  }: {
-    color: string;
-    bgColor: string;
-    referenceText: string;
-    subText: string;
-  }) => (
-    <Paper
-      elevation={0}
-      sx={{ bgcolor: bgColor, p: 3, borderRadius: 2, mb: 3, textAlign: "center" }}
-    >
-      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 1, mb: 1 }}>
-        <ArticleOutlinedIcon sx={{ color, fontSize: 20 }} />
-        <Typography variant="body1" fontWeight="bold" sx={{ color: "text.primary" }}>
-          Decision Reference
-        </Typography>
-      </Box>
-      <Typography variant="h6" fontWeight="bold" sx={{ color, letterSpacing: 1, mb: 0.5 }}>
-        {referenceText}
-      </Typography>
-      <Typography variant="body2" sx={{ color: "text.secondary" }}>
-        {subText}
-      </Typography>
-    </Paper>
-  );
 
   return (
     <Box sx={{ bgcolor: "background.default", p: 3 }}>
@@ -362,59 +359,67 @@ const OutcomePage = () => {
                 />
               )}
 
-              <Paper
-                elevation={0}
-                sx={{
-                  bgcolor: "background.default",
-                  p: 3,
-                  borderRadius: 2,
-                  mb: 3,
-                  textAlign: "left",
-                }}
-              >
-                {reason && (
-                  <Paper
-                    elevation={0}
-                    sx={{ bgcolor: "#fff5f5", p: 3, borderRadius: 2, mb: 3, textAlign: "left" }}
+              {reason ? (
+                <Paper
+                  elevation={0}
+                  sx={{ bgcolor: "#fff5f5", p: 3, borderRadius: 2, mb: 3, textAlign: "left" }}
+                >
+                  <Typography
+                    variant="body1"
+                    fontWeight="bold"
+                    sx={{ color: "text.primary", mb: 1 }}
                   >
-                    <Typography
-                      variant="body1"
-                      fontWeight="bold"
-                      sx={{ color: "text.primary", mb: 1 }}
-                    >
-                      Reason for decline:
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                      {reason}
-                    </Typography>
-                  </Paper>
-                )}
-                <Typography variant="body1" fontWeight="bold" sx={{ color: "text.primary", mb: 2 }}>
-                  Common reasons for decline:
-                </Typography>
-                {[
-                  "Device is older than our coverage eligibility criteria",
-                  "Pre-existing damage detected on the device",
-                  "Device model not currently covered under our policies",
-                  "Information provided could not be verified",
-                ].map((item) => (
-                  <Box key={item} sx={{ display: "flex", gap: 1, mb: 1, alignItems: "flex-start" }}>
+                    Reason for decline:
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                    {reason}
+                  </Typography>
+                </Paper>
+              ) : (
+                <Paper
+                  elevation={0}
+                  sx={{
+                    bgcolor: "background.default",
+                    p: 3,
+                    borderRadius: 2,
+                    mb: 3,
+                    textAlign: "left",
+                  }}
+                >
+                  <Typography
+                    variant="body1"
+                    fontWeight="bold"
+                    sx={{ color: "text.primary", mb: 2 }}
+                  >
+                    Common reasons for decline:
+                  </Typography>
+                  {[
+                    "Device is older than our coverage eligibility criteria",
+                    "Pre-existing damage detected on the device",
+                    "Device model not currently covered under our policies",
+                    "Information provided could not be verified",
+                  ].map((item) => (
                     <Box
-                      sx={{
-                        width: 6,
-                        height: 6,
-                        borderRadius: "50%",
-                        bgcolor: "primary.main",
-                        mt: 0.8,
-                        flexShrink: 0,
-                      }}
-                    />
-                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                      {item}
-                    </Typography>
-                  </Box>
-                ))}
-              </Paper>
+                      key={item}
+                      sx={{ display: "flex", gap: 1, mb: 1, alignItems: "flex-start" }}
+                    >
+                      <Box
+                        sx={{
+                          width: 6,
+                          height: 6,
+                          borderRadius: "50%",
+                          bgcolor: "primary.main",
+                          mt: 0.8,
+                          flexShrink: 0,
+                        }}
+                      />
+                      <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                        {item}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Paper>
+              )}
 
               <Paper
                 elevation={0}

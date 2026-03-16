@@ -65,9 +65,15 @@ describe("OutcomePage", () => {
       expect(screen.getByText(/Decision Reference/i)).toBeInTheDocument();
     });
 
-    test("renders common reasons section", () => {
+    test("renders common reasons when no reason is provided", () => {
       renderWithState({ decision: "decline" });
       expect(screen.getByText(/Common reasons for decline/i)).toBeInTheDocument();
+    });
+
+    test("renders specific reason when reason is provided", () => {
+      renderWithState({ decision: "decline", reason: "Device is too old" });
+      expect(screen.getByText(/Device is too old/i)).toBeInTheDocument();
+      expect(screen.queryByText(/Common reasons for decline/i)).not.toBeInTheDocument();
     });
 
     test("renders need help section", () => {
