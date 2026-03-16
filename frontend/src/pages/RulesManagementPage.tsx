@@ -67,7 +67,7 @@ const RulesManagementPage = () => {
   const selectedProduct = searchParams.get("product") ?? "";
   const [rules, setRules] = useState<Rule[]>([]);
   const [products, setProducts] = useState<ProductOption[]>([]);
-  const [createRuleOpen, setCreateRuleOpen] = useState(false);
+  const [createRuleOpen, setCreateRuleOpen] = useState(searchParams.get("create") === "true");
 
   const handleProductChange = (productId: string) => {
     setSearchParams({ product: productId });

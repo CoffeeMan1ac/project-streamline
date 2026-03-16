@@ -30,7 +30,7 @@ type Condition = {
   value: string;
 };
 
-const API_BASE = import.meta.env.VITE_API_URL;
+import http from "../api/http";
 
 const fieldOptions: Record<string, { value: string; label: string }[]> = {
   country: [
@@ -206,13 +206,8 @@ const CreateRulePage = ({
         },
       };
 
-      const res = await fetch(`${API_BASE}/admin/rules`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      await http.post("/backoffice/rules", payload);
 
-      if (!res.ok) throw new Error("Failed to create rule");
       onSave?.();
       onClose?.();
     } catch (err) {

@@ -614,7 +614,7 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
               onClick={() => {
                 setShowSuccess(false);
                 onClose?.();
-                navigate(`/rules?product=${newProductId}`); // was: navigate("/rules")
+                navigate(`/rules?product=${newProductId}&create=true`);
               }}
               sx={{ borderRadius: 3, py: 1.5, fontSize: 16 }}
             >

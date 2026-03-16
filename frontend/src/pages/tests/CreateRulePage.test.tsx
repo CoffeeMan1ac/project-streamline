@@ -4,7 +4,11 @@ import { describe, test, expect, vi, beforeEach } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import CreateRulePage from "../CreateRulePage";
 
-vi.mock("axios");
+vi.mock("../api/http", () => ({
+  default: {
+    post: vi.fn().mockResolvedValue({ data: {} }),
+  },
+}));
 
 describe("CreateRulePage", () => {
   let form: HTMLFormElement;
