@@ -105,21 +105,22 @@ const ProductRow: React.FC<ProductRowProps> = ({
       <TableCell>{coverageSummary}</TableCell>
 
       <TableCell>
-        <IconButton
-          size="small"
-          color={active ? "success" : "inherit"}
-          onClick={onToggleActive}
-          data-testid="toggle-button"
-        >
-          <PowerSettingsNewIcon fontSize="small" />
-        </IconButton>
-        <IconButton size="small" color="inherit" onClick={onEdit} data-testid="edit-button">
-          <EditIcon fontSize="small" />
-        </IconButton>
-
-        <IconButton size="small" color="error">
-          <DeleteIcon fontSize="small" />
-        </IconButton>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <IconButton
+            size="small"
+            color={active ? "success" : "inherit"}
+            onClick={onToggleActive}
+            data-testid="toggle-button"
+          >
+            <PowerSettingsNewIcon fontSize="small" />
+          </IconButton>
+          <IconButton size="small" color="inherit" onClick={onEdit} data-testid="edit-button">
+            <EditIcon fontSize="small" />
+          </IconButton>
+          <IconButton size="small" color="error">
+            <DeleteIcon fontSize="small" />
+          </IconButton>
+        </Box>
       </TableCell>
     </TableRow>
   );
