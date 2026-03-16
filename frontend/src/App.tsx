@@ -4,8 +4,7 @@ import QuotesPage from "./pages/QuotesPage";
 import "./App.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import AcceptPage from "./pages/AcceptPage";
-import DeclinePage from "./pages/DeclinePage";
+import OutcomePage from "./pages/Outcome";
 import RulesManagementPage from "./pages/RulesManagementPage";
 import { ThemeProvider, CssBaseline, Box } from "@mui/material";
 import { lightTheme, darkTheme } from "./theme/theme";
@@ -69,8 +68,7 @@ function AppContent() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/quote" element={<QuotesPage />} />
-            <Route path="/accepted" element={<AcceptPage />} />
-            <Route path="/declined" element={<DeclinePage />} />
+            <Route path="/outcome" element={<OutcomePage />} />
             <Route path="/login" element={<BackOfficeLoginPage />} />
             <Route element={<ProtectedRoute />}>
               <Route path="/rules" element={<RulesManagementPage />} />

@@ -194,9 +194,9 @@ const QuotesPage = () => {
       const status = String(result?.status ?? "").toUpperCase();
 
       if (status === "ACCEPTED" || status === "APPROVED") {
-        navigate("/accepted", { state: result });
+        navigate("/outcome", { state: { decision: "accept", premium: result.premium } });
       } else {
-        navigate("/declined", { state: result });
+        navigate("/outcome", { state: { decision: "decline" } });
       }
     } catch (err: any) {
       const msg =
