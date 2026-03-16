@@ -141,7 +141,7 @@ public class ProductService {
     else return getInactiveProducts();
   }
 
-  public void createProduct(CreateProductRequestDto productRequest) {
+  public ProductDto createProduct(CreateProductRequestDto productRequest) {
     Product product = new Product();
     product.setName(productRequest.getName());
     product.setDescription(productRequest.getDescription());
@@ -173,7 +173,8 @@ public class ProductService {
     if (exclusionsIds.size() != exclusions.size()) throw new CoverageNotFoundException();
     product.setExclusions(exclusions);
 
-    productRepository.saveAndFlush(product);
+    Product saved = productRepository.saveAndFlush(product);
+    return getProductDto(saved.getId());
   }
 
   public List<TagOptionDto> getAllTags() {

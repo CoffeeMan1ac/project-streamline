@@ -43,6 +43,7 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
   const [coverageOptions, setCoverageOptions] = useState<CoverageOption[]>([]);
   const [tagOptions, setTagOptions] = useState<TagOption[]>([]);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [newProductId, setNewProductId] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const startDateRef = useRef<HTMLInputElement>(null);
@@ -117,7 +118,8 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
     setSubmitError(null);
 
     try {
-      await productService.createProduct({
+      const { data } = await productService.createProduct({
+        // was: await productService.createProduct(
         name: productName,
         description,
         baseRate: parseFloat(monthlyPrice),
@@ -128,6 +130,7 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
         exclusions: selectedExclusions,
         tags: selectedTags,
       });
+      setNewProductId(data.id); // store the ID
       setShowSuccess(true);
     } catch {
       setSubmitError("Failed to create product. Please try again.");
@@ -611,7 +614,7 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
               onClick={() => {
                 setShowSuccess(false);
                 onClose?.();
-                navigate("/rules");
+                navigate(`/rules?product=${newProductId}`); // was: navigate("/rules")
               }}
               sx={{ borderRadius: 3, py: 1.5, fontSize: 16 }}
             >

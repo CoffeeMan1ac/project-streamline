@@ -92,7 +92,7 @@ export const productService = {
   toggleProductActive: (id: string) => http.patch<void>(`/backoffice/products/${id}/active`),
 
   createProduct: (payload: CreateProductRequest) =>
-    http.post<void>("/backoffice/products", payload),
+    http.post<ProductDto>("/backoffice/products", payload),
 
   getCoverages: () => http.get<CoverageOption[]>("/backoffice/products/coverages"),
 

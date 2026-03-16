@@ -168,7 +168,6 @@ const ProductManagementPage = () => {
         <CreateProductPage
           onClose={() => {
             setCreateProductOpen(false);
-            fetchProducts();
           }}
         />
       </Dialog>
