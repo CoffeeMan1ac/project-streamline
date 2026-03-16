@@ -4,7 +4,7 @@ import QuotesPage from "./pages/QuotesPage";
 import "./App.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import OutcomePage from "./pages/Outcome";
+import OutcomePage from "./pages/OutcomePage";
 import RulesManagementPage from "./pages/RulesManagementPage";
 import { ThemeProvider, CssBaseline, Box } from "@mui/material";
 import { lightTheme, darkTheme } from "./theme/theme";
