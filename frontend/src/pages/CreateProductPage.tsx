@@ -19,6 +19,10 @@ import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import { productService, type CoverageOption, type TagOption } from "../services/productService";
+import { Dialog, DialogContent } from "@mui/material";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { useNavigate } from "react-router-dom";
 
 interface CreateProductPageProps {
   onClose?: () => void;
@@ -38,6 +42,8 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [coverageOptions, setCoverageOptions] = useState<CoverageOption[]>([]);
   const [tagOptions, setTagOptions] = useState<TagOption[]>([]);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const navigate = useNavigate();
 
   const startDateRef = useRef<HTMLInputElement>(null);
   const endDateRef = useRef<HTMLInputElement>(null);
@@ -116,17 +122,15 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
         description,
         baseRate: parseFloat(monthlyPrice),
         type: "9333558f-9a40-4ad6-b20b-7f45246c70ea",
-        startDate: new Date(startDate).toISOString(),
-        endDate: endDate ? new Date(endDate).toISOString() : null,
+        startDate: `${startDate}T00:00:00`,
+        endDate: endDate ? `${endDate}T00:00:00` : null,
         coverages: selectedCoverages,
         exclusions: selectedExclusions,
         tags: selectedTags,
       });
-      onClose?.();
+      setShowSuccess(true);
     } catch {
       setSubmitError("Failed to create product. Please try again.");
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -566,6 +570,73 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
           </Box>
         </Container>
       </Box>
+      <Dialog
+        open={showSuccess}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{ sx: { borderRadius: 4, p: 2 } }}
+      >
+        <DialogContent>
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            textAlign="center"
+            gap={2}
+            py={2}
+          >
+            <Box
+              sx={{
+                width: 80,
+                height: 80,
+                borderRadius: "50%",
+                bgcolor: "success.light",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <CheckCircleIcon sx={{ fontSize: 40, color: "success.main" }} />
+            </Box>
+            <Typography variant="h5" fontWeight="bold">
+              Product Created Successfully!
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              Would you like to create rules for this product now?
+            </Typography>
+            <Button
+              fullWidth
+              variant="contained"
+              endIcon={<ArrowForwardIcon />}
+              onClick={() => {
+                setShowSuccess(false);
+                onClose?.();
+                navigate("/rules");
+              }}
+              sx={{ borderRadius: 3, py: 1.5, fontSize: 16 }}
+            >
+              Create Rules
+            </Button>
+            <Button
+              fullWidth
+              variant="outlined"
+              onClick={() => {
+                setShowSuccess(false);
+                onClose?.();
+              }}
+              sx={{
+                borderRadius: 3,
+                py: 1.5,
+                fontSize: 16,
+                borderColor: "divider",
+                color: "text.primary",
+              }}
+            >
+              Skip for Now
+            </Button>
+          </Box>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

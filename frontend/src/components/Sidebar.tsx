@@ -31,7 +31,7 @@ const Sidebar = ({ toggleSidebar, open, toggleTheme, mode }: SidebarProps) => {
     return "rules";
   };
 
-  const [active, setActive] = useState(getActiveFromPath(location.pathname));
+  const active = getActiveFromPath(location.pathname);
 
   const getButtonStyle = (name: string) => ({
     justifyContent: open ? "flex-start" : "center",
@@ -137,7 +137,6 @@ const Sidebar = ({ toggleSidebar, open, toggleTheme, mode }: SidebarProps) => {
                 sx={getButtonStyle(item.key)}
                 startIcon={item.icon}
                 onClick={() => {
-                  setActive(item.key);
                   navigate(item.path);
                 }}
               >
@@ -147,7 +146,6 @@ const Sidebar = ({ toggleSidebar, open, toggleTheme, mode }: SidebarProps) => {
               <Tooltip key={item.key} title={item.label} placement="right">
                 <IconButton
                   onClick={() => {
-                    setActive(item.key);
                     navigate(item.path);
                   }}
                   sx={{

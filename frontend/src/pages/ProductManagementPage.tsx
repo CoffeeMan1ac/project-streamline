@@ -164,12 +164,7 @@ const ProductManagementPage = () => {
         )}
       </Box>
 
-      <Dialog
-        open={createProductOpen}
-        onClose={() => setCreateProductOpen(false)}
-        maxWidth="md"
-        fullWidth
-      >
+      <Dialog open={createProductOpen} maxWidth="md" fullWidth>
         <CreateProductPage
           onClose={() => {
             setCreateProductOpen(false);
