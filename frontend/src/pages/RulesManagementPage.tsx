@@ -162,6 +162,7 @@ const RulesManagementPage = () => {
               onClose={() => setCreateRuleOpen(false)}
               maxWidth="md"
               fullWidth
+              fullScreen={window.innerWidth < 600}
             >
               <CreateRulePage
                 products={products}

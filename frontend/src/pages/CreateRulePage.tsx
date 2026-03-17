@@ -219,12 +219,15 @@ const CreateRulePage = ({
 
   return (
     <>
-      <Box sx={{ p: 6 }}>
+      <Box sx={{ p: { xs: 2, sm: 4, md: 6 } }}>
         <Container maxWidth="md" sx={{ p: 3, borderRadius: 2, bgcolor: "background.paper" }}>
           <Box
             sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}
           >
-            <Typography variant="h4" sx={{ color: "text.primary" }}>
+            <Typography
+              variant="h4"
+              sx={{ color: "text.primary", fontSize: { xs: "1.5rem", md: "2.125rem" } }}
+            >
               Create New Rule
             </Typography>
             <Typography
@@ -361,31 +364,48 @@ const CreateRulePage = ({
                   border: conditionErrors[index] ? "1px solid #d32f2f" : "none",
                 }}
               >
-                <Box sx={{ display: "flex", gap: 2, alignItems: "flex-start" }}>
-                  <Box sx={{ flex: 1 }}>
-                    <Typography variant="body2" sx={{ mb: 0.5, color: "text.secondary" }}>
-                      Field
-                    </Typography>
-                    <FormControl fullWidth disabled={isLoading}>
-                      <Select
-                        value={condition.field}
-                        displayEmpty
-                        onChange={(e) => {
-                          updateCondition(index, "field", e.target.value);
-                          updateCondition(index, "value", "");
-                          updateCondition(index, "operator", "");
-                        }}
-                        sx={{ textAlign: "left" }}
-                      >
-                        <MenuItem value="">Select field</MenuItem>
-                        <MenuItem value="country">Country</MenuItem>
-                        <MenuItem value="occupation">Occupation</MenuItem>
-                        <MenuItem value="phoneMake">Phone Make</MenuItem>
-                        <MenuItem value="phoneModel">Phone Model</MenuItem>
-                        <MenuItem value="phoneCondition">Phone Condition</MenuItem>
-                        <MenuItem value="phoneAge">Phone Age</MenuItem>
-                      </Select>
-                    </FormControl>
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: 2,
+                    alignItems: "flex-start",
+                    flexDirection: { xs: "column", sm: "row" },
+                  }}
+                >
+                  <Box
+                    sx={{
+                      display: "flex",
+                      gap: 2,
+                      flex: 1,
+                      width: "100%",
+                      flexDirection: { xs: "column", sm: "row" },
+                    }}
+                  >
+                    <Box sx={{ flex: 1 }}>
+                      <Typography variant="body2" sx={{ mb: 0.5, color: "text.secondary" }}>
+                        Field
+                      </Typography>
+                      <FormControl fullWidth disabled={isLoading}>
+                        <Select
+                          value={condition.field}
+                          displayEmpty
+                          onChange={(e) => {
+                            updateCondition(index, "field", e.target.value);
+                            updateCondition(index, "value", "");
+                            updateCondition(index, "operator", "");
+                          }}
+                          sx={{ textAlign: "left" }}
+                        >
+                          <MenuItem value="">Select field</MenuItem>
+                          <MenuItem value="country">Country</MenuItem>
+                          <MenuItem value="occupation">Occupation</MenuItem>
+                          <MenuItem value="phoneMake">Phone Make</MenuItem>
+                          <MenuItem value="phoneModel">Phone Model</MenuItem>
+                          <MenuItem value="phoneCondition">Phone Condition</MenuItem>
+                          <MenuItem value="phoneAge">Phone Age</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Box>
                   </Box>
 
                   <Box sx={{ flex: 1 }}>
@@ -448,7 +468,8 @@ const CreateRulePage = ({
                         color: "error.main",
                         fontSize: "20px",
                         flexShrink: 0,
-                        mt: 3.5,
+                        mt: { xs: 0, sm: 3.5 },
+                        alignSelf: { xs: "flex-end", sm: "auto" },
                       }}
                     >
                       ✕
