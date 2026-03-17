@@ -177,7 +177,7 @@ const ProductManagementPage = () => {
         )}
       </Box>
 
-      <Dialog open={createProductOpen} maxWidth="md" fullWidth>
+      <Dialog open={createProductOpen} maxWidth="md" fullWidth fullScreen={window.innerWidth < 600}>
         <CreateProductPage
           onClose={() => {
             setCreateProductOpen(false);
@@ -190,6 +190,7 @@ const ProductManagementPage = () => {
         onClose={() => setEditProductId(null)}
         maxWidth="md"
         fullWidth
+        fullScreen={window.innerWidth < 600}
       >
         <EditProductPage
           id={editProductId}

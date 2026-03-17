@@ -139,12 +139,15 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
 
   return (
     <>
-      <Box sx={{ p: 6 }}>
+      <Box sx={{ p: { xs: 2, sm: 4, md: 6 } }}>
         <Container maxWidth="md" sx={{ p: 3, borderRadius: 2, bgcolor: "background.paper" }}>
           <Box
             sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}
           >
-            <Typography variant="h4" sx={{ color: "text.primary" }}>
+            <Typography
+              variant="h4"
+              sx={{ color: "text.primary", fontSize: { xs: "1.5rem", md: "2.125rem" } }}
+            >
               Create New Product
             </Typography>
             <Typography
@@ -173,8 +176,15 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
               Basic Information
             </Typography>
 
-            <Box sx={{ display: "flex", gap: 2, alignItems: "flex-start" }}>
-              <Box sx={{ flex: 1 }}>
+            <Box
+              sx={{
+                display: "flex",
+                gap: 2,
+                alignItems: "flex-start",
+                flexDirection: { xs: "column", sm: "row" },
+              }}
+            >
+              <Box sx={{ flex: 1, width: "100%" }}>
                 <Typography variant="body1" gutterBottom sx={{ color: "text.primary" }}>
                   Product Name *
                 </Typography>
@@ -192,7 +202,7 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
                   sx={{ mb: 3 }}
                 />
               </Box>
-              <Box sx={{ flex: 1 }}>
+              <Box sx={{ flex: 1, width: "100%" }}>
                 <Typography variant="body1" gutterBottom sx={{ color: "text.primary" }}>
                   Status *
                 </Typography>
@@ -270,15 +280,22 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
               error={!!errors.monthlyPrice}
               helperText={errors.monthlyPrice}
               disabled={isLoading}
-              sx={{ mb: 3, width: "50%" }}
+              sx={{ mb: 3, width: { xs: "100%", sm: "50%" } }}
               InputProps={{ startAdornment: <InputAdornment position="start">€</InputAdornment> }}
             />
 
             <Typography variant="h6" fontWeight="bold" sx={{ color: "text.primary", mb: 2, mt: 1 }}>
               Validity Period
             </Typography>
-            <Box sx={{ display: "flex", gap: 2, alignItems: "flex-start" }}>
-              <Box sx={{ flex: 1 }}>
+            <Box
+              sx={{
+                display: "flex",
+                gap: 2,
+                alignItems: "flex-start",
+                flexDirection: { xs: "column", sm: "row" },
+              }}
+            >
+              <Box sx={{ flex: 1, width: "100%" }}>
                 <Typography variant="body1" gutterBottom sx={{ color: "text.primary" }}>
                   Start Date *
                 </Typography>
@@ -315,7 +332,7 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
                   sx={{ mb: 3 }}
                 />
               </Box>
-              <Box sx={{ flex: 1 }}>
+              <Box sx={{ flex: 1, width: "100%" }}>
                 <Typography variant="body1" gutterBottom sx={{ color: "text.primary" }}>
                   End Date
                 </Typography>
@@ -365,7 +382,13 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
                 mb: errors.coverages ? 0.5 : 3,
               }}
             >
-              <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1.5 }}>
+              <Box
+                sx={{
+                  display: "grid",
+                  gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+                  gap: 1.5,
+                }}
+              >
                 {coverageOptions.map((coverage) => {
                   const selected = selectedCoverages.includes(coverage.id);
                   const disabled = selectedExclusions.includes(coverage.id);
@@ -433,7 +456,13 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
               Select exclusions to apply to this product. These items will NOT be covered.
             </Typography>
             <Box sx={{ border: "1px solid #e0e0e0", borderRadius: 2, p: 2, mb: 3 }}>
-              <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1.5 }}>
+              <Box
+                sx={{
+                  display: "grid",
+                  gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+                  gap: 1.5,
+                }}
+              >
                 {coverageOptions.map((exclusion) => {
                   const selected = selectedExclusions.includes(exclusion.id);
                   const disabled = selectedCoverages.includes(exclusion.id);
