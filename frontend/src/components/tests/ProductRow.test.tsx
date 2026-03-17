@@ -97,4 +97,9 @@ describe("ProductRow", () => {
     expect(screen.getByText("Green")).toBeInTheDocument();
     expect(screen.getByText("Retired")).toBeInTheDocument();
   });
+
+  test("renders nothing for unknown tags", () => {
+    renderRow({ tags: ["UnknownTag"] });
+    expect(screen.queryByText("UnknownTag")).not.toBeInTheDocument();
+  });
 });
