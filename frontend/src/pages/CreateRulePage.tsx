@@ -406,75 +406,75 @@ const CreateRulePage = ({
                         </Select>
                       </FormControl>
                     </Box>
-                  </Box>
 
-                  <Box sx={{ flex: 1 }}>
-                    <Typography variant="body2" sx={{ mb: 0.5, color: "text.secondary" }}>
-                      Operator
-                    </Typography>
-                    <FormControl fullWidth disabled={isLoading}>
-                      <Select
-                        value={condition.operator}
-                        displayEmpty
-                        onChange={(e) => updateCondition(index, "operator", e.target.value)}
-                        sx={{ textAlign: "left" }}
-                      >
-                        <MenuItem value="">Select operator</MenuItem>
-                        <MenuItem value="equals">Equals</MenuItem>
-                        <MenuItem value="notEquals">Not Equals</MenuItem>
-                        <MenuItem value="greaterThan">Greater Than</MenuItem>
-                        <MenuItem value="lessThan">Less Than</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Box>
-
-                  <Box sx={{ flex: 1 }}>
-                    <Typography variant="body2" sx={{ mb: 0.5, color: "text.secondary" }}>
-                      Value
-                    </Typography>
-                    {fieldOptions[condition.field] ? (
+                    <Box sx={{ flex: 1 }}>
+                      <Typography variant="body2" sx={{ mb: 0.5, color: "text.secondary" }}>
+                        Operator
+                      </Typography>
                       <FormControl fullWidth disabled={isLoading}>
                         <Select
-                          value={condition.value}
+                          value={condition.operator}
                           displayEmpty
-                          onChange={(e) => updateCondition(index, "value", e.target.value)}
+                          onChange={(e) => updateCondition(index, "operator", e.target.value)}
                           sx={{ textAlign: "left" }}
                         >
-                          <MenuItem value="">Select value</MenuItem>
-                          {fieldOptions[condition.field].map((opt) => (
-                            <MenuItem key={opt.value} value={opt.value}>
-                              {opt.label}
-                            </MenuItem>
-                          ))}
+                          <MenuItem value="">Select operator</MenuItem>
+                          <MenuItem value="equals">Equals</MenuItem>
+                          <MenuItem value="notEquals">Not Equals</MenuItem>
+                          <MenuItem value="greaterThan">Greater Than</MenuItem>
+                          <MenuItem value="lessThan">Less Than</MenuItem>
                         </Select>
                       </FormControl>
-                    ) : (
-                      <TextField
-                        fullWidth
-                        placeholder="Value"
-                        value={condition.value}
-                        onChange={(e) => updateCondition(index, "value", e.target.value)}
-                        disabled={isLoading}
-                      />
+                    </Box>
+
+                    <Box sx={{ flex: 1 }}>
+                      <Typography variant="body2" sx={{ mb: 0.5, color: "text.secondary" }}>
+                        Value
+                      </Typography>
+                      {fieldOptions[condition.field] ? (
+                        <FormControl fullWidth disabled={isLoading}>
+                          <Select
+                            value={condition.value}
+                            displayEmpty
+                            onChange={(e) => updateCondition(index, "value", e.target.value)}
+                            sx={{ textAlign: "left" }}
+                          >
+                            <MenuItem value="">Select value</MenuItem>
+                            {fieldOptions[condition.field].map((opt) => (
+                              <MenuItem key={opt.value} value={opt.value}>
+                                {opt.label}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      ) : (
+                        <TextField
+                          fullWidth
+                          placeholder="Value"
+                          value={condition.value}
+                          onChange={(e) => updateCondition(index, "value", e.target.value)}
+                          disabled={isLoading}
+                        />
+                      )}
+                    </Box>
+
+                    {/* only show remove button if there is more than one condition */}
+                    {conditions.length > 1 && (
+                      <Typography
+                        onClick={() => removeCondition(index)}
+                        sx={{
+                          cursor: "pointer",
+                          color: "error.main",
+                          fontSize: "20px",
+                          flexShrink: 0,
+                          mt: { xs: 0, sm: 3.5 },
+                          alignSelf: { xs: "flex-end", sm: "auto" },
+                        }}
+                      >
+                        ✕
+                      </Typography>
                     )}
                   </Box>
-
-                  {/* only show remove button if there is more than one condition */}
-                  {conditions.length > 1 && (
-                    <Typography
-                      onClick={() => removeCondition(index)}
-                      sx={{
-                        cursor: "pointer",
-                        color: "error.main",
-                        fontSize: "20px",
-                        flexShrink: 0,
-                        mt: { xs: 0, sm: 3.5 },
-                        alignSelf: { xs: "flex-end", sm: "auto" },
-                      }}
-                    >
-                      ✕
-                    </Typography>
-                  )}
                 </Box>
                 {conditionErrors[index] && (
                   <Typography variant="body2" sx={{ color: "#d32f2f", mt: 1, fontSize: "12px" }}>

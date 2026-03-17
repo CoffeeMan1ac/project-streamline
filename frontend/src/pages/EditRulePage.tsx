@@ -246,12 +246,15 @@ const EditRulePage = ({ id, products = [], onClose, onSave }: EditRulePageProps)
 
   return (
     <>
-      <Box sx={{ p: 6 }}>
+      <Box sx={{ p: { xs: 2, sm: 4, md: 6 } }}>
         <Container maxWidth="md" sx={{ p: 3, borderRadius: 2, bgcolor: "background.paper" }}>
           <Box
             sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}
           >
-            <Typography variant="h4" sx={{ color: "text.primary" }}>
+            <Typography
+              variant="h4"
+              sx={{ color: "text.primary", fontSize: { xs: "1.5rem", md: "2.125rem" } }}
+            >
               Edit Rule
             </Typography>
             <Typography
@@ -388,92 +391,108 @@ const EditRulePage = ({ id, products = [], onClose, onSave }: EditRulePageProps)
                   border: conditionErrors[index] ? "1px solid #d32f2f" : "none",
                 }}
               >
-                <Box sx={{ display: "flex", gap: 2, alignItems: "flex-start" }}>
-                  <Box sx={{ flex: 1 }}>
-                    <Typography variant="body2" sx={{ mb: 0.5, color: "text.secondary" }}>
-                      Field
-                    </Typography>
-                    <FormControl fullWidth disabled={isLoading}>
-                      <Select
-                        value={condition.field}
-                        displayEmpty
-                        onChange={(e) => {
-                          const newField = e.target.value;
-                          setConditions((prev) =>
-                            prev.map((condition, i) =>
-                              i === index
-                                ? { ...condition, field: newField, value: "", operator: "" }
-                                : condition
-                            )
-                          );
-                          setConditionErrors((prev) =>
-                            prev.map((err, i) => (i === index ? false : err))
-                          );
-                        }}
-                        sx={{ textAlign: "left" }}
-                      >
-                        <MenuItem value="">Select field</MenuItem>
-                        <MenuItem value="country">Country</MenuItem>
-                        <MenuItem value="occupation">Occupation</MenuItem>
-                        <MenuItem value="phoneMake">Phone Make</MenuItem>
-                        <MenuItem value="phoneModel">Phone Model</MenuItem>
-                        <MenuItem value="phoneCondition">Phone Condition</MenuItem>
-                        <MenuItem value="phoneAge">Phone Age</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Box>
-
-                  <Box sx={{ flex: 1 }}>
-                    <Typography variant="body2" sx={{ mb: 0.5, color: "text.secondary" }}>
-                      Operator
-                    </Typography>
-                    <FormControl fullWidth disabled={isLoading}>
-                      <Select
-                        value={condition.operator}
-                        displayEmpty
-                        onChange={(e) => updateCondition(index, "operator", e.target.value)}
-                        sx={{ textAlign: "left" }}
-                      >
-                        <MenuItem value="">Select operator</MenuItem>
-                        <MenuItem value="equals">Equals</MenuItem>
-                        <MenuItem value="not_equals">Not Equals</MenuItem>
-                        <MenuItem value="greater_than">Greater Than</MenuItem>
-                        <MenuItem value="less_than">Less Than</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Box>
-
-                  <Box sx={{ flex: 1 }}>
-                    <Typography variant="body2" sx={{ mb: 0.5, color: "text.secondary" }}>
-                      Value
-                    </Typography>
-                    {fieldOptions[condition.field] ? (
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: 2,
+                    alignItems: "flex-start",
+                    flexDirection: { xs: "column", sm: "row" },
+                  }}
+                >
+                  <Box
+                    sx={{
+                      display: "flex",
+                      gap: 2,
+                      flex: 1,
+                      width: "100%",
+                      flexDirection: { xs: "column", sm: "row" },
+                    }}
+                  >
+                    <Box sx={{ flex: 1 }}>
+                      <Typography variant="body2" sx={{ mb: 0.5, color: "text.secondary" }}>
+                        Field
+                      </Typography>
                       <FormControl fullWidth disabled={isLoading}>
                         <Select
-                          value={condition.value}
+                          value={condition.field}
                           displayEmpty
-                          onChange={(e) => updateCondition(index, "value", e.target.value)}
+                          onChange={(e) => {
+                            const newField = e.target.value;
+                            setConditions((prev) =>
+                              prev.map((condition, i) =>
+                                i === index
+                                  ? { ...condition, field: newField, value: "", operator: "" }
+                                  : condition
+                              )
+                            );
+                            setConditionErrors((prev) =>
+                              prev.map((err, i) => (i === index ? false : err))
+                            );
+                          }}
                           sx={{ textAlign: "left" }}
                         >
-                          <MenuItem value="">Select value</MenuItem>
-                          {fieldOptions[condition.field].map((opt) => (
-                            <MenuItem key={opt.value} value={opt.value}>
-                              {opt.label}
-                            </MenuItem>
-                          ))}
+                          <MenuItem value="">Select field</MenuItem>
+                          <MenuItem value="country">Country</MenuItem>
+                          <MenuItem value="occupation">Occupation</MenuItem>
+                          <MenuItem value="phoneMake">Phone Make</MenuItem>
+                          <MenuItem value="phoneModel">Phone Model</MenuItem>
+                          <MenuItem value="phoneCondition">Phone Condition</MenuItem>
+                          <MenuItem value="phoneAge">Phone Age</MenuItem>
                         </Select>
                       </FormControl>
-                    ) : (
-                      <TextField
-                        fullWidth
-                        placeholder="Value"
-                        value={condition.value}
-                        onChange={(e) => updateCondition(index, "value", e.target.value)}
-                        disabled={isLoading}
-                      />
-                    )}
-                  </Box>
+                    </Box>
 
+                    <Box sx={{ flex: 1 }}>
+                      <Typography variant="body2" sx={{ mb: 0.5, color: "text.secondary" }}>
+                        Operator
+                      </Typography>
+                      <FormControl fullWidth disabled={isLoading}>
+                        <Select
+                          value={condition.operator}
+                          displayEmpty
+                          onChange={(e) => updateCondition(index, "operator", e.target.value)}
+                          sx={{ textAlign: "left" }}
+                        >
+                          <MenuItem value="">Select operator</MenuItem>
+                          <MenuItem value="equals">Equals</MenuItem>
+                          <MenuItem value="not_equals">Not Equals</MenuItem>
+                          <MenuItem value="greater_than">Greater Than</MenuItem>
+                          <MenuItem value="less_than">Less Than</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Box>
+
+                    <Box sx={{ flex: 1 }}>
+                      <Typography variant="body2" sx={{ mb: 0.5, color: "text.secondary" }}>
+                        Value
+                      </Typography>
+                      {fieldOptions[condition.field] ? (
+                        <FormControl fullWidth disabled={isLoading}>
+                          <Select
+                            value={condition.value}
+                            displayEmpty
+                            onChange={(e) => updateCondition(index, "value", e.target.value)}
+                            sx={{ textAlign: "left" }}
+                          >
+                            <MenuItem value="">Select value</MenuItem>
+                            {fieldOptions[condition.field].map((opt) => (
+                              <MenuItem key={opt.value} value={opt.value}>
+                                {opt.label}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      ) : (
+                        <TextField
+                          fullWidth
+                          placeholder="Value"
+                          value={condition.value}
+                          onChange={(e) => updateCondition(index, "value", e.target.value)}
+                          disabled={isLoading}
+                        />
+                      )}
+                    </Box>
+                  </Box>
                   {/* only show remove button if there is more than one condition */}
                   {conditions.length > 1 && (
                     <Typography
@@ -483,7 +502,8 @@ const EditRulePage = ({ id, products = [], onClose, onSave }: EditRulePageProps)
                         color: "error.main",
                         fontSize: "20px",
                         flexShrink: 0,
-                        mt: 3.5,
+                        mt: { xs: 0, sm: 3.5 },
+                        alignSelf: { xs: "flex-end", sm: "auto" },
                       }}
                     >
                       ✕

@@ -196,6 +196,7 @@ const RulesManagementPage = () => {
         onClose={() => setEditRuleId(null)}
         maxWidth="md"
         fullWidth
+        fullScreen={window.innerWidth < 600}
       >
         <EditRulePage
           id={editRuleId}
