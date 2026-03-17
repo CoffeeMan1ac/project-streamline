@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom/vitest";
-import { render, screen, cleanup } from "@testing-library/react";
+import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import { describe, test, expect, vi, beforeEach } from "vitest";
 import RuleTable from "../RuleTable";
 
@@ -124,5 +124,21 @@ describe("RuleTable", () => {
   test("renders conditions header", () => {
     render(<RuleTable {...defaultProps} />);
     expect(screen.getByText("Conditions")).toBeInTheDocument();
+  });
+
+  test("calls onToggleRuleActive when toggle is clicked", () => {
+    const onToggleRuleActive = vi.fn();
+    render(<RuleTable {...defaultProps} onToggleRuleActive={onToggleRuleActive} />);
+    const powerButtons = screen.getAllByTestId("PowerSettingsNewIcon");
+    fireEvent.click(powerButtons[0].closest("button")!);
+    expect(onToggleRuleActive).toHaveBeenCalledWith(1);
+  });
+
+  test("calls onEditRule when edit is clicked", () => {
+    const onEditRule = vi.fn();
+    render(<RuleTable {...defaultProps} onEditRule={onEditRule} />);
+    const editButtons = screen.getAllByTestId("EditIcon");
+    fireEvent.click(editButtons[0].closest("button")!);
+    expect(onEditRule).toHaveBeenCalledWith("1");
   });
 });
