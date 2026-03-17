@@ -1,5 +1,5 @@
 import Home from "./pages/Home";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import QuotesPage from "./pages/QuotesPage";
 import "./App.css";
 import Navbar from "./components/Navbar";
@@ -75,6 +75,7 @@ function AppContent() {
               <Route path="/products-management" element={<ProductManagementPage />} />
             </Route>
             <Route path="/sandbox" element={<Sandbox />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
           {!isBackOffice && <Footer />}
         </Box>
