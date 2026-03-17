@@ -130,7 +130,7 @@ const RulesManagementPage = () => {
 
   return (
     <>
-      <Box sx={{ mx: 20, my: 4 }}>
+      <Box sx={{ mx: { xs: 2, sm: 3, md: 4, lg: 8, xl: 20 }, my: 4 }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
           <Box>
             <Typography variant="h4" sx={{ fontWeight: 700 }}>

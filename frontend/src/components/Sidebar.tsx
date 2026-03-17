@@ -8,6 +8,7 @@ import { signOut } from "firebase/auth";
 import { auth } from "../config/firebase";
 import { Brightness4, Brightness7 } from "@mui/icons-material";
 import { useAuth } from "../context/AuthContext";
+import { useTheme, useMediaQuery } from "@mui/material";
 
 const EXPANDED_WIDTH = 260;
 const COLLAPSED_WIDTH = 64;
@@ -58,17 +59,21 @@ const Sidebar = ({ toggleSidebar, open, toggleTheme, mode }: SidebarProps) => {
       path: "/products-management",
     },
   ];
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   return (
     <Drawer
-      variant="permanent"
+      variant={isMobile ? "temporary" : "permanent"}
+      open={isMobile ? open : true}
+      onClose={toggleSidebar}
       anchor="left"
       sx={{
-        width: open ? EXPANDED_WIDTH : COLLAPSED_WIDTH,
+        width: isMobile ? 0 : open ? EXPANDED_WIDTH : COLLAPSED_WIDTH,
         flexShrink: 0,
         transition: "width 0.3s ease",
         "& .MuiDrawer-paper": {
-          width: open ? EXPANDED_WIDTH : COLLAPSED_WIDTH,
+          width: isMobile ? EXPANDED_WIDTH : open ? EXPANDED_WIDTH : COLLAPSED_WIDTH,
           boxSizing: "border-box",
           borderRight: "1px solid #e0e0e0",
           overflowX: "hidden",
