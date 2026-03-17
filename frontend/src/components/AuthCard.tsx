@@ -43,7 +43,7 @@ const AuthCard = ({ onSubmit }: AuthCardProps) => {
         <TextField
           fullWidth
           id="outlined-basic"
-          placeholder="admin@phoneshield.com"
+          placeholder="admin@phone-shield.com"
           variant="outlined"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -86,7 +86,7 @@ const AuthCard = ({ onSubmit }: AuthCardProps) => {
       </Button>
       <Box borderTop={1} borderColor="divider" pt={2}>
         <Typography fontSize="small" sx={{ color: "text.secondary" }}>
-          Demo credentials: admin@phoneshield.com / admin123
+          Demo credentials: admin@phone-shield.com / phone-shield-sweng
         </Typography>
       </Box>
     </Box>
