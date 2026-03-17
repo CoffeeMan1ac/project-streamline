@@ -102,7 +102,7 @@ const ProductRow: React.FC<ProductRowProps> = ({
         </Typography>
       </TableCell>
 
-      <TableCell>{coverageSummary}</TableCell>
+      <TableCell sx={{ display: { xs: "none", md: "table-cell" } }}>{coverageSummary}</TableCell>
 
       <TableCell>
         <Box sx={{ display: "flex", alignItems: "center" }}>

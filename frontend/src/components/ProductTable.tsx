@@ -32,7 +32,13 @@ const ProductTable: React.FC<ProductTableProps> = ({
   onToggleProductActive,
 }) => {
   return (
-    <Box border={1} borderColor="divider" borderRadius={2} bgcolor={"background.paper"}>
+    <Box
+      border={1}
+      borderColor="divider"
+      borderRadius={2}
+      bgcolor={"background.paper"}
+      sx={{ overflowX: "auto" }}
+    >
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -40,7 +46,9 @@ const ProductTable: React.FC<ProductTableProps> = ({
               <TableCell>PRODUCT NAME</TableCell>
               <TableCell>STATUS</TableCell>
               <TableCell>PRICE</TableCell>
-              <TableCell>COVERAGE SUMMARY</TableCell>
+              <TableCell sx={{ display: { xs: "none", md: "table-cell" } }}>
+                COVERAGE SUMMARY
+              </TableCell>
               <TableCell>ACTIONS</TableCell>
             </TableRow>
           </TableHead>

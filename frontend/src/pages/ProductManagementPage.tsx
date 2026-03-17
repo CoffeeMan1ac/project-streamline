@@ -77,7 +77,7 @@ const ProductManagementPage = () => {
 
   return (
     <>
-      <Box sx={{ mx: 20, my: 4 }}>
+      <Box sx={{ mx: { xs: 2, sm: 3, md: 4, lg: 8, xl: 20 }, my: 4 }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
           <Box>
             <Typography variant="h4" sx={{ fontWeight: 700 }}>
@@ -98,6 +98,7 @@ const ProductManagementPage = () => {
               p: 3,
               display: "flex",
               alignItems: "center",
+              flexWrap: "wrap",
               gap: 2,
             }}
           >
@@ -106,7 +107,7 @@ const ProductManagementPage = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               size="small"
-              sx={{ flex: 3 }}
+              sx={{ flex: 3, minWidth: { xs: "100%", sm: 0 } }}
               slotProps={{
                 input: {
                   sx: { borderRadius: 2 },
@@ -118,8 +119,8 @@ const ProductManagementPage = () => {
                 },
               }}
             />
-            <TuneIcon sx={{ color: "text.secondary", cursor: "pointer" }} />
-            <FormControl size="small" sx={{ flex: 1 }}>
+            <TuneIcon sx={{ color: "text.secondary", cursor: "pointer", display: { xs: "none", sm: "block" } }} />
+            <FormControl size="small" sx={{ flex: 1, minWidth: { xs: "100%", sm: 120 } }}>
               <Select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
@@ -138,7 +139,13 @@ const ProductManagementPage = () => {
               size="small"
               startIcon={<AddIcon />}
               onClick={() => setCreateProductOpen(true)}
-              sx={{ whiteSpace: "nowrap", borderRadius: 2, px: 2, py: 1 }}
+              sx={{
+                whiteSpace: "nowrap",
+                borderRadius: 2,
+                px: 2,
+                py: 1,
+                width: { xs: "100%", sm: "auto" },
+              }}
             >
               Create Product
             </Button>
