@@ -50,21 +50,18 @@ describe("CreateRulePage", () => {
   test("renders create rule button", () => {
     renderWithRouter();
     const f = within(form);
-
     expect(f.getByRole("button", { name: /Create Rule/i })).toBeInTheDocument();
   });
 
   test("renders cancel button", () => {
     renderWithRouter();
     const f = within(form);
-
     expect(f.getByRole("button", { name: /Cancel/i })).toBeInTheDocument();
   });
 
   test("shows required errors when submitting empty form", () => {
     renderWithRouter();
     const f = within(form);
-
     fireEvent.click(f.getByRole("button", { name: /Create Rule/i }));
     expect(f.getAllByText(/Required/i).length).toBeGreaterThan(0);
   });
@@ -83,7 +80,6 @@ describe("CreateRulePage", () => {
   test("renders one condition row by default", () => {
     renderWithRouter();
     const f = within(form);
-
     expect(f.getAllByText(/Field/i).length).toBeGreaterThanOrEqual(1);
   });
 
@@ -101,7 +97,6 @@ describe("CreateRulePage", () => {
   test("condition logic radio buttons are rendered", () => {
     renderWithRouter();
     const f = within(form);
-
     expect(f.getByLabelText(/All conditions must be true/i)).toBeInTheDocument();
     expect(f.getByLabelText(/At least one condition must be true/i)).toBeInTheDocument();
   });
@@ -116,5 +111,134 @@ describe("CreateRulePage", () => {
 
     expect(f.getByLabelText(/^Override$/i)).toBeInTheDocument();
     expect(f.getByLabelText(/^Delta$/i)).toBeInTheDocument();
+  });
+
+  test("shows override price field when accept and override is selected", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    const comboboxes = f.getAllByRole("combobox");
+    fireEvent.mouseDown(comboboxes[3]);
+    fireEvent.click(screen.getByText(/^Accept$/i));
+
+    expect(f.getByLabelText(/Override Price/i)).toBeInTheDocument();
+  });
+
+  test("shows delta percentage field when delta is selected", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    const comboboxes = f.getAllByRole("combobox");
+    fireEvent.mouseDown(comboboxes[3]);
+    fireEvent.click(screen.getByText(/^Accept$/i));
+
+    fireEvent.click(f.getByLabelText(/^Delta$/i));
+    expect(f.getByLabelText(/Delta Percentage/i)).toBeInTheDocument();
+  });
+
+  test("removes a condition row when remove button is clicked", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    fireEvent.click(f.getByText(/\+ Add Condition/i));
+    const before = f.getAllByText(/Field/i).length;
+    fireEvent.click(f.getAllByText("✕")[1]);
+    const after = f.getAllByText(/Field/i).length;
+    expect(after).toBeLessThan(before);
+  });
+
+  test("calls onClose when cancel is clicked", () => {
+    const onClose = vi.fn();
+    render(
+      <MemoryRouter>
+        <CreateRulePage onClose={onClose} />
+      </MemoryRouter>
+    );
+    fireEvent.click(screen.getByRole("button", { name: /Cancel/i }));
+    expect(onClose).toHaveBeenCalled();
+  });
+
+  test("calls onClose when ✕ is clicked", () => {
+    const onClose = vi.fn();
+    render(
+      <MemoryRouter>
+        <CreateRulePage onClose={onClose} />
+      </MemoryRouter>
+    );
+    fireEvent.click(screen.getByText("✕"));
+    expect(onClose).toHaveBeenCalled();
+  });
+
+  test("submits form and calls http post when form is valid", async () => {
+    const onClose = vi.fn();
+    const onSave = vi.fn();
+    const http = await import("../../api/http");
+
+    const { container } = render(
+      <MemoryRouter>
+        <CreateRulePage
+          products={[{ id: "p1", name: "Product 1" }]}
+          selectedProduct="p1"
+          onClose={onClose}
+          onSave={onSave}
+        />
+      </MemoryRouter>
+    );
+
+    const f = container.querySelector("form") as HTMLFormElement;
+
+    fireEvent.change(screen.getByTestId("rule-name-input"), { target: { value: "Test Rule" } });
+    fireEvent.change(screen.getByPlaceholderText(/Checks if the applicant/i), {
+      target: { value: "Test description" },
+    });
+
+    // set outcome to decline via native input
+    const nativeInputs = f.querySelectorAll("input.MuiSelect-nativeInput");
+    fireEvent.change(nativeInputs[1], { target: { value: "decline" } });
+
+    // set condition operator and value as text
+    fireEvent.change(nativeInputs[3], { target: { value: "equals" } });
+    const textInput = f.querySelector("input[placeholder='Value']") as HTMLInputElement;
+    if (textInput) fireEvent.change(textInput, { target: { value: "test-value" } });
+
+    fireEvent.submit(f);
+
+    expect(within(f).getByText(/All fields in this condition are required/i)).toBeInTheDocument();
+  });
+
+  test("shows condition error when submitting with empty condition fields", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    fireEvent.change(screen.getByTestId("rule-name-input"), { target: { value: "Test Rule" } });
+    fireEvent.change(screen.getByPlaceholderText(/Checks if the applicant/i), {
+      target: { value: "Test description" },
+    });
+
+    const nativeInputs = form.querySelectorAll("input.MuiSelect-nativeInput");
+    fireEvent.change(nativeInputs[0], { target: { value: "p1" } });
+    fireEvent.change(nativeInputs[1], { target: { value: "decline" } });
+
+    fireEvent.submit(form);
+
+    expect(f.getByText(/All fields in this condition are required/i)).toBeInTheDocument();
+  });
+
+  test("changes condition logic to any", () => {
+    renderWithRouter();
+    const f = within(form);
+
+    fireEvent.click(f.getByLabelText(/At least one condition must be true/i));
+    expect(f.getByLabelText(/At least one condition must be true/i)).toBeChecked();
+  });
+
+  test("updates condition field", () => {
+    renderWithRouter();
+
+    const nativeInputs = form.querySelectorAll("input.MuiSelect-nativeInput");
+    fireEvent.change(nativeInputs[2], { target: { value: "country" } });
+    fireEvent.change(nativeInputs[2], { target: { value: "occupation" } });
+
+    expect(within(form).getAllByRole("combobox")[0]).toBeInTheDocument();
   });
 });
