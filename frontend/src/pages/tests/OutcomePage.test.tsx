@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom/vitest";
-import { render, screen, fireEvent, cleanup } from "@testing-library/react";
-import { describe, test, expect, beforeEach } from "vitest";
+import { render, screen, fireEvent, cleanup, waitFor } from "@testing-library/react";
+import { describe, test, expect, vi, beforeEach } from "vitest";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import OutcomePage from "../OutcomePage";
 
@@ -157,5 +157,57 @@ describe("OutcomePage", () => {
       fireEvent.click(screen.getByRole("button", { name: /Email Support/i }));
       expect(screen.getByRole("button", { name: /Sending.../i })).toBeInTheDocument();
     });
+  });
+
+  test("copy icon is rendered when reference is provided", () => {
+    renderWithState({ decision: "accept", premium: 29.99, reference: "ABC123" });
+    expect(screen.getByTestId("ContentCopyIcon")).toBeInTheDocument();
+  });
+
+  test("copies reference to clipboard when copy icon is clicked", () => {
+    const writeTextMock = vi.fn();
+    Object.assign(navigator, {
+      clipboard: { writeText: writeTextMock },
+    });
+
+    renderWithState({ decision: "accept", premium: 29.99, reference: "ABC123" });
+    fireEvent.click(screen.getByTestId("ContentCopyIcon"));
+    expect(writeTextMock).toHaveBeenCalledWith("ABC123");
+  });
+
+  test("proceed to purchase button returns to normal after loading", async () => {
+    renderWithState({ decision: "accept", premium: 29.99 });
+    fireEvent.click(screen.getByRole("button", { name: /Proceed to Purchase/i }));
+    expect(screen.getByRole("button", { name: /Proceeding.../i })).toBeInTheDocument();
+    await waitFor(
+      () => {
+        expect(screen.getByRole("button", { name: /Proceed to Purchase/i })).toBeInTheDocument();
+      },
+      { timeout: 2000 }
+    );
+  });
+
+  test("call us button returns to normal after loading", async () => {
+    renderWithState({ decision: "decline" });
+    fireEvent.click(screen.getByRole("button", { name: /Call Us/i }));
+    expect(screen.getByRole("button", { name: /Calling.../i })).toBeInTheDocument();
+    await waitFor(
+      () => {
+        expect(screen.getByRole("button", { name: /Call Us/i })).toBeInTheDocument();
+      },
+      { timeout: 2000 }
+    );
+  });
+
+  test("email support button returns to normal after loading", async () => {
+    renderWithState({ decision: "decline" });
+    fireEvent.click(screen.getByRole("button", { name: /Email Support/i }));
+    expect(screen.getByRole("button", { name: /Sending.../i })).toBeInTheDocument();
+    await waitFor(
+      () => {
+        expect(screen.getByRole("button", { name: /Email Support/i })).toBeInTheDocument();
+      },
+      { timeout: 2000 }
+    );
   });
 });
