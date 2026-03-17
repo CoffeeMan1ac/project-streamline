@@ -119,7 +119,13 @@ const ProductManagementPage = () => {
                 },
               }}
             />
-            <TuneIcon sx={{ color: "text.secondary", cursor: "pointer", display: { xs: "none", sm: "block" } }} />
+            <TuneIcon
+              sx={{
+                color: "text.secondary",
+                cursor: "pointer",
+                display: { xs: "none", sm: "block" },
+              }}
+            />
             <FormControl size="small" sx={{ flex: 1, minWidth: { xs: "100%", sm: 120 } }}>
               <Select
                 value={statusFilter}

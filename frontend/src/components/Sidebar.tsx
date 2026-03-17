@@ -142,6 +142,7 @@ const Sidebar = ({ toggleSidebar, open, toggleTheme, mode }: SidebarProps) => {
                 startIcon={item.icon}
                 onClick={() => {
                   navigate(item.path);
+                  if (isMobile) toggleSidebar();
                 }}
               >
                 {item.label}
@@ -151,6 +152,7 @@ const Sidebar = ({ toggleSidebar, open, toggleTheme, mode }: SidebarProps) => {
                 <IconButton
                   onClick={() => {
                     navigate(item.path);
+                    if (isMobile) toggleSidebar();
                   }}
                   sx={{
                     borderRadius: 1,
