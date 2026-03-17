@@ -5,10 +5,12 @@ import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config/firebase";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const BackOfficeLoginPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [error, setError] = useState<string | null>(null);
   const from = location.state?.from?.pathname || "/rules";
   const handleLogin = async (email: string, password: string) => {
     try {
@@ -17,6 +19,7 @@ const BackOfficeLoginPage = () => {
       navigate(from, { replace: true });
     } catch (error) {
       console.error("Login failed:", error);
+      setError("Invalid email or password.");
     }
   };
 
@@ -59,7 +62,7 @@ const BackOfficeLoginPage = () => {
         <Typography gutterBottom mb={5} sx={{ color: "text.secondary" }}>
           Back Office Portal Login
         </Typography>
-        <AuthCard onSubmit={handleLogin} />
+        <AuthCard onSubmit={handleLogin} error={error} />
         <Button
           onClick={() => navigate("/")}
           variant="text"

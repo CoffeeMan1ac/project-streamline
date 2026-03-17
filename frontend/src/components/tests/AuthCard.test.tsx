@@ -14,10 +14,8 @@ describe("AuthCard", () => {
 
     render(<AuthCard onSubmit={mockSubmit} />);
 
-    expect(screen.getByPlaceholderText(/admin@phoneshield.com/i)).toBeInTheDocument();
-
+    expect(screen.getByPlaceholderText(/admin@phone-shield.com/i)).toBeInTheDocument();
     expect(screen.getByPlaceholderText(/enter your password/i)).toBeInTheDocument();
-
     expect(screen.getByRole("button", { name: /login/i })).toBeInTheDocument();
   });
 
@@ -27,7 +25,7 @@ describe("AuthCard", () => {
 
     render(<AuthCard onSubmit={mockSubmit} />);
 
-    const emailInput = screen.getByPlaceholderText(/admin@phoneshield.com/i);
+    const emailInput = screen.getByPlaceholderText(/admin@phone-shield.com/i);
     const passwordInput = screen.getByPlaceholderText(/enter your password/i);
 
     await user.type(emailInput, "test@example.com");
@@ -61,7 +59,7 @@ describe("AuthCard", () => {
 
     render(<AuthCard onSubmit={mockSubmit} />);
 
-    const emailInput = screen.getByPlaceholderText(/admin@phoneshield.com/i);
+    const emailInput = screen.getByPlaceholderText(/admin@phone-shield.com/i);
     const passwordInput = screen.getByPlaceholderText(/enter your password/i);
     const loginButton = screen.getByRole("button", { name: /login/i });
 
@@ -71,5 +69,23 @@ describe("AuthCard", () => {
 
     expect(mockSubmit).toHaveBeenCalledTimes(1);
     expect(mockSubmit).toHaveBeenCalledWith("admin@test.com", "password123");
+  });
+
+  test("displays error message when error prop is provided", () => {
+    const mockSubmit = vi.fn();
+
+    render(
+      <AuthCard onSubmit={mockSubmit} error="Incorrect email or password. Please try again." />
+    );
+
+    expect(screen.getByText(/Incorrect email or password/i)).toBeInTheDocument();
+  });
+
+  test("does not display error message when error prop is not provided", () => {
+    const mockSubmit = vi.fn();
+
+    render(<AuthCard onSubmit={mockSubmit} />);
+
+    expect(screen.queryByText(/Incorrect email or password/i)).not.toBeInTheDocument();
   });
 });

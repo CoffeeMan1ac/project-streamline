@@ -13,9 +13,10 @@ import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined
 
 type AuthCardProps = {
   onSubmit: (email: string, password: string) => Promise<void> | void;
+  error?: string | null;
 };
 
-const AuthCard = ({ onSubmit }: AuthCardProps) => {
+const AuthCard = ({ onSubmit, error }: AuthCardProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -81,6 +82,11 @@ const AuthCard = ({ onSubmit }: AuthCardProps) => {
           Forgot password?
         </Link>
       </Box>
+      {error && (
+        <Typography variant="body2" sx={{ color: "error.main", textAlign: "center", mt: -1 }}>
+          {error}
+        </Typography>
+      )}
       <Button fullWidth variant="contained" color="primary" type="submit">
         Login
       </Button>
