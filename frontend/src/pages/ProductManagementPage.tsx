@@ -20,6 +20,7 @@ import EditProductPage from "./EditProductPage";
 import CreateProductPage from "./CreateProductPage";
 import ProductTable from "../components/ProductTable";
 import { productService, type ProductDto } from "../services/productService";
+import { useMediaQuery, useTheme } from "@mui/material";
 
 const ProductManagementPage = () => {
   const [editProductId, setEditProductId] = useState<string | null>(null);
@@ -29,6 +30,8 @@ const ProductManagementPage = () => {
   const [products, setProducts] = useState<ProductDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const fetchProducts = async () => {
     try {
@@ -177,7 +180,7 @@ const ProductManagementPage = () => {
         )}
       </Box>
 
-      <Dialog open={createProductOpen} maxWidth="md" fullWidth fullScreen={window.innerWidth < 600}>
+      <Dialog open={createProductOpen} maxWidth="md" fullWidth fullScreen={isMobile}>
         <CreateProductPage
           onClose={() => {
             setCreateProductOpen(false);
@@ -190,7 +193,7 @@ const ProductManagementPage = () => {
         onClose={() => setEditProductId(null)}
         maxWidth="md"
         fullWidth
-        fullScreen={window.innerWidth < 600}
+        fullScreen={isMobile}
       >
         <EditProductPage
           id={editProductId}
