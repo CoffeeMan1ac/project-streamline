@@ -131,7 +131,15 @@ const RulesManagementPage = () => {
   return (
     <>
       <Box sx={{ mx: { xs: 2, sm: 3, md: 4, lg: 8, xl: 20 }, my: 4 }}>
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: 2,
+          }}
+        >
           <Box>
             <Typography variant="h4" sx={{ fontWeight: 700 }}>
               Rules Management
@@ -144,7 +152,6 @@ const RulesManagementPage = () => {
             <Button
               variant="contained"
               color="primary"
-              sx={{ mt: 2 }}
               startIcon={<AddIcon />}
               onClick={() => setCreateRuleOpen(true)}
             >
