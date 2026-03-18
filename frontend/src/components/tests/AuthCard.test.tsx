@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom/vitest";
 import { render, screen, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, test, expect, vi, afterEach } from "vitest";
+import { describe, test, expect, vi, afterEach, afterAll, beforeAll } from "vitest";
 import AuthCard from "../AuthCard";
 
 afterEach(() => {
@@ -9,6 +9,32 @@ afterEach(() => {
 });
 
 describe("AuthCard", () => {
+  const originalConsoleError = console.error;
+  const originalConsoleWarn = console.warn;
+
+  beforeAll(() => {
+    console.error = (...args) => {
+      const isMuiAnchorError = args.some(
+        (arg) => typeof arg === "string" && arg.includes("anchorEl")
+      );
+      if (isMuiAnchorError) return;
+      originalConsoleError(...args);
+    };
+
+    console.warn = (...args) => {
+      const isMuiAnchorWarning = args.some(
+        (arg) => typeof arg === "string" && arg.includes("anchorEl")
+      );
+      if (isMuiAnchorWarning) return;
+      originalConsoleWarn(...args);
+    };
+  });
+
+  afterAll(() => {
+    console.error = originalConsoleError;
+    console.warn = originalConsoleWarn;
+  });
+
   test("renders email, password fields and login button", () => {
     const mockSubmit = vi.fn();
 

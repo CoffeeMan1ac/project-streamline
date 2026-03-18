@@ -14,11 +14,9 @@ const BackOfficeLoginPage = () => {
   const from = location.state?.from?.pathname || "/rules";
   const handleLogin = async (email: string, password: string) => {
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      console.log("Logged in:", userCredential.user);
+      await signInWithEmailAndPassword(auth, email, password);
       navigate(from, { replace: true });
-    } catch (error) {
-      console.error("Login failed:", error);
+    } catch {
       setError("Invalid email or password.");
     }
   };

@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom/vitest";
-import { render, screen, fireEvent, within, waitFor } from "@testing-library/react";
-import { describe, test, expect, vi, beforeEach } from "vitest";
+import { render, screen, fireEvent, within, waitFor, cleanup } from "@testing-library/react";
+import { describe, test, expect, vi, beforeEach, afterEach, beforeAll, afterAll } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import axios from "axios";
 import QuotesPage from "../QuotesPage";
@@ -44,6 +44,31 @@ vi.mock("../../api/http", () => ({
 
 describe("QuotesPage", () => {
   let form: HTMLFormElement;
+  const originalConsoleError = console.error;
+  const originalConsoleWarn = console.warn;
+
+  beforeAll(() => {
+    console.error = (...args) => {
+      const isMuiAnchorError = args.some(
+        (arg) => typeof arg === "string" && arg.includes("anchorEl")
+      );
+      if (isMuiAnchorError) return;
+      originalConsoleError(...args);
+    };
+
+    console.warn = (...args) => {
+      const isMuiAnchorWarning = args.some(
+        (arg) => typeof arg === "string" && arg.includes("anchorEl")
+      );
+      if (isMuiAnchorWarning) return;
+      originalConsoleWarn(...args);
+    };
+  });
+
+  afterAll(() => {
+    console.error = originalConsoleError;
+    console.warn = originalConsoleWarn;
+  });
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -52,6 +77,11 @@ describe("QuotesPage", () => {
       data: { name: "Basic", baseRate: 9.99 },
     });
     (axios as any).__mockHttp.post.mockResolvedValue({ data: {} });
+  });
+
+  afterEach(() => {
+    cleanup();
+    vi.useRealTimers();
   });
 
   const renderWithRouter = () => {
@@ -118,9 +148,9 @@ describe("QuotesPage", () => {
 
   test("renders main heading and subtitle", () => {
     renderWithRouter();
-    expect(screen.getAllByRole("heading", { name: /Get Your Quote/i })[0]).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Get Your Quote/i })).toBeInTheDocument();
     expect(
-      screen.getAllByText(/Fill in your details below to receive an instant quote/i)[0]
+      screen.getByText(/Fill in your details below to receive an instant quote/i)
     ).toBeInTheDocument();
   });
 
@@ -180,9 +210,9 @@ describe("QuotesPage", () => {
     fireEvent.mouseDown(f.getByLabelText(/Country/i));
     fireEvent.click(screen.getByRole("option", { name: "Ireland" }));
     fireEvent.mouseDown(f.getByLabelText(/Phone Make/i));
-    fireEvent.click(screen.getAllByText(/Apple/i)[0]);
+    fireEvent.click(screen.getByText(/Apple/i));
     fireEvent.mouseDown(f.getByLabelText(/Phone Model/i));
-    fireEvent.click(screen.getAllByText(/iPhone 15/i)[0]);
+    fireEvent.click(screen.getByText(/iPhone 15/i));
     fireEvent.click(f.getByRole("button", { name: /Get Quote/i }));
     expect(f.getByText(/Valid email required/i)).toBeInTheDocument();
   });
@@ -196,10 +226,12 @@ describe("QuotesPage", () => {
     fillForm();
     fireEvent.submit(form);
 
-    await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith("/outcome", {
-        state: { decision: "accept", premium: 29.99, reference: "REF123" },
-      });
+    // Wait ONLY for the function to fire
+    await waitFor(() => expect(mockNavigate).toHaveBeenCalled());
+
+    // Assert the exact arguments synchronously outside the loop
+    expect(mockNavigate).toHaveBeenCalledWith("/outcome", {
+      state: { decision: "accept", premium: 29.99, reference: "REF123" },
     });
   });
 
@@ -212,10 +244,10 @@ describe("QuotesPage", () => {
     fillForm();
     fireEvent.submit(form);
 
-    await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith("/outcome", {
-        state: { decision: "refer", reason: "Needs review", reference: "REF456" },
-      });
+    await waitFor(() => expect(mockNavigate).toHaveBeenCalled());
+
+    expect(mockNavigate).toHaveBeenCalledWith("/outcome", {
+      state: { decision: "refer", reason: "Needs review", reference: "REF456" },
     });
   });
 
@@ -228,10 +260,10 @@ describe("QuotesPage", () => {
     fillForm();
     fireEvent.submit(form);
 
-    await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith("/outcome", {
-        state: { decision: "decline", reason: "Not eligible", reference: "REF789" },
-      });
+    await waitFor(() => expect(mockNavigate).toHaveBeenCalled());
+
+    expect(mockNavigate).toHaveBeenCalledWith("/outcome", {
+      state: { decision: "decline", reason: "Not eligible", reference: "REF789" },
     });
   });
 
@@ -278,13 +310,13 @@ describe("QuotesPage", () => {
     const f = within(form);
 
     fireEvent.mouseDown(f.getByLabelText(/Phone Make/i));
-    fireEvent.click(screen.getAllByText("Apple")[0]);
+    fireEvent.click(screen.getByText("Apple"));
 
     fireEvent.mouseDown(f.getByLabelText(/Phone Model/i));
-    fireEvent.click(screen.getAllByText("iPhone 15")[0]);
+    fireEvent.click(screen.getByText("iPhone 15"));
 
     fireEvent.mouseDown(f.getByLabelText(/Phone Make/i));
-    fireEvent.click(screen.getAllByText("Samsung")[0]);
+    fireEvent.click(screen.getByText("Samsung"));
 
     expect(f.getByLabelText(/Phone Model/i)).toBeInTheDocument();
   });

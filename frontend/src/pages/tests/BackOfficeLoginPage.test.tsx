@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom/vitest";
 import { render, screen, fireEvent, cleanup, waitFor } from "@testing-library/react";
-import { describe, test, expect, vi, beforeEach } from "vitest";
+import { describe, test, expect, vi, beforeEach, afterAll, beforeAll } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import BackOfficeLoginPage from "../BackOfficeLoginPage";
 
@@ -55,6 +55,32 @@ vi.mock("firebase/auth", async (importOriginal) => {
 vi.mock("../config/firebase", () => ({ auth: {} }));
 
 describe("BackOfficeLoginPage", () => {
+  const originalConsoleError = console.error;
+  const originalConsoleWarn = console.warn;
+
+  beforeAll(() => {
+    console.error = (...args) => {
+      const isMuiAnchorError = args.some(
+        (arg) => typeof arg === "string" && arg.includes("anchorEl")
+      );
+      if (isMuiAnchorError) return;
+      originalConsoleError(...args);
+    };
+
+    console.warn = (...args) => {
+      const isMuiAnchorWarning = args.some(
+        (arg) => typeof arg === "string" && arg.includes("anchorEl")
+      );
+      if (isMuiAnchorWarning) return;
+      originalConsoleWarn(...args);
+    };
+  });
+
+  afterAll(() => {
+    console.error = originalConsoleError;
+    console.warn = originalConsoleWarn;
+  });
+
   beforeEach(() => {
     cleanup();
     mockNavigate.mockClear();

@@ -1,12 +1,16 @@
 import "@testing-library/jest-dom/vitest";
 import { render, screen, fireEvent, within, cleanup, waitFor } from "@testing-library/react";
-import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, test, expect, vi, beforeEach, afterEach, afterAll, beforeAll } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import EditRulePage from "../EditRulePage";
 import http from "../../api/http";
 
 describe("EditRulePage", () => {
   let form: HTMLFormElement;
+  const originalConsoleError = console.error;
+  const originalConsoleWarn = console.warn;
+
+  const mockProducts = [{ id: "abc", name: "Test Product" }];
 
   const mockRule = {
     id: "123",
@@ -30,6 +34,29 @@ describe("EditRulePage", () => {
     },
   };
 
+  beforeAll(() => {
+    console.error = (...args) => {
+      const isMuiAnchorError = args.some(
+        (arg) => typeof arg === "string" && arg.includes("anchorEl")
+      );
+      if (isMuiAnchorError) return;
+      originalConsoleError(...args);
+    };
+
+    console.warn = (...args) => {
+      const isMuiAnchorWarning = args.some(
+        (arg) => typeof arg === "string" && arg.includes("anchorEl")
+      );
+      if (isMuiAnchorWarning) return;
+      originalConsoleWarn(...args);
+    };
+  });
+
+  afterAll(() => {
+    console.error = originalConsoleError;
+    console.warn = originalConsoleWarn;
+  });
+
   beforeEach(() => {
     vi.spyOn(http, "get").mockResolvedValue({ data: mockRule });
     vi.spyOn(http, "patch").mockResolvedValue({ data: {} });
@@ -43,7 +70,7 @@ describe("EditRulePage", () => {
   const renderWithRouter = async () => {
     const utils = render(
       <MemoryRouter>
-        <EditRulePage id="123" onClose={vi.fn()} />
+        <EditRulePage id="123" products={mockProducts} onClose={vi.fn()} />
       </MemoryRouter>
     );
 
@@ -59,7 +86,7 @@ describe("EditRulePage", () => {
   const renderEmptyForm = () => {
     const utils = render(
       <MemoryRouter>
-        <EditRulePage onClose={vi.fn()} />
+        <EditRulePage products={mockProducts} onClose={vi.fn()} />
       </MemoryRouter>
     );
 
@@ -149,7 +176,7 @@ describe("EditRulePage", () => {
 
     const utils = render(
       <MemoryRouter>
-        <EditRulePage id="123" onClose={vi.fn()} />
+        <EditRulePage id="123" products={mockProducts} onClose={vi.fn()} />
       </MemoryRouter>
     );
 
@@ -169,7 +196,7 @@ describe("EditRulePage", () => {
     const onClose = vi.fn();
     render(
       <MemoryRouter>
-        <EditRulePage id="123" onClose={onClose} />
+        <EditRulePage id="123" products={mockProducts} onClose={onClose} />
       </MemoryRouter>
     );
     await screen.findByDisplayValue("Test Rule");
@@ -181,7 +208,7 @@ describe("EditRulePage", () => {
     const onClose = vi.fn();
     render(
       <MemoryRouter>
-        <EditRulePage id="123" onClose={onClose} />
+        <EditRulePage id="123" products={mockProducts} onClose={onClose} />
       </MemoryRouter>
     );
     await screen.findByDisplayValue("Test Rule");
@@ -227,7 +254,7 @@ describe("EditRulePage", () => {
 
     const { container } = render(
       <MemoryRouter>
-        <EditRulePage id="123" onClose={onClose} onSave={onSave} />
+        <EditRulePage id="123" products={mockProducts} onClose={onClose} onSave={onSave} />
       </MemoryRouter>
     );
 
@@ -254,7 +281,7 @@ describe("EditRulePage", () => {
 
     const { container } = render(
       <MemoryRouter>
-        <EditRulePage id="123" onClose={vi.fn()} />
+        <EditRulePage id="123" products={mockProducts} onClose={vi.fn()} />
       </MemoryRouter>
     );
 
@@ -276,7 +303,7 @@ describe("EditRulePage", () => {
 
     const { container } = render(
       <MemoryRouter>
-        <EditRulePage id="123" onClose={vi.fn()} />
+        <EditRulePage id="123" products={mockProducts} onClose={vi.fn()} />
       </MemoryRouter>
     );
 
@@ -291,7 +318,7 @@ describe("EditRulePage", () => {
 
     render(
       <MemoryRouter>
-        <EditRulePage id="123" onClose={vi.fn()} />
+        <EditRulePage id="123" products={mockProducts} onClose={vi.fn()} />
       </MemoryRouter>
     );
 
@@ -327,7 +354,7 @@ describe("EditRulePage", () => {
 
     const { container } = render(
       <MemoryRouter>
-        <EditRulePage id="123" onClose={vi.fn()} />
+        <EditRulePage id="123" products={mockProducts} onClose={vi.fn()} />
       </MemoryRouter>
     );
 
@@ -353,7 +380,7 @@ describe("EditRulePage", () => {
 
     const { container } = render(
       <MemoryRouter>
-        <EditRulePage id="123" onClose={vi.fn()} />
+        <EditRulePage id="123" products={mockProducts} onClose={vi.fn()} />
       </MemoryRouter>
     );
 
@@ -376,7 +403,7 @@ describe("EditRulePage", () => {
 
     const { container } = render(
       <MemoryRouter>
-        <EditRulePage id="123" onClose={vi.fn()} />
+        <EditRulePage id="123" products={mockProducts} onClose={vi.fn()} />
       </MemoryRouter>
     );
 
@@ -392,7 +419,7 @@ describe("EditRulePage", () => {
 
     const { container } = render(
       <MemoryRouter>
-        <EditRulePage id="123" onClose={vi.fn()} />
+        <EditRulePage id="123" products={mockProducts} onClose={vi.fn()} />
       </MemoryRouter>
     );
 
@@ -408,7 +435,7 @@ describe("EditRulePage", () => {
   test("renders with no id provided", () => {
     const { container } = render(
       <MemoryRouter>
-        <EditRulePage onClose={vi.fn()} />
+        <EditRulePage products={mockProducts} onClose={vi.fn()} />
       </MemoryRouter>
     );
     expect(container.querySelector("form")).toBeInTheDocument();
@@ -430,7 +457,7 @@ describe("EditRulePage", () => {
 
     const { container } = render(
       <MemoryRouter>
-        <EditRulePage id="123" onClose={onClose} onSave={onSave} />
+        <EditRulePage id="123" products={mockProducts} onClose={onClose} onSave={onSave} />
       </MemoryRouter>
     );
 
@@ -465,7 +492,7 @@ describe("EditRulePage", () => {
 
     const { container } = render(
       <MemoryRouter>
-        <EditRulePage id="123" onClose={onClose} onSave={onSave} />
+        <EditRulePage id="123" products={mockProducts} onClose={onClose} onSave={onSave} />
       </MemoryRouter>
     );
 
@@ -497,7 +524,7 @@ describe("EditRulePage", () => {
 
     const { container } = render(
       <MemoryRouter>
-        <EditRulePage id="123" onClose={vi.fn()} />
+        <EditRulePage id="123" products={mockProducts} onClose={vi.fn()} />
       </MemoryRouter>
     );
 
@@ -525,7 +552,7 @@ describe("EditRulePage", () => {
 
     const { container } = render(
       <MemoryRouter>
-        <EditRulePage id="123" onClose={vi.fn()} />
+        <EditRulePage id="123" products={mockProducts} onClose={vi.fn()} />
       </MemoryRouter>
     );
 
@@ -552,7 +579,7 @@ describe("EditRulePage", () => {
 
     const { container } = render(
       <MemoryRouter>
-        <EditRulePage id="123" onClose={vi.fn()} />
+        <EditRulePage id="123" products={mockProducts} onClose={vi.fn()} />
       </MemoryRouter>
     );
 
@@ -577,7 +604,7 @@ describe("EditRulePage", () => {
 
     const { container } = render(
       <MemoryRouter>
-        <EditRulePage id="123" onClose={vi.fn()} />
+        <EditRulePage id="123" products={mockProducts} onClose={vi.fn()} />
       </MemoryRouter>
     );
 
@@ -605,7 +632,7 @@ describe("EditRulePage", () => {
 
     const { container } = render(
       <MemoryRouter>
-        <EditRulePage id="123" onClose={onClose} onSave={onSave} />
+        <EditRulePage id="123" products={mockProducts} onClose={onClose} onSave={onSave} />
       </MemoryRouter>
     );
 
@@ -635,7 +662,7 @@ describe("EditRulePage", () => {
 
     const { container } = render(
       <MemoryRouter>
-        <EditRulePage id="123" onClose={onClose} onSave={onSave} />
+        <EditRulePage id="123" products={mockProducts} onClose={onClose} onSave={onSave} />
       </MemoryRouter>
     );
 
@@ -656,7 +683,7 @@ describe("EditRulePage", () => {
 
     const { container } = render(
       <MemoryRouter>
-        <EditRulePage id="123" onClose={vi.fn()} />
+        <EditRulePage id="123" products={mockProducts} onClose={vi.fn()} />
       </MemoryRouter>
     );
 
