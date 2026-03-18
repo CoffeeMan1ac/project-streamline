@@ -375,6 +375,10 @@ deploy:production:
         --image "${BACKEND_IMAGE_URI}:${CI_COMMIT_SHA}" \
         --region "$GCP_REGION" \
         --platform managed \
+        --add-cloudsql-instances "${GCP_PROJECT_ID}:${GCP_REGION}:project-streamline" \
+        --set-env-vars "SPRING_PROFILES_ACTIVE=prod" \
+        --set-env-vars "SPRING_DATASOURCE_URL=jdbc:postgresql:///streamline?socketFactory=com.google.cloud.sql.postgres.SocketFactory&cloudSqlInstance=${GCP_PROJECT_ID}:${GCP_REGION}:project-streamline" \
+        --set-secrets "SPRING_DATASOURCE_USERNAME=DB_USER:latest,SPRING_DATASOURCE_PASSWORD=DB_PASS:latest" \
         --allow-unauthenticated \
         --quiet
 
