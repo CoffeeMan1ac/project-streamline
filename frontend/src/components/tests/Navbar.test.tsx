@@ -18,7 +18,7 @@ describe("Navbar", () => {
 
     render(
       <MemoryRouter>
-        <Navbar mode="light" toggleTheme={vi.fn()} toggleSidebar={vi.fn()} admin={true} />
+        <Navbar mode="light" toggleTheme={vi.fn()} />
       </MemoryRouter>
     );
     expect(screen.getByAltText(/Phone Shield logo/i)).toBeInTheDocument();
