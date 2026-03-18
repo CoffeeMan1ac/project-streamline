@@ -250,10 +250,12 @@ describe("QuotesPage", () => {
     });
   });
 
-  test("shows submitting state when form is submitted", async () => {
+  test("shows submitting state and then navigates to outcome page", async () => {
+    vi.useFakeTimers();
+
+    const mockResponse = { data: { status: "ACCEPTED", premium: 29.99, reference: "REF123" } };
     mockHttp.post.mockImplementation(
-      () =>
-        new Promise((resolve) => setTimeout(() => resolve({ data: { status: "ACCEPTED" } }), 500))
+      () => new Promise((resolve) => setTimeout(() => resolve(mockResponse), 500))
     );
 
     renderWithRouter();
@@ -261,9 +263,14 @@ describe("QuotesPage", () => {
 
     fireEvent.submit(form);
 
-    await waitFor(() => {
-      expect(screen.getByRole("button", { name: /Submitting.../i })).toBeInTheDocument();
-    });
+    await vi.advanceTimersByTimeAsync(100);
+    expect(screen.getByText(/Submitting/i)).toBeInTheDocument();
+
+    await vi.advanceTimersByTimeAsync(400);
+
+    expect(mockNavigate).toHaveBeenCalledWith("/outcome", expect.anything());
+
+    vi.useRealTimers();
   });
 
   test("clears phone model when make changes", () => {
