@@ -70,27 +70,50 @@ describe("QuotesPage", () => {
 
   const fillForm = () => {
     const f = within(form);
+
     fireEvent.change(f.getByLabelText(/First Name/i), { target: { value: "John" } });
     fireEvent.change(f.getByLabelText(/Last Name/i), { target: { value: "Doe" } });
-    fireEvent.change(f.getByLabelText(/Email Address/i), { target: { value: "john@example.com" } });
-    fireEvent.change(f.getByLabelText(/Phone Number/i), { target: { value: "0871234567" } });
-    fireEvent.change(f.getByLabelText(/Date of Birth/i), { target: { value: "01/01/1990" } });
-    fireEvent.change(f.getByLabelText(/Address Line 1/i), { target: { value: "123 Main St" } });
-    fireEvent.change(f.getByLabelText(/City/i), { target: { value: "Dublin" } });
-    fireEvent.change(f.getByLabelText(/Postal Code/i), { target: { value: "D01 ABC" } });
-    fireEvent.change(f.getByLabelText(/Address Line 2/i), { target: { value: "Apt 1" } });
+    fireEvent.change(f.getByLabelText(/Email Address/i), {
+      target: { value: "john@example.com" },
+    });
+    fireEvent.change(f.getByLabelText(/Phone Number/i), {
+      target: { value: "0871234567" },
+    });
+    fireEvent.change(f.getByLabelText(/Date of Birth/i), {
+      target: { value: "01/01/1990" },
+    });
+    fireEvent.change(f.getByLabelText(/Address Line 1/i), {
+      target: { value: "123 Main St" },
+    });
+    fireEvent.change(f.getByLabelText(/City/i), {
+      target: { value: "Dublin" },
+    });
+    fireEvent.change(f.getByLabelText(/Postal Code/i), {
+      target: { value: "D01 ABC" },
+    });
+    // Occupation
+    fireEvent.mouseDown(f.getByLabelText(/Occupation/i));
+    fireEvent.click(screen.getByRole("option", { name: "Engineer" }));
 
-    // Use the hidden native inputs for selects
-    const nativeInputs = form.querySelectorAll("input.MuiSelect-nativeInput");
-    const selects = Array.from(nativeInputs);
+    // Country
+    fireEvent.mouseDown(f.getByLabelText(/Country/i));
+    fireEvent.click(screen.getByRole("option", { name: "Ireland" }));
 
-    // occupation, country, phoneMake, phoneCondition, phoneAge, phoneModel
-    fireEvent.change(selects[0], { target: { value: "engineer" } }); // occupation
-    fireEvent.change(selects[1], { target: { value: "ireland" } }); // country
-    fireEvent.change(selects[2], { target: { value: "apple" } }); // phone make
-    fireEvent.change(selects[3], { target: { value: "iphone15" } }); // phone model
-    fireEvent.change(selects[4], { target: { value: "brand new" } }); // phone condition
-    fireEvent.change(selects[5], { target: { value: "1 year" } }); // phone age
+    // Phone Make
+    fireEvent.mouseDown(f.getByLabelText(/Phone Make/i));
+    fireEvent.click(screen.getByRole("option", { name: "Apple" }));
+
+    // Phone Model
+    fireEvent.mouseDown(f.getByLabelText(/Phone Model/i));
+    fireEvent.click(screen.getByRole("option", { name: "iPhone 15" }));
+
+    // Condition
+    fireEvent.mouseDown(f.getByLabelText(/Phone Condition/i));
+    fireEvent.click(screen.getByRole("option", { name: "Brand New" }));
+
+    // Age
+    fireEvent.mouseDown(f.getByLabelText(/Phone Age/i));
+    fireEvent.click(screen.getByRole("option", { name: "1 year" }));
   };
 
   test("renders main heading and subtitle", () => {
@@ -155,7 +178,7 @@ describe("QuotesPage", () => {
     fireEvent.change(f.getByLabelText(/City/i), { target: { value: "Dublin" } });
     fireEvent.change(f.getByLabelText(/Postal Code/i), { target: { value: "D01 ABC" } });
     fireEvent.mouseDown(f.getByLabelText(/Country/i));
-    fireEvent.click(screen.getAllByText(/Ireland/i)[0]);
+    fireEvent.click(screen.getByRole("option", { name: "Ireland" }));
     fireEvent.mouseDown(f.getByLabelText(/Phone Make/i));
     fireEvent.click(screen.getAllByText(/Apple/i)[0]);
     fireEvent.mouseDown(f.getByLabelText(/Phone Model/i));
@@ -214,10 +237,12 @@ describe("QuotesPage", () => {
 
   test("shows alert on submission error", async () => {
     mockHttp.post.mockRejectedValueOnce(new Error("Network error"));
+
     const alertMock = vi.spyOn(window, "alert").mockImplementation(() => {});
 
     renderWithRouter();
     fillForm();
+
     fireEvent.submit(form);
 
     await waitFor(() => {
@@ -233,9 +258,12 @@ describe("QuotesPage", () => {
 
     renderWithRouter();
     fillForm();
+
     fireEvent.submit(form);
 
-    expect(screen.getByRole("button", { name: /Submitting.../i })).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: /Submitting.../i })).toBeInTheDocument();
+    });
   });
 
   test("clears phone model when make changes", () => {
