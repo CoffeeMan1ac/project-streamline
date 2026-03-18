@@ -1,13 +1,8 @@
 package com.munichre.streamline.quote.api.dto;
 
-import java.util.Map;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.munichre.streamline.quote.model.ApplicantData;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import java.util.UUID;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class QuoteRequest {
-  private Map<String, Object> data;
-}
+public record QuoteRequest(@NotNull UUID productId, @Valid @NotNull ApplicantData applicantData) {}

@@ -117,10 +117,10 @@ const EditRulePage = ({ id, products = [], onClose, onSave }: EditRulePageProps)
   useEffect(() => {
     if (!id) return;
 
-    http
-      .get(`/backoffice/rules/${id}`)
-      .then((res) => {
-        const data = res.data;
+    const fetchRule = async () => {
+      try {
+        const { data } = await http.get(`/backoffice/rules/${id}`);
+
         setProduct(data.productId);
         setRuleName(data.name);
         setRuleDescription(data.description ?? "");
@@ -134,6 +134,7 @@ const EditRulePage = ({ id, products = [], onClose, onSave }: EditRulePageProps)
             })
           )
         );
+
         setConditionErrors(data.ruleConfig.when.conditions.map(() => false));
         setOutcome(data.ruleConfig.then.decision.toLowerCase());
         setDeclineReason(data.reason ?? "");
@@ -144,8 +145,11 @@ const EditRulePage = ({ id, products = [], onClose, onSave }: EditRulePageProps)
           setPremiumOutcome("delta");
           setDeltaValue((data.ruleConfig.then.premiumDelta * 100).toFixed(0));
         }
-      })
-      .catch((err) => console.error("Failed to fetch rule:", err));
+      } catch (err) {
+        console.error("Failed to fetch rule:", err);
+      }
+    };
+    fetchRule();
   }, [id]);
 
   // adds a new condition row
@@ -213,7 +217,7 @@ const EditRulePage = ({ id, products = [], onClose, onSave }: EditRulePageProps)
         name: ruleName,
         description: ruleDescription,
         reason: declineReason,
-        rule_config: {
+        ruleConfig: {
           when: {
             match: conditionLogic,
             conditions: conditions.map((c) => ({
@@ -228,12 +232,12 @@ const EditRulePage = ({ id, products = [], onClose, onSave }: EditRulePageProps)
               premiumOutcome === "override" && overrideValue ? parseFloat(overrideValue) : null,
             premiumDelta:
               premiumOutcome === "delta" && deltaValue ? parseFloat(deltaValue) / 100 : null,
+            stop: false,
           },
-          stop: false,
         },
       };
 
-      await http.put(`/backoffice/rules/${id}`, payload);
+      await http.patch(`/backoffice/rules/${id}`, payload);
 
       onSave?.();
       onClose?.();
@@ -533,12 +537,12 @@ const EditRulePage = ({ id, products = [], onClose, onSave }: EditRulePageProps)
               sx={{ mb: 3 }}
             >
               <FormControlLabel
-                value="all"
+                value="ALL"
                 control={<Radio />}
                 label="All conditions must be true"
               />
               <FormControlLabel
-                value="any"
+                value="ANY"
                 control={<Radio />}
                 label="At least one condition must be true"
               />

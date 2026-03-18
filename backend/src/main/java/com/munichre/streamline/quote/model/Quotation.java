@@ -1,6 +1,5 @@
 package com.munichre.streamline.quote.model;
 
-import com.munichre.streamline.decision.model.DecisionStatus;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
@@ -24,7 +23,7 @@ public class Quotation {
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private DecisionStatus status;
+  private QuotationStatus status;
 
   @Column private String reason;
 

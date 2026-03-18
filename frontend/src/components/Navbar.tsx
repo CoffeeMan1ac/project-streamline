@@ -6,16 +6,13 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { useAuth } from "../context/AuthContext";
 import { signOut } from "firebase/auth";
 import { auth } from "../config/firebase";
-import MenuIcon from "@mui/icons-material/Menu";
 
 type NavbarProps = {
   mode: "light" | "dark";
   toggleTheme: () => void;
-  toggleSidebar: () => void;
-  admin: boolean;
 };
 
-const Navbar = ({ mode, toggleTheme, toggleSidebar, admin }: NavbarProps) => {
+const Navbar = ({ mode, toggleTheme }: NavbarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
@@ -48,13 +45,6 @@ const Navbar = ({ mode, toggleTheme, toggleSidebar, admin }: NavbarProps) => {
       <Toolbar sx={{ justifyContent: "space-between" }}>
         {/* Logo and Title */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          {/* sidebar button only appears when admin is logged in*/}
-          {admin && (
-            <IconButton color="inherit" onClick={toggleSidebar}>
-              <MenuIcon />
-            </IconButton>
-          )}
-
           <Box
             sx={{ display: "flex", alignItems: "center", gap: 2, cursor: "pointer" }}
             onClick={() => navigate("/")}

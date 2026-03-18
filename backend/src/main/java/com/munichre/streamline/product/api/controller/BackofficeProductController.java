@@ -36,9 +36,9 @@ public class BackofficeProductController {
   }
 
   @PostMapping()
-  public ResponseEntity<ProductDto> createProduct(@RequestBody CreateProductRequestDto payload) {
-    ProductDto created = productService.createProduct(payload);
-    return ResponseEntity.status(HttpStatus.CREATED).body(created);
+  public ResponseEntity<ProductDto> createProduct(@RequestBody CreateProductRequestDto request) {
+    productService.createProduct(request);
+    return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
   @PatchMapping("/{id}/active")
@@ -64,8 +64,8 @@ public class BackofficeProductController {
 
   @PutMapping("/{id}")
   public ResponseEntity<Void> updateProduct(
-      @PathVariable UUID id, @RequestBody UpdateProductRequestDto payload) {
-    productService.updateProduct(id, payload);
+      @PathVariable UUID id, @RequestBody UpdateProductRequestDto request) {
+    productService.updateProduct(id, request);
     return ResponseEntity.ok().build();
   }
 }

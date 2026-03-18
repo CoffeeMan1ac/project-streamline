@@ -56,7 +56,7 @@ const Sidebar = ({ toggleSidebar, open, toggleTheme, mode }: SidebarProps) => {
       key: "products",
       label: "Products Management",
       icon: <ViewInArOutlinedIcon />,
-      path: "/products-management",
+      path: "/products",
     },
   ];
   const theme = useTheme();

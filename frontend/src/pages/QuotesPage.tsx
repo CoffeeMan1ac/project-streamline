@@ -170,22 +170,24 @@ const QuotesPage = () => {
 
     try {
       const payload = {
-        firstName,
-        lastName,
-        emailAddress: email,
-        phoneNumber: phone,
-        dateOfBirth: dob,
-        occupation,
-        address1,
-        address2,
-        city,
-        postalCode,
-        country,
-        phoneMake: makeLabel,
-        phoneModel: modelLabel,
-        phoneCondition,
-        phoneAge,
         productId: productId,
+        applicantData: {
+          firstName,
+          lastName,
+          emailAddress: email,
+          phoneNumber: phone,
+          dateOfBirth: dob,
+          occupation,
+          address1,
+          address2,
+          city,
+          postalCode,
+          country,
+          phoneMake: makeLabel,
+          phoneModel: modelLabel,
+          phoneCondition,
+          phoneAge,
+        },
       };
 
       const res = await http.post("/customer/quote", payload);

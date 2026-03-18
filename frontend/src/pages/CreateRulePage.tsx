@@ -15,6 +15,7 @@ import {
   Button,
 } from "@mui/material";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
+import http from "../api/http";
 
 interface CreateRulePageProps {
   products?: { id: string; name: string }[];
@@ -29,8 +30,6 @@ type Condition = {
   operator: string;
   value: string;
 };
-
-import http from "../api/http";
 
 const fieldOptions: Record<string, { value: string; label: string }[]> = {
   country: [
@@ -182,7 +181,7 @@ const CreateRulePage = ({
         description: ruleDescription,
         reason: declineReason,
         active: true,
-        rule_config: {
+        ruleConfig: {
           when: {
             match: conditionLogic,
             conditions: conditions.map((c) => ({
@@ -201,13 +200,12 @@ const CreateRulePage = ({
               outcome === "accept" && premiumOutcome === "delta" && deltaValue
                 ? parseFloat(deltaValue) / 100
                 : null,
+            stop: false,
           },
-          stop: false,
         },
       };
 
       await http.post("/backoffice/rules", payload);
-
       onSave?.();
       onClose?.();
     } catch (err) {
@@ -499,12 +497,12 @@ const CreateRulePage = ({
               sx={{ mb: 3 }}
             >
               <FormControlLabel
-                value="all"
+                value="ALL"
                 control={<Radio />}
                 label="All conditions must be true"
               />
               <FormControlLabel
-                value="any"
+                value="ANY"
                 control={<Radio />}
                 label="At least one condition must be true"
               />

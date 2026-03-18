@@ -96,7 +96,7 @@ const RulesManagementPage = () => {
     if (!rule) return;
 
     try {
-      await http.patch(`/backoffice/rules/${rule.id}/active`, {
+      await http.patch(`/backoffice/rules/${rule.id}`, {
         active: !rule.active,
       });
 

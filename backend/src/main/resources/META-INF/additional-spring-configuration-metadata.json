@@ -1,9 +1,12 @@
-{
-  "properties": [
-    {
-      "name": "google.application.credentials",
-      "type": "java.lang.String",
-      "description": "Path to the Firebase service account JSON file."
-    }
-  ]
-}
+{"properties": [
+  {
+    "name": "google.application.credentials",
+    "type": "java.lang.String",
+    "description": "Path to the Firebase service account JSON file."
+  },
+  {
+    "name": "firebase.project-id",
+    "type": "java.lang.String",
+    "description": "Firebase project id"
+  }
+]}

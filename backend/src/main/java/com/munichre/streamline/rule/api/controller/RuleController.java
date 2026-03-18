@@ -2,10 +2,13 @@ package com.munichre.streamline.rule.api.controller;
 
 import static com.munichre.streamline.constant.ApiRoutes.BACKOFFICE_API_BASE;
 
-import com.munichre.streamline.rule.api.dto.RuleResponseDto;
+import com.munichre.streamline.rule.api.dto.RuleCreateRequest;
+import com.munichre.streamline.rule.api.dto.RuleReorderRequest;
+import com.munichre.streamline.rule.api.dto.RuleResponse;
+import com.munichre.streamline.rule.api.dto.RuleUpdateRequest;
 import com.munichre.streamline.rule.service.RuleService;
+import jakarta.validation.Valid;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,9 +23,9 @@ public class RuleController {
   private final RuleService ruleService;
 
   @PostMapping
-  public ResponseEntity<Boolean> createRule(@RequestBody Map<String, Object> payload) {
-    ruleService.createRule(payload);
-    return ResponseEntity.status(HttpStatus.CREATED).build();
+  public ResponseEntity<RuleResponse> createRule(@Valid @RequestBody RuleCreateRequest request) {
+    RuleResponse repsonse = ruleService.createRule(request);
+    return ResponseEntity.status(HttpStatus.CREATED).body(repsonse);
   }
 
   /**
@@ -32,10 +35,10 @@ public class RuleController {
    * @return List of matching rules.
    */
   @GetMapping
-  public ResponseEntity<List<RuleResponseDto>> getRules(
+  public ResponseEntity<List<RuleResponse>> getRules(
       @RequestParam UUID product, @RequestParam(required = false) Boolean active) {
-    List<RuleResponseDto> rules = ruleService.getRules(product, active);
-    return ResponseEntity.ok(rules);
+    List<RuleResponse> response = ruleService.getRules(product, active);
+    return ResponseEntity.ok(response);
   }
 
   /**
@@ -43,16 +46,16 @@ public class RuleController {
    * @return The matching rule.
    */
   @GetMapping("/{id}")
-  public ResponseEntity<RuleResponseDto> getRule(@PathVariable UUID id) {
-    RuleResponseDto rule = ruleService.getRule(id);
-    return ResponseEntity.ok(rule);
+  public ResponseEntity<RuleResponse> getRule(@PathVariable UUID id) {
+    RuleResponse response = ruleService.getRule(id);
+    return ResponseEntity.ok(response);
   }
 
   @PutMapping("/reorder")
-  public ResponseEntity<List<RuleResponseDto>> reorderRule(
-      @RequestBody Map<String, Object> payload) {
-    List<RuleResponseDto> newOrder = ruleService.reorderRule(payload);
-    return ResponseEntity.ok(newOrder);
+  public ResponseEntity<List<RuleResponse>> reorderRule(
+      @Valid @RequestBody RuleReorderRequest request) {
+    List<RuleResponse> response = ruleService.reorderRule(request);
+    return ResponseEntity.ok(response);
   }
 
   /**
@@ -60,22 +63,10 @@ public class RuleController {
    * @param payload Map of fields to update.
    * @return The updated rule.
    */
-  @PutMapping("/{id}")
-  public ResponseEntity<RuleResponseDto> updateRule(
-      @PathVariable UUID id, @RequestBody Map<String, Object> payload) {
-    RuleResponseDto updated = ruleService.updateRule(id, payload);
-    return ResponseEntity.ok(updated);
-  }
-
-  /**
-   * @param id UUID of the rule to update.
-   * @param payload Map containing the "active" field to update e.g. {"active": true}.
-   * @return The updated rule.
-   */
-  @PatchMapping("/{id}/active")
-  public ResponseEntity<RuleResponseDto> setRuleActive(
-      @PathVariable UUID id, @RequestBody Map<String, Object> payload) {
-    RuleResponseDto updated = ruleService.updateRule(id, payload);
-    return ResponseEntity.ok(updated);
+  @PatchMapping("/{id}")
+  public ResponseEntity<RuleResponse> updateRule(
+      @PathVariable UUID id, @Valid @RequestBody RuleUpdateRequest request) {
+    RuleResponse response = ruleService.updateRule(id, request);
+    return ResponseEntity.ok(response);
   }
 }

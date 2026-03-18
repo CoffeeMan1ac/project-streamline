@@ -1,23 +1,18 @@
 package com.munichre.streamline.decision.service;
 
 import com.munichre.streamline.decision.dto.Decision;
-import com.munichre.streamline.decision.exception.FieldNotFoundException;
-import com.munichre.streamline.decision.model.DecisionStatus;
 import com.munichre.streamline.product.model.Product;
 import com.munichre.streamline.product.service.ProductService;
+import com.munichre.streamline.quote.api.dto.QuoteRequest;
+import com.munichre.streamline.quote.model.ApplicantData;
+import com.munichre.streamline.rule.model.PremiumState;
 import com.munichre.streamline.rule.model.Rule;
-import com.munichre.streamline.rule.model.RuleConfig;
-import com.munichre.streamline.rule.model.RuleConfig.Condition;
 import com.munichre.streamline.rule.model.RuleConfig.Then;
-import com.munichre.streamline.rule.model.RuleConfig.When;
-import com.munichre.streamline.rule.repository.RuleRepository;
+import com.munichre.streamline.rule.service.RuleService;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 /**
@@ -37,11 +32,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class DecisionService {
 
-  private final RuleRepository ruleRepository;
   private final ProductService productService;
+  private final RuleService ruleService;
 
   /**
    * The one function. Takes the hashmap, returns the decision.
@@ -49,246 +43,34 @@ public class DecisionService {
    * @param fields hashmap of ALL fields from the incoming request
    * @return EvaluationResult with status (ACCEPTED/DECLINED/REFER), premium, reason, rules applied
    */
-  public Decision evaluate(Map<String, Object> fields) {
-    long startTime = System.currentTimeMillis();
-    BigDecimal delta = BigDecimal.ONE;
-    log.info("Starting rule evaluation with {} fields", fields.size());
+  public Decision decide(final QuoteRequest request) {
+    final long startTime = System.currentTimeMillis();
 
-    String productIdString = (String) fields.get("productId");
-    UUID productId = UUID.fromString(productIdString);
+    final ApplicantData applicantData = request.applicantData();
+    final Product product = productService.getProduct(request.productId());
 
-    final Product product = productService.getProduct(productId);
-    BigDecimal premium = product.getBaseRate();
+    final List<Rule> rules =
+        ruleService.findByProductIdAndActiveTrueOrderByPriorityAsc(product.getId());
 
-    // 1. Fetch rules from database
-    List<Rule> rules = ruleRepository.findByProductIdAndActiveTrueOrderByPriorityAsc(productId);
+    if (rules.isEmpty()) return Decision.autoAccept(product.getBaseRate(), startTime);
 
-    if (rules.isEmpty()) {
-      log.warn("No active rules found in database");
-      return buildResult(
-          DecisionStatus.ACCEPTED,
-          premium.multiply(delta),
-          "Auto-accept. No rules configured.",
-          new ArrayList<>(),
-          startTime);
-    }
+    PremiumState premium = new PremiumState(product.getBaseRate(), BigDecimal.ZERO);
 
-    log.info("Fetched {} active rules", rules.size());
-
-    boolean declined = false;
     List<String> rulesApplied = new ArrayList<>();
-    List<String> reasons = new ArrayList<>();
 
-    // 2. Apply each rule in priority order
     for (Rule rule : rules) {
-      RuleConfig config = rule.getRuleConfig();
-      When when = config.getWhen();
-      Then then = config.getThen();
+      if (rule.isTriggeredBy(applicantData)) {
+        rulesApplied.add(rule.getName());
 
-      // Evaluate conditions with AND/OR logic
-      boolean triggered = evaluateWhen(when, fields);
+        final Then outcome = rule.getRuleConfig().then();
+        premium = outcome.apply(premium);
 
-      if (!triggered) {
-        continue;
-      }
-
-      log.info("Rule '{}' triggered -> decision={}", rule.getName(), then.getDecision());
-      rulesApplied.add(rule.getName());
-
-      String decision = then.getDecision().toUpperCase();
-
-      switch (decision) {
-        case "DECLINE" -> {
-          declined = true;
-          if (rule.getReason() != null) {
-            reasons.add(rule.getReason());
-          }
-
-          log.info("Rule '{}' has stop=true. Stopping.", rule.getName());
-          Decision result =
-              buildResult(
-                  DecisionStatus.DECLINED,
-                  BigDecimal.ZERO,
-                  String.join("; ", reasons),
-                  rulesApplied,
-                  startTime);
-          result.setEvaluationStopped(true);
-          result.setStoppedByRule(rule.getName());
-          return result;
-        }
-
-        case "ACCEPT" -> {
-          // Apply premium adjustments
-          if (then.getPremiumOverride() != null) {
-            delta = BigDecimal.ONE;
-            premium = then.getPremiumOverride();
-            log.info("Rule '{}' overrides premium to {}", rule.getName(), premium);
-          }
-          if (then.getPremiumDelta() != null) {
-            delta = delta.add(then.getPremiumDelta());
-            log.info(
-                "Rule '{}' adjusts premium by {}, now {}",
-                rule.getName(),
-                then.getPremiumDelta(),
-                premium);
-          }
-
-          if (config.getStop()) {
-            log.info("Rule '{}' has stop=true. Stopping.", rule.getName());
-            Decision result =
-                buildResult(
-                    DecisionStatus.ACCEPTED,
-                    premium.multiply(delta),
-                    rule.getReason(),
-                    rulesApplied,
-                    startTime);
-            result.setEvaluationStopped(true);
-            result.setStoppedByRule(rule.getName());
-            return result;
-          }
-        }
-
-        case "REFER" -> {
-          if (rule.getReason() != null) {
-            reasons.add(rule.getReason());
-          }
-
-          Decision result =
-              buildResult(
-                  DecisionStatus.REFER,
-                  premium.multiply(delta),
-                  String.join("; ", reasons),
-                  rulesApplied,
-                  startTime);
-          result.setEvaluationStopped(true);
-          result.setStoppedByRule(rule.getName());
-          return result;
+        if (outcome.isTerminal()) {
+          return new Decision(rule, rulesApplied, premium, startTime);
         }
       }
     }
 
-    // 3. After all rules
-    if (declined) {
-      return buildResult(
-          DecisionStatus.DECLINED,
-          BigDecimal.ZERO,
-          String.join("; ", reasons),
-          rulesApplied,
-          startTime);
-    }
-
-    return buildResult(
-        DecisionStatus.ACCEPTED,
-        premium.multiply(delta),
-        "All rules passed",
-        rulesApplied,
-        startTime);
-  }
-
-  // ──────────────────────────────────────────────────────────
-  // When clause: AND/OR over multiple conditions
-  // ──────────────────────────────────────────────────────────
-
-  private boolean evaluateWhen(When when, Map<String, Object> fields) {
-    List<Condition> conditions = when.getConditions();
-    String match = when.getMatch().toLowerCase();
-
-    if ("all".equals(match)) {
-      // AND: every condition must be true
-      for (Condition c : conditions) {
-        if (!evaluateCondition(c, fields)) {
-          return false;
-        }
-      }
-      return true;
-    }
-
-    if ("one".equals(match)) {
-      // OR: any condition being true is enough
-      for (Condition c : conditions) {
-        if (evaluateCondition(c, fields)) {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    log.warn("Unknown match type '{}', defaulting to AND", match);
-    return false;
-  }
-
-  // ──────────────────────────────────────────────────────────
-  // Single condition evaluation
-  // ──────────────────────────────────────────────────────────
-
-  private boolean evaluateCondition(Condition condition, Map<String, Object> fields) {
-    String fieldName = condition.getField();
-
-    if (!fields.containsKey(fieldName)) {
-      throw new FieldNotFoundException(fieldName);
-    }
-
-    Object fieldValue = fields.get(fieldName);
-    if (fieldValue == null) {
-      return false;
-    }
-
-    String fieldStr = fieldValue.toString();
-    String threshold = condition.getValue();
-    String op = condition.getOperator().toUpperCase();
-
-    return switch (op) {
-      case "EQUALS" -> fieldStr.equalsIgnoreCase(threshold);
-      case "NOT_EQUALS" -> !fieldStr.equalsIgnoreCase(threshold);
-      case "GREATER_THAN" -> toDouble(fieldStr) > toDouble(threshold);
-      case "LESS_THAN" -> toDouble(fieldStr) < toDouble(threshold);
-      case "GREATER_THAN_OR_EQUAL" -> toDouble(fieldStr) >= toDouble(threshold);
-      case "LESS_THAN_OR_EQUAL" -> toDouble(fieldStr) <= toDouble(threshold);
-      case "BETWEEN" -> {
-        String[] parts = threshold.split(",");
-        double val = toDouble(fieldStr);
-        yield val >= toDouble(parts[0].trim()) && val <= toDouble(parts[1].trim());
-      }
-      case "IN" -> {
-        String[] allowed = threshold.split(",");
-        boolean found = false;
-        for (String a : allowed) {
-          if (fieldStr.equalsIgnoreCase(a.trim())) {
-            found = true;
-            break;
-          }
-        }
-        yield found;
-      }
-      default -> false;
-    };
-  }
-
-  private double toDouble(String value) {
-    try {
-      return Double.parseDouble(value.trim());
-    } catch (NumberFormatException e) {
-      throw new IllegalArgumentException(
-          "Cannot convert '" + value + "' to number for rule comparison");
-    }
-  }
-
-  // ──────────────────────────────────────────────────────────
-  // Result builder
-  // ──────────────────────────────────────────────────────────
-
-  private Decision buildResult(
-      DecisionStatus status,
-      BigDecimal premium,
-      String reason,
-      List<String> rulesApplied,
-      long startTime) {
-    Decision result = new Decision();
-    result.setStatus(status);
-    result.setPremium(premium);
-    result.setReason(reason);
-    result.setRulesApplied(rulesApplied);
-    result.setProcessingTimeMs(System.currentTimeMillis() - startTime);
-    return result;
+    return Decision.allRulesPassed(premium, startTime, rulesApplied);
   }
 }

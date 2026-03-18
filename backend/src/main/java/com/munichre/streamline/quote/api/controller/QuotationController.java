@@ -2,7 +2,8 @@ package com.munichre.streamline.quote.api.controller;
 
 import static com.munichre.streamline.constant.ApiRoutes.CUSTOMER_API_BASE;
 
-import com.munichre.streamline.decision.dto.Decision;
+import com.munichre.streamline.quote.api.dto.QuoteRequest;
+import com.munichre.streamline.quote.api.dto.QuoteResponse;
 import com.munichre.streamline.quote.service.QuotationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -10,7 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.Map;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,19 +32,19 @@ public class QuotationController {
         @ApiResponse(
             responseCode = "200",
             description = "Quote successfully evaluated",
-            content = @Content(schema = @Schema(implementation = Decision.class))),
+            content = @Content(schema = @Schema(implementation = QuoteResponse.class))),
         @ApiResponse(responseCode = "400", description = "Invalid request payload"),
         @ApiResponse(responseCode = "500", description = "Internal server error")
       })
   @PostMapping
-  public ResponseEntity<Decision> createQuote(@RequestBody Map<String, Object> payload) {
-    Decision result = quotationService.createQuote(payload);
-    return ResponseEntity.ok(result);
+  public ResponseEntity<QuoteResponse> createQuote(@Valid @RequestBody QuoteRequest request) {
+    QuoteResponse response = quotationService.createQuote(request);
+    return ResponseEntity.ok(response);
   }
 
   @GetMapping("/{reference}")
-  public ResponseEntity<Decision> getQuoteByReference(@PathVariable String reference) {
-    Decision quote = quotationService.getQuoteByReference(reference);
-    return ResponseEntity.ok(quote);
+  public ResponseEntity<QuoteResponse> getQuoteByReference(@PathVariable String reference) {
+    QuoteResponse response = quotationService.getQuoteByReference(reference);
+    return ResponseEntity.ok(response);
   }
 }

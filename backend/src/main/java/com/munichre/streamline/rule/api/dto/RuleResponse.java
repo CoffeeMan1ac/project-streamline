@@ -4,7 +4,7 @@ import com.munichre.streamline.rule.model.Rule;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record RuleResponseDto(
+public record RuleResponse(
     UUID id,
     UUID productId,
     String name,
@@ -16,11 +16,11 @@ public record RuleResponseDto(
     LocalDateTime createdAt,
     LocalDateTime updatedAt) {
 
-  public static RuleResponseDto of(Rule r) {
+  public static RuleResponse of(Rule r) {
     if (r == null) {
       return null;
     }
-    return new RuleResponseDto(
+    return new RuleResponse(
         r.getId(),
         r.getProduct() != null ? r.getProduct().getId() : null,
         r.getName(),

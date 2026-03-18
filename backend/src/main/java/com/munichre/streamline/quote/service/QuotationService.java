@@ -2,14 +2,15 @@ package com.munichre.streamline.quote.service;
 
 import com.munichre.streamline.decision.dto.Decision;
 import com.munichre.streamline.decision.service.DecisionService;
+import com.munichre.streamline.quote.api.dto.QuoteRequest;
+import com.munichre.streamline.quote.api.dto.QuoteResponse;
+import com.munichre.streamline.quote.exception.QuoteNotFoundException;
 import com.munichre.streamline.quote.model.Quotation;
+import com.munichre.streamline.quote.model.QuotationStatus;
 import com.munichre.streamline.quote.repository.QuotationRepository;
 import java.security.SecureRandom;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -21,40 +22,31 @@ public class QuotationService {
   private final DecisionService decisionService;
   private final QuotationRepository quotationRepository;
 
-  public Decision createQuote(Map<String, Object> payload) {
-    Decision evaluation = decisionService.evaluate(payload);
+  public QuoteResponse createQuote(QuoteRequest quoteRequest) {
+    Decision decision = decisionService.decide(quoteRequest);
 
     Quotation quotation =
         Quotation.builder()
             .reference(generateUniqueReference())
-            .status(evaluation.getStatus())
-            .reason(evaluation.getReason())
-            .rulesApplied(evaluation.getRulesApplied())
-            .premium(evaluation.getPremium())
-            .processingTimeMs(evaluation.getProcessingTimeMs())
+            .status(QuotationStatus.from(decision.status()))
+            .reason(decision.reason())
+            .rulesApplied(decision.rulesApplied())
+            .premium(decision.premium())
+            .processingTimeMs(decision.processingTimeMs())
             .build();
 
-    quotationRepository.save(quotation);
-    evaluation.setReference(quotation.getReference());
+    Quotation savedQuotation = quotationRepository.save(quotation);
 
-    return evaluation;
+    return QuoteResponse.from(savedQuotation);
   }
 
-  public Decision getQuoteByReference(String reference) {
+  public QuoteResponse getQuoteByReference(String reference) {
     Quotation quotation =
         quotationRepository
             .findByReference(reference)
-            .orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Quote not found"));
+            .orElseThrow(() -> new QuoteNotFoundException(null));
 
-    return Decision.builder()
-        .reference(quotation.getReference())
-        .status(quotation.getStatus())
-        .reason(quotation.getReason())
-        .rulesApplied(quotation.getRulesApplied())
-        .premium(quotation.getPremium())
-        .processingTimeMs(quotation.getProcessingTimeMs())
-        .build();
+    return QuoteResponse.from(quotation);
   }
 
   private String generateReference() {

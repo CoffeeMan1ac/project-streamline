@@ -2,10 +2,12 @@ package com.munichre.streamline.rule.repository;
 
 import com.munichre.streamline.rule.model.Rule;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -67,4 +69,7 @@ public interface RuleRepository extends JpaRepository<Rule, UUID> {
       AND r.priority BETWEEN :start AND :end
   """)
   void decrementPriorityBetween(UUID productId, Integer start, Integer end);
+
+  @Query("SELECT MAX(r.priority) FROM Rule r WHERE r.product.id = :productId")
+  Optional<Integer> findMaxPriorityByProductId(@Param("productId") UUID productId);
 }

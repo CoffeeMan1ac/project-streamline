@@ -1,49 +1,61 @@
 package com.munichre.streamline.decision.dto;
 
 import com.munichre.streamline.decision.model.DecisionStatus;
+import com.munichre.streamline.rule.model.PremiumState;
+import com.munichre.streamline.rule.model.Rule;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class Decision {
-  private String reference;
-  private DecisionStatus status;
-  private String reason;
-  @Builder.Default private List<String> rulesApplied = new ArrayList<>();
-  private BigDecimal premium;
-  private long processingTimeMs;
-  @Builder.Default private boolean evaluationStopped = false;
-  private String stoppedByRule;
+public record Decision(
+    DecisionStatus status,
+    String reason,
+    List<String> rulesApplied,
+    BigDecimal premium,
+    long processingTimeMs,
+    boolean evaluationStopped,
+    String stoppedByRule) {
+  private static final String NO_RULES_REASON_MESSAGE =
+      "No underwriting rules are currently defined for this product. Automatic acceptance applied.";
 
-  public static Decision accepted(BigDecimal premium) {
-    return Decision.builder()
-        .status(DecisionStatus.ACCEPTED)
-        .premium(premium)
-        .rulesApplied(new ArrayList<>())
-        .build();
+  private static final String ALL_RULES_PASSED_MESSAGE = "All rules passed";
+
+  public Decision {
+    if (status != DecisionStatus.ACCEPT) {
+      premium = null;
+    }
   }
 
-  public static Decision declined(String reason, String ruleName) {
-    return Decision.builder()
-        .status(DecisionStatus.DECLINED)
-        .reason(reason)
-        .rulesApplied(List.of(ruleName))
-        .build();
+  public static Decision autoAccept(BigDecimal baseRate, long startTime) {
+    return new Decision(
+        DecisionStatus.ACCEPT,
+        NO_RULES_REASON_MESSAGE,
+        List.of(),
+        baseRate,
+        System.currentTimeMillis() - startTime,
+        false,
+        null);
   }
 
-  public static Decision refer(String reason, String ruleName) {
-    return Decision.builder()
-        .status(DecisionStatus.REFER)
-        .reason(reason)
-        .rulesApplied(List.of(ruleName))
-        .build();
+  public static Decision allRulesPassed(
+      PremiumState premium, long startTime, List<String> rulesApplied) {
+    return new Decision(
+        DecisionStatus.ACCEPT,
+        ALL_RULES_PASSED_MESSAGE,
+        rulesApplied,
+        premium.calculateTotal(),
+        System.currentTimeMillis() - startTime,
+        false,
+        null);
+  }
+
+  public Decision(Rule rule, List<String> rules, PremiumState premium, long start) {
+    this(
+        rule.getRuleConfig().then().decision(),
+        rule.getReason(),
+        rules,
+        premium.calculateTotal(),
+        System.currentTimeMillis() - start,
+        true,
+        rule.getName());
   }
 }
