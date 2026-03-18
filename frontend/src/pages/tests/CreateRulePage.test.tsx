@@ -172,7 +172,6 @@ describe("CreateRulePage", () => {
   test("submits form and calls http post when form is valid", async () => {
     const onClose = vi.fn();
     const onSave = vi.fn();
-    const http = await import("../../api/http");
 
     const { container } = render(
       <MemoryRouter>

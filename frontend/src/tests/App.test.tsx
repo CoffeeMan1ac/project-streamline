@@ -24,22 +24,21 @@ vi.mock("../pages/BackOfficeLoginPage", () => ({ default: () => <div>Login Page<
 vi.mock("../pages/RulesManagementPage", () => ({ default: () => <div>Rules Page</div> }));
 vi.mock("../pages/ProductManagementPage", () => ({ default: () => <div>Products Page</div> }));
 vi.mock("../dev/Sandbox", () => ({ default: () => <div>Sandbox Page</div> }));
-vi.mock("../components/Navbar", () => ({
-  default: ({ toggleTheme }: { toggleTheme: () => void }) => (
-    <div>
-      Navbar
-      <button onClick={toggleTheme}>Toggle Theme</button>
-    </div>
-  ),
-}));
-vi.mock("../components/Footer", () => ({ default: () => <div>Footer</div> }));
-vi.mock("../components/Sidebar", () => ({
-  default: ({ toggleSidebar }: { toggleSidebar: () => void }) => (
-    <div>
-      Sidebar
-      <button onClick={toggleSidebar}>Toggle Sidebar</button>
-    </div>
-  ),
+vi.mock("../layouts/PublicLayout", async () => {
+  const { Outlet } = await vi.importActual("react-router-dom") as any;
+  return {
+    default: ({ toggleTheme }: { toggleTheme: () => void }) => (
+      <div>
+        <div>Navbar</div>
+        <button onClick={toggleTheme}>Toggle Theme</button>
+        <Outlet />
+        <div>Footer</div>
+      </div>
+    ),
+  };
+});
+vi.mock("../layouts/ProtectedLayout", () => ({
+  default: () => <div>Protected Layout</div>,
 }));
 vi.mock("../components/ProtectedRoute", () => ({
   default: () => <div>Protected</div>,
@@ -124,25 +123,6 @@ describe("App", () => {
     expect(screen.queryByText("Footer")).not.toBeInTheDocument();
   });
 
-  test("renders sidebar on backoffice routes when logged in", () => {
-    mockUseAuth.mockReturnValue({ user: { email: "admin@test.com" } });
-    render(
-      <MemoryRouter initialEntries={["/rules"]}>
-        <App />
-      </MemoryRouter>
-    );
-    expect(screen.getByText("Sidebar")).toBeInTheDocument();
-  });
-
-  test("does not render sidebar when not logged in", () => {
-    render(
-      <MemoryRouter initialEntries={["/rules"]}>
-        <App />
-      </MemoryRouter>
-    );
-    expect(screen.queryByText("Sidebar")).not.toBeInTheDocument();
-  });
-
   test("renders sandbox page at /sandbox", () => {
     render(
       <MemoryRouter initialEntries={["/sandbox"]}>
@@ -187,23 +167,9 @@ describe("App", () => {
     expect(localStorage.getItem("themeMode")).toBe("light");
   });
 
-  test("toggleSidebar toggles sidebar open state", () => {
-    mockUseAuth.mockReturnValue({ user: { email: "admin@test.com" } });
+  test("renders products management page at /products", () => {
     render(
-      <MemoryRouter initialEntries={["/rules"]}>
-        <App />
-      </MemoryRouter>
-    );
-    expect(screen.getByText("Sidebar")).toBeInTheDocument();
-    act(() => {
-      fireEvent.click(screen.getByRole("button", { name: /toggle sidebar/i }));
-    });
-    expect(screen.getByText("Sidebar")).toBeInTheDocument();
-  });
-
-  test("renders products management page at /products-management", () => {
-    render(
-      <MemoryRouter initialEntries={["/products-management"]}>
+      <MemoryRouter initialEntries={["/products"]}>
         <App />
       </MemoryRouter>
     );

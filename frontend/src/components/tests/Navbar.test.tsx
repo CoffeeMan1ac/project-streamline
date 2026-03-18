@@ -44,16 +44,12 @@ describe("Navbar", () => {
   });
 
   test("renders logo and title", () => {
-    vi.mocked(useAuth).mockReturnValue({
-      user: null,
-      loading: false,
-    });
-
     render(
       <MemoryRouter>
         <Navbar mode="light" toggleTheme={vi.fn()} />
       </MemoryRouter>
     );
+
     expect(screen.getByAltText(/Phone Shield logo/i)).toBeInTheDocument();
     expect(screen.getByText(/Phone Shield/i)).toBeInTheDocument();
   });
@@ -61,9 +57,10 @@ describe("Navbar", () => {
   test("renders login icon when user is not logged in", () => {
     render(
       <MemoryRouter>
-        <Navbar mode="light" toggleTheme={vi.fn()} toggleSidebar={vi.fn()} admin={false} />
+        <Navbar mode="light" toggleTheme={vi.fn()} />
       </MemoryRouter>
     );
+
     expect(screen.getByTestId("LoginIcon")).toBeInTheDocument();
   });
 
@@ -72,20 +69,23 @@ describe("Navbar", () => {
       user: { email: "admin@test.com" } as any,
       loading: false,
     });
+
     render(
       <MemoryRouter>
-        <Navbar mode="light" toggleTheme={vi.fn()} toggleSidebar={vi.fn()} admin={false} />
+        <Navbar mode="light" toggleTheme={vi.fn()} />
       </MemoryRouter>
     );
+
     expect(screen.getByTestId("LogoutIcon")).toBeInTheDocument();
   });
 
   test("navigates to home when logo is clicked", () => {
     render(
       <MemoryRouter>
-        <Navbar mode="light" toggleTheme={vi.fn()} toggleSidebar={vi.fn()} admin={false} />
+        <Navbar mode="light" toggleTheme={vi.fn()} />
       </MemoryRouter>
     );
+
     fireEvent.click(screen.getByAltText(/Phone Shield logo/i));
     expect(mockNavigate).toHaveBeenCalledWith("/");
   });
@@ -93,33 +93,25 @@ describe("Navbar", () => {
   test("navigates to login when login icon is clicked", () => {
     render(
       <MemoryRouter>
-        <Navbar mode="light" toggleTheme={vi.fn()} toggleSidebar={vi.fn()} admin={false} />
+        <Navbar mode="light" toggleTheme={vi.fn()} />
       </MemoryRouter>
     );
+
     fireEvent.click(screen.getByTestId("LoginIcon"));
     expect(mockNavigate).toHaveBeenCalledWith("/login");
   });
 
   test("calls toggleTheme when theme button is clicked", () => {
     const toggleTheme = vi.fn();
+
     render(
       <MemoryRouter>
-        <Navbar mode="light" toggleTheme={toggleTheme} toggleSidebar={vi.fn()} admin={false} />
+        <Navbar mode="light" toggleTheme={toggleTheme} />
       </MemoryRouter>
     );
+
     fireEvent.click(screen.getByTestId("Brightness4Icon"));
     expect(toggleTheme).toHaveBeenCalled();
-  });
-
-  test("calls toggleSidebar when menu icon is clicked", () => {
-    const toggleSidebar = vi.fn();
-    render(
-      <MemoryRouter>
-        <Navbar mode="light" toggleTheme={vi.fn()} toggleSidebar={toggleSidebar} admin={true} />
-      </MemoryRouter>
-    );
-    fireEvent.click(screen.getByTestId("MenuIcon"));
-    expect(toggleSidebar).toHaveBeenCalled();
   });
 
   test("calls signOut and navigates to login on logout", async () => {
@@ -127,14 +119,16 @@ describe("Navbar", () => {
       user: { email: "admin@test.com" } as any,
       loading: false,
     });
+
     const { signOut } = await import("firebase/auth");
     vi.mocked(signOut).mockResolvedValueOnce();
 
     render(
       <MemoryRouter>
-        <Navbar mode="light" toggleTheme={vi.fn()} toggleSidebar={vi.fn()} admin={false} />
+        <Navbar mode="light" toggleTheme={vi.fn()} />
       </MemoryRouter>
     );
+
     fireEvent.click(screen.getByTestId("LogoutIcon"));
 
     await waitFor(() => {
@@ -147,14 +141,16 @@ describe("Navbar", () => {
       user: { email: "admin@test.com" } as any,
       loading: false,
     });
+
     const { signOut } = await import("firebase/auth");
     vi.mocked(signOut).mockRejectedValueOnce(new Error("Logout failed"));
 
     render(
       <MemoryRouter>
-        <Navbar mode="light" toggleTheme={vi.fn()} toggleSidebar={vi.fn()} admin={false} />
+        <Navbar mode="light" toggleTheme={vi.fn()} />
       </MemoryRouter>
     );
+
     fireEvent.click(screen.getByTestId("LogoutIcon"));
 
     await waitFor(() => {
@@ -165,10 +161,15 @@ describe("Navbar", () => {
   test("navigates to home with quotes hash when get a quote is clicked", () => {
     render(
       <MemoryRouter>
-        <Navbar mode="light" toggleTheme={vi.fn()} toggleSidebar={vi.fn()} admin={false} />
+        <Navbar mode="light" toggleTheme={vi.fn()} />
       </MemoryRouter>
     );
+
     fireEvent.click(screen.getByRole("button", { name: /get a quote/i }));
-    expect(mockNavigate).toHaveBeenCalledWith({ pathname: "/", hash: "#quotes" });
+
+    expect(mockNavigate).toHaveBeenCalledWith({
+      pathname: "/",
+      hash: "#quotes",
+    });
   });
 });

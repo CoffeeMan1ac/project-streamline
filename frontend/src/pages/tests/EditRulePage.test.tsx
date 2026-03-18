@@ -18,7 +18,7 @@ describe("EditRulePage", () => {
     active: true,
     ruleConfig: {
       when: {
-        match: "all",
+        match: "ALL",
         conditions: [{ field: "country", operator: "EQUALS", value: "ireland" }],
       },
       then: {
@@ -32,7 +32,7 @@ describe("EditRulePage", () => {
 
   beforeEach(() => {
     vi.spyOn(http, "get").mockResolvedValue({ data: mockRule });
-    vi.spyOn(http, "put").mockResolvedValue({ data: {} });
+    vi.spyOn(http, "patch").mockResolvedValue({ data: {} });
     cleanup();
   });
 
@@ -78,7 +78,6 @@ describe("EditRulePage", () => {
   test("renders all form fields", async () => {
     await renderWithRouter();
     const f = within(form);
-
     expect(f.getByTestId("rule-name-input")).toBeInTheDocument();
     expect(f.getByText(/Rule Description/i)).toBeInTheDocument();
     expect(f.getAllByText(/Conditions/i)[0]).toBeInTheDocument();
@@ -89,21 +88,18 @@ describe("EditRulePage", () => {
   test("renders save changes button", async () => {
     await renderWithRouter();
     const f = within(form);
-
     expect(f.getByRole("button", { name: /Save Changes/i })).toBeInTheDocument();
   });
 
   test("renders cancel button", async () => {
     await renderWithRouter();
     const f = within(form);
-
     expect(f.getByRole("button", { name: /Cancel/i })).toBeInTheDocument();
   });
 
   test("shows required errors when submitting empty form", () => {
     renderEmptyForm();
     const f = within(form);
-
     fireEvent.click(f.getByRole("button", { name: /Save Changes/i }));
     expect(f.getAllByText(/Required/i).length).toBeGreaterThan(0);
   });
@@ -111,32 +107,27 @@ describe("EditRulePage", () => {
   test("shows decline reason field when decline is selected", async () => {
     await renderWithRouter();
     const f = within(form);
-
     expect(f.getByText(/Reason for Decline/i)).toBeInTheDocument();
   });
 
   test("renders one condition row by default", async () => {
     await renderWithRouter();
     const f = within(form);
-
     expect(f.getAllByText(/Field/i).length).toBeGreaterThanOrEqual(1);
   });
 
   test("adds a condition row when + Add Condition is clicked", async () => {
     await renderWithRouter();
     const f = within(form);
-
     const before = f.getAllByText(/Field/i).length;
     fireEvent.click(f.getByText(/\+ Add Condition/i));
     const after = f.getAllByText(/Field/i).length;
-
     expect(after).toBeGreaterThan(before);
   });
 
   test("condition logic radio buttons are rendered", async () => {
     await renderWithRouter();
     const f = within(form);
-
     expect(f.getByLabelText(/All conditions must be true/i)).toBeInTheDocument();
     expect(f.getByLabelText(/At least one condition must be true/i)).toBeInTheDocument();
   });
@@ -242,7 +233,6 @@ describe("EditRulePage", () => {
 
     await screen.findByDisplayValue("Test Rule");
     const f = container.querySelector("form") as HTMLFormElement;
-
     fireEvent.submit(f);
 
     await waitFor(() => {
@@ -257,11 +247,7 @@ describe("EditRulePage", () => {
         ...mockRule,
         ruleConfig: {
           ...mockRule.ruleConfig,
-          then: {
-            decision: "ACCEPT",
-            premiumOverride: 29.99,
-            premiumDelta: null,
-          },
+          then: { decision: "ACCEPT", premiumOverride: 29.99, premiumDelta: null },
         },
       },
     });
@@ -283,11 +269,7 @@ describe("EditRulePage", () => {
         ...mockRule,
         ruleConfig: {
           ...mockRule.ruleConfig,
-          then: {
-            decision: "ACCEPT",
-            premiumOverride: null,
-            premiumDelta: 0.1,
-          },
+          then: { decision: "ACCEPT", premiumOverride: null, premiumDelta: 0.1 },
         },
       },
     });
@@ -328,7 +310,7 @@ describe("EditRulePage", () => {
   test("updates condition operator", async () => {
     await renderWithRouter();
     const nativeInputs = form.querySelectorAll("input.MuiSelect-nativeInput");
-    fireEvent.change(nativeInputs[3], { target: { value: "notEquals" } });
+    fireEvent.change(nativeInputs[3], { target: { value: "not_equals" } });
     expect(within(form).getAllByRole("combobox")[0]).toBeInTheDocument();
   });
 
@@ -377,7 +359,6 @@ describe("EditRulePage", () => {
 
     await screen.findByDisplayValue("Test Rule");
     const f = within(container.querySelector("form") as HTMLFormElement);
-
     fireEvent.click(f.getByLabelText(/^Delta$/i));
     expect(f.getByLabelText(/Delta Percentage/i)).toBeInTheDocument();
   });
@@ -401,13 +382,12 @@ describe("EditRulePage", () => {
 
     await screen.findByDisplayValue("Test Rule");
     const f = within(container.querySelector("form") as HTMLFormElement);
-
     fireEvent.click(f.getByLabelText(/^Override$/i));
     expect(f.getByLabelText(/Override Price/i)).toBeInTheDocument();
   });
 
   test("handles submit error gracefully", async () => {
-    vi.spyOn(http, "put").mockRejectedValueOnce(new Error("Save failed"));
+    vi.spyOn(http, "patch").mockRejectedValueOnce(new Error("Save failed"));
     vi.spyOn(console, "error").mockImplementation(() => {});
 
     const { container } = render(
@@ -558,6 +538,7 @@ describe("EditRulePage", () => {
     fireEvent.click(f.getByLabelText(/^Override$/i));
     expect(f.getByLabelText(/Override Price/i)).toHaveValue(null);
   });
+
   test("renders accept outcome UI with override field on load", async () => {
     vi.spyOn(http, "get").mockResolvedValue({
       data: {
@@ -630,7 +611,6 @@ describe("EditRulePage", () => {
 
     await screen.findByDisplayValue("Test Rule");
     const f = container.querySelector("form") as HTMLFormElement;
-
     fireEvent.submit(f);
 
     await waitFor(() => {
@@ -661,7 +641,6 @@ describe("EditRulePage", () => {
 
     await screen.findByDisplayValue("Test Rule");
     const f = container.querySelector("form") as HTMLFormElement;
-
     fireEvent.submit(f);
 
     await waitFor(() => {
@@ -671,7 +650,7 @@ describe("EditRulePage", () => {
   });
 
   test("shows saving state when form is submitting", async () => {
-    vi.spyOn(http, "put").mockImplementation(
+    vi.spyOn(http, "patch").mockImplementation(
       () => new Promise((resolve) => setTimeout(() => resolve({ data: {} }), 500))
     );
 
@@ -687,32 +666,5 @@ describe("EditRulePage", () => {
     fireEvent.submit(f);
 
     expect(screen.getByRole("button", { name: /Saving.../i })).toBeInTheDocument();
-  });
-  test("debug - check what http.put receives on accept submit", async () => {
-    const putSpy = vi.spyOn(http, "put");
-
-    vi.spyOn(http, "get").mockResolvedValue({
-      data: {
-        ...mockRule,
-        ruleConfig: {
-          ...mockRule.ruleConfig,
-          then: { decision: "ACCEPT", premiumOverride: 29.99, premiumDelta: null },
-        },
-      },
-    });
-
-    const { container } = render(
-      <MemoryRouter>
-        <EditRulePage id="123" onClose={vi.fn()} onSave={vi.fn()} />
-      </MemoryRouter>
-    );
-
-    await screen.findByDisplayValue("Test Rule");
-    fireEvent.submit(container.querySelector("form")!);
-
-    await waitFor(() => {
-      console.log("put called:", putSpy.mock.calls.length);
-      console.log("put args:", JSON.stringify(putSpy.mock.calls[0]));
-    });
   });
 });

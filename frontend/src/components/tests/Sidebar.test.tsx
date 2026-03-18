@@ -133,7 +133,7 @@ describe("Sidebar", () => {
       </MemoryRouter>
     );
     fireEvent.click(screen.getByText("Products Management"));
-    expect(mockNavigate).toHaveBeenCalledWith("/products-management");
+    expect(mockNavigate).toHaveBeenCalledWith("/products");
   });
 
   test("calls toggleTheme when theme button is clicked", () => {
@@ -214,7 +214,7 @@ describe("Sidebar", () => {
       </MemoryRouter>
     );
     fireEvent.click(screen.getByTestId("ViewInArOutlinedIcon").closest("button")!);
-    expect(mockNavigate).toHaveBeenCalledWith("/products-management");
+    expect(mockNavigate).toHaveBeenCalledWith("/products");
   });
 
   test("calls signOut and navigates to login when collapsed logout icon is clicked", async () => {
