@@ -25,7 +25,7 @@ vi.mock("../pages/RulesManagementPage", () => ({ default: () => <div>Rules Page<
 vi.mock("../pages/ProductManagementPage", () => ({ default: () => <div>Products Page</div> }));
 vi.mock("../dev/Sandbox", () => ({ default: () => <div>Sandbox Page</div> }));
 vi.mock("../layouts/PublicLayout", async () => {
-  const { Outlet } = await vi.importActual("react-router-dom") as any;
+  const { Outlet } = (await vi.importActual("react-router-dom")) as any;
   return {
     default: ({ toggleTheme }: { toggleTheme: () => void }) => (
       <div>
