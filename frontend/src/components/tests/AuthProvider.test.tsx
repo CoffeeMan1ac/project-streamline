@@ -47,7 +47,7 @@ describe("AuthProvider", () => {
   });
 
   test("renders children after auth state resolves", async () => {
-    mockOnAuthStateChanged.mockImplementation((auth, callback) => {
+    mockOnAuthStateChanged.mockImplementation((_auth, callback) => {
       callback(null);
       return mockUnsubscribe;
     });
@@ -64,7 +64,7 @@ describe("AuthProvider", () => {
   });
 
   test("renders children when user is logged in", async () => {
-    mockOnAuthStateChanged.mockImplementation((auth, callback) => {
+    mockOnAuthStateChanged.mockImplementation((_auth, callback) => {
       callback({ email: "admin@test.com", uid: "123" });
       return mockUnsubscribe;
     });
@@ -81,7 +81,7 @@ describe("AuthProvider", () => {
   });
 
   test("calls unsubscribe on unmount", async () => {
-    mockOnAuthStateChanged.mockImplementation((auth, callback) => {
+    mockOnAuthStateChanged.mockImplementation((_auth, callback) => {
       callback(null);
       return mockUnsubscribe;
     });
@@ -105,7 +105,7 @@ describe("AuthProvider", () => {
   });
 
   test("registers auth state change listener on mount", async () => {
-    mockOnAuthStateChanged.mockImplementation((auth, callback) => {
+    mockOnAuthStateChanged.mockImplementation((_auth, callback) => {
       callback(null);
       return mockUnsubscribe;
     });
