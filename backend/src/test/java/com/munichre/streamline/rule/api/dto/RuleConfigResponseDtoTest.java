@@ -52,5 +52,20 @@ class RuleConfigResponseDtoTest {
     void returnsNullWhenConditionIsNull() {
       assertThat(RuleConfigResponseDto.Condition.of(null)).isNull();
     }
+
+    @Test
+    @DisplayName("Should map valid condition")
+    void mapsValidCondition() {
+      RuleConfig.Condition mockCondition = mock(RuleConfig.Condition.class);
+      when(mockCondition.field()).thenReturn("age");
+      when(mockCondition.operator()).thenReturn(null);
+      when(mockCondition.value()).thenReturn("25");
+
+      RuleConfigResponseDto.Condition result = RuleConfigResponseDto.Condition.of(mockCondition);
+
+      assertThat(result).isNotNull();
+      assertThat(result.field()).isEqualTo("age");
+      assertThat(result.value()).isEqualTo("25");
+    }
   }
 }
