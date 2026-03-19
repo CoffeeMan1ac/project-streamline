@@ -46,5 +46,19 @@ class RuleTest {
 
       assertThat(rule.isTriggeredBy(mockApplicantData)).isFalse();
     }
+
+    @Test
+    @DisplayName("delegates logic to ruleConfig when present")
+    void delegatesToRuleConfig() {
+      RuleConfig mockConfig = mock(RuleConfig.class);
+      RuleConfig.When mockWhen = mock(RuleConfig.When.class);
+
+      when(mockConfig.when()).thenReturn(mockWhen);
+      when(mockWhen.isSatisfiedBy(mockApplicantData)).thenReturn(true);
+
+      rule.setRuleConfig(mockConfig);
+
+      assertThat(rule.isTriggeredBy(mockApplicantData)).isTrue();
+    }
   }
 }
