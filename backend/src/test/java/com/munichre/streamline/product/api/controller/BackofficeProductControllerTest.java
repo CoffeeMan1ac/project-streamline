@@ -1,6 +1,7 @@
 package com.munichre.streamline.product.api.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -10,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.munichre.streamline.product.api.dto.CreateProductRequestDto;
 import com.munichre.streamline.product.api.dto.ProductOptionDto;
+import com.munichre.streamline.product.api.dto.UpdateProductRequestDto;
 import com.munichre.streamline.product.service.ProductService;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -162,6 +164,34 @@ class BackofficeProductControllerTest {
       UUID id = UUID.randomUUID();
       mockMvc.perform(get("/backoffice/products/{id}", id)).andExpect(status().isOk());
       verify(productService).getProductDto(id);
+    }
+  }
+
+  @Nested
+  @DisplayName("PUT /backoffice/products/{id}")
+  class UpdateProduct {
+    @Test
+    void returns200Ok() throws Exception {
+      UUID id = UUID.randomUUID();
+
+      UpdateProductRequestDto request =
+          UpdateProductRequestDto.builder()
+              .name("Updated Name")
+              .baseRate(new BigDecimal("150.00"))
+              .startDate(LocalDateTime.now())
+              .coverages(List.of())
+              .exclusions(List.of())
+              .tags(List.of())
+              .build();
+
+      mockMvc
+          .perform(
+              put("/backoffice/products/{id}", id)
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(objectMapper.writeValueAsString(request)))
+          .andExpect(status().isOk());
+
+      verify(productService).updateProduct(eq(id), any(UpdateProductRequestDto.class));
     }
   }
 }
