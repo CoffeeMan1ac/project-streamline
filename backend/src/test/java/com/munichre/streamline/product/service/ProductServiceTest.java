@@ -822,4 +822,16 @@ public class ProductServiceTest {
       verify(productRepository).save(product);
     }
   }
+
+  @Nested
+  @DisplayName("getProductDto()")
+  class GetProductDto {
+    @Test
+    void throwsNotFoundIfAssemblyResultIsEmpty() {
+      UUID id = UUID.randomUUID();
+      when(productRepository.findProductRowById(id)).thenReturn(List.of());
+
+      assertThrows(ProductNotFoundException.class, () -> productService.getProductDto(id));
+    }
+  }
 }
