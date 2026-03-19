@@ -949,5 +949,19 @@ public class ProductServiceTest {
       assertThat(result).hasSize(1);
       assertThat(result.get(0).code()).isEqualTo("T1");
     }
+
+    @Test
+    void getAllCoveragesReturnsMappedDtos() {
+      Coverage coverage = new Coverage();
+      coverage.setId(UUID.randomUUID());
+      coverage.setCode("C1");
+      coverage.setLabel("Cov 1");
+
+      when(productCoverageRepository.findAllCoverages()).thenReturn(List.of(coverage));
+
+      var result = productService.getAllCoverages();
+      assertThat(result).hasSize(1);
+      assertThat(result.get(0).code()).isEqualTo("C1");
+    }
   }
 }
