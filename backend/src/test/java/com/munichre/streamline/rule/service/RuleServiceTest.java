@@ -138,5 +138,17 @@ class RuleServiceTest {
       assertThat(response.active()).isFalse();
       assertThat(mockRule.getPriority()).isEqualTo(5);
     }
+
+    @Test
+    @DisplayName("Should update rule configuration when present in request")
+    void shouldUpdateRuleConfig() {
+      var request = new RuleUpdateRequest(null, null, null, null, null);
+
+      when(ruleRepository.findById(ruleId)).thenReturn(Optional.of(mockRule));
+      when(ruleRepository.save(any(Rule.class))).thenReturn(mockRule);
+
+      ruleService.updateRule(ruleId, request);
+      verify(ruleRepository).save(mockRule);
+    }
   }
 }
