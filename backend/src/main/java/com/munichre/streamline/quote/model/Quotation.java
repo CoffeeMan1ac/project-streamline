@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
+
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import lombok.*;
 
 @Entity
@@ -33,6 +37,10 @@ public class Quotation {
       joinColumns = @JoinColumn(name = "quotation_id"))
   @Column(name = "rule_name")
   private List<String> rulesApplied;
+
+  @Column(columnDefinition = "jsonb")
+  @JdbcTypeCode(SqlTypes.JSON)
+  private ApplicantData customerInput;
 
   @Column private BigDecimal premium;
 

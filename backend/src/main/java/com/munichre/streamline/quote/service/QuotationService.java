@@ -31,6 +31,7 @@ public class QuotationService {
             .status(QuotationStatus.from(decision.status()))
             .reason(decision.reason())
             .rulesApplied(decision.rulesApplied())
+            .customerInput(quoteRequest.applicantData())
             .premium(decision.premium())
             .processingTimeMs(decision.processingTimeMs())
             .build();
