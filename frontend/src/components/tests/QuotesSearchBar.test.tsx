@@ -19,9 +19,7 @@ describe("QuotationsSearchBar", () => {
     render(<QuotationsSearchBar {...defaultProps} />);
 
     expect(
-      screen.getByPlaceholderText(
-        "Search by reference, customer name, email, or product..."
-      )
+      screen.getByPlaceholderText("Search by reference, customer name, email, or product...")
     ).toBeInTheDocument();
   });
 
@@ -36,9 +34,7 @@ describe("QuotationsSearchBar", () => {
     render(<QuotationsSearchBar {...defaultProps} onSearchChange={onSearchChange} />);
 
     fireEvent.change(
-      screen.getByPlaceholderText(
-        "Search by reference, customer name, email, or product..."
-      ),
+      screen.getByPlaceholderText("Search by reference, customer name, email, or product..."),
       { target: { value: "john" } }
     );
 
@@ -48,9 +44,7 @@ describe("QuotationsSearchBar", () => {
   test("displays the current search query value", () => {
     render(<QuotationsSearchBar {...defaultProps} searchQuery="PS-2024-001234" />);
 
-    expect(
-      screen.getByDisplayValue("PS-2024-001234")
-    ).toBeInTheDocument();
+    expect(screen.getByDisplayValue("PS-2024-001234")).toBeInTheDocument();
   });
 
   test("displays the current status filter value", () => {
@@ -70,9 +64,7 @@ describe("QuotationsSearchBar", () => {
 
   test("calls onStatusFilterChange when status filter changes", async () => {
     const onStatusFilterChange = vi.fn();
-    render(
-      <QuotationsSearchBar {...defaultProps} onStatusFilterChange={onStatusFilterChange} />
-    );
+    render(<QuotationsSearchBar {...defaultProps} onStatusFilterChange={onStatusFilterChange} />);
 
     fireEvent.mouseDown(screen.getByText("All Quotations"));
     fireEvent.click(await screen.findByText("Rejected"));
