@@ -8,6 +8,7 @@ import static org.mockito.Mockito.*;
 import com.munichre.streamline.product.model.Product;
 import com.munichre.streamline.product.service.ProductService;
 import com.munichre.streamline.rule.api.dto.RuleCreateRequest;
+import com.munichre.streamline.rule.api.dto.RuleUpdateRequest;
 import com.munichre.streamline.rule.exception.RuleNotFoundException;
 import com.munichre.streamline.rule.model.Rule;
 import com.munichre.streamline.rule.repository.RuleRepository;
@@ -116,6 +117,26 @@ class RuleServiceTest {
       assertThat(response).isNotNull();
       assertThat(response.id()).isEqualTo(ruleId);
       verify(ruleRepository).findById(ruleId);
+    }
+  }
+
+  @Nested
+  @DisplayName("Rule Updates")
+  class UpdateTests {
+
+    @Test
+    @DisplayName("Should update only provided fields and ignore nulls in request")
+    void shouldPerformPartialUpdate() {
+      var request = new RuleUpdateRequest("Updated Name", null, false, null, null);
+
+      when(ruleRepository.findById(ruleId)).thenReturn(Optional.of(mockRule));
+      when(ruleRepository.save(any(Rule.class))).thenAnswer(i -> i.getArgument(0));
+
+      var response = ruleService.updateRule(ruleId, request);
+
+      assertThat(response.name()).isEqualTo("Updated Name");
+      assertThat(response.active()).isFalse();
+      assertThat(mockRule.getPriority()).isEqualTo(5);
     }
   }
 }
