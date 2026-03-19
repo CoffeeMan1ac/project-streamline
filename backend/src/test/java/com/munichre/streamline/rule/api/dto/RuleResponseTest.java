@@ -60,5 +60,17 @@ class RuleResponseTest {
       assertThat(response.createdAt()).isEqualTo(now);
       assertThat(response.updatedAt()).isEqualTo(now);
     }
+
+    @Test
+    @DisplayName("Should map rule correctly when product is null")
+    void mapsRuleWithoutProduct() {
+      Rule mockRule = mock(Rule.class);
+      when(mockRule.getProduct()).thenReturn(null);
+
+      RuleResponse response = RuleResponse.of(mockRule);
+
+      assertThat(response).isNotNull();
+      assertThat(response.productId()).isNull();
+    }
   }
 }
