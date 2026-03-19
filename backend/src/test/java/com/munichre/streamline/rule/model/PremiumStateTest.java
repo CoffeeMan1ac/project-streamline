@@ -14,4 +14,11 @@ class PremiumStateTest {
     PremiumState state = new PremiumState(new BigDecimal("100"), null);
     assertThat(state.calculateTotal()).isEqualByComparingTo("100.00");
   }
+
+  @Test
+  @DisplayName("calculateTotal() calculates 10% increase correctly")
+  void calculateTotal_WithPositiveDelta_CalculatesCorrectTotal() {
+    PremiumState state = new PremiumState(new BigDecimal("100.00"), new BigDecimal("0.10"));
+    assertThat(state.calculateTotal()).isEqualByComparingTo("110.00");
+  }
 }
