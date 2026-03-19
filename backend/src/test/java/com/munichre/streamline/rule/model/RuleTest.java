@@ -61,4 +61,17 @@ class RuleTest {
       assertThat(rule.isTriggeredBy(mockApplicantData)).isTrue();
     }
   }
+
+  @Nested
+  @DisplayName("Lombok Builder Defaults")
+  class BuilderDefaults {
+
+    @Test
+    @DisplayName("active field should be true by default when using builder")
+    void activeIsTrueByDefault() {
+      Rule builtRule = Rule.builder().name("Test Rule").priority(1).build();
+
+      assertThat(builtRule.getActive()).isTrue();
+    }
+  }
 }
