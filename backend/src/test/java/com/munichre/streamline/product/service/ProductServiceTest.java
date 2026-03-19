@@ -799,5 +799,12 @@ public class ProductServiceTest {
       assertThat(product.getActive()).isFalse();
       verify(productRepository).save(product);
     }
+
+    @Test
+    void throwsNotFoundException() {
+      UUID id = UUID.randomUUID();
+      when(productRepository.findById(id)).thenReturn(Optional.empty());
+      assertThrows(ProductNotFoundException.class, () -> productService.toggleProductActive(id));
+    }
   }
 }
