@@ -142,4 +142,15 @@ class BackofficeProductControllerTest {
       verify(productService).getAllCoverages();
     }
   }
+
+  @Nested
+  @DisplayName("GET /backoffice/products/tags")
+  class GetTags {
+    @Test
+    void returnsTags() throws Exception {
+      when(productService.getAllTags()).thenReturn(List.of());
+      mockMvc.perform(get("/backoffice/products/tags")).andExpect(status().isOk());
+      verify(productService).getAllTags();
+    }
+  }
 }
