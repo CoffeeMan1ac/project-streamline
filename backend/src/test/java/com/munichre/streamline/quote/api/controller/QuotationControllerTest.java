@@ -3,7 +3,9 @@ package com.munichre.streamline.quote.api.controller;
 import static com.munichre.streamline.constant.ApiRoutes.CUSTOMER_API_BASE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -76,6 +78,29 @@ class QuotationControllerTest {
                   .content(objectMapper.writeValueAsString(invalidRequest)))
           .andExpect(status().isBadRequest())
           .andExpect(jsonPath("$.message").value("Invalid request payload: applicantData"));
+    }
+  }
+
+  @Nested
+  @DisplayName("GET /quote/{reference}")
+  class GetQuoteByReference {
+    @Test
+    @DisplayName("should return 200 and the quote when reference is valid")
+    void returns200AndQuote() throws Exception {
+      String reference = "REF-456";
+      var response =
+          new QuoteResponse(reference, QuotationStatus.REFERRED, null, "Manual check required");
+
+      when(quotationService.getQuoteByReference(reference)).thenReturn(response);
+
+      mockMvc
+          .perform(get(baseUrl + "/{reference}", reference).accept(MediaType.APPLICATION_JSON))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.reference").value(reference))
+          .andExpect(jsonPath("$.status").value("REFERRED"));
+
+      verify(quotationService).getQuoteByReference(reference);
+      verifyNoMoreInteractions(quotationService);
     }
   }
 }
