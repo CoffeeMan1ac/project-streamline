@@ -884,5 +884,16 @@ public class ProductServiceTest {
       assertThrows(
           CoverageNotFoundException.class, () -> productService.updateProduct(id, request));
     }
+
+    @Test
+    @DisplayName("Throws ProductNotFoundException when updating an unknown product")
+    void throwsProductNotFoundWhenUpdatingUnknownProduct() {
+      UUID id = UUID.randomUUID();
+      UpdateProductRequestDto request = UpdateProductRequestDto.builder().build();
+
+      when(productRepository.findById(id)).thenReturn(Optional.empty());
+
+      assertThrows(ProductNotFoundException.class, () -> productService.updateProduct(id, request));
+    }
   }
 }
