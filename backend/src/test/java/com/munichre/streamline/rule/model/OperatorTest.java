@@ -1,7 +1,9 @@
 package com.munichre.streamline.rule.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.munichre.streamline.rule.exception.InvalidNumericValueException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -54,6 +56,17 @@ class OperatorTest {
       assertThat(Operator.BETWEEN.apply("25", "20,30")).isTrue();
       assertThat(Operator.BETWEEN.apply("20", "20,30")).isTrue();
       assertThat(Operator.BETWEEN.apply("15", "20,30")).isFalse();
+    }
+  }
+
+  @Nested
+  @DisplayName("Exception Handling")
+  class ExceptionTests {
+    @Test
+    @DisplayName("Throws InvalidNumericValueException for non-numeric input")
+    void throwsOnInvalidNumber() {
+      assertThatThrownBy(() -> Operator.GREATER_THAN.apply("abc", "10"))
+          .isInstanceOf(InvalidNumericValueException.class);
     }
   }
 }
