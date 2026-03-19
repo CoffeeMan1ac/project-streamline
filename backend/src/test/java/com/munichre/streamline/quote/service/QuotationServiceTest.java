@@ -1,6 +1,7 @@
 package com.munichre.streamline.quote.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -10,6 +11,7 @@ import com.munichre.streamline.decision.model.DecisionStatus;
 import com.munichre.streamline.decision.service.DecisionService;
 import com.munichre.streamline.quote.api.dto.QuoteRequest;
 import com.munichre.streamline.quote.api.dto.QuoteResponse;
+import com.munichre.streamline.quote.exception.QuoteNotFoundException;
 import com.munichre.streamline.quote.model.Quotation;
 import com.munichre.streamline.quote.repository.QuotationRepository;
 import java.math.BigDecimal;
@@ -101,6 +103,16 @@ class QuotationServiceTest {
 
       assertThat(response).isNotNull();
       verify(quotationRepository).findByReference(ref);
+    }
+
+    @Test
+    @DisplayName("Should throw QuoteNotFoundException when reference does not exist")
+    void shouldThrowExceptionForMissingReference() {
+      String ref = "INVALID";
+      when(quotationRepository.findByReference(ref)).thenReturn(Optional.empty());
+
+      assertThatThrownBy(() -> quotationService.getQuoteByReference(ref))
+          .isInstanceOf(QuoteNotFoundException.class);
     }
   }
 }
