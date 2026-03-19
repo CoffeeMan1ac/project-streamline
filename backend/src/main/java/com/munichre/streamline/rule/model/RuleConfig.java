@@ -1,7 +1,6 @@
 package com.munichre.streamline.rule.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.munichre.streamline.decision.exception.DecisionStatusNotImplementedException;
 import com.munichre.streamline.decision.exception.FieldNotFoundException;
 import com.munichre.streamline.decision.model.DecisionStatus;
 import com.munichre.streamline.quote.model.ApplicantData;
@@ -49,7 +48,6 @@ public record RuleConfig(When when, Then then) {
       return switch (decision) {
         case DECLINE, REFER -> true;
         case ACCEPT -> stop;
-        default -> throw new DecisionStatusNotImplementedException(decision);
       };
     }
   }
