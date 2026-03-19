@@ -120,4 +120,15 @@ class BackofficeProductControllerTest {
       verify(productService).createProduct(any(CreateProductRequestDto.class));
     }
   }
+
+  @Nested
+  @DisplayName("PATCH /backoffice/products/{id}/active")
+  class ToggleActive {
+    @Test
+    void returns200Ok() throws Exception {
+      UUID id = UUID.randomUUID();
+      mockMvc.perform(patch("/backoffice/products/{id}/active", id)).andExpect(status().isOk());
+      verify(productService).toggleProductActive(id);
+    }
+  }
 }
