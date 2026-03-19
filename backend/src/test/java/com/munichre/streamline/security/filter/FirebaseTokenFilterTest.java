@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -68,5 +69,26 @@ class FirebaseTokenFilterTest {
 
     verify(chain).doFilter(request, response);
     assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
+  }
+
+  @Test
+  @DisplayName("Should set SecurityContext when Firebase token is valid")
+  void shouldSetAuthenticationOnValidToken()
+      throws ServletException, IOException, FirebaseAuthException {
+    String token = "valid-firebase-token";
+    String uid = "firebase-user-id-123";
+    when(request.getMethod()).thenReturn("GET");
+    when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn("Bearer " + token);
+
+    firebaseAuthStatic.when(FirebaseAuth::getInstance).thenReturn(firebaseAuth);
+    when(firebaseAuth.verifyIdToken(token)).thenReturn(firebaseToken);
+    when(firebaseToken.getUid()).thenReturn(uid);
+
+    filter.doFilterInternal(request, response, chain);
+
+    var auth = SecurityContextHolder.getContext().getAuthentication();
+    assertThat(auth).isNotNull();
+    assertThat(auth.getPrincipal()).isEqualTo(uid);
+    verify(chain).doFilter(request, response);
   }
 }
