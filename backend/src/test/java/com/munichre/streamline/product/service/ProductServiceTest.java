@@ -895,5 +895,20 @@ public class ProductServiceTest {
 
       assertThrows(ProductNotFoundException.class, () -> productService.updateProduct(id, request));
     }
+
+    @Test
+    @DisplayName("Throws CoverageNotFoundException when coverages mismatch during update")
+    void throwsCoverageNotFoundWhenCoveragesMismatch() {
+      UUID id = UUID.randomUUID();
+      UpdateProductRequestDto request =
+          UpdateProductRequestDto.builder().coverages(List.of(UUID.randomUUID())).build();
+
+      Product product = new Product();
+      when(productRepository.findById(id)).thenReturn(Optional.of(product));
+      when(productCoverageRepository.findCoverageModels(any())).thenReturn(Set.of());
+
+      assertThrows(
+          CoverageNotFoundException.class, () -> productService.updateProduct(id, request));
+    }
   }
 }
