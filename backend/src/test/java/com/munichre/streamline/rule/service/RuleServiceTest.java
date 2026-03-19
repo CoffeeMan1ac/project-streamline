@@ -8,7 +8,9 @@ import static org.mockito.Mockito.*;
 import com.munichre.streamline.product.model.Product;
 import com.munichre.streamline.product.service.ProductService;
 import com.munichre.streamline.rule.api.dto.RuleCreateRequest;
+import com.munichre.streamline.rule.api.dto.RuleReorderRequest;
 import com.munichre.streamline.rule.api.dto.RuleUpdateRequest;
+import com.munichre.streamline.rule.exception.RuleNotAssignedToProductException;
 import com.munichre.streamline.rule.exception.RuleNotFoundException;
 import com.munichre.streamline.rule.model.Rule;
 import com.munichre.streamline.rule.repository.RuleRepository;
@@ -149,6 +151,25 @@ class RuleServiceTest {
 
       ruleService.updateRule(ruleId, request);
       verify(ruleRepository).save(mockRule);
+    }
+  }
+
+  @Nested
+  @DisplayName("Rule Reordering Logic")
+  class ReorderTests {
+
+    @Test
+    @DisplayName("Should throw exception if the rule belongs to a different product than requested")
+    void shouldThrowExceptionForProductMismatch() {
+      Product otherProduct = new Product();
+      otherProduct.setId(UUID.randomUUID());
+      mockRule.setProduct(otherProduct);
+
+      var request = new RuleReorderRequest(productId, ruleId, 1);
+      when(ruleRepository.findById(ruleId)).thenReturn(Optional.of(mockRule));
+
+      assertThatThrownBy(() -> ruleService.reorderRule(request))
+          .isInstanceOf(RuleNotAssignedToProductException.class);
     }
   }
 }
