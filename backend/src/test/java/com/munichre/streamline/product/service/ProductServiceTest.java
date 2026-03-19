@@ -762,5 +762,24 @@ public class ProductServiceTest {
 
       assertThrows(CoverageNotFoundException.class, () -> productService.createProduct(request));
     }
+
+    @Test
+    @DisplayName("Throws CoverageNotFoundException when exclusions mismatch during creation")
+    void throwsCoverageNotFoundWhenExclusionsMismatch() {
+      CreateProductRequestDto request =
+          CreateProductRequestDto.builder()
+              .type(UUID.randomUUID())
+              .tags(List.of())
+              .coverages(List.of())
+              .exclusions(List.of(UUID.randomUUID()))
+              .build();
+
+      when(productTypeRepository.findProductTypeById(any())).thenReturn(new ProductType());
+      when(productTagRepository.findTagModelsByIds(any())).thenReturn(Set.of());
+      when(productCoverageRepository.findCoverageModels(any())).thenReturn(Set.of());
+      when(productCoverageRepository.findExclusionModels(any())).thenReturn(Set.of());
+
+      assertThrows(CoverageNotFoundException.class, () -> productService.createProduct(request));
+    }
   }
 }
