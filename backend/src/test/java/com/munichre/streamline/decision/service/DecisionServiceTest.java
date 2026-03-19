@@ -118,5 +118,42 @@ public class DecisionServiceTest {
       assertThat(result.rulesApplied()).containsExactly("Terminal Rule");
       verifyNoInteractions(secondRule);
     }
+
+    @Test
+    void accumulatesPremiumAcrossMultipleTriggeredRules() {
+      when(productService.getProduct(productId)).thenReturn(mockProduct);
+
+      Rule rule1 =
+          createMockRule(
+              "Rule 1", false, new PremiumState(new BigDecimal("120.00"), BigDecimal.ZERO));
+
+      Rule rule2 =
+          createMockRule(
+              "Rule 2", false, new PremiumState(new BigDecimal("130.00"), BigDecimal.ZERO));
+
+      when(ruleService.findByProductIdAndActiveTrueOrderByPriorityAsc(productId))
+          .thenReturn(List.of(rule1, rule2));
+
+      Decision result = decisionService.decide(request);
+
+      assertThat(result.status()).isEqualTo(DecisionStatus.ACCEPT);
+      assertThat(result.premium()).isEqualByComparingTo("130.00");
+      assertThat(result.rulesApplied()).containsExactly("Rule 1", "Rule 2");
+    }
+  }
+
+  private Rule createMockRule(String name, boolean isTerminal, PremiumState resultingState) {
+    Rule rule = mock(Rule.class);
+    RuleConfig config = mock(RuleConfig.class);
+    Then then = mock(Then.class);
+
+    when(rule.getName()).thenReturn(name);
+    when(rule.isTriggeredBy(any())).thenReturn(true);
+    when(rule.getRuleConfig()).thenReturn(config);
+    when(config.then()).thenReturn(then);
+    when(then.isTerminal()).thenReturn(isTerminal);
+    when(then.apply(any(PremiumState.class))).thenReturn(resultingState);
+
+    return rule;
   }
 }
