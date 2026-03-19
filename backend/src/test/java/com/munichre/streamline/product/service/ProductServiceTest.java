@@ -647,4 +647,15 @@ public class ProductServiceTest {
       verify(productRepository).findInactiveProductRows(any());
     }
   }
+
+  @Nested
+  @DisplayName("assembleProducts()")
+  class AssembleProducts {
+    @Test
+    void returnsEmptyListImmediatelyWhenInputIsEmpty() {
+      List<ProductDto> result = productService.assembleProducts(List.of());
+      assertThat(result).isEmpty();
+      verifyNoInteractions(productCoverageRepository, productTagRepository);
+    }
+  }
 }
