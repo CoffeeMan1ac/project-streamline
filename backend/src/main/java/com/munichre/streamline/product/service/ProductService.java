@@ -6,6 +6,7 @@ import static java.util.stream.Collectors.toMap;
 import com.munichre.streamline.product.api.dto.CoverageCategoryDto;
 import com.munichre.streamline.product.api.dto.CoverageDto;
 import com.munichre.streamline.product.api.dto.CoverageOptionDto;
+import com.munichre.streamline.product.api.dto.CreateCoverageRequestDto;
 import com.munichre.streamline.product.api.dto.CreateProductRequestDto;
 import com.munichre.streamline.product.api.dto.ProductDto;
 import com.munichre.streamline.product.api.dto.ProductFieldDto;
@@ -13,16 +14,21 @@ import com.munichre.streamline.product.api.dto.ProductOptionDto;
 import com.munichre.streamline.product.api.dto.ProductTagDto;
 import com.munichre.streamline.product.api.dto.ProductTypeDto;
 import com.munichre.streamline.product.api.dto.TagOptionDto;
+import com.munichre.streamline.product.api.dto.UpdateCoverageRequestDto;
 import com.munichre.streamline.product.api.dto.UpdateProductRequestDto;
+import com.munichre.streamline.product.exception.CoverageCategoryNotFoundException;
 import com.munichre.streamline.product.exception.CoverageNotFoundException;
 import com.munichre.streamline.product.exception.ProductNotFoundException;
 import com.munichre.streamline.product.exception.ProductTagNotFoundException;
 import com.munichre.streamline.product.exception.ProductTypeNotFoundException;
 import com.munichre.streamline.product.model.Coverage;
+import com.munichre.streamline.product.model.CoverageCategory;
 import com.munichre.streamline.product.model.Product;
 import com.munichre.streamline.product.model.ProductField;
 import com.munichre.streamline.product.model.ProductTag;
 import com.munichre.streamline.product.model.ProductType;
+import com.munichre.streamline.product.repository.CoverageCategoryRepository;
+import com.munichre.streamline.product.repository.CoverageRepository;
 import com.munichre.streamline.product.repository.ProductCoverageRepository;
 import com.munichre.streamline.product.repository.ProductRepository;
 import com.munichre.streamline.product.repository.ProductTagRepository;
@@ -47,6 +53,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductService {
   private final ProductRepository productRepository;
   private final ProductCoverageRepository productCoverageRepository;
+  private final CoverageRepository coverageRepository;
+  private final CoverageCategoryRepository coverageCategoryRepository;
   private final ProductTagRepository productTagRepository;
   private final ProductTypeRepository productTypeRepository;
   private final Clock clock;
@@ -187,6 +195,45 @@ public class ProductService {
     return productCoverageRepository.findAllCoverages().stream()
         .map(c -> new CoverageOptionDto(c.getId(), c.getCode(), c.getLabel()))
         .toList();
+  }
+
+  @Transactional
+  public CoverageOptionDto createCoverage(CreateCoverageRequestDto request) {
+    CoverageCategory category =
+        coverageCategoryRepository
+            .findById(request.categoryId())
+            .orElseThrow(() -> new CoverageCategoryNotFoundException(request.categoryId()));
+
+    ProductType type = getProductType(request.typeId());
+    if (type == null) throw new ProductTypeNotFoundException();
+
+    Coverage coverage = new Coverage();
+    coverage.setCode(request.code());
+    coverage.setLabel(request.label());
+    coverage.setCategory(category);
+    coverage.setType(type);
+
+    Coverage saved = coverageRepository.save(coverage);
+    return new CoverageOptionDto(saved.getId(), saved.getCode(), saved.getLabel());
+  }
+
+  @Transactional
+  public CoverageOptionDto updateCoverage(UUID id, UpdateCoverageRequestDto request) {
+    Coverage coverage =
+        coverageRepository
+            .findById(id)
+            .orElseThrow(() -> new CoverageNotFoundException(id));
+
+    CoverageCategory category =
+        coverageCategoryRepository
+            .findById(request.categoryId())
+            .orElseThrow(() -> new CoverageCategoryNotFoundException(request.categoryId()));
+
+    coverage.setLabel(request.label());
+    coverage.setCategory(category);
+
+    Coverage saved = coverageRepository.save(coverage);
+    return new CoverageOptionDto(saved.getId(), saved.getCode(), saved.getLabel());
   }
 
   @Transactional
