@@ -22,6 +22,7 @@ import com.munichre.streamline.product.exception.ProductTagNotFoundException;
 import com.munichre.streamline.product.exception.ProductTypeNotFoundException;
 import com.munichre.streamline.product.model.Coverage;
 import com.munichre.streamline.product.model.Product;
+import com.munichre.streamline.product.model.ProductField;
 import com.munichre.streamline.product.model.ProductTag;
 import com.munichre.streamline.product.model.ProductType;
 import com.munichre.streamline.product.repository.ProductCoverageRepository;
@@ -971,6 +972,51 @@ public class ProductServiceTest {
       when(productTypeRepository.findProductTypeById(typeId)).thenReturn(type);
 
       assertThat(productService.getProductType(typeId)).isEqualTo(type);
+    }
+  }
+
+  @Nested
+  @DisplayName("assembleProducts() - Field Mapping")
+  class AssembleProductsFields {
+
+    @Test
+    @DisplayName("Should handle both null and populated product fields")
+    void handlesNullAndNonNullProductFields() {
+      UUID id1 = UUID.randomUUID();
+      UUID id2 = UUID.randomUUID();
+
+      ProductRowDto row1 =
+          new ProductRowDto(
+              id1, BigDecimal.ONE, "P1", "D", null, null, true, UUID.randomUUID(), "C", "L");
+      ProductRowDto row2 =
+          new ProductRowDto(
+              id2, BigDecimal.ONE, "P2", "D", null, null, true, UUID.randomUUID(), "C", "L");
+      List<ProductRowDto> productRows = List.of(row1, row2);
+
+      Product p1 = new Product();
+      p1.setId(id1);
+      p1.setProductFields(null);
+
+      Product p2 = new Product();
+      p2.setId(id2);
+      ProductField field = new ProductField();
+      field.setName("TestField");
+      p2.setProductFields(List.of(field));
+
+      when(productRepository.findAllById(List.of(id1, id2))).thenReturn(List.of(p1, p2));
+
+      List<ProductDto> result = productService.assembleProducts(productRows);
+
+      assertThat(result).hasSize(2);
+
+      ProductDto dto1 = result.stream().filter(p -> p.id().equals(id1)).findFirst().orElseThrow();
+      assertThat(dto1.productFields()).isEmpty();
+
+      ProductDto dto2 = result.stream().filter(p -> p.id().equals(id2)).findFirst().orElseThrow();
+      assertThat(dto2.productFields()).hasSize(1);
+      assertThat(dto2.productFields().get(0).name()).isEqualTo("TestField");
+
+      verify(productRepository).findAllById(List.of(id1, id2));
     }
   }
 }
