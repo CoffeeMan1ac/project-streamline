@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.munichre.streamline.rule.api.dto.RuleCreateRequest;
+import com.munichre.streamline.rule.api.dto.RuleReorderRequest;
 import com.munichre.streamline.rule.api.dto.RuleResponse;
 import com.munichre.streamline.rule.model.RuleConfig;
 import com.munichre.streamline.rule.service.RuleService;
@@ -130,6 +131,33 @@ class RuleControllerTest {
           .andExpect(jsonPath("$.name").value("Found Rule"));
 
       verify(ruleService).getRule(ruleId);
+    }
+  }
+
+  @Nested
+  @DisplayName("PUT /rules/reorder")
+  class ReorderRule {
+    @Test
+    @DisplayName("should return 200 after reordering rules")
+    void returns200AndReorderedList() throws Exception {
+      var request = new RuleReorderRequest(productId, ruleId, 1);
+      var response =
+          List.of(
+              new RuleResponse(ruleId, productId, "Rule 1", null, null, 1, true, null, null, null));
+
+      when(ruleService.reorderRule(any(RuleReorderRequest.class))).thenReturn(response);
+
+      mockMvc
+          .perform(
+              put(baseUrl + "/reorder")
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(objectMapper.writeValueAsString(request))
+                  .accept(MediaType.APPLICATION_JSON))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.length()").value(1))
+          .andExpect(jsonPath("$[0].priority").value(1));
+
+      verify(ruleService).reorderRule(any(RuleReorderRequest.class));
     }
   }
 }
