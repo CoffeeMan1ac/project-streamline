@@ -36,10 +36,11 @@ const QuotationDetails = ({ quotationId, timeStamp, status }: QuotationDetailsPr
   return (
     <Box>
       <Paper
-        elevation={1}
         sx={{
           p: 2,
           borderRadius: 2,
+          border: 1,
+          borderColor: "divider",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",

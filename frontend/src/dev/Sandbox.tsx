@@ -5,7 +5,11 @@ const Sandbox = () => {
     <>
       <h1>Sandbox for viewing components</h1>
       <Box width="80%">
-        <QuotationDetails quotationId="test" timeStamp="now" status="ACCEPTED" />
+        <QuotationDetails
+          quotationId="PS-2024-001234"
+          timeStamp="2024-03-15 14:30"
+          status="ACCEPTED"
+        />
       </Box>
     </>
   );
