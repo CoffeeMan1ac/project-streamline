@@ -5,6 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.munichre.streamline.rule.model.RuleConfig;
+import java.math.BigDecimal;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -76,6 +77,22 @@ class RuleConfigResponseDtoTest {
     @DisplayName("Should return null when 'then' is null")
     void returnsNullWhenThenIsNull() {
       assertThat(RuleConfigResponseDto.Then.of(null)).isNull();
+    }
+
+    @Test
+    @DisplayName("Should map valid 'then' object")
+    void mapsValidThen() {
+      RuleConfig.Then mockThen = mock(RuleConfig.Then.class);
+      when(mockThen.decision()).thenReturn(null);
+      when(mockThen.premiumOverride()).thenReturn(BigDecimal.TEN);
+      when(mockThen.premiumDelta()).thenReturn(BigDecimal.ONE);
+      when(mockThen.stop()).thenReturn(true);
+
+      RuleConfigResponseDto.Then result = RuleConfigResponseDto.Then.of(mockThen);
+
+      assertThat(result).isNotNull();
+      assertThat(result.premiumOverride()).isEqualTo(BigDecimal.TEN);
+      assertThat(result.stop()).isTrue();
     }
   }
 }
