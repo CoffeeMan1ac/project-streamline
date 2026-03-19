@@ -1,12 +1,14 @@
 package com.munichre.streamline.rule.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import com.munichre.streamline.product.model.Product;
 import com.munichre.streamline.product.service.ProductService;
 import com.munichre.streamline.rule.api.dto.RuleCreateRequest;
+import com.munichre.streamline.rule.exception.RuleNotFoundException;
 import com.munichre.streamline.rule.model.Rule;
 import com.munichre.streamline.rule.repository.RuleRepository;
 import java.util.Optional;
@@ -80,6 +82,15 @@ class RuleServiceTest {
       var response = ruleService.createRule(request);
 
       assertThat(response.priority()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("Should throw RuleNotFoundException when searching for non-existent ID")
+    void shouldThrowExceptionWhenRuleIdIsInvalid() {
+      when(ruleRepository.findById(ruleId)).thenReturn(Optional.empty());
+
+      assertThatThrownBy(() -> ruleService.getRule(ruleId))
+          .isInstanceOf(RuleNotFoundException.class);
     }
   }
 }
