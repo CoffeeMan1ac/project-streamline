@@ -21,4 +21,11 @@ class PremiumStateTest {
     PremiumState state = new PremiumState(new BigDecimal("100.00"), new BigDecimal("0.10"));
     assertThat(state.calculateTotal()).isEqualByComparingTo("110.00");
   }
+
+  @Test
+  @DisplayName("calculateTotal() calculates 20% discount correctly")
+  void calculateTotal_WithNegativeDelta_CalculatesDiscount() {
+    PremiumState state = new PremiumState(new BigDecimal("100.00"), new BigDecimal("-0.20"));
+    assertThat(state.calculateTotal()).isEqualByComparingTo("80.00");
+  }
 }
