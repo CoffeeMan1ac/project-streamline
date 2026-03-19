@@ -1,9 +1,9 @@
 package com.munichre.streamline.rule.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.munichre.streamline.decision.exception.FieldNotFoundException;
 import com.munichre.streamline.decision.model.DecisionStatus;
 import com.munichre.streamline.quote.model.ApplicantData;
+import com.munichre.streamline.rule.exception.FieldNotFoundException;
 import java.math.BigDecimal;
 import java.util.List;
 
