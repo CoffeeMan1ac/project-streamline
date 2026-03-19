@@ -63,5 +63,19 @@ class QuotationControllerTest {
 
       verify(quotationService).createQuote(any(QuoteRequest.class));
     }
+
+    @Test
+    @DisplayName("POST /quote: Should return 400 when applicantData is missing")
+    void shouldReturn400WhenRequestIsInvalid() throws Exception {
+      var invalidRequest = new QuoteRequest(UUID.randomUUID(), null);
+
+      mockMvc
+          .perform(
+              post(baseUrl)
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(objectMapper.writeValueAsString(invalidRequest)))
+          .andExpect(status().isBadRequest())
+          .andExpect(jsonPath("$.message").value("Invalid request payload: applicantData"));
+    }
   }
 }
