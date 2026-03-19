@@ -932,4 +932,22 @@ public class ProductServiceTest {
           ProductTagNotFoundException.class, () -> productService.updateProduct(id, request));
     }
   }
+
+  @Nested
+  @DisplayName("Utility Fetches")
+  class UtilityFetches {
+    @Test
+    void getAllTagsReturnsMappedDtos() {
+      ProductTag tag = new ProductTag();
+      tag.setId(UUID.randomUUID());
+      tag.setCode("T1");
+      tag.setLabel("Tag 1");
+
+      when(productTagRepository.findAllTags()).thenReturn(List.of(tag));
+
+      var result = productService.getAllTags();
+      assertThat(result).hasSize(1);
+      assertThat(result.get(0).code()).isEqualTo("T1");
+    }
+  }
 }
