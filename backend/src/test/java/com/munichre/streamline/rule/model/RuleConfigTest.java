@@ -46,5 +46,12 @@ class RuleConfigTest {
       var when = new RuleConfig.When(MatchCriteria.ALL, null);
       assertThat(when.isSatisfiedBy(applicantData)).isTrue();
     }
+
+    @Test
+    @DisplayName("Should return true when conditions list is empty")
+    void shouldReturnTrueWhenConditionsAreEmpty() {
+      var when = new RuleConfig.When(MatchCriteria.ALL, List.of());
+      assertThat(when.isSatisfiedBy(applicantData)).isTrue();
+    }
   }
 }
