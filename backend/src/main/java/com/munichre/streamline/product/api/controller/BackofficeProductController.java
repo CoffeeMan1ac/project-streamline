@@ -3,10 +3,12 @@ package com.munichre.streamline.product.api.controller;
 import static com.munichre.streamline.constant.ApiRoutes.BACKOFFICE_API_BASE;
 
 import com.munichre.streamline.product.api.dto.CoverageOptionDto;
+import com.munichre.streamline.product.api.dto.CreateCoverageRequestDto;
 import com.munichre.streamline.product.api.dto.CreateProductRequestDto;
 import com.munichre.streamline.product.api.dto.ProductDto;
 import com.munichre.streamline.product.api.dto.ProductOptionDto;
 import com.munichre.streamline.product.api.dto.TagOptionDto;
+import com.munichre.streamline.product.api.dto.UpdateCoverageRequestDto;
 import com.munichre.streamline.product.api.dto.UpdateProductRequestDto;
 import com.munichre.streamline.product.service.ProductService;
 import java.util.List;
@@ -50,6 +52,18 @@ public class BackofficeProductController {
   @GetMapping("/coverages")
   public ResponseEntity<List<CoverageOptionDto>> getCoverages() {
     return ResponseEntity.ok(productService.getAllCoverages());
+  }
+
+  @PostMapping("/coverages")
+  public ResponseEntity<CoverageOptionDto> createCoverage(
+      @RequestBody CreateCoverageRequestDto request) {
+    return ResponseEntity.status(HttpStatus.CREATED).body(productService.createCoverage(request));
+  }
+
+  @PutMapping("/coverages/{id}")
+  public ResponseEntity<CoverageOptionDto> updateCoverage(
+      @PathVariable UUID id, @RequestBody UpdateCoverageRequestDto request) {
+    return ResponseEntity.ok(productService.updateCoverage(id, request));
   }
 
   @GetMapping("/tags")
