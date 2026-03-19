@@ -77,5 +77,12 @@ class BackofficeProductControllerTest {
           .andExpect(status().isOk());
       verify(productService).getProducts(true);
     }
+
+    @Test
+    void returnsAllProductsWhenActiveIsNull() throws Exception {
+      when(productService.getProducts(null)).thenReturn(List.of());
+      mockMvc.perform(get("/backoffice/products")).andExpect(status().isOk());
+      verify(productService).getProducts(null);
+    }
   }
 }
