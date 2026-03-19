@@ -10,12 +10,16 @@ import static org.mockito.Mockito.when;
 
 import com.munichre.streamline.product.api.dto.CoverageCategoryDto;
 import com.munichre.streamline.product.api.dto.CoverageDto;
+import com.munichre.streamline.product.api.dto.CreateProductRequestDto;
 import com.munichre.streamline.product.api.dto.ProductDto;
 import com.munichre.streamline.product.api.dto.ProductOptionDto;
 import com.munichre.streamline.product.api.dto.ProductTagDto;
 import com.munichre.streamline.product.api.dto.ProductTypeDto;
 import com.munichre.streamline.product.exception.ProductNotFoundException;
+import com.munichre.streamline.product.model.Coverage;
 import com.munichre.streamline.product.model.Product;
+import com.munichre.streamline.product.model.ProductTag;
+import com.munichre.streamline.product.model.ProductType;
 import com.munichre.streamline.product.repository.ProductCoverageRepository;
 import com.munichre.streamline.product.repository.ProductRepository;
 import com.munichre.streamline.product.repository.ProductTagRepository;
@@ -32,6 +36,7 @@ import java.time.ZoneId;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -656,6 +661,64 @@ public class ProductServiceTest {
       List<ProductDto> result = productService.assembleProducts(List.of());
       assertThat(result).isEmpty();
       verifyNoInteractions(productCoverageRepository, productTagRepository);
+    }
+  }
+
+  @Nested
+  @DisplayName("createProduct()")
+  class CreateProduct {
+
+    @Test
+    void successfullyCreatesAndAssemblesProduct() {
+      UUID typeId = UUID.randomUUID();
+      UUID tagId = UUID.randomUUID();
+      UUID coverageId = UUID.randomUUID();
+      UUID exclusionId = UUID.randomUUID();
+
+      CreateProductRequestDto request =
+          CreateProductRequestDto.builder()
+              .name("Test Product")
+              .type(typeId)
+              .tags(List.of(tagId))
+              .coverages(List.of(coverageId))
+              .exclusions(List.of(exclusionId))
+              .build();
+
+      ProductType mockType = new ProductType();
+      ProductTag mockTag = new ProductTag();
+      Coverage mockCoverage = new Coverage();
+      Coverage mockExclusion = new Coverage();
+
+      Product savedProduct = new Product();
+      savedProduct.setId(UUID.randomUUID());
+
+      when(productTypeRepository.findProductTypeById(typeId)).thenReturn(mockType);
+      when(productTagRepository.findTagModelsByIds(any())).thenReturn(Set.of(mockTag));
+      when(productCoverageRepository.findCoverageModels(Set.of(coverageId)))
+          .thenReturn(Set.of(mockCoverage));
+      when(productCoverageRepository.findExclusionModels(Set.of(exclusionId)))
+          .thenReturn(Set.of(mockExclusion));
+      when(productRepository.saveAndFlush(any(Product.class))).thenReturn(savedProduct);
+
+      when(productRepository.findProductRowById(savedProduct.getId()))
+          .thenReturn(
+              List.of(
+                  new ProductRowDto(
+                      savedProduct.getId(),
+                      BigDecimal.ONE,
+                      "T",
+                      "D",
+                      null, // startDate
+                      null, // endDate
+                      true, // active
+                      typeId,
+                      "C",
+                      "L")));
+
+      ProductDto result = productService.createProduct(request);
+
+      assertThat(result).isNotNull();
+      verify(productRepository).saveAndFlush(any(Product.class));
     }
   }
 }
