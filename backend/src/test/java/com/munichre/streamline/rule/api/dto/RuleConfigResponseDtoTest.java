@@ -68,4 +68,14 @@ class RuleConfigResponseDtoTest {
       assertThat(result.value()).isEqualTo("25");
     }
   }
+
+  @Nested
+  @DisplayName("RuleConfigResponseDto.Then.of()")
+  class OfThen {
+    @Test
+    @DisplayName("Should return null when 'then' is null")
+    void returnsNullWhenThenIsNull() {
+      assertThat(RuleConfigResponseDto.Then.of(null)).isNull();
+    }
+  }
 }
