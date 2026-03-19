@@ -910,5 +910,26 @@ public class ProductServiceTest {
       assertThrows(
           CoverageNotFoundException.class, () -> productService.updateProduct(id, request));
     }
+
+    @Test
+    @DisplayName("Throws ProductTagNotFoundException when tags mismatch during update")
+    void throwsProductTagNotFoundWhenTagsMismatch() {
+      UUID id = UUID.randomUUID();
+      UpdateProductRequestDto request =
+          UpdateProductRequestDto.builder()
+              .coverages(List.of())
+              .exclusions(List.of())
+              .tags(List.of(UUID.randomUUID()))
+              .build();
+
+      Product product = new Product();
+      when(productRepository.findById(id)).thenReturn(Optional.of(product));
+      when(productCoverageRepository.findCoverageModels(any())).thenReturn(Set.of());
+      when(productCoverageRepository.findExclusionModels(any())).thenReturn(Set.of());
+      when(productTagRepository.findTagModelsByIds(any())).thenReturn(Set.of());
+
+      assertThrows(
+          ProductTagNotFoundException.class, () -> productService.updateProduct(id, request));
+    }
   }
 }
