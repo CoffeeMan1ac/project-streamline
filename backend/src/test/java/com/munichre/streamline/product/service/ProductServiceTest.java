@@ -806,5 +806,20 @@ public class ProductServiceTest {
       when(productRepository.findById(id)).thenReturn(Optional.empty());
       assertThrows(ProductNotFoundException.class, () -> productService.toggleProductActive(id));
     }
+
+    @Test
+    @DisplayName("Toggles active status from false to true")
+    void togglesActiveStatusFromFalseToTrue() {
+      UUID id = UUID.randomUUID();
+      Product product = new Product();
+      product.setActive(false);
+
+      when(productRepository.findById(id)).thenReturn(Optional.of(product));
+
+      productService.toggleProductActive(id);
+
+      assertThat(product.getActive()).isTrue();
+      verify(productRepository).save(product);
+    }
   }
 }
