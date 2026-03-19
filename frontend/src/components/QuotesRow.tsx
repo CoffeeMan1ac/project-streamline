@@ -35,7 +35,7 @@ const QuotesRow: React.FC<QuotesRowProps> = ({
     rejected: {
       label: "rejected",
       icon: <CancelOutlinedIcon sx={{ fontSize: 18, color: "error.main" }} />,
-      chipSx: { backgroundColor: "error.light", color: "error.dark", fontWeight: 500 },
+      chipSx: { backgroundColor: "rgba(211, 47, 47, 0.16)", color: "error.dark", fontWeight: 500 },
     },
   };
 
