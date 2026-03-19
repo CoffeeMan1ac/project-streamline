@@ -4,6 +4,7 @@ import static com.munichre.streamline.constant.ApiRoutes.BACKOFFICE_API_BASE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -12,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.munichre.streamline.rule.api.dto.RuleCreateRequest;
 import com.munichre.streamline.rule.api.dto.RuleReorderRequest;
 import com.munichre.streamline.rule.api.dto.RuleResponse;
+import com.munichre.streamline.rule.api.dto.RuleUpdateRequest;
 import com.munichre.streamline.rule.model.RuleConfig;
 import com.munichre.streamline.rule.service.RuleService;
 import java.time.LocalDateTime;
@@ -158,6 +160,34 @@ class RuleControllerTest {
           .andExpect(jsonPath("$[0].priority").value(1));
 
       verify(ruleService).reorderRule(any(RuleReorderRequest.class));
+    }
+  }
+
+  @Nested
+  @DisplayName("PATCH /rules/{id}")
+  class UpdateRule {
+    @Test
+    @DisplayName("should return 200 and updated fields")
+    void returns200AndUpdatedRule() throws Exception {
+      var request = new RuleUpdateRequest("Updated Name", null, false, "New Reason", null);
+      var response =
+          new RuleResponse(
+              ruleId, productId, "Updated Name", null, "New Reason", 1, false, null, null, null);
+
+      when(ruleService.updateRule(eq(ruleId), any(RuleUpdateRequest.class))).thenReturn(response);
+
+      mockMvc
+          .perform(
+              patch(baseUrl + "/{id}", ruleId)
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(objectMapper.writeValueAsString(request))
+                  .accept(MediaType.APPLICATION_JSON))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.name").value("Updated Name"))
+          .andExpect(jsonPath("$.active").value(false));
+
+      verify(ruleService).updateRule(eq(ruleId), any(RuleUpdateRequest.class));
+      verifyNoMoreInteractions(ruleService);
     }
   }
 }
