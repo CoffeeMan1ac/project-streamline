@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.munichre.streamline.decision.model.DecisionStatus;
 import com.munichre.streamline.quote.model.ApplicantData;
 import com.munichre.streamline.rule.exception.FieldNotFoundException;
+import com.munichre.streamline.rule.exception.FieldNullException;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -100,6 +101,21 @@ class RuleConfigTest {
       var condition = new RuleConfig.Condition("status", Operator.EQUALS, "ACTIVE");
 
       assertThat(condition.isSatisfiedBy(applicantData)).isTrue();
+    }
+
+    @Test
+    @DisplayName(
+        "Should throw FieldNullException when the field is present in data but the value is null")
+    void shouldThrowFieldNullExceptionWhenFieldIsPresentButValueIsNull() {
+      String fieldName = "smokerStatus";
+      applicantData.put(fieldName, null);
+
+      var condition = new RuleConfig.Condition(fieldName, Operator.EQUALS, "NEVER");
+
+      assertThatThrownBy(() -> condition.isSatisfiedBy(applicantData))
+          .isInstanceOf(FieldNullException.class)
+          .hasMessageContaining(
+              "Field 'smokerStatus' was found in applicant data but the value is null");
     }
   }
 }
