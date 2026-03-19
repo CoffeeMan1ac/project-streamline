@@ -14,5 +14,5 @@ public interface QuotationRepository extends JpaRepository<Quotation, UUID> {
 
   List<Quotation> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
-  List<Quotation> findByReferenceStartingWith(String prefix, Pageable pageable);
+  List<Quotation> findByReferenceContaining(String partialRef, Pageable pageable);
 }

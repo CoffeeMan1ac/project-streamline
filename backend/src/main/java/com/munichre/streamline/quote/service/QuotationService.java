@@ -63,20 +63,20 @@ public class QuotationService {
    * @return
    */
   public List<QuoteSummary> findRecentQuotations(
-      Integer pageNumber, Integer pageSize, String prefix) {
+      Integer pageNumber, Integer pageSize, String partialRef) {
     if (pageNumber == null) pageNumber = 0;
     if (pageSize == null) pageSize = 50;
 
     List<Quotation> quotations;
 
-    if (prefix == null)
+    if (partialRef == null)
       quotations =
           quotationRepository.findAllByOrderByCreatedAtDesc(
               PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending()));
     else
       quotations =
-          quotationRepository.findByReferenceStartingWith(
-              prefix, PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending()));
+          quotationRepository.findByReferenceContaining(
+              partialRef, PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending()));
 
     return quotations.stream().map(QuoteSummary::from).toList();
   }
