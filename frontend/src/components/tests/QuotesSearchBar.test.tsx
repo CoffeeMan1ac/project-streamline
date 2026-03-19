@@ -1,67 +1,88 @@
-import TextField from "@mui/material/TextField";
-import { FormControl, Select, MenuItem, Paper } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
-import InputAdornment from "@mui/material/InputAdornment";
+import "@testing-library/jest-dom/vitest";
+import { render, screen, fireEvent, cleanup } from "@testing-library/react";
+import { describe, test, expect, vi, afterEach } from "vitest";
+import QuotationsSearchBar from "../QuotesSearchBar";
 
-interface QuotationsSearchBarProps {
-  searchQuery: string;
-  onSearchChange: (value: string) => void;
-  statusFilter: string;
-  onStatusFilterChange: (value: string) => void;
-}
+afterEach(() => {
+  cleanup();
+});
 
-const QuotationsSearchBar = ({
-  searchQuery,
-  onSearchChange,
-  statusFilter,
-  onStatusFilterChange,
-}: QuotationsSearchBarProps) => {
-  return (
-    <Paper
-      elevation={0}
-      sx={{
-        border: 1,
-        borderColor: "divider",
-        borderRadius: 3,
-        p: 3,
-        display: "flex",
-        alignItems: "center",
-        flexWrap: "wrap",
-        gap: 2,
-      }}
-    >
-      <TextField
-        placeholder="Search by reference, customer name, email, or product..."
-        value={searchQuery}
-        onChange={(e) => onSearchChange(e.target.value)}
-        size="small"
-        sx={{ flex: 3, minWidth: { xs: "100%", sm: 0 } }}
-        slotProps={{
-          input: {
-            sx: { borderRadius: 2 },
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon sx={{ color: "text.secondary" }} />
-              </InputAdornment>
-            ),
-          },
-        }}
-      />
-      <FormControl size="small" sx={{ flex: 1, minWidth: { xs: "100%", sm: 150 } }}>
-        <Select
-          value={statusFilter}
-          onChange={(e) => onStatusFilterChange(e.target.value)}
-          displayEmpty
-          sx={{ borderRadius: 2 }}
-        >
-          <MenuItem value="all">All Quotations</MenuItem>
-          <MenuItem value="accepted">Accepted</MenuItem>
-          <MenuItem value="rejected">Rejected</MenuItem>
-          <MenuItem value="pending">Pending</MenuItem>
-        </Select>
-      </FormControl>
-    </Paper>
-  );
-};
+describe("QuotationsSearchBar", () => {
+  const defaultProps = {
+    searchQuery: "",
+    onSearchChange: vi.fn(),
+    statusFilter: "all",
+    onStatusFilterChange: vi.fn(),
+  };
 
-export default QuotationsSearchBar;
+  test("renders search input with correct placeholder", () => {
+    render(<QuotationsSearchBar {...defaultProps} />);
+
+    expect(
+      screen.getByPlaceholderText(
+        "Search by reference, customer name, email, or product..."
+      )
+    ).toBeInTheDocument();
+  });
+
+  test("renders status filter dropdown", () => {
+    render(<QuotationsSearchBar {...defaultProps} />);
+
+    expect(screen.getByText("All Quotations")).toBeInTheDocument();
+  });
+
+  test("calls onSearchChange when search input changes", () => {
+    const onSearchChange = vi.fn();
+    render(<QuotationsSearchBar {...defaultProps} onSearchChange={onSearchChange} />);
+
+    fireEvent.change(
+      screen.getByPlaceholderText(
+        "Search by reference, customer name, email, or product..."
+      ),
+      { target: { value: "john" } }
+    );
+
+    expect(onSearchChange).toHaveBeenCalledWith("john");
+  });
+
+  test("displays the current search query value", () => {
+    render(<QuotationsSearchBar {...defaultProps} searchQuery="PS-2024-001234" />);
+
+    expect(
+      screen.getByDisplayValue("PS-2024-001234")
+    ).toBeInTheDocument();
+  });
+
+  test("displays the current status filter value", () => {
+    render(<QuotationsSearchBar {...defaultProps} statusFilter="accepted" />);
+
+    expect(screen.getByText("Accepted")).toBeInTheDocument();
+  });
+
+  test("renders both status filter options", async () => {
+    render(<QuotationsSearchBar {...defaultProps} />);
+
+    fireEvent.mouseDown(screen.getByText("All Quotations"));
+
+    expect(await screen.findByText("Accepted")).toBeInTheDocument();
+    expect(await screen.findByText("Rejected")).toBeInTheDocument();
+  });
+
+  test("calls onStatusFilterChange when status filter changes", async () => {
+    const onStatusFilterChange = vi.fn();
+    render(
+      <QuotationsSearchBar {...defaultProps} onStatusFilterChange={onStatusFilterChange} />
+    );
+
+    fireEvent.mouseDown(screen.getByText("All Quotations"));
+    fireEvent.click(await screen.findByText("Rejected"));
+
+    expect(onStatusFilterChange).toHaveBeenCalledWith("rejected");
+  });
+
+  test("renders search icon", () => {
+    render(<QuotationsSearchBar {...defaultProps} />);
+
+    expect(screen.getByTestId("SearchIcon")).toBeInTheDocument();
+  });
+});
