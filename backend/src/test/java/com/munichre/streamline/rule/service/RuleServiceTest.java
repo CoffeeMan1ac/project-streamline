@@ -67,5 +67,19 @@ class RuleServiceTest {
       assertThat(response.priority()).isEqualTo(11);
       verify(ruleRepository).save(any(Rule.class));
     }
+
+    @Test
+    @DisplayName("Should use priority 1 if no existing rules are found for product")
+    void shouldCreateRuleWithFirstPriority() {
+      var request = new RuleCreateRequest(productId, "New Rule", "Desc", true, "Reason", null);
+
+      when(productService.getProduct(productId)).thenReturn(mockProduct);
+      when(ruleRepository.findMaxPriorityByProductId(productId)).thenReturn(Optional.empty());
+      when(ruleRepository.save(any(Rule.class))).thenAnswer(i -> i.getArgument(0));
+
+      var response = ruleService.createRule(request);
+
+      assertThat(response.priority()).isEqualTo(1);
+    }
   }
 }
