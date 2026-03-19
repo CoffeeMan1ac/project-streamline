@@ -5,11 +5,13 @@ import static com.munichre.streamline.constant.ApiRoutes.BACKOFFICE_API_BASE;
 import com.munichre.streamline.product.api.dto.CoverageOptionDto;
 import com.munichre.streamline.product.api.dto.CreateCoverageRequestDto;
 import com.munichre.streamline.product.api.dto.CreateProductRequestDto;
+import com.munichre.streamline.product.api.dto.CreateTagRequestDto;
 import com.munichre.streamline.product.api.dto.ProductDto;
 import com.munichre.streamline.product.api.dto.ProductOptionDto;
 import com.munichre.streamline.product.api.dto.TagOptionDto;
 import com.munichre.streamline.product.api.dto.UpdateCoverageRequestDto;
 import com.munichre.streamline.product.api.dto.UpdateProductRequestDto;
+import com.munichre.streamline.product.api.dto.UpdateTagRequestDto;
 import com.munichre.streamline.product.service.ProductService;
 import java.util.List;
 import java.util.UUID;
@@ -69,6 +71,17 @@ public class BackofficeProductController {
   @GetMapping("/tags")
   public ResponseEntity<List<TagOptionDto>> getTags() {
     return ResponseEntity.ok(productService.getAllTags());
+  }
+
+  @PostMapping("/tags")
+  public ResponseEntity<TagOptionDto> createTag(@RequestBody CreateTagRequestDto request) {
+    return ResponseEntity.status(HttpStatus.CREATED).body(productService.createTag(request));
+  }
+
+  @PutMapping("/tags/{id}")
+  public ResponseEntity<TagOptionDto> updateTag(
+      @PathVariable UUID id, @RequestBody UpdateTagRequestDto request) {
+    return ResponseEntity.ok(productService.updateTag(id, request));
   }
 
   @GetMapping("/{id}")
