@@ -23,10 +23,13 @@ public class BackofficeQuotationController {
 
   @GetMapping("/recent")
   public ResponseEntity<List<QuoteSummary>> findRecentQuotations(
-      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "1") int page,
       @RequestParam(defaultValue = "50") int pageSize,
       @RequestParam(required = false) String ref) {
 
+    // Front end would want to send page=1 for the first page. First page in the repo is page 0.
+    // We dec to avoid off-by-one expectation. Also clamp to avoid underflow.
+    page = Math.max(0, page - 1);
     List<QuoteSummary> response = quotationService.findRecentQuotations(page, pageSize, ref);
     return ResponseEntity.ok(response);
   }
