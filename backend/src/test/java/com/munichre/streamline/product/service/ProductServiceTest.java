@@ -833,5 +833,11 @@ public class ProductServiceTest {
 
       assertThrows(ProductNotFoundException.class, () -> productService.getProductDto(id));
     }
+
+    @Test
+    @DisplayName("Throws NPE when ID is null to satisfy Lombok @NonNull")
+    void throwsNullPointerExceptionWhenIdIsNull() {
+      assertThrows(NullPointerException.class, () -> productService.getProductDto(null));
+    }
   }
 }
