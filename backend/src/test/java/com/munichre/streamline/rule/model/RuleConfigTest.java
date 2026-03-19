@@ -135,5 +135,14 @@ class RuleConfigTest {
       assertThat(result.base()).isEqualByComparingTo("250");
       assertThat(result.delta()).isEqualByComparingTo("0");
     }
+
+    @Test
+    @DisplayName("Should add delta to current state when delta is present and override is null")
+    void shouldApplyPremiumDeltaToCurrentState() {
+      var then = new RuleConfig.Then(DecisionStatus.ACCEPT, null, new BigDecimal("25"), false);
+      var result = then.apply(baseState);
+
+      assertThat(result.delta()).isEqualByComparingTo("25");
+    }
   }
 }
