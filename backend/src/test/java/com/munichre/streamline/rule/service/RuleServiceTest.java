@@ -257,4 +257,11 @@ class RuleServiceTest {
       verify(ruleRepository).save(mockRule);
     }
   }
+
+  @Test
+  @DisplayName("Should call specialised findByProductIdAndActiveTrueOrderByPriorityAsc method")
+  void shouldCallSpecialisedFind() {
+    ruleService.findByProductIdAndActiveTrueOrderByPriorityAsc(productId);
+    verify(ruleRepository).findByProductIdAndActiveTrueOrderByPriorityAsc(productId);
+  }
 }
