@@ -866,5 +866,23 @@ public class ProductServiceTest {
       productService.updateProduct(id, request);
       verify(productRepository).save(product);
     }
+
+    @Test
+    void throwsCoverageNotFoundWhenExclusionsMismatch() {
+      UUID id = UUID.randomUUID();
+      UpdateProductRequestDto request =
+          UpdateProductRequestDto.builder()
+              .coverages(List.of())
+              .exclusions(List.of(UUID.randomUUID()))
+              .build();
+
+      Product product = new Product();
+      when(productRepository.findById(id)).thenReturn(Optional.of(product));
+      when(productCoverageRepository.findCoverageModels(any())).thenReturn(Set.of());
+      when(productCoverageRepository.findExclusionModels(any())).thenReturn(Set.of());
+
+      assertThrows(
+          CoverageNotFoundException.class, () -> productService.updateProduct(id, request));
+    }
   }
 }
