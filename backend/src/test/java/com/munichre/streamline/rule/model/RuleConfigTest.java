@@ -7,6 +7,7 @@ import com.munichre.streamline.quote.model.ApplicantData;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 class RuleConfigTest {
@@ -33,5 +34,17 @@ class RuleConfigTest {
     assertThat(config).isEqualTo(sameConfig);
     assertThat(config.hashCode()).isEqualTo(sameConfig.hashCode());
     assertThat(config.toString()).contains("RuleConfig");
+  }
+
+  @Nested
+  @DisplayName("When: Match Criteria Logic")
+  class WhenTests {
+
+    @Test
+    @DisplayName("Should return true when conditions list is null")
+    void shouldReturnTrueWhenConditionsAreNull() {
+      var when = new RuleConfig.When(MatchCriteria.ALL, null);
+      assertThat(when.isSatisfiedBy(applicantData)).isTrue();
+    }
   }
 }
