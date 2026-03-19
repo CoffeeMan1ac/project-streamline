@@ -639,5 +639,12 @@ public class ProductServiceTest {
       productService.getProducts(true);
       verify(productRepository).findActiveProductRows(any());
     }
+
+    @Test
+    void callsInactiveProductsWhenFalse() {
+      when(productRepository.findInactiveProductRows(any())).thenReturn(List.of());
+      productService.getProducts(false);
+      verify(productRepository).findInactiveProductRows(any());
+    }
   }
 }
