@@ -68,5 +68,12 @@ class OperatorTest {
       assertThatThrownBy(() -> Operator.GREATER_THAN.apply("abc", "10"))
           .isInstanceOf(InvalidNumericValueException.class);
     }
+
+    @Test
+    @DisplayName("Throws InvalidNumericValueException for null input")
+    void throwsOnNull() {
+      assertThatThrownBy(() -> Operator.LESS_THAN.apply(null, "10"))
+          .isInstanceOf(InvalidNumericValueException.class);
+    }
   }
 }
