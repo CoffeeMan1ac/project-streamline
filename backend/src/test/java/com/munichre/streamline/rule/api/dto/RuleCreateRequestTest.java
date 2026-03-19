@@ -24,4 +24,19 @@ class RuleCreateRequestTest {
 
     assertThat(request.active()).isTrue();
   }
+
+  @Test
+  @DisplayName("Should keep active as false when explicitly passed as false")
+  void shouldKeepActiveFalseWhenExplicit() {
+    RuleCreateRequest request =
+        new RuleCreateRequest(
+            UUID.randomUUID(),
+            "My Rule",
+            "Rule Description",
+            false,
+            "Business Reason",
+            mock(RuleConfig.class));
+
+    assertThat(request.active()).isFalse();
+  }
 }
