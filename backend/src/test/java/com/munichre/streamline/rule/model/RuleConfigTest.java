@@ -154,4 +154,16 @@ class RuleConfigTest {
       assertThat(result).isEqualTo(baseState);
     }
   }
+
+  @Nested
+  @DisplayName("Then: Decision Terminality")
+  class TerminalityTests {
+
+    @Test
+    @DisplayName("Should return true for DECLINE regardless of stop flag")
+    void shouldBeTerminalWhenDecisionIsDecline() {
+      var then = new RuleConfig.Then(DecisionStatus.DECLINE, null, null, false);
+      assertThat(then.isTerminal()).isTrue();
+    }
+  }
 }
