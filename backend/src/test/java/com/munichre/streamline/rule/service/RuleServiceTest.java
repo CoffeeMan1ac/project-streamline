@@ -236,5 +236,25 @@ class RuleServiceTest {
       assertThat(mockRule.getReason()).isEqualTo("Updated Reason");
       assertThat(mockRule.getRuleConfig()).isEqualTo(newConfig);
     }
+
+    @Test
+    @DisplayName("Should skip all updates when request fields are null")
+    void shouldNotUpdateAnythingWhenRequestIsEmpty() {
+      mockRule.setName("Original Name");
+      mockRule.setDescription("Original Desc");
+      mockRule.setReason("Original Reason");
+
+      var request = new RuleUpdateRequest(null, null, null, null, null);
+
+      when(ruleRepository.findById(ruleId)).thenReturn(Optional.of(mockRule));
+      when(ruleRepository.save(any(Rule.class))).thenAnswer(i -> i.getArgument(0));
+
+      ruleService.updateRule(ruleId, request);
+
+      assertThat(mockRule.getName()).isEqualTo("Original Name");
+      assertThat(mockRule.getDescription()).isEqualTo("Original Desc");
+      assertThat(mockRule.getReason()).isEqualTo("Original Reason");
+      verify(ruleRepository).save(mockRule);
+    }
   }
 }
