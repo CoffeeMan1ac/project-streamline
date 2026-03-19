@@ -14,6 +14,7 @@ import com.munichre.streamline.quote.model.Quotation;
 import com.munichre.streamline.quote.repository.QuotationRepository;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -83,6 +84,23 @@ class QuotationServiceTest {
       quotationService.createQuote(mockRequest);
 
       verify(quotationRepository, times(2)).existsByReference(anyString());
+    }
+  }
+
+  @Nested
+  @DisplayName("getQuoteByReference: Retrieval")
+  class GetQuoteTests {
+
+    @Test
+    @DisplayName("Should return quote response when reference is valid")
+    void shouldReturnQuoteForValidReference() {
+      String ref = "456XYZ";
+      when(quotationRepository.findByReference(ref)).thenReturn(Optional.of(mockQuotation));
+
+      QuoteResponse response = quotationService.getQuoteByReference(ref);
+
+      assertThat(response).isNotNull();
+      verify(quotationRepository).findByReference(ref);
     }
   }
 }
