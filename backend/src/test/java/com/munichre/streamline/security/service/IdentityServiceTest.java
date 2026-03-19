@@ -2,6 +2,7 @@ package com.munichre.streamline.security.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.munichre.streamline.security.exception.UnauthenticatedException;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -63,6 +65,16 @@ class IdentityServiceTest {
   void shouldThrowExceptionWhenNotAuthenticated() {
     when(securityContext.getAuthentication()).thenReturn(authentication);
     when(authentication.isAuthenticated()).thenReturn(false);
+
+    assertThatThrownBy(() -> identityService.getUserId())
+        .isInstanceOf(UnauthenticatedException.class);
+  }
+
+  @Test
+  @DisplayName("Should throw UnauthenticatedException when token is anonymous")
+  void shouldThrowExceptionWhenAnonymousToken() {
+    AnonymousAuthenticationToken anonymousToken = mock(AnonymousAuthenticationToken.class);
+    when(securityContext.getAuthentication()).thenReturn(anonymousToken);
 
     assertThatThrownBy(() -> identityService.getUserId())
         .isInstanceOf(UnauthenticatedException.class);
