@@ -57,4 +57,14 @@ class IdentityServiceTest {
     assertThatThrownBy(() -> identityService.getUserId())
         .isInstanceOf(UnauthenticatedException.class);
   }
+
+  @Test
+  @DisplayName("Should throw UnauthenticatedException when isAuthenticated is false")
+  void shouldThrowExceptionWhenNotAuthenticated() {
+    when(securityContext.getAuthentication()).thenReturn(authentication);
+    when(authentication.isAuthenticated()).thenReturn(false);
+
+    assertThatThrownBy(() -> identityService.getUserId())
+        .isInstanceOf(UnauthenticatedException.class);
+  }
 }
