@@ -17,4 +17,14 @@ class RuleConfigResponseDtoTest {
       assertThat(RuleConfigResponseDto.of(null)).isNull();
     }
   }
+
+  @Nested
+  @DisplayName("RuleConfigResponseDto.When.of()")
+  class OfWhen {
+    @Test
+    @DisplayName("Should return null when 'when' is null")
+    void returnsNullWhenWhenIsNull() {
+      assertThat(RuleConfigResponseDto.When.of(null)).isNull();
+    }
+  }
 }
