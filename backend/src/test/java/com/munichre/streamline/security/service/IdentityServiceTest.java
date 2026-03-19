@@ -1,8 +1,10 @@
 package com.munichre.streamline.security.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
+import com.munichre.streamline.security.exception.UnauthenticatedException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -45,5 +47,14 @@ class IdentityServiceTest {
     String actualUserId = identityService.getUserId();
 
     assertThat(actualUserId).isEqualTo(expectedUserId);
+  }
+
+  @Test
+  @DisplayName("Should throw UnauthenticatedException when authentication is null")
+  void shouldThrowExceptionWhenAuthIsNull() {
+    when(securityContext.getAuthentication()).thenReturn(null);
+
+    assertThatThrownBy(() -> identityService.getUserId())
+        .isInstanceOf(UnauthenticatedException.class);
   }
 }
