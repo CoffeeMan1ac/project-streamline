@@ -91,5 +91,15 @@ class RuleConfigTest {
       assertThatThrownBy(() -> condition.isSatisfiedBy(applicantData))
           .isInstanceOf(FieldNotFoundException.class);
     }
+
+    @Test
+    @DisplayName("Should evaluate true when operator logic matches field value")
+    void shouldReturnTrueWhenOperatorMatchesValue() {
+      applicantData.put("status", "ACTIVE");
+
+      var condition = new RuleConfig.Condition("status", Operator.EQUALS, "ACTIVE");
+
+      assertThat(condition.isSatisfiedBy(applicantData)).isTrue();
+    }
   }
 }
