@@ -110,4 +110,14 @@ class OperatorTest {
       assertThat(Operator.BETWEEN.apply("31", "20,30")).isFalse();
     }
   }
+
+  @Nested
+  @DisplayName("String & Collection Logic")
+  class StringLogic {
+    @Test
+    void testEqualsCaseInsensitive() {
+      assertThat(Operator.EQUALS.apply("Dublin", "dublin")).isTrue();
+      assertThat(Operator.NOT_EQUALS.apply("Dublin", "London")).isTrue();
+    }
+  }
 }
