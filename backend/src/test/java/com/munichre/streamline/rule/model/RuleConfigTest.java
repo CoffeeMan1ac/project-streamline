@@ -172,5 +172,15 @@ class RuleConfigTest {
       var then = new RuleConfig.Then(DecisionStatus.REFER, null, null, false);
       assertThat(then.isTerminal()).isTrue();
     }
+
+    @Test
+    @DisplayName("Should return the stop flag value when decision is ACCEPT")
+    void shouldReturnStopFlagWhenDecisionIsAccept() {
+      var thenStop = new RuleConfig.Then(DecisionStatus.ACCEPT, null, null, true);
+      var thenContinue = new RuleConfig.Then(DecisionStatus.ACCEPT, null, null, false);
+
+      assertThat(thenStop.isTerminal()).isTrue();
+      assertThat(thenContinue.isTerminal()).isFalse();
+    }
   }
 }
