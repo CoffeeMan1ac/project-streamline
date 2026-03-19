@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
+import com.munichre.streamline.decision.model.DecisionStatus;
 import com.munichre.streamline.product.model.Product;
 import com.munichre.streamline.product.service.ProductService;
 import com.munichre.streamline.rule.api.dto.RuleCreateRequest;
@@ -13,8 +14,11 @@ import com.munichre.streamline.rule.api.dto.RuleReorderRequest;
 import com.munichre.streamline.rule.api.dto.RuleUpdateRequest;
 import com.munichre.streamline.rule.exception.RuleNotAssignedToProductException;
 import com.munichre.streamline.rule.exception.RuleNotFoundException;
+import com.munichre.streamline.rule.model.MatchCriteria;
 import com.munichre.streamline.rule.model.Rule;
+import com.munichre.streamline.rule.model.RuleConfig;
 import com.munichre.streamline.rule.repository.RuleRepository;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -208,6 +212,29 @@ class RuleServiceTest {
 
       verify(ruleRepository).decrementPriorityBetween(productId, 6, 8);
       assertThat(mockRule.getPriority()).isEqualTo(8);
+    }
+
+    @Test
+    @DisplayName("Should update all fields when request contains all values")
+    void shouldUpdateAllFieldsWhenRequestIsFull() {
+      var newConfig =
+          new RuleConfig(
+              new RuleConfig.When(MatchCriteria.ANY, List.of()),
+              new RuleConfig.Then(DecisionStatus.REFER, null, null, true));
+
+      var request =
+          new RuleUpdateRequest(
+              "Updated Name", "Updated Description", false, "Updated Reason", newConfig);
+
+      when(ruleRepository.findById(ruleId)).thenReturn(Optional.of(mockRule));
+      when(ruleRepository.save(any(Rule.class))).thenAnswer(i -> i.getArgument(0));
+
+      var response = ruleService.updateRule(ruleId, request);
+
+      assertThat(response.name()).isEqualTo("Updated Name");
+      assertThat(mockRule.getDescription()).isEqualTo("Updated Description");
+      assertThat(mockRule.getReason()).isEqualTo("Updated Reason");
+      assertThat(mockRule.getRuleConfig()).isEqualTo(newConfig);
     }
   }
 }
