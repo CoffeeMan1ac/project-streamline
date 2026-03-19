@@ -65,4 +65,17 @@ class BackofficeProductControllerTest {
       verifyNoMoreInteractions(productService);
     }
   }
+
+  @Nested
+  @DisplayName("GET /backoffice/products")
+  class GetProducts {
+    @Test
+    void returnsProductsFilteredByActive() throws Exception {
+      when(productService.getProducts(true)).thenReturn(List.of());
+      mockMvc
+          .perform(get("/backoffice/products").param("active", "true"))
+          .andExpect(status().isOk());
+      verify(productService).getProducts(true);
+    }
+  }
 }
