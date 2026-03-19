@@ -2,9 +2,11 @@ package com.munichre.streamline.quote.model;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -46,4 +48,6 @@ public class Quotation {
 
   @Column(nullable = false)
   private long processingTimeMs;
+
+  @CreationTimestamp private LocalDateTime createdAt;
 }
