@@ -73,5 +73,13 @@ class RuleTest {
 
       assertThat(builtRule.getActive()).isTrue();
     }
+
+    @Test
+    @DisplayName("active field can be set to false via builder")
+    void activeCanBeSetToFalse() {
+      Rule builtRule = Rule.builder().active(false).build();
+
+      assertThat(builtRule.getActive()).isFalse();
+    }
   }
 }
