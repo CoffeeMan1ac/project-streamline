@@ -3,6 +3,7 @@ package com.munichre.streamline.rule.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
 import com.munichre.streamline.product.model.Product;
@@ -170,6 +171,18 @@ class RuleServiceTest {
 
       assertThatThrownBy(() -> ruleService.reorderRule(request))
           .isInstanceOf(RuleNotAssignedToProductException.class);
+    }
+
+    @Test
+    @DisplayName("Should return rules list immediately if the priority remains unchanged")
+    void shouldHandleNoChangeInPriority() {
+      var request = new RuleReorderRequest(productId, ruleId, 5);
+      when(ruleRepository.findById(ruleId)).thenReturn(Optional.of(mockRule));
+
+      ruleService.reorderRule(request);
+
+      verify(ruleRepository, never()).incrementPriorityBetween(any(), anyInt(), anyInt());
+      verify(ruleRepository, never()).decrementPriorityBetween(any(), anyInt(), anyInt());
     }
   }
 }
