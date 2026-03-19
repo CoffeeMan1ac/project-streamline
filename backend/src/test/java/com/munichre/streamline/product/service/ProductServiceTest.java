@@ -611,4 +611,15 @@ public class ProductServiceTest {
       verify(productRepository).findInactiveProductRows(any());
     }
   }
+
+  @Nested
+  @DisplayName("getAllProducts()")
+  class GetAllProducts {
+    @Test
+    void callsRepositoryAndAssembles() {
+      when(productRepository.findProductRows()).thenReturn(List.of());
+      productService.getAllProducts();
+      verify(productRepository).findProductRows();
+    }
+  }
 }
