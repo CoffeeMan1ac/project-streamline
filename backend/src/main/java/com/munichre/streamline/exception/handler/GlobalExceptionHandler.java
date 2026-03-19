@@ -37,4 +37,14 @@ public class GlobalExceptionHandler {
       final Exception ex, final HttpServletRequest request) {
     return response(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occured", request);
   }
+
+  @ExceptionHandler(org.springframework.web.bind.MethodArgumentNotValidException.class)
+  public ResponseEntity<ErrorResponseDto> handleValidationException(
+      final org.springframework.web.bind.MethodArgumentNotValidException ex,
+      final jakarta.servlet.http.HttpServletRequest request) {
+    return response(
+        HttpStatus.BAD_REQUEST,
+        "Invalid request payload: " + ex.getBindingResult().getFieldError().getField(),
+        request);
+  }
 }
