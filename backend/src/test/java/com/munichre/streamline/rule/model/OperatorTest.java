@@ -119,5 +119,12 @@ class OperatorTest {
       assertThat(Operator.EQUALS.apply("Dublin", "dublin")).isTrue();
       assertThat(Operator.NOT_EQUALS.apply("Dublin", "London")).isTrue();
     }
+
+    @Test
+    void testInOperatorSplitting() {
+      assertThat(Operator.IN.apply("A", "A,B,C")).isTrue();
+      assertThat(Operator.IN.apply("b", "A, B, C")).isTrue();
+      assertThat(Operator.IN.apply("D", "A,B,C")).isFalse();
+    }
   }
 }
