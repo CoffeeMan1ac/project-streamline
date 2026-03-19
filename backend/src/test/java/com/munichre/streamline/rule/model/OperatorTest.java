@@ -99,5 +99,15 @@ class OperatorTest {
     void testComparisonBoundaries(Operator op, String actual, String expected, boolean result) {
       assertThat(op.apply(actual, expected)).isEqualTo(result);
     }
+
+    @Test
+    @DisplayName("BETWEEN hits all boundaries")
+    void testBetweenBoundaries() {
+      assertThat(Operator.BETWEEN.apply("20", "20,30")).isTrue();
+      assertThat(Operator.BETWEEN.apply("30", "20,30")).isTrue();
+      assertThat(Operator.BETWEEN.apply("25", "20,30")).isTrue();
+      assertThat(Operator.BETWEEN.apply("19", "20,30")).isFalse();
+      assertThat(Operator.BETWEEN.apply("31", "20,30")).isFalse();
+    }
   }
 }
