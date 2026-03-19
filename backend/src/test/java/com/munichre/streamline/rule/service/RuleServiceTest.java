@@ -105,5 +105,17 @@ class RuleServiceTest {
       ruleService.getRules(productId, false);
       verify(ruleRepository).findByProductIdAndActiveFalseOrderByPriorityAsc(productId);
     }
+
+    @Test
+    @DisplayName("Should return a RuleResponse when a valid ID is provided")
+    void shouldReturnRuleResponseForValidId() {
+      when(ruleRepository.findById(ruleId)).thenReturn(Optional.of(mockRule));
+
+      var response = ruleService.getRule(ruleId);
+
+      assertThat(response).isNotNull();
+      assertThat(response.id()).isEqualTo(ruleId);
+      verify(ruleRepository).findById(ruleId);
+    }
   }
 }
