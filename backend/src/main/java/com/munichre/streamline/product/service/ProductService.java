@@ -220,9 +220,7 @@ public class ProductService {
   @Transactional
   public CoverageOptionDto updateCoverage(UUID id, UpdateCoverageRequestDto request) {
     Coverage coverage =
-        coverageRepository
-            .findById(id)
-            .orElseThrow(() -> new CoverageNotFoundException(id));
+        coverageRepository.findById(id).orElseThrow(() -> new CoverageNotFoundException(id));
 
     CoverageCategory category =
         coverageCategoryRepository

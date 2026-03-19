@@ -207,8 +207,10 @@ class BackofficeProductControllerTest {
     void returns201Created() throws Exception {
       UUID catId = UUID.randomUUID();
       UUID typeId = UUID.randomUUID();
-      CreateCoverageRequestDto request = new CreateCoverageRequestDto("NEW_COV", "New Coverage", catId, typeId);
-      CoverageOptionDto response = new CoverageOptionDto(UUID.randomUUID(), "NEW_COV", "New Coverage");
+      CreateCoverageRequestDto request =
+          new CreateCoverageRequestDto("NEW_COV", "New Coverage", catId, typeId);
+      CoverageOptionDto response =
+          new CoverageOptionDto(UUID.randomUUID(), "NEW_COV", "New Coverage");
 
       when(productService.createCoverage(any(CreateCoverageRequestDto.class))).thenReturn(response);
 
@@ -228,7 +230,8 @@ class BackofficeProductControllerTest {
     void returns404WhenCategoryNotFound() throws Exception {
       UUID catId = UUID.randomUUID();
       UUID typeId = UUID.randomUUID();
-      CreateCoverageRequestDto request = new CreateCoverageRequestDto("COV", "Coverage", catId, typeId);
+      CreateCoverageRequestDto request =
+          new CreateCoverageRequestDto("COV", "Coverage", catId, typeId);
 
       when(productService.createCoverage(any(CreateCoverageRequestDto.class)))
           .thenThrow(new CoverageCategoryNotFoundException(catId));
