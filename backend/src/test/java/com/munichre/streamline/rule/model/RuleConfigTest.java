@@ -1,0 +1,37 @@
+package com.munichre.streamline.rule.model;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.munichre.streamline.decision.model.DecisionStatus;
+import com.munichre.streamline.quote.model.ApplicantData;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+class RuleConfigTest {
+
+  private final ApplicantData applicantData = new ApplicantData();
+
+  @BeforeEach
+  void setUp() {
+    applicantData.clear();
+  }
+
+  @Test
+  @DisplayName("RuleConfig: Verify record boilerplate (constructor, accessors, equals)")
+  void shouldVerifyRuleConfigRecordIntegrity() {
+    var when = new RuleConfig.When(MatchCriteria.ALL, List.of());
+    var then = new RuleConfig.Then(DecisionStatus.ACCEPT, null, null, false);
+
+    var config = new RuleConfig(when, then);
+
+    assertThat(config.when()).isEqualTo(when);
+    assertThat(config.then()).isEqualTo(then);
+
+    var sameConfig = new RuleConfig(when, then);
+    assertThat(config).isEqualTo(sameConfig);
+    assertThat(config.hashCode()).isEqualTo(sameConfig.hashCode());
+    assertThat(config.toString()).contains("RuleConfig");
+  }
+}
