@@ -79,4 +79,16 @@ class IdentityServiceTest {
     assertThatThrownBy(() -> identityService.getUserId())
         .isInstanceOf(UnauthenticatedException.class);
   }
+
+  @Test
+  @DisplayName(
+      "Should throw UnauthenticatedException when token is anonymous even if 'authenticated' is true")
+  void shouldThrowExceptionWhenAuthenticatedAnonymousToken() {
+    AnonymousAuthenticationToken anonymousToken = mock(AnonymousAuthenticationToken.class);
+    when(securityContext.getAuthentication()).thenReturn(anonymousToken);
+    when(anonymousToken.isAuthenticated()).thenReturn(true);
+
+    assertThatThrownBy(() -> identityService.getUserId())
+        .isInstanceOf(UnauthenticatedException.class);
+  }
 }
