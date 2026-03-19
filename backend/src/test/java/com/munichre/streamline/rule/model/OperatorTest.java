@@ -47,5 +47,13 @@ class OperatorTest {
     void testNumericLogic(Operator op, String actual, String expected, boolean result) {
       assertThat(op.apply(actual, expected)).isEqualTo(result);
     }
+
+    @Test
+    @DisplayName("BETWEEN operator correctly identifies range")
+    void testBetween() {
+      assertThat(Operator.BETWEEN.apply("25", "20,30")).isTrue();
+      assertThat(Operator.BETWEEN.apply("20", "20,30")).isTrue();
+      assertThat(Operator.BETWEEN.apply("15", "20,30")).isFalse();
+    }
   }
 }
