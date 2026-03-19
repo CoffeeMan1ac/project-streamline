@@ -622,4 +622,15 @@ public class ProductServiceTest {
       verify(productRepository).findProductRows();
     }
   }
+
+  @Nested
+  @DisplayName("getProducts(Boolean active)")
+  class GetProducts {
+    @Test
+    void callsAllProductsWhenNull() {
+      when(productRepository.findProductRows()).thenReturn(List.of());
+      productService.getProducts(null);
+      verify(productRepository).findProductRows();
+    }
+  }
 }
