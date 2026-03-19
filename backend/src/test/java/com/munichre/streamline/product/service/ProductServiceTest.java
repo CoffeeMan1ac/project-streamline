@@ -600,4 +600,15 @@ public class ProductServiceTest {
           .containsExactlyElementsOf(expectedExclusions);
     }
   }
+
+  @Nested
+  @DisplayName("getInactiveProducts()")
+  class GetInactiveProducts {
+    @Test
+    void callsRepositoryWithCurrentTime() {
+      when(productRepository.findInactiveProductRows(any())).thenReturn(List.of());
+      productService.getInactiveProducts();
+      verify(productRepository).findInactiveProductRows(any());
+    }
+  }
 }
