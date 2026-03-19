@@ -782,4 +782,22 @@ public class ProductServiceTest {
       assertThrows(CoverageNotFoundException.class, () -> productService.createProduct(request));
     }
   }
+
+  @Nested
+  @DisplayName("toggleProductActive()")
+  class ToggleProductActive {
+    @Test
+    void negatesActiveStatusAndSaves() {
+      UUID id = UUID.randomUUID();
+      Product product = new Product();
+      product.setActive(true);
+
+      when(productRepository.findById(id)).thenReturn(Optional.of(product));
+
+      productService.toggleProductActive(id);
+
+      assertThat(product.getActive()).isFalse();
+      verify(productRepository).save(product);
+    }
+  }
 }
