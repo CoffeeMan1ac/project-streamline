@@ -49,4 +49,21 @@ class GlobalExceptionHandlerTest {
     assertThat(response.getBody().path()).isEqualTo(uri);
     assertThat(response.getBody().timestamp()).isNotNull();
   }
+
+  @Test
+  @DisplayName("Should handle generic Exception and return 500 Internal Server Error")
+  void shouldHandleGeneralException() {
+    RuntimeException ex = new RuntimeException("Database connection timed out");
+    String uri = "/api/v1/quotes";
+    when(request.getRequestURI()).thenReturn(uri);
+
+    ResponseEntity<ErrorResponseDto> response =
+        globalExceptionHandler.handleGeneralException(ex, request);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+    assertThat(response.getBody()).isNotNull();
+    assertThat(response.getBody().status()).isEqualTo(500);
+    assertThat(response.getBody().message()).isEqualTo("An unexpected error occured");
+    assertThat(response.getBody().path()).isEqualTo(uri);
+  }
 }
