@@ -18,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 @ExtendWith(MockitoExtension.class)
@@ -50,6 +51,18 @@ class FirebaseTokenFilterTest {
   @DisplayName("Should immediately proceed and skip logic for OPTIONS requests")
   void shouldSkipForOptionsRequest() throws ServletException, IOException {
     when(request.getMethod()).thenReturn("OPTIONS");
+
+    filter.doFilterInternal(request, response, chain);
+
+    verify(chain).doFilter(request, response);
+    assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
+  }
+
+  @Test
+  @DisplayName("Should proceed without auth if Authorization header is missing")
+  void shouldProceedWhenNoHeader() throws ServletException, IOException {
+    when(request.getMethod()).thenReturn("GET");
+    when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn(null);
 
     filter.doFilterInternal(request, response, chain);
 
