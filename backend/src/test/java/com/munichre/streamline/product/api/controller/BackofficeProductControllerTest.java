@@ -1,13 +1,18 @@
 package com.munichre.streamline.product.api.controller;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.munichre.streamline.product.api.dto.CreateProductRequestDto;
 import com.munichre.streamline.product.api.dto.ProductOptionDto;
 import com.munichre.streamline.product.service.ProductService;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
@@ -25,6 +30,8 @@ import org.springframework.test.web.servlet.MockMvc;
 class BackofficeProductControllerTest {
 
   @Autowired private MockMvc mockMvc;
+
+  @Autowired private ObjectMapper objectMapper;
 
   @MockitoBean private ProductService productService;
 
@@ -83,6 +90,34 @@ class BackofficeProductControllerTest {
       when(productService.getProducts(null)).thenReturn(List.of());
       mockMvc.perform(get("/backoffice/products")).andExpect(status().isOk());
       verify(productService).getProducts(null);
+    }
+  }
+
+  @Nested
+  @DisplayName("POST /backoffice/products")
+  class CreateProduct {
+    @Test
+    void returns201Created() throws Exception {
+      CreateProductRequestDto request =
+          CreateProductRequestDto.builder()
+              .name("New Product")
+              .description("Description")
+              .baseRate(new BigDecimal("100.00"))
+              .type(UUID.randomUUID())
+              .startDate(LocalDateTime.now())
+              .coverages(List.of())
+              .exclusions(List.of())
+              .tags(List.of())
+              .build();
+
+      mockMvc
+          .perform(
+              post("/backoffice/products")
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(objectMapper.writeValueAsString(request)))
+          .andExpect(status().isCreated());
+
+      verify(productService).createProduct(any(CreateProductRequestDto.class));
     }
   }
 }
