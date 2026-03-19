@@ -15,6 +15,7 @@ import com.munichre.streamline.product.api.dto.ProductDto;
 import com.munichre.streamline.product.api.dto.ProductOptionDto;
 import com.munichre.streamline.product.api.dto.ProductTagDto;
 import com.munichre.streamline.product.api.dto.ProductTypeDto;
+import com.munichre.streamline.product.api.dto.UpdateProductRequestDto;
 import com.munichre.streamline.product.exception.CoverageNotFoundException;
 import com.munichre.streamline.product.exception.ProductNotFoundException;
 import com.munichre.streamline.product.exception.ProductTagNotFoundException;
@@ -838,6 +839,32 @@ public class ProductServiceTest {
     @DisplayName("Throws NPE when ID is null to satisfy Lombok @NonNull")
     void throwsNullPointerExceptionWhenIdIsNull() {
       assertThrows(NullPointerException.class, () -> productService.getProductDto(null));
+    }
+  }
+
+  @Nested
+  @DisplayName("updateProduct()")
+  class UpdateProduct {
+
+    @Test
+    void successfullyUpdatesProduct() {
+      UUID id = UUID.randomUUID();
+      UpdateProductRequestDto request =
+          UpdateProductRequestDto.builder()
+              .name("Updated")
+              .coverages(List.of())
+              .exclusions(List.of())
+              .tags(List.of())
+              .build();
+
+      Product product = new Product();
+      when(productRepository.findById(id)).thenReturn(Optional.of(product));
+      when(productCoverageRepository.findCoverageModels(any())).thenReturn(Set.of());
+      when(productCoverageRepository.findExclusionModels(any())).thenReturn(Set.of());
+      when(productTagRepository.findTagModelsByIds(any())).thenReturn(Set.of());
+
+      productService.updateProduct(id, request);
+      verify(productRepository).save(product);
     }
   }
 }
