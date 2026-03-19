@@ -1,8 +1,10 @@
 package com.munichre.streamline.decision.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import com.munichre.streamline.decision.dto.Decision;
@@ -11,7 +13,10 @@ import com.munichre.streamline.product.model.Product;
 import com.munichre.streamline.product.service.ProductService;
 import com.munichre.streamline.quote.api.dto.QuoteRequest;
 import com.munichre.streamline.quote.model.ApplicantData;
+import com.munichre.streamline.rule.model.PremiumState;
 import com.munichre.streamline.rule.model.Rule;
+import com.munichre.streamline.rule.model.RuleConfig;
+import com.munichre.streamline.rule.model.RuleConfig.Then;
 import com.munichre.streamline.rule.service.RuleService;
 import java.math.BigDecimal;
 import java.util.List;
@@ -84,6 +89,34 @@ public class DecisionServiceTest {
       assertThat(result.status()).isEqualTo(DecisionStatus.ACCEPT);
       assertThat(result.rulesApplied()).isEmpty();
       verify(rule).isTriggeredBy(mockApplicantData);
+    }
+
+    @Test
+    void returnsTerminalDecisionImmediately() {
+      when(productService.getProduct(productId)).thenReturn(mockProduct);
+
+      Rule terminalRule = mock(Rule.class);
+      RuleConfig config = mock(RuleConfig.class);
+      Then thenOutcome = mock(Then.class);
+
+      when(terminalRule.getName()).thenReturn("Terminal Rule");
+      when(terminalRule.isTriggeredBy(mockApplicantData)).thenReturn(true);
+      when(terminalRule.getRuleConfig()).thenReturn(config);
+      when(config.then()).thenReturn(thenOutcome);
+
+      when(thenOutcome.isTerminal()).thenReturn(true);
+      when(thenOutcome.apply(any(PremiumState.class)))
+          .thenReturn(new PremiumState(BigDecimal.ZERO, BigDecimal.ZERO));
+
+      Rule secondRule = mock(Rule.class);
+
+      when(ruleService.findByProductIdAndActiveTrueOrderByPriorityAsc(productId))
+          .thenReturn(List.of(terminalRule, secondRule));
+
+      Decision result = decisionService.decide(request);
+
+      assertThat(result.rulesApplied()).containsExactly("Terminal Rule");
+      verifyNoInteractions(secondRule);
     }
   }
 }
