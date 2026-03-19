@@ -1,6 +1,7 @@
 package com.munichre.streamline.exception.handler;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.munichre.streamline.exception.BaseApplicationException;
@@ -14,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 @ExtendWith(MockitoExtension.class)
 class GlobalExceptionHandlerTest {
@@ -64,6 +66,33 @@ class GlobalExceptionHandlerTest {
     assertThat(response.getBody()).isNotNull();
     assertThat(response.getBody().status()).isEqualTo(500);
     assertThat(response.getBody().message()).isEqualTo("An unexpected error occured");
+    assertThat(response.getBody().path()).isEqualTo(uri);
+  }
+
+  @Test
+  @DisplayName("Should handle MethodArgumentNotValidException and return 400 Bad Request")
+  void shouldHandleValidationException() {
+    MethodArgumentNotValidException ex = mock(MethodArgumentNotValidException.class);
+    org.springframework.validation.BindingResult bindingResult =
+        mock(org.springframework.validation.BindingResult.class);
+
+    org.springframework.validation.FieldError fieldError =
+        new org.springframework.validation.FieldError(
+            "quoteRequest", "applicantData", "must not be null");
+
+    when(ex.getBindingResult()).thenReturn(bindingResult);
+    when(bindingResult.getFieldError()).thenReturn(fieldError);
+
+    String uri = "/api/v1/quote";
+    when(request.getRequestURI()).thenReturn(uri);
+
+    ResponseEntity<ErrorResponseDto> response =
+        globalExceptionHandler.handleValidationException(ex, request);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    assertThat(response.getBody()).isNotNull();
+    assertThat(response.getBody().status()).isEqualTo(400);
+    assertThat(response.getBody().message()).contains("applicantData");
     assertThat(response.getBody().path()).isEqualTo(uri);
   }
 }
