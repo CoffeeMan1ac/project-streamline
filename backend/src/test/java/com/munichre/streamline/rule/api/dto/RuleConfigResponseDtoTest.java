@@ -43,4 +43,14 @@ class RuleConfigResponseDtoTest {
       assertThat(result.conditions()).isNull();
     }
   }
+
+  @Nested
+  @DisplayName("RuleConfigResponseDto.Condition.of()")
+  class OfCondition {
+    @Test
+    @DisplayName("Should return null when condition is null")
+    void returnsNullWhenConditionIsNull() {
+      assertThat(RuleConfigResponseDto.Condition.of(null)).isNull();
+    }
+  }
 }
