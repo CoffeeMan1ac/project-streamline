@@ -73,4 +73,20 @@ class RuleResponseTest {
       assertThat(response.productId()).isNull();
     }
   }
+
+  @Nested
+  @DisplayName("Boilerplate Integrity")
+  class BoilerplateTests {
+    @Test
+    @DisplayName("Verify record equals, hashCode, and toString")
+    void verifyRecordMethods() {
+      UUID id = UUID.randomUUID();
+      RuleResponse req1 = new RuleResponse(id, id, "N", "D", "R", 1, true, null, null, null);
+      RuleResponse req2 = new RuleResponse(id, id, "N", "D", "R", 1, true, null, null, null);
+
+      assertThat(req1).isEqualTo(req2);
+      assertThat(req1.hashCode()).isEqualTo(req2.hashCode());
+      assertThat(req1.toString()).contains("RuleResponse");
+    }
+  }
 }
