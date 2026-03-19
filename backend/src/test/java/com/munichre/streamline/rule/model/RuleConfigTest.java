@@ -7,6 +7,7 @@ import com.munichre.streamline.decision.model.DecisionStatus;
 import com.munichre.streamline.quote.model.ApplicantData;
 import com.munichre.streamline.rule.exception.FieldNotFoundException;
 import com.munichre.streamline.rule.exception.FieldNullException;
+import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -116,6 +117,23 @@ class RuleConfigTest {
           .isInstanceOf(FieldNullException.class)
           .hasMessageContaining(
               "Field 'smokerStatus' was found in applicant data but the value is null");
+    }
+  }
+
+  @Nested
+  @DisplayName("Then: Financial Actions")
+  class ThenTests {
+
+    private final PremiumState baseState = new PremiumState(new BigDecimal("100"), BigDecimal.ZERO);
+
+    @Test
+    @DisplayName("Should replace base premium and reset delta when override is present")
+    void shouldApplyPremiumOverrideAndResetDelta() {
+      var then = new RuleConfig.Then(DecisionStatus.ACCEPT, new BigDecimal("250"), null, false);
+      var result = then.apply(baseState);
+
+      assertThat(result.base()).isEqualByComparingTo("250");
+      assertThat(result.delta()).isEqualByComparingTo("0");
     }
   }
 }
