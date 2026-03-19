@@ -44,7 +44,7 @@ public class QuotationService {
   public QuoteResponse getQuoteByReference(String reference) {
     Quotation quotation =
         quotationRepository
-            .findByReference(reference)
+            .findByReference(reference.toUpperCase()) // case insensitive
             .orElseThrow(() -> new QuoteNotFoundException(null));
 
     return QuoteResponse.from(quotation);
