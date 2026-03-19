@@ -76,4 +76,28 @@ class OperatorTest {
           .isInstanceOf(InvalidNumericValueException.class);
     }
   }
+
+  @Nested
+  @DisplayName("Numeric Boundary Tests")
+  class NumericBoundaries {
+
+    @ParameterizedTest
+    @CsvSource({
+      "GREATER_THAN, 11, 10, true",
+      "GREATER_THAN, 10, 10, false",
+      "GREATER_THAN, 9, 10, false",
+      "GREATER_THAN_OR_EQUAL, 11, 10, true",
+      "GREATER_THAN_OR_EQUAL, 10, 10, true",
+      "GREATER_THAN_OR_EQUAL, 9, 10, false",
+      "LESS_THAN, 9, 10, true",
+      "LESS_THAN, 10, 10, false",
+      "LESS_THAN, 11, 10, false",
+      "LESS_THAN_OR_EQUAL, 9, 10, true",
+      "LESS_THAN_OR_EQUAL, 10, 10, true",
+      "LESS_THAN_OR_EQUAL, 11, 10, false"
+    })
+    void testComparisonBoundaries(Operator op, String actual, String expected, boolean result) {
+      assertThat(op.apply(actual, expected)).isEqualTo(result);
+    }
+  }
 }
