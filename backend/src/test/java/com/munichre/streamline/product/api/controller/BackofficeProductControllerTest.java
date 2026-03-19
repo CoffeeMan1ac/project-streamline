@@ -12,11 +12,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.munichre.streamline.product.api.dto.CoverageOptionDto;
 import com.munichre.streamline.product.api.dto.CreateCoverageRequestDto;
 import com.munichre.streamline.product.api.dto.CreateProductRequestDto;
+import com.munichre.streamline.product.api.dto.CreateTagRequestDto;
 import com.munichre.streamline.product.api.dto.ProductOptionDto;
+import com.munichre.streamline.product.api.dto.TagOptionDto;
 import com.munichre.streamline.product.api.dto.UpdateCoverageRequestDto;
 import com.munichre.streamline.product.api.dto.UpdateProductRequestDto;
+import com.munichre.streamline.product.api.dto.UpdateTagRequestDto;
 import com.munichre.streamline.product.exception.CoverageCategoryNotFoundException;
 import com.munichre.streamline.product.exception.CoverageNotFoundException;
+import com.munichre.streamline.product.exception.DuplicateTagCodeException;
+import com.munichre.streamline.product.exception.ProductTagNotFoundException;
 import com.munichre.streamline.product.service.ProductService;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -281,6 +286,83 @@ class BackofficeProductControllerTest {
       mockMvc
           .perform(
               put("/backoffice/products/coverages/{id}", id)
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(objectMapper.writeValueAsString(request)))
+          .andExpect(status().isNotFound());
+    }
+  }
+
+  @Nested
+  @DisplayName("POST /backoffice/products/tags")
+  class CreateTag {
+    @Test
+    void returns201Created() throws Exception {
+      CreateTagRequestDto request = new CreateTagRequestDto("NEW_TAG", "New Tag");
+      TagOptionDto response = new TagOptionDto(UUID.randomUUID(), "NEW_TAG", "New Tag");
+
+      when(productService.createTag(any(CreateTagRequestDto.class))).thenReturn(response);
+
+      mockMvc
+          .perform(
+              post("/backoffice/products/tags")
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(objectMapper.writeValueAsString(request)))
+          .andExpect(status().isCreated())
+          .andExpect(jsonPath("$.code").value("NEW_TAG"))
+          .andExpect(jsonPath("$.label").value("New Tag"));
+
+      verify(productService).createTag(any(CreateTagRequestDto.class));
+    }
+
+    @Test
+    void returns400WhenDuplicateCode() throws Exception {
+      CreateTagRequestDto request = new CreateTagRequestDto("EXISTING", "Tag");
+
+      when(productService.createTag(any(CreateTagRequestDto.class)))
+          .thenThrow(new DuplicateTagCodeException("EXISTING"));
+
+      mockMvc
+          .perform(
+              post("/backoffice/products/tags")
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(objectMapper.writeValueAsString(request)))
+          .andExpect(status().isBadRequest());
+    }
+  }
+
+  @Nested
+  @DisplayName("PUT /backoffice/products/tags/{id}")
+  class UpdateTag {
+    @Test
+    void returns200Ok() throws Exception {
+      UUID id = UUID.randomUUID();
+      UpdateTagRequestDto request = new UpdateTagRequestDto("Updated Label");
+      TagOptionDto response = new TagOptionDto(id, "TAG_CODE", "Updated Label");
+
+      when(productService.updateTag(eq(id), any(UpdateTagRequestDto.class))).thenReturn(response);
+
+      mockMvc
+          .perform(
+              put("/backoffice/products/tags/{id}", id)
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(objectMapper.writeValueAsString(request)))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.label").value("Updated Label"));
+
+      verify(productService).updateTag(eq(id), any(UpdateTagRequestDto.class));
+    }
+
+    @Test
+    void returns404WhenTagNotFound() throws Exception {
+      UUID id = UUID.randomUUID();
+      UpdateTagRequestDto request = new UpdateTagRequestDto("Label");
+
+      when(productService.updateTag(eq(id), any(UpdateTagRequestDto.class)))
+          .thenThrow(new ProductTagNotFoundException(id));
+
+      mockMvc
+          .perform(
+              put("/backoffice/products/tags/{id}", id)
                   .contentType(MediaType.APPLICATION_JSON)
                   .content(objectMapper.writeValueAsString(request)))
           .andExpect(status().isNotFound());
