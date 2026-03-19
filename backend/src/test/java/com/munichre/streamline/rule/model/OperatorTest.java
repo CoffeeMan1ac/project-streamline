@@ -32,4 +32,20 @@ class OperatorTest {
       assertThat(Operator.IN.apply("nurse", "engineer, doctor")).isFalse();
     }
   }
+
+  @Nested
+  @DisplayName("Numeric Operators")
+  class NumericOperators {
+    @ParameterizedTest
+    @CsvSource({
+      "GREATER_THAN, 25, 20, true",
+      "GREATER_THAN, 20, 25, false",
+      "LESS_THAN, 10, 15, true",
+      "GREATER_THAN_OR_EQUAL, 20, 20, true",
+      "LESS_THAN_OR_EQUAL, 20, 20, true"
+    })
+    void testNumericLogic(Operator op, String actual, String expected, boolean result) {
+      assertThat(op.apply(actual, expected)).isEqualTo(result);
+    }
+  }
 }
