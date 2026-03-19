@@ -153,4 +153,15 @@ class BackofficeProductControllerTest {
       verify(productService).getAllTags();
     }
   }
+
+  @Nested
+  @DisplayName("GET /backoffice/products/{id}")
+  class GetProductById {
+    @Test
+    void returnsProductDto() throws Exception {
+      UUID id = UUID.randomUUID();
+      mockMvc.perform(get("/backoffice/products/{id}", id)).andExpect(status().isOk());
+      verify(productService).getProductDto(id);
+    }
+  }
 }
