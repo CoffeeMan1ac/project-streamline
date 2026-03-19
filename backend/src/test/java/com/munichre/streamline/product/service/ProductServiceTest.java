@@ -16,6 +16,7 @@ import com.munichre.streamline.product.api.dto.ProductOptionDto;
 import com.munichre.streamline.product.api.dto.ProductTagDto;
 import com.munichre.streamline.product.api.dto.ProductTypeDto;
 import com.munichre.streamline.product.exception.ProductNotFoundException;
+import com.munichre.streamline.product.exception.ProductTypeNotFoundException;
 import com.munichre.streamline.product.model.Coverage;
 import com.munichre.streamline.product.model.Product;
 import com.munichre.streamline.product.model.ProductTag;
@@ -719,6 +720,15 @@ public class ProductServiceTest {
 
       assertThat(result).isNotNull();
       verify(productRepository).saveAndFlush(any(Product.class));
+    }
+
+    @Test
+    void throwsProductTypeNotFoundExceptionWhenTypeIsNull() {
+      CreateProductRequestDto request =
+          CreateProductRequestDto.builder().type(UUID.randomUUID()).build();
+      when(productTypeRepository.findProductTypeById(any())).thenReturn(null);
+
+      assertThrows(ProductTypeNotFoundException.class, () -> productService.createProduct(request));
     }
   }
 }
