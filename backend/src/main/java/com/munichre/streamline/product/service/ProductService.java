@@ -8,6 +8,7 @@ import com.munichre.streamline.product.api.dto.CoverageDto;
 import com.munichre.streamline.product.api.dto.CoverageOptionDto;
 import com.munichre.streamline.product.api.dto.CreateCoverageRequestDto;
 import com.munichre.streamline.product.api.dto.CreateProductRequestDto;
+import com.munichre.streamline.product.api.dto.CreateTagRequestDto;
 import com.munichre.streamline.product.api.dto.ProductDto;
 import com.munichre.streamline.product.api.dto.ProductFieldDto;
 import com.munichre.streamline.product.api.dto.ProductOptionDto;
@@ -16,8 +17,10 @@ import com.munichre.streamline.product.api.dto.ProductTypeDto;
 import com.munichre.streamline.product.api.dto.TagOptionDto;
 import com.munichre.streamline.product.api.dto.UpdateCoverageRequestDto;
 import com.munichre.streamline.product.api.dto.UpdateProductRequestDto;
+import com.munichre.streamline.product.api.dto.UpdateTagRequestDto;
 import com.munichre.streamline.product.exception.CoverageCategoryNotFoundException;
 import com.munichre.streamline.product.exception.CoverageNotFoundException;
+import com.munichre.streamline.product.exception.DuplicateTagCodeException;
 import com.munichre.streamline.product.exception.ProductNotFoundException;
 import com.munichre.streamline.product.exception.ProductTagNotFoundException;
 import com.munichre.streamline.product.exception.ProductTypeNotFoundException;
@@ -30,6 +33,7 @@ import com.munichre.streamline.product.model.ProductType;
 import com.munichre.streamline.product.repository.CoverageCategoryRepository;
 import com.munichre.streamline.product.repository.CoverageRepository;
 import com.munichre.streamline.product.repository.ProductCoverageRepository;
+import com.munichre.streamline.product.repository.TagRepository;
 import com.munichre.streamline.product.repository.ProductRepository;
 import com.munichre.streamline.product.repository.ProductTagRepository;
 import com.munichre.streamline.product.repository.ProductTypeRepository;
@@ -56,6 +60,7 @@ public class ProductService {
   private final CoverageRepository coverageRepository;
   private final CoverageCategoryRepository coverageCategoryRepository;
   private final ProductTagRepository productTagRepository;
+  private final TagRepository tagRepository;
   private final ProductTypeRepository productTypeRepository;
   private final Clock clock;
 
@@ -189,6 +194,31 @@ public class ProductService {
     return productTagRepository.findAllTags().stream()
         .map(t -> new TagOptionDto(t.getId(), t.getCode(), t.getLabel()))
         .toList();
+  }
+
+  @Transactional
+  public TagOptionDto createTag(CreateTagRequestDto request) {
+    if (tagRepository.existsByCode(request.code())) {
+      throw new DuplicateTagCodeException(request.code());
+    }
+
+    ProductTag tag = new ProductTag();
+    tag.setCode(request.code());
+    tag.setLabel(request.label());
+
+    ProductTag saved = tagRepository.save(tag);
+    return new TagOptionDto(saved.getId(), saved.getCode(), saved.getLabel());
+  }
+
+  @Transactional
+  public TagOptionDto updateTag(UUID id, UpdateTagRequestDto request) {
+    ProductTag tag =
+        tagRepository.findById(id).orElseThrow(() -> new ProductTagNotFoundException(id));
+
+    tag.setLabel(request.label());
+
+    ProductTag saved = tagRepository.save(tag);
+    return new TagOptionDto(saved.getId(), saved.getCode(), saved.getLabel());
   }
 
   public List<CoverageOptionDto> getAllCoverages() {
