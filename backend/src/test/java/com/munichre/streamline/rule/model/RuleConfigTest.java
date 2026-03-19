@@ -144,5 +144,14 @@ class RuleConfigTest {
 
       assertThat(result.delta()).isEqualByComparingTo("25");
     }
+
+    @Test
+    @DisplayName("Should return unchanged state when both override and delta are null")
+    void shouldReturnCurrentStateWhenNoPremiumChangesDefined() {
+      var then = new RuleConfig.Then(DecisionStatus.ACCEPT, null, null, false);
+      var result = then.apply(baseState);
+
+      assertThat(result).isEqualTo(baseState);
+    }
   }
 }
