@@ -35,6 +35,7 @@ class QuotationServiceTest {
 
   private QuoteRequest mockRequest;
   private Decision mockDecision;
+  private Quotation mockQuotation;
 
   @BeforeEach
   void setUp() {
@@ -49,6 +50,8 @@ class QuotationServiceTest {
             120L,
             true,
             "MAX_PREMIUM");
+
+    mockQuotation = Quotation.builder().reference("456XYZ").build();
   }
 
   @Nested
@@ -68,6 +71,18 @@ class QuotationServiceTest {
       assertThat(response).isNotNull();
       verify(decisionService).decide(mockRequest);
       verify(quotationRepository).save(any(Quotation.class));
+    }
+
+    @Test
+    @DisplayName("Should loop and retry reference generation if a collision occurs")
+    void shouldHandleReferenceCollision() {
+      when(decisionService.decide(mockRequest)).thenReturn(mockDecision);
+      when(quotationRepository.existsByReference(anyString())).thenReturn(true).thenReturn(false);
+      when(quotationRepository.save(any(Quotation.class))).thenReturn(mockQuotation);
+
+      quotationService.createQuote(mockRequest);
+
+      verify(quotationRepository, times(2)).existsByReference(anyString());
     }
   }
 }
