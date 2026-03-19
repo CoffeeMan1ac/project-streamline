@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.munichre.streamline.decision.model.DecisionStatus;
 import com.munichre.streamline.quote.model.ApplicantData;
 import com.munichre.streamline.rule.exception.FieldNotFoundException;
+import com.munichre.streamline.rule.exception.FieldNullException;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -25,8 +26,9 @@ public record RuleConfig(When when, Then then) {
         throw new FieldNotFoundException(field);
       }
       Object fieldValue = applicantData.get(field);
+      if (fieldValue == null) throw new FieldNullException(field);
       String actual = fieldValue.toString();
-      return actual != null && operator.apply(actual, value);
+      return operator.apply(actual, value);
     }
   }
 
