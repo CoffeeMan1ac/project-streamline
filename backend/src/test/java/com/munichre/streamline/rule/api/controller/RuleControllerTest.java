@@ -111,4 +111,25 @@ class RuleControllerTest {
       verify(ruleService).getRules(productId, true);
     }
   }
+
+  @Nested
+  @DisplayName("GET /rules/{id}")
+  class GetRule {
+    @Test
+    @DisplayName("should return 200 for a specific rule ID")
+    void returns200AndRule() throws Exception {
+      var response =
+          new RuleResponse(ruleId, productId, "Found Rule", null, null, 1, true, null, null, null);
+
+      when(ruleService.getRule(ruleId)).thenReturn(response);
+
+      mockMvc
+          .perform(get(baseUrl + "/{id}", ruleId).accept(MediaType.APPLICATION_JSON))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.id").value(ruleId.toString()))
+          .andExpect(jsonPath("$.name").value("Found Rule"));
+
+      verify(ruleService).getRule(ruleId);
+    }
+  }
 }
