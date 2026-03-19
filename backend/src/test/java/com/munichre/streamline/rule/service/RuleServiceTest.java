@@ -92,5 +92,18 @@ class RuleServiceTest {
       assertThatThrownBy(() -> ruleService.getRule(ruleId))
           .isInstanceOf(RuleNotFoundException.class);
     }
+
+    @Test
+    @DisplayName("Should call the correct repository methods for all active filter states")
+    void shouldFilterRulesByActiveStatus() {
+      ruleService.getRules(productId, null);
+      verify(ruleRepository).findByProductIdOrderByPriorityAsc(productId);
+
+      ruleService.getRules(productId, true);
+      verify(ruleRepository).findByProductIdAndActiveTrueOrderByPriorityAsc(productId);
+
+      ruleService.getRules(productId, false);
+      verify(ruleRepository).findByProductIdAndActiveFalseOrderByPriorityAsc(productId);
+    }
   }
 }
