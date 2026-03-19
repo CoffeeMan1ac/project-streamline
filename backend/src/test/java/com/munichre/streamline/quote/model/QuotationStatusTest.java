@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.munichre.streamline.decision.model.DecisionStatus;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -14,5 +15,12 @@ class QuotationStatusTest {
   @DisplayName("Should correctly map all DecisionStatus values to QuotationStatus")
   void shouldMapDecisionStatusToQuotationStatus(DecisionStatus input, QuotationStatus expected) {
     assertThat(QuotationStatus.from(input)).isEqualTo(expected);
+  }
+
+  @Test
+  @DisplayName("Verify enum boilerplate (values and valueOf)")
+  void verifyEnumBoilerplate() {
+    assertThat(QuotationStatus.values()).hasSize(3);
+    assertThat(QuotationStatus.valueOf("ACCEPTED")).isEqualTo(QuotationStatus.ACCEPTED);
   }
 }
