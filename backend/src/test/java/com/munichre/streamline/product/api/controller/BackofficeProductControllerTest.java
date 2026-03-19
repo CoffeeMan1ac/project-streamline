@@ -131,4 +131,15 @@ class BackofficeProductControllerTest {
       verify(productService).toggleProductActive(id);
     }
   }
+
+  @Nested
+  @DisplayName("GET /backoffice/products/coverages")
+  class GetCoverages {
+    @Test
+    void returnsCoverages() throws Exception {
+      when(productService.getAllCoverages()).thenReturn(List.of());
+      mockMvc.perform(get("/backoffice/products/coverages")).andExpect(status().isOk());
+      verify(productService).getAllCoverages();
+    }
+  }
 }
