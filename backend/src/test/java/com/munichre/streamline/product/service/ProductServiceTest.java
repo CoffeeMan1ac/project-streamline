@@ -963,5 +963,14 @@ public class ProductServiceTest {
       assertThat(result).hasSize(1);
       assertThat(result.get(0).code()).isEqualTo("C1");
     }
+
+    @Test
+    void getProductTypeReturnsType() {
+      UUID typeId = UUID.randomUUID();
+      ProductType type = new ProductType();
+      when(productTypeRepository.findProductTypeById(typeId)).thenReturn(type);
+
+      assertThat(productService.getProductType(typeId)).isEqualTo(type);
+    }
   }
 }
