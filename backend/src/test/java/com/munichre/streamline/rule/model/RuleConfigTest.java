@@ -64,5 +64,16 @@ class RuleConfigTest {
 
       assertThat(when.isSatisfiedBy(applicantData)).isTrue();
     }
+
+    @Test
+    @DisplayName("Should return false when conditions don't match under ANY criteria")
+    void shouldSatisfyAnyConditionWhenCriteriaIsAny() {
+      applicantData.put("age", "15");
+
+      var condition = new RuleConfig.Condition("age", Operator.GREATER_THAN, "20");
+      var when = new RuleConfig.When(MatchCriteria.ANY, List.of(condition));
+
+      assertThat(when.isSatisfiedBy(applicantData)).isFalse();
+    }
   }
 }
