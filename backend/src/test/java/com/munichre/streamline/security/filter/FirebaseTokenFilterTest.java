@@ -91,4 +91,21 @@ class FirebaseTokenFilterTest {
     assertThat(auth.getPrincipal()).isEqualTo(uid);
     verify(chain).doFilter(request, response);
   }
+
+  @Test
+  @DisplayName("Should clear context and proceed if token verification fails")
+  void shouldClearContextOnVerificationFailure()
+      throws ServletException, IOException, FirebaseAuthException {
+    String token = "expired-token";
+    when(request.getMethod()).thenReturn("GET");
+    when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn("Bearer " + token);
+
+    firebaseAuthStatic.when(FirebaseAuth::getInstance).thenReturn(firebaseAuth);
+    when(firebaseAuth.verifyIdToken(token)).thenThrow(mock(FirebaseAuthException.class));
+
+    filter.doFilterInternal(request, response, chain);
+
+    assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
+    verify(chain).doFilter(request, response);
+  }
 }
