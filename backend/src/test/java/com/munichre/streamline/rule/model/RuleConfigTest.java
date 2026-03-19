@@ -53,5 +53,16 @@ class RuleConfigTest {
       var when = new RuleConfig.When(MatchCriteria.ALL, List.of());
       assertThat(when.isSatisfiedBy(applicantData)).isTrue();
     }
+
+    @Test
+    @DisplayName("Should return true when all conditions match under ALL criteria")
+    void shouldSatisfyAllConditionsWhenCriteriaIsAll() {
+      applicantData.put("age", "30");
+
+      var condition = new RuleConfig.Condition("age", Operator.GREATER_THAN, "20");
+      var when = new RuleConfig.When(MatchCriteria.ALL, List.of(condition));
+
+      assertThat(when.isSatisfiedBy(applicantData)).isTrue();
+    }
   }
 }
