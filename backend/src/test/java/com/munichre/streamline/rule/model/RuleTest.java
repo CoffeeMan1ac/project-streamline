@@ -1,6 +1,8 @@
 package com.munichre.streamline.rule.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import com.munichre.streamline.quote.model.ApplicantData;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,6 +33,17 @@ class RuleTest {
     @DisplayName("returns false when ruleConfig is null")
     void returnsFalseWhenRuleConfigIsNull() {
       rule.setRuleConfig(null);
+      assertThat(rule.isTriggeredBy(mockApplicantData)).isFalse();
+    }
+
+    @Test
+    @DisplayName("returns false when whenConfig is null")
+    void returnsFalseWhenWhenConfigIsNull() {
+      RuleConfig mockConfig = mock(RuleConfig.class);
+      when(mockConfig.when()).thenReturn(null);
+
+      rule.setRuleConfig(mockConfig);
+
       assertThat(rule.isTriggeredBy(mockApplicantData)).isFalse();
     }
   }
