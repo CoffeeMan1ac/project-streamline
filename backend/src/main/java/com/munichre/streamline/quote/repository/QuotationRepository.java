@@ -1,6 +1,5 @@
 package com.munichre.streamline.quote.repository;
 
-import com.munichre.streamline.quote.api.dto.QuoteSummary;
 import com.munichre.streamline.quote.model.Quotation;
 import java.util.List;
 import java.util.Optional;
@@ -13,7 +12,7 @@ public interface QuotationRepository extends JpaRepository<Quotation, UUID> {
 
   boolean existsByReference(String reference);
 
-  List<QuoteSummary> findAllByOrderByCreatedAtDesc(Pageable pageable);
+  List<Quotation> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
-  List<QuoteSummary> findByReferenceStartingWith(String prefix, Pageable pageable);
+  List<Quotation> findByReferenceStartingWith(String prefix, Pageable pageable);
 }

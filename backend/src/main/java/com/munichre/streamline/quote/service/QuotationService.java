@@ -67,12 +67,18 @@ public class QuotationService {
     if (pageNumber == null) pageNumber = 0;
     if (pageSize == null) pageSize = 50;
 
-    if (prefix == null)
-      return quotationRepository.findAllByOrderByCreatedAtDesc(
-          PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending()));
+    List<Quotation> quotations;
 
-    return quotationRepository.findByReferenceStartingWith(
-        "123A", PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending()));
+    if (prefix == null)
+      quotations =
+          quotationRepository.findAllByOrderByCreatedAtDesc(
+              PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending()));
+    else
+      quotations =
+          quotationRepository.findByReferenceStartingWith(
+              prefix, PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending()));
+
+    return quotations.stream().map(QuoteSummary::from).toList();
   }
 
   private String generateReference() {
