@@ -2,6 +2,7 @@ package com.munichre.streamline.rule.api.controller;
 
 import static com.munichre.streamline.constant.ApiRoutes.BACKOFFICE_API_BASE;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -13,6 +14,7 @@ import com.munichre.streamline.rule.api.dto.RuleResponse;
 import com.munichre.streamline.rule.model.RuleConfig;
 import com.munichre.streamline.rule.service.RuleService;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -81,6 +83,32 @@ class RuleControllerTest {
           .andExpect(jsonPath("$.name").value("New Rule"));
 
       verify(ruleService).createRule(any(RuleCreateRequest.class));
+    }
+  }
+
+  @Nested
+  @DisplayName("GET /rules")
+  class GetRules {
+    @Test
+    @DisplayName("should return 200 and filter rules by product and status")
+    void returns200AndRuleList() throws Exception {
+      var response =
+          List.of(
+              new RuleResponse(ruleId, productId, "Rule 1", null, null, 1, true, null, null, null));
+
+      when(ruleService.getRules(eq(productId), eq(true))).thenReturn(response);
+
+      mockMvc
+          .perform(
+              get(baseUrl)
+                  .param("product", productId.toString())
+                  .param("active", "true")
+                  .accept(MediaType.APPLICATION_JSON))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.length()").value(1))
+          .andExpect(jsonPath("$[0].productId").value(productId.toString()));
+
+      verify(ruleService).getRules(productId, true);
     }
   }
 }
