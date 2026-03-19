@@ -75,6 +75,19 @@ class OperatorTest {
       assertThatThrownBy(() -> Operator.LESS_THAN.apply(null, "10"))
           .isInstanceOf(InvalidNumericValueException.class);
     }
+
+    @Test
+    @DisplayName("Verify toDouble exception paths")
+    void testToDoubleExceptions() {
+      assertThatThrownBy(() -> Operator.GREATER_THAN.apply("not-a-number", "10"))
+          .isInstanceOf(InvalidNumericValueException.class);
+
+      assertThatThrownBy(() -> Operator.GREATER_THAN.apply("10", "not-a-number"))
+          .isInstanceOf(InvalidNumericValueException.class);
+
+      assertThatThrownBy(() -> Operator.GREATER_THAN.apply(null, "10"))
+          .isInstanceOf(InvalidNumericValueException.class);
+    }
   }
 
   @Nested
