@@ -11,6 +11,7 @@ import com.munichre.streamline.product.model.Product;
 import com.munichre.streamline.product.service.ProductService;
 import com.munichre.streamline.quote.api.dto.QuoteRequest;
 import com.munichre.streamline.quote.model.ApplicantData;
+import com.munichre.streamline.rule.model.Rule;
 import com.munichre.streamline.rule.service.RuleService;
 import java.math.BigDecimal;
 import java.util.List;
@@ -66,6 +67,23 @@ public class DecisionServiceTest {
 
       verify(productService).getProduct(productId);
       verify(ruleService).findByProductIdAndActiveTrueOrderByPriorityAsc(productId);
+    }
+
+    @Test
+    void skipsRulesThatAreNotTriggered() {
+      when(productService.getProduct(productId)).thenReturn(mockProduct);
+
+      Rule rule = mock(Rule.class);
+      when(rule.isTriggeredBy(mockApplicantData)).thenReturn(false);
+
+      when(ruleService.findByProductIdAndActiveTrueOrderByPriorityAsc(productId))
+          .thenReturn(List.of(rule));
+
+      Decision result = decisionService.decide(request);
+
+      assertThat(result.status()).isEqualTo(DecisionStatus.ACCEPT);
+      assertThat(result.rulesApplied()).isEmpty();
+      verify(rule).isTriggeredBy(mockApplicantData);
     }
   }
 }
