@@ -165,5 +165,12 @@ class RuleConfigTest {
       var then = new RuleConfig.Then(DecisionStatus.DECLINE, null, null, false);
       assertThat(then.isTerminal()).isTrue();
     }
+
+    @Test
+    @DisplayName("Should return true for REFER regardless of stop flag")
+    void shouldBeTerminalWhenDecisionIsRefer() {
+      var then = new RuleConfig.Then(DecisionStatus.REFER, null, null, false);
+      assertThat(then.isTerminal()).isTrue();
+    }
   }
 }
