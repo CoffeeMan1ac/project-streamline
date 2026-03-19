@@ -25,6 +25,8 @@ import com.munichre.streamline.product.model.Product;
 import com.munichre.streamline.product.model.ProductField;
 import com.munichre.streamline.product.model.ProductTag;
 import com.munichre.streamline.product.model.ProductType;
+import com.munichre.streamline.product.repository.CoverageCategoryRepository;
+import com.munichre.streamline.product.repository.CoverageRepository;
 import com.munichre.streamline.product.repository.ProductCoverageRepository;
 import com.munichre.streamline.product.repository.ProductRepository;
 import com.munichre.streamline.product.repository.ProductTagRepository;
@@ -58,6 +60,8 @@ public class ProductServiceTest {
   @Mock private ProductTagRepository productTagRepository;
   @Mock private ProductTypeRepository productTypeRepository;
   @Mock private ProductCoverageRepository productCoverageRepository;
+  @Mock private CoverageRepository coverageRepository;
+  @Mock private CoverageCategoryRepository coverageCategoryRepository;
 
   private Clock clock;
 
@@ -70,6 +74,8 @@ public class ProductServiceTest {
         new ProductService(
             productRepository,
             productCoverageRepository,
+            coverageRepository,
+            coverageCategoryRepository,
             productTagRepository,
             productTypeRepository,
             clock);

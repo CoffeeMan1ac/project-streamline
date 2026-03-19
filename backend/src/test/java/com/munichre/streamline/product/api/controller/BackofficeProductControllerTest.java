@@ -9,9 +9,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.munichre.streamline.product.api.dto.CoverageOptionDto;
+import com.munichre.streamline.product.api.dto.CreateCoverageRequestDto;
 import com.munichre.streamline.product.api.dto.CreateProductRequestDto;
 import com.munichre.streamline.product.api.dto.ProductOptionDto;
+import com.munichre.streamline.product.api.dto.UpdateCoverageRequestDto;
 import com.munichre.streamline.product.api.dto.UpdateProductRequestDto;
+import com.munichre.streamline.product.exception.CoverageCategoryNotFoundException;
+import com.munichre.streamline.product.exception.CoverageNotFoundException;
 import com.munichre.streamline.product.service.ProductService;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -192,6 +197,90 @@ class BackofficeProductControllerTest {
           .andExpect(status().isOk());
 
       verify(productService).updateProduct(eq(id), any(UpdateProductRequestDto.class));
+    }
+  }
+
+  @Nested
+  @DisplayName("POST /backoffice/products/coverages")
+  class CreateCoverage {
+    @Test
+    void returns201Created() throws Exception {
+      UUID catId = UUID.randomUUID();
+      UUID typeId = UUID.randomUUID();
+      CreateCoverageRequestDto request = new CreateCoverageRequestDto("NEW_COV", "New Coverage", catId, typeId);
+      CoverageOptionDto response = new CoverageOptionDto(UUID.randomUUID(), "NEW_COV", "New Coverage");
+
+      when(productService.createCoverage(any(CreateCoverageRequestDto.class))).thenReturn(response);
+
+      mockMvc
+          .perform(
+              post("/backoffice/products/coverages")
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(objectMapper.writeValueAsString(request)))
+          .andExpect(status().isCreated())
+          .andExpect(jsonPath("$.code").value("NEW_COV"))
+          .andExpect(jsonPath("$.label").value("New Coverage"));
+
+      verify(productService).createCoverage(any(CreateCoverageRequestDto.class));
+    }
+
+    @Test
+    void returns404WhenCategoryNotFound() throws Exception {
+      UUID catId = UUID.randomUUID();
+      UUID typeId = UUID.randomUUID();
+      CreateCoverageRequestDto request = new CreateCoverageRequestDto("COV", "Coverage", catId, typeId);
+
+      when(productService.createCoverage(any(CreateCoverageRequestDto.class)))
+          .thenThrow(new CoverageCategoryNotFoundException(catId));
+
+      mockMvc
+          .perform(
+              post("/backoffice/products/coverages")
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(objectMapper.writeValueAsString(request)))
+          .andExpect(status().isNotFound());
+    }
+  }
+
+  @Nested
+  @DisplayName("PUT /backoffice/products/coverages/{id}")
+  class UpdateCoverage {
+    @Test
+    void returns200Ok() throws Exception {
+      UUID id = UUID.randomUUID();
+      UUID catId = UUID.randomUUID();
+      UpdateCoverageRequestDto request = new UpdateCoverageRequestDto("Updated Label", catId);
+      CoverageOptionDto response = new CoverageOptionDto(id, "COV_CODE", "Updated Label");
+
+      when(productService.updateCoverage(eq(id), any(UpdateCoverageRequestDto.class)))
+          .thenReturn(response);
+
+      mockMvc
+          .perform(
+              put("/backoffice/products/coverages/{id}", id)
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(objectMapper.writeValueAsString(request)))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.label").value("Updated Label"));
+
+      verify(productService).updateCoverage(eq(id), any(UpdateCoverageRequestDto.class));
+    }
+
+    @Test
+    void returns404WhenCoverageNotFound() throws Exception {
+      UUID id = UUID.randomUUID();
+      UUID catId = UUID.randomUUID();
+      UpdateCoverageRequestDto request = new UpdateCoverageRequestDto("Label", catId);
+
+      when(productService.updateCoverage(eq(id), any(UpdateCoverageRequestDto.class)))
+          .thenThrow(new CoverageNotFoundException(id));
+
+      mockMvc
+          .perform(
+              put("/backoffice/products/coverages/{id}", id)
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(objectMapper.writeValueAsString(request)))
+          .andExpect(status().isNotFound());
     }
   }
 }
