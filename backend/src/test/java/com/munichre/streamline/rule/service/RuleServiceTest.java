@@ -196,5 +196,18 @@ class RuleServiceTest {
       verify(ruleRepository).incrementPriorityBetween(productId, 2, 4);
       assertThat(mockRule.getPriority()).isEqualTo(2);
     }
+
+    @Test
+    @DisplayName(
+        "Should shift intermediate rules down when moving a rule to a higher priority number")
+    void shouldDecrementPrioritiesWhenMovingToBottom() {
+      var request = new RuleReorderRequest(productId, ruleId, 8);
+      when(ruleRepository.findById(ruleId)).thenReturn(Optional.of(mockRule));
+
+      ruleService.reorderRule(request);
+
+      verify(ruleRepository).decrementPriorityBetween(productId, 6, 8);
+      assertThat(mockRule.getPriority()).isEqualTo(8);
+    }
   }
 }
