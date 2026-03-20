@@ -1,9 +1,9 @@
 import { Box, Typography, Paper } from "@mui/material";
-import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
-import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
-import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
-import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
-import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
+import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
+import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
+import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
+import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 
 type QuotePersonalDetailsProps = {
   fullName: string;
@@ -32,16 +32,16 @@ const QuotePersonalDetails = ({
       >
         {/* Personal Details Section */}
         <Box display="flex" alignItems="center" gap={1} mb={2.5}>
-            <PersonOutlineOutlinedIcon color="primary" sx={{ fontSize: 22 }}/>
-            <Typography
+          <PersonOutlineOutlinedIcon color="primary" sx={{ fontSize: 22 }} />
+          <Typography
             sx={{
-                fontSize: 16,
-                fontWeight: 600,
-                lineHeight: 1,
+              fontSize: 16,
+              fontWeight: 600,
+              lineHeight: 1,
             }}
-            >
+          >
             Personal Details
-            </Typography>
+          </Typography>
         </Box>
 
         {/* Name */}
@@ -69,19 +69,19 @@ const QuotePersonalDetails = ({
         {/* Email */}
 
         <Box mb={1.5}>
-            <Box display="flex" alignItems="center" gap={1}>
-                <EmailOutlinedIcon sx={{ color : "text.secondary", fontSize: 13}} />
-                <Typography
-                    sx={{
-                    fontSize: 11,
-                    color: "text.secondary",
-                    fontWeight: 600,
-                    letterSpacing: 0.5,
-                    }}
-                >
-                    EMAIL
-                </Typography>
-            </Box>
+          <Box display="flex" alignItems="center" gap={1}>
+            <EmailOutlinedIcon sx={{ color: "text.secondary", fontSize: 13 }} />
+            <Typography
+              sx={{
+                fontSize: 11,
+                color: "text.secondary",
+                fontWeight: 600,
+                letterSpacing: 0.5,
+              }}
+            >
+              EMAIL
+            </Typography>
+          </Box>
           <Typography
             sx={{
               fontSize: 14,
@@ -92,21 +92,21 @@ const QuotePersonalDetails = ({
           </Typography>
         </Box>
 
-        {/* Phone */}    
+        {/* Phone */}
         <Box mb={1.5}>
-            <Box display="flex" alignItems="center" gap={1}>
-                <LocalPhoneOutlinedIcon sx={{ color : "text.secondary", fontSize: 13}} />
-                <Typography
-                    sx={{
-                    fontSize: 11,
-                    color: "text.secondary",
-                    fontWeight: 600,
-              letterSpacing: 0.5,
-            }}
-          >
-            PHONE
-          </Typography>
-            </Box>
+          <Box display="flex" alignItems="center" gap={1}>
+            <LocalPhoneOutlinedIcon sx={{ color: "text.secondary", fontSize: 13 }} />
+            <Typography
+              sx={{
+                fontSize: 11,
+                color: "text.secondary",
+                fontWeight: 600,
+                letterSpacing: 0.5,
+              }}
+            >
+              PHONE
+            </Typography>
+          </Box>
           <Typography
             sx={{
               fontSize: 14,
@@ -120,17 +120,17 @@ const QuotePersonalDetails = ({
         {/* Date of Birth */}
         <Box mb={1.5}>
           <Box display="flex" alignItems="center" gap={1}>
-              <CalendarTodayOutlinedIcon sx={{ color : "text.secondary", fontSize: 13}} />
-              <Typography
-                  sx={{
-                  fontSize: 11,
-                  color: "text.secondary",
-              fontWeight: 600,
-              letterSpacing: 0.5,
-            }}
-          >
-            DATE OF BIRTH
-          </Typography>
+            <CalendarTodayOutlinedIcon sx={{ color: "text.secondary", fontSize: 13 }} />
+            <Typography
+              sx={{
+                fontSize: 11,
+                color: "text.secondary",
+                fontWeight: 600,
+                letterSpacing: 0.5,
+              }}
+            >
+              DATE OF BIRTH
+            </Typography>
           </Box>
 
           <Typography
@@ -143,21 +143,21 @@ const QuotePersonalDetails = ({
           </Typography>
         </Box>
 
-            {/* Address */}
+        {/* Address */}
         <Box>
-        <Box display="flex" alignItems="center" gap={1}>
-            <LocationOnOutlinedIcon sx={{ color : "text.secondary", fontSize: 13}} />
-          <Typography
-            sx={{
-              fontSize: 11,
-              color: "text.secondary",
-              fontWeight: 600,
-              letterSpacing: 0.5,
-            }}
-          >
-            ADDRESS
-          </Typography>
-            </Box>
+          <Box display="flex" alignItems="center" gap={1}>
+            <LocationOnOutlinedIcon sx={{ color: "text.secondary", fontSize: 13 }} />
+            <Typography
+              sx={{
+                fontSize: 11,
+                color: "text.secondary",
+                fontWeight: 600,
+                letterSpacing: 0.5,
+              }}
+            >
+              ADDRESS
+            </Typography>
+          </Box>
 
           <Typography
             sx={{
