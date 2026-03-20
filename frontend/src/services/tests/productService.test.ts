@@ -168,7 +168,10 @@ describe("productService.createProduct", () => {
 
     productService.createProduct({ ...createPayload, endDate: null });
 
-    expect(mockedHttp.post).toHaveBeenCalledWith("/backoffice/products", expect.objectContaining({ endDate: null }));
+    expect(mockedHttp.post).toHaveBeenCalledWith(
+      "/backoffice/products",
+      expect.objectContaining({ endDate: null })
+    );
   });
 
   it("propagates errors", async () => {
