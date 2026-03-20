@@ -121,7 +121,7 @@ frontend:containerise:
     entrypoint: [""]
   needs: ["frontend:build"]
   rules:
-    - if: '$CI_COMMIT_BRANCH == SIT_BRANCH'
+    - if: '$CI_COMMIT_BRANCH == $SIT_BRANCH'
       variables:
         BUILD_MODE: "$BUILD_MODE_SIT"
         VITE_API_URL: "$API_BASE_URL_SIT"
@@ -129,7 +129,7 @@ frontend:containerise:
       variables:
         BUILD_MODE: "$BUILD_MODE_SIT"
         VITE_API_URL: "$API_BASE_URL_SIT"
-    - if: '$CI_COMMIT_BRANCH == PROD_BRANCH'
+    - if: '$CI_COMMIT_BRANCH == $PROD_BRANCH'
       variables:
         BUILD_MODE: "$BUILD_MODE_PROD"
         VITE_API_URL: "$API_BASE_URL_PROD"
@@ -319,7 +319,7 @@ deploy:sit:
     name: sit
     url: $APP_BASE_URL
   rules:
-    - if: '$CI_COMMIT_BRANCH == SIT_BRANCH'
+    - if: '$CI_COMMIT_BRANCH == $SIT_BRANCH'
       when: on_success
   script:
     - SA_JSON="$CI_PROJECT_DIR/sa.json"
@@ -359,7 +359,7 @@ deploy:production:
     name: production
     url: $APP_BASE_URL
   rules:
-    - if: '$CI_COMMIT_BRANCH == PROD_BRANCH'
+    - if: '$CI_COMMIT_BRANCH == $PROD_BRANCH'
       when: on_success
   script:
     - SA_JSON="$CI_PROJECT_DIR/sa.json"
