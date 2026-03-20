@@ -2,6 +2,7 @@ package com.munichre.streamline.quote.service;
 
 import com.munichre.streamline.decision.dto.Decision;
 import com.munichre.streamline.decision.service.DecisionService;
+import com.munichre.streamline.quote.api.dto.QuoteDetail;
 import com.munichre.streamline.quote.api.dto.QuoteRequest;
 import com.munichre.streamline.quote.api.dto.QuoteResponse;
 import com.munichre.streamline.quote.api.dto.QuoteSummary;
@@ -46,12 +47,19 @@ public class QuotationService {
   }
 
   public QuoteResponse getQuoteByReference(String reference) {
+    String ref = reference.toUpperCase(); // case insensitive
     Quotation quotation =
-        quotationRepository
-            .findByReference(reference.toUpperCase()) // case insensitive
-            .orElseThrow(() -> new QuoteNotFoundException(null));
+        quotationRepository.findByReference(ref).orElseThrow(() -> new QuoteNotFoundException(ref));
 
     return QuoteResponse.from(quotation);
+  }
+
+  public QuoteDetail getQuoteDetailByReference(String reference) {
+    String ref = reference.toUpperCase(); // case insensitive
+    Quotation quotation =
+        quotationRepository.findByReference(ref).orElseThrow(() -> new QuoteNotFoundException(ref));
+
+    return QuoteDetail.from(quotation);
   }
 
   /**
