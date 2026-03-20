@@ -3,8 +3,6 @@ spring:
     name: streamline
 
   jpa:
-    hibernate:
-      ddl-auto: update
     show-sql: true
     defer-datasource-initialization: true
     properties:
@@ -18,7 +16,7 @@ spring:
         - classpath:db/data/*.sql
 
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 google:
   application:
