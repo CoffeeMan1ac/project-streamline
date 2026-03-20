@@ -15,7 +15,6 @@ variables:
   MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
   SAST_EXCLUDED_PATHS: "spec,test,tests,tmp,frontend/coverage/**,backend/target/site/jacoco/**"
 
-
 workflow:
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -25,9 +24,6 @@ workflow:
     - if: $CI_COMMIT_BRANCH
     - if: $CI_PIPELINE_SOURCE == "schedule"
 
-# -----------------------------
-# Security templates
-# -----------------------------
 include:
   - template: Security/SAST.gitlab-ci.yml
   - template: Security/Dependency-Scanning.gitlab-ci.yml
@@ -43,9 +39,6 @@ sast:
 dependency_scanning:
   stage: security
 
-# -----------------------------
-# Frontend (Vite / React)
-# -----------------------------
 frontend:lint:
   stage: lint
   image: node:20
@@ -127,23 +120,20 @@ frontend:containerise:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]
   needs: ["frontend:build"]
-  variables:
-    VITE_API_URL: "https://api.phone-shield.com"
-    BUILD_MODE: "prod"
   rules:
     - if: '$CI_COMMIT_BRANCH == "dev"'
       variables:
-        VITE_API_URL: "https://api.sit.phone-shield.com"
         BUILD_MODE: "sit"
+        VITE_API_URL: "$API_BASE_URL_SIT"
     - if: '$CI_COMMIT_BRANCH == "360-sit-environment-deployment"'
       variables:
-        VITE_API_URL: "https://api.sit.phone-shield.com"
         BUILD_MODE: "sit"
+        VITE_API_URL: "$API_BASE_URL_SIT"
     - if: '$CI_COMMIT_BRANCH == "main"'
       variables:
-        VITE_API_URL: "https://api.phone-shield.com"
         BUILD_MODE: "prod"
-    - when: on_success
+        VITE_API_URL: "$API_BASE_URL_PROD"
+    - when: never
   script:
     - export AR_HOST="${GCP_REGION}-docker.pkg.dev"
     - export FRONTEND_IMAGE_URI="${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/frontend"
@@ -174,9 +164,6 @@ frontend:containerise:
         --destination "${FRONTEND_IMAGE_URI}:${CI_COMMIT_SHA}" \
         --destination "${FRONTEND_IMAGE_URI}:latest"
 
-# -----------------------------
-# Backend (Spring Boot / Maven)
-# -----------------------------
 backend:format:
   stage: lint
   image: maven:3.9.6-eclipse-temurin-21
@@ -212,16 +199,11 @@ backend:test:
     POSTGRES_DB: streamline
     POSTGRES_USER: streamline
     POSTGRES_PASSWORD: password
-
     SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/streamline
     SPRING_DATASOURCE_USERNAME: streamline
     SPRING_DATASOURCE_PASSWORD: password
-
     SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
-
-
     GOOGLE_APPLICATION_CREDENTIALS: "$FIREBASE_SERVICE_ACCOUNT"
-    
   cache:
     key:
       files:
@@ -289,7 +271,6 @@ backend:containerise:
     - export AR_HOST="${GCP_REGION}-docker.pkg.dev"
     - export BACKEND_IMAGE_URI="${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/backend"
 
-    # Write SA json somewhere guaranteed to exist + be writable
     - SA_JSON="${CI_PROJECT_DIR}/sa.json"
     - echo "$GCP_SA_KEY_B64" | base64 -d > "$SA_JSON"
 
@@ -320,7 +301,7 @@ deploy:sit:
   needs: ["backend:containerise", "frontend:containerise"]
   environment:
     name: sit
-    url: https://sit.phone-shield.com
+    url: $APP_BASE_URL
   rules:
     - if: '$CI_COMMIT_BRANCH == "dev"'
     - if: '$CI_COMMIT_BRANCH == "360-sit-environment-deployment"'
@@ -334,32 +315,34 @@ deploy:sit:
     - export AR_HOST="${GCP_REGION}-docker.pkg.dev"
     - export BACKEND_IMAGE_URI="${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/backend"
     - export FRONTEND_IMAGE_URI="${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/frontend"
+
     - |
-      gcloud run deploy backend-sit \
+      gcloud run deploy "$BACKEND_SERVICE_NAME" \
         --image "${BACKEND_IMAGE_URI}:${CI_COMMIT_SHA}" \
         --region "$GCP_REGION" \
         --platform managed \
-        --add-cloudsql-instances "${GCP_PROJECT_ID}:${GCP_REGION}:streamline-sit" \
-        --set-env-vars "SPRING_PROFILES_ACTIVE=sit" \
-        --set-env-vars "SPRING_DATASOURCE_URL=jdbc:postgresql://localhost/streamline_sit?socketFactory=com.google.cloud.sql.postgres.SocketFactory&cloudSqlInstance=${GCP_PROJECT_ID}:${GCP_REGION}:streamline-sit" \
-        --set-secrets "SPRING_DATASOURCE_USERNAME=DB_USER_SIT:latest,SPRING_DATASOURCE_PASSWORD=DB_PASS_SIT:latest" \
+        --add-cloudsql-instances "${CLOUDSQL_INSTANCE}" \
+        --set-env-vars "SPRING_PROFILES_ACTIVE=${SPRING_PROFILE}" \
+        --set-env-vars "SPRING_DATASOURCE_URL=jdbc:postgresql://localhost/${DB_NAME}?socketFactory=com.google.cloud.sql.postgres.SocketFactory&cloudSqlInstance=${CLOUDSQL_INSTANCE}" \
+        --set-secrets "SPRING_DATASOURCE_USERNAME=${DB_USER_SECRET},SPRING_DATASOURCE_PASSWORD=${DB_PASS_SECRET}" \
         --allow-unauthenticated \
         --quiet
+
     - |
-      gcloud run deploy frontend-sit \
+      gcloud run deploy "$FRONTEND_SERVICE_NAME" \
         --image "${FRONTEND_IMAGE_URI}:${CI_COMMIT_SHA}" \
         --region "$GCP_REGION" \
         --platform managed \
         --allow-unauthenticated \
         --quiet
-  
+
 deploy:production:
   stage: deploy
   image: google/cloud-sdk:slim
   needs: ["backend:containerise", "frontend:containerise"]
   environment:
     name: production
-    url: https://phone-shield.com
+    url: $APP_BASE_URL
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
       when: on_success
@@ -374,19 +357,19 @@ deploy:production:
     - export FRONTEND_IMAGE_URI="${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/frontend"
 
     - |
-      gcloud run deploy backend-prod \
+      gcloud run deploy "$BACKEND_SERVICE_NAME" \
         --image "${BACKEND_IMAGE_URI}:${CI_COMMIT_SHA}" \
         --region "$GCP_REGION" \
         --platform managed \
-        --add-cloudsql-instances "${GCP_PROJECT_ID}:${GCP_REGION}:project-streamline" \
-        --set-env-vars "SPRING_PROFILES_ACTIVE=prod" \
-        --set-env-vars "SPRING_DATASOURCE_URL=jdbc:postgresql:///streamline?socketFactory=com.google.cloud.sql.postgres.SocketFactory&cloudSqlInstance=${GCP_PROJECT_ID}:${GCP_REGION}:project-streamline" \
-        --set-secrets "SPRING_DATASOURCE_USERNAME=DB_USER:latest,SPRING_DATASOURCE_PASSWORD=DB_PASS:latest" \
+        --add-cloudsql-instances "${CLOUDSQL_INSTANCE}" \
+        --set-env-vars "SPRING_PROFILES_ACTIVE=${SPRING_PROFILE}" \
+        --set-env-vars "SPRING_DATASOURCE_URL=jdbc:postgresql://localhost/${DB_NAME}?socketFactory=com.google.cloud.sql.postgres.SocketFactory&cloudSqlInstance=${CLOUDSQL_INSTANCE}" \
+        --set-secrets "SPRING_DATASOURCE_USERNAME=${DB_USER_SECRET},SPRING_DATASOURCE_PASSWORD=${DB_PASS_SECRET}" \
         --allow-unauthenticated \
         --quiet
 
     - |
-      gcloud run deploy frontend-prod \
+      gcloud run deploy "$FRONTEND_SERVICE_NAME" \
         --image "${FRONTEND_IMAGE_URI}:${CI_COMMIT_SHA}" \
         --region "$GCP_REGION" \
         --platform managed \
