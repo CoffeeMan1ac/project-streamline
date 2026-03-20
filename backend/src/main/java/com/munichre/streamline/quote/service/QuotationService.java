@@ -84,7 +84,8 @@ public class QuotationService {
     else
       quotations =
           quotationRepository.findByReferenceContaining(
-              partialRef, PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending()));
+              partialRef.toUpperCase(),
+              PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending()));
 
     return quotations.stream().map(QuoteSummary::from).toList();
   }
