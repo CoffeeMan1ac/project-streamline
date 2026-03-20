@@ -5,7 +5,21 @@ import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 
-const QuotePersonalDetails = () => {
+type QuotePersonalDetailsProps = {
+  fullName: string;
+  email: string;
+  phone: string;
+  dateOfBirth: string;
+  address: string;
+};
+
+const QuotePersonalDetails = ({
+  fullName,
+  email,
+  phone,
+  dateOfBirth,
+  address,
+}: QuotePersonalDetailsProps) => {
   return (
     <Box width="40%">
       <Paper
@@ -48,7 +62,7 @@ const QuotePersonalDetails = () => {
               fontWeight: 500,
             }}
           >
-            John Smith
+            {fullName}
           </Typography>
         </Box>
 
@@ -74,7 +88,7 @@ const QuotePersonalDetails = () => {
               fontWeight: 500,
             }}
           >
-            john.smith@email.com
+            {email}
           </Typography>
         </Box>
 
@@ -99,7 +113,7 @@ const QuotePersonalDetails = () => {
               fontWeight: 500,
             }}
           >
-            +353 87 123 4567
+            {phone}
           </Typography>
         </Box>
 
@@ -125,7 +139,7 @@ const QuotePersonalDetails = () => {
               fontWeight: 500,
             }}
           >
-            15 May 1992
+            {dateOfBirth}
           </Typography>
         </Box>
 
@@ -151,7 +165,7 @@ const QuotePersonalDetails = () => {
               fontWeight: 500,
             }}
           >
-            123 Main Street, Dublin 2, Ireland
+            {address}
           </Typography>
         </Box>
       </Paper>
