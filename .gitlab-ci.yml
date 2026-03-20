@@ -373,7 +373,8 @@ deploy:production:
     - export BACKEND_IMAGE_URI="${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/backend"
     - export FRONTEND_IMAGE_URI="${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/frontend"
 
-    - gcloud run deploy backend-prod \
+    - |
+      gcloud run deploy backend-prod \
         --image "${BACKEND_IMAGE_URI}:${CI_COMMIT_SHA}" \
         --region "$GCP_REGION" \
         --platform managed \
@@ -384,7 +385,8 @@ deploy:production:
         --allow-unauthenticated \
         --quiet
 
-    - gcloud run deploy frontend-prod \
+    - |
+      gcloud run deploy frontend-prod \
         --image "${FRONTEND_IMAGE_URI}:${CI_COMMIT_SHA}" \
         --region "$GCP_REGION" \
         --platform managed \
