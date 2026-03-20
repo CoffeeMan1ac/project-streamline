@@ -17,14 +17,13 @@ const QuotePersonalDetails = () => {
         }}
       >
         {/* Personal Details Section */}
-        <Box display="flex" alignItems="center">
-            <PersonOutlineOutlinedIcon color="primary" sx={{ fontSize: 40 }} />
+        <Box display="flex" alignItems="center" gap={1} mb={2.5}>
+            <PersonOutlineOutlinedIcon color="primary" sx={{ fontSize: 22 }}/>
             <Typography
             sx={{
                 fontSize: 16,
                 fontWeight: 600,
-                mb: 2,
-                ml: 1,
+                lineHeight: 1,
             }}
             >
             Personal Details
@@ -56,8 +55,8 @@ const QuotePersonalDetails = () => {
         {/* Email */}
 
         <Box mb={1.5}>
-            <Box display="flex" alignItems="center">
-                <EmailOutlinedIcon sx={{ color : "text.secondary"}} />
+            <Box display="flex" alignItems="center" gap={1}>
+                <EmailOutlinedIcon sx={{ color : "text.secondary", fontSize: 13}} />
                 <Typography
                     sx={{
                     fontSize: 11,
@@ -81,8 +80,8 @@ const QuotePersonalDetails = () => {
 
         {/* Phone */}    
         <Box mb={1.5}>
-            <Box display="flex" alignItems="center">
-                <LocalPhoneOutlinedIcon sx={{ color : "text.secondary"}} />
+            <Box display="flex" alignItems="center" gap={1}>
+                <LocalPhoneOutlinedIcon sx={{ color : "text.secondary", fontSize: 13}} />
                 <Typography
                     sx={{
                     fontSize: 11,
@@ -106,8 +105,8 @@ const QuotePersonalDetails = () => {
 
         {/* Date of Birth */}
         <Box mb={1.5}>
-          <Box display="flex" alignItems="center">
-              <CalendarTodayOutlinedIcon sx={{ color : "text.secondary"}} />
+          <Box display="flex" alignItems="center" gap={1}>
+              <CalendarTodayOutlinedIcon sx={{ color : "text.secondary", fontSize: 13}} />
               <Typography
                   sx={{
                   fontSize: 11,
@@ -132,8 +131,8 @@ const QuotePersonalDetails = () => {
 
             {/* Address */}
         <Box>
-        <Box display="flex" alignItems="center">
-            <LocationOnOutlinedIcon sx={{ color : "text.secondary"}} />
+        <Box display="flex" alignItems="center" gap={1}>
+            <LocationOnOutlinedIcon sx={{ color : "text.secondary", fontSize: 13}} />
           <Typography
             sx={{
               fontSize: 11,
