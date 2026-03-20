@@ -1,7 +1,13 @@
+import QuotePersonalDetails from "../components/QuotePersonalDetails";
+import { Box } from "@mui/material";
+
 const Sandbox = () => {
   return (
     <>
-      <h1>Sandbox for viewing components</h1>
+      <Box width="80%">
+        <h1>Sandbox for viewing components</h1>
+        <QuotePersonalDetails />
+      </Box>
     </>
   );
 };
