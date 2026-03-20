@@ -3,6 +3,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import FeedOutlinedIcon from "@mui/icons-material/FeedOutlined";
 import ViewInArOutlinedIcon from "@mui/icons-material/ViewInArOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import { useNavigate, useLocation } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../config/firebase";
@@ -27,7 +28,8 @@ const Sidebar = ({ toggleSidebar, open, toggleTheme, mode }: SidebarProps) => {
 
   const getActiveFromPath = (path: string) => {
     if (path.startsWith("/rules")) return "rules";
-    if (path.startsWith("/products-management")) return "products";
+    if (path.startsWith("/products")) return "products";
+    if (path.startsWith("/quotes")) return "quotes";
     return "rules";
   };
 
@@ -57,6 +59,12 @@ const Sidebar = ({ toggleSidebar, open, toggleTheme, mode }: SidebarProps) => {
       label: "Products Management",
       icon: <ViewInArOutlinedIcon />,
       path: "/products",
+    },
+    {
+      key: "quotes",
+      label: "Quotations",
+      icon: <SearchOutlinedIcon />,
+      path: "/quotes",
     },
   ];
   const theme = useTheme();
