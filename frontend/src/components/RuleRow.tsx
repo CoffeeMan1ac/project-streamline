@@ -63,8 +63,8 @@ const RuleRow: React.FC<RuleRowProps> = ({
         {numberOfConditions} condition{numberOfConditions !== 1 ? "s" : ""}
       </TableCell>
 
-      <TableCell>{decision}</TableCell>
-      <TableCell>{premium}</TableCell>
+      <TableCell sx={{ p: { xs: 0, sm: 1 } }}>{decision}</TableCell>
+      <TableCell sx={{ p: { xs: 0, sm: 1 } }}>{premium}</TableCell>
 
       <TableCell>
         <IconButton size="small" color={active ? "success" : "inherit"} onClick={onToggleActive}>

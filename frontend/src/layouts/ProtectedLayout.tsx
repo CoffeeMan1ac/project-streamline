@@ -21,7 +21,7 @@ const ProtectedLayout = ({ mode, toggleTheme, sidebarOpen, setSidebarOpen }: Lay
     if (isMobile) {
       setSidebarOpen(false);
     }
-  }, [isMobile]);
+  }, [isMobile, setSidebarOpen]);
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
