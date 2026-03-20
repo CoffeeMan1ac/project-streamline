@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useCallback, useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
-import { Dialog } from "@mui/material";
+import { Dialog, useMediaQuery, useTheme } from "@mui/material";
 import EditRulePage from "../pages/EditRulePage";
 import CreateRulePage from "./CreateRulePage";
 import http from "../api/http";
@@ -68,6 +68,8 @@ const RulesManagementPage = () => {
   const [rules, setRules] = useState<Rule[]>([]);
   const [products, setProducts] = useState<ProductOption[]>([]);
   const [createRuleOpen, setCreateRuleOpen] = useState(searchParams.get("create") === "true");
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleProductChange = (productId: string) => {
     setSearchParams({ product: productId });
@@ -162,7 +164,7 @@ const RulesManagementPage = () => {
               onClose={() => setCreateRuleOpen(false)}
               maxWidth="md"
               fullWidth
-              fullScreen={window.innerWidth < 600}
+              fullScreen={isMobile}
             >
               <CreateRulePage
                 products={products}
@@ -196,7 +198,7 @@ const RulesManagementPage = () => {
         onClose={() => setEditRuleId(null)}
         maxWidth="md"
         fullWidth
-        fullScreen={window.innerWidth < 600}
+        fullScreen={isMobile}
       >
         <EditRulePage
           id={editRuleId}

@@ -53,7 +53,13 @@ const RuleTable: React.FC<RuleTableProps> = ({
   };
 
   return (
-    <Box border={1} borderColor="divider" borderRadius={2} bgcolor={"background.paper"}>
+    <Box
+      border={1}
+      borderColor="divider"
+      borderRadius={2}
+      bgcolor="background.paper"
+      sx={{ width: "100%", overflowX: "auto" }}
+    >
       <Box sx={{ p: 2, borderBottom: 1, borderColor: "divider" }}>
         <Typography variant="h6" sx={{ fontWeight: 600 }}>
           Rules for {activeProductName || "..."}
@@ -63,15 +69,15 @@ const RuleTable: React.FC<RuleTableProps> = ({
         </Typography>
       </Box>
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-        <TableContainer component={Paper}>
-          <Table>
+        <TableContainer component={Paper} sx={{ maxWidth: "100%" }}>
+          <Table sx={{ minWidth: { xs: "unset", sm: 650 } }}>
             <TableHead>
               <TableRow sx={{ bgcolor: "background.default" }}>
                 <TableCell>Drag</TableCell>
-                <TableCell>Order</TableCell>
+                <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>Order</TableCell>
                 <TableCell>Rule Name</TableCell>
                 <TableCell>Status</TableCell>
-                <TableCell>Conditions</TableCell>
+                <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>Conditions</TableCell>
                 <TableCell>Decision</TableCell>
                 <TableCell>Premium</TableCell>
                 <TableCell>Actions</TableCell>

@@ -21,7 +21,7 @@ const SelectProduct = ({ products, selectedProduct, onProductChange }: SelectPro
     <Box border={1} borderColor="divider" borderRadius={2} bgcolor={"background.paper"} p={2}>
       <Typography>Select Product</Typography>
 
-      <Box sx={{ width: "50%" }}>
+      <Box sx={{ width: { xs: "100%", sm: "50%" } }}>
         <FormControl fullWidth sx={{ mt: 2 }}>
           <InputLabel id="product-label">Product</InputLabel>
 

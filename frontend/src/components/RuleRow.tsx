@@ -39,7 +39,7 @@ const RuleRow: React.FC<RuleRowProps> = ({
           <DragIndicatorIcon />
         </IconButton>
       </TableCell>
-      <TableCell>{order}</TableCell>
+      <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>{order}</TableCell>
 
       <TableCell>{ruleName}</TableCell>
 
@@ -59,7 +59,7 @@ const RuleRow: React.FC<RuleRowProps> = ({
         />
       </TableCell>
 
-      <TableCell>
+      <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>
         {numberOfConditions} condition{numberOfConditions !== 1 ? "s" : ""}
       </TableCell>
 
