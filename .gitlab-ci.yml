@@ -125,10 +125,6 @@ frontend:containerise:
       variables:
         BUILD_MODE: "sit"
         VITE_API_URL: "$API_BASE_URL_SIT"
-    - if: '$CI_COMMIT_BRANCH == "360-sit-environment-deployment"'
-      variables:
-        BUILD_MODE: "sit"
-        VITE_API_URL: "$API_BASE_URL_SIT"
     - if: '$CI_COMMIT_BRANCH == "main"'
       variables:
         BUILD_MODE: "prod"
@@ -304,7 +300,6 @@ deploy:sit:
     url: $APP_BASE_URL
   rules:
     - if: '$CI_COMMIT_BRANCH == "dev"'
-    - if: '$CI_COMMIT_BRANCH == "360-sit-environment-deployment"'
       when: on_success
   script:
     - SA_JSON="$CI_PROJECT_DIR/sa.json"
