@@ -49,7 +49,7 @@ const ProductRow: React.FC<ProductRowProps> = ({
 }) => {
   return (
     <TableRow>
-      <TableCell>
+      <TableCell sx={{ wordBreak: "break-word", maxWidth: { xs: 120, sm: "unset" } }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap" }}>
           <Typography variant="body2" fontWeight="bold">
             {productName}
@@ -104,7 +104,7 @@ const ProductRow: React.FC<ProductRowProps> = ({
 
       <TableCell sx={{ display: { xs: "none", md: "table-cell" } }}>{coverageSummary}</TableCell>
 
-      <TableCell>
+      <TableCell sx={{ whiteSpace: "nowrap" }}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <IconButton
             size="small"

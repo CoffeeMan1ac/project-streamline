@@ -81,7 +81,15 @@ const ProductManagementPage = () => {
   return (
     <>
       <Box sx={{ mx: { xs: 2, sm: 3, md: 4, lg: 8, xl: 20 }, my: 4 }}>
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            flexWrap: "wrap",
+            gap: 2,
+          }}
+        >
           <Box>
             <Typography variant="h4" sx={{ fontWeight: 700 }}>
               Products Management

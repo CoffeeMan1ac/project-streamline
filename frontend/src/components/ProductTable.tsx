@@ -40,7 +40,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
       sx={{ overflowX: "auto" }}
     >
       <TableContainer component={Paper}>
-        <Table>
+        <Table sx={{ minWidth: { xs: "unset", sm: 400 } }}>
           <TableHead>
             <TableRow sx={{ bgcolor: "background.default" }}>
               <TableCell>PRODUCT NAME</TableCell>
