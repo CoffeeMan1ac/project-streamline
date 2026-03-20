@@ -13,6 +13,7 @@ import ProductManagementPage from "./pages/ProductManagementPage";
 import BackOfficeLoginPage from "./pages/BackOfficeLoginPage";
 import Sandbox from "./dev/Sandbox";
 import OutcomePage from "./pages/OutcomePage";
+import QuotesManagementPage from "./pages/QuotesManagementPage";
 
 function AppContent() {
   const [mode, setMode] = useState<"light" | "dark">(
@@ -56,6 +57,7 @@ function AppContent() {
           >
             <Route path="/rules" element={<RulesManagementPage />} />
             <Route path="/products" element={<ProductManagementPage />} />
+            <Route path="/quotes" element={<QuotesManagementPage />} />
           </Route>
         </Route>
 
