@@ -20,7 +20,7 @@ workflow:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
       when: never
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH == $PROD_BRANCH
     - if: $CI_COMMIT_BRANCH
     - if: $CI_PIPELINE_SOURCE == "schedule"
 
@@ -121,17 +121,17 @@ frontend:containerise:
     entrypoint: [""]
   needs: ["frontend:build"]
   rules:
-    - if: '$CI_COMMIT_BRANCH == "dev"'
+    - if: '$CI_COMMIT_BRANCH == SIT_BRANCH'
       variables:
-        BUILD_MODE: "sit"
+        BUILD_MODE: "$BUILD_MODE_SIT"
         VITE_API_URL: "$API_BASE_URL_SIT"
     - if: '$CI_COMMIT_BRANCH == "360-sit-environment-deployment"'
       variables:
-        BUILD_MODE: "sit"
+        BUILD_MODE: "$BUILD_MODE_SIT"
         VITE_API_URL: "$API_BASE_URL_SIT"
-    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_COMMIT_BRANCH == PROD_BRANCH'
       variables:
-        BUILD_MODE: "prod"
+        BUILD_MODE: "$BUILD_MODE_PROD"
         VITE_API_URL: "$API_BASE_URL_PROD"
     - when: never
   script:
@@ -319,7 +319,7 @@ deploy:sit:
     name: sit
     url: $APP_BASE_URL
   rules:
-    - if: '$CI_COMMIT_BRANCH == "dev"'
+    - if: '$CI_COMMIT_BRANCH == SIT_BRANCH'
       when: on_success
   script:
     - SA_JSON="$CI_PROJECT_DIR/sa.json"
@@ -359,7 +359,7 @@ deploy:production:
     name: production
     url: $APP_BASE_URL
   rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_COMMIT_BRANCH == PROD_BRANCH'
       when: on_success
   script:
     - SA_JSON="$CI_PROJECT_DIR/sa.json"
