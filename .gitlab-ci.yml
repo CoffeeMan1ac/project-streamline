@@ -125,6 +125,10 @@ frontend:containerise:
       variables:
         BUILD_MODE: "sit"
         VITE_API_URL: "$API_BASE_URL_SIT"
+    - if: '$CI_COMMIT_BRANCH == "360-sit-environment-deployment"'
+      variables:
+        BUILD_MODE: "sit"
+        VITE_API_URL: "$API_BASE_URL_SIT"
     - if: '$CI_COMMIT_BRANCH == "main"'
       variables:
         BUILD_MODE: "prod"
@@ -133,22 +137,28 @@ frontend:containerise:
   script:
     - export AR_HOST="${GCP_REGION}-docker.pkg.dev"
     - export FRONTEND_IMAGE_URI="${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/frontend"
+    - export GITLAB_FRONTEND_IMAGE_URI="${CI_REGISTRY_IMAGE}/frontend"
 
     - SA_JSON="${CI_PROJECT_DIR}/sa.json"
     - echo "$GCP_SA_KEY_B64" | base64 -d > "$SA_JSON"
 
     - mkdir -p /kaniko/.docker
     - |
-      AUTH_B64="$(printf '_json_key:%s' "$(cat "$SA_JSON")" | base64 | tr -d '\n')"
+      GCP_AUTH_B64="$(printf '_json_key:%s' "$(cat "$SA_JSON")" | base64 | tr -d '\n')"
+      GITLAB_AUTH_B64="$(printf '%s:%s' "$CI_REGISTRY_USER" "$CI_REGISTRY_PASSWORD" | base64 | tr -d '\n')"
       cat > /kaniko/.docker/config.json <<EOF
       {
         "auths": {
           "${AR_HOST}": {
-            "auth": "${AUTH_B64}"
+            "auth": "${GCP_AUTH_B64}"
+          },
+          "${CI_REGISTRY}": {
+            "auth": "${GITLAB_AUTH_B64}"
           }
         }
       }
       EOF
+
     - echo 'precedence ::ffff:0:0/96  100' > /etc/gai.conf || true
     - |
       /kaniko/executor \
@@ -158,7 +168,9 @@ frontend:containerise:
         --build-arg BUILD_MODE="${BUILD_MODE}" \
         --build-arg VITE_API_URL="${VITE_API_URL}" \
         --destination "${FRONTEND_IMAGE_URI}:${CI_COMMIT_SHA}" \
-        --destination "${FRONTEND_IMAGE_URI}:latest"
+        --destination "${FRONTEND_IMAGE_URI}:latest" \
+        --destination "${GITLAB_FRONTEND_IMAGE_URI}:${CI_COMMIT_SHA}" \
+        --destination "${GITLAB_FRONTEND_IMAGE_URI}:latest"
 
 backend:format:
   stage: lint
@@ -266,22 +278,28 @@ backend:containerise:
   script:
     - export AR_HOST="${GCP_REGION}-docker.pkg.dev"
     - export BACKEND_IMAGE_URI="${AR_HOST}/${GCP_PROJECT_ID}/${AR_REPO}/backend"
+    - export GITLAB_BACKEND_IMAGE_URI="${CI_REGISTRY_IMAGE}/backend"
 
     - SA_JSON="${CI_PROJECT_DIR}/sa.json"
     - echo "$GCP_SA_KEY_B64" | base64 -d > "$SA_JSON"
 
     - mkdir -p /kaniko/.docker
     - |
-      AUTH_B64="$(printf '_json_key:%s' "$(cat "$SA_JSON")" | base64 | tr -d '\n')"
+      GCP_AUTH_B64="$(printf '_json_key:%s' "$(cat "$SA_JSON")" | base64 | tr -d '\n')"
+      GITLAB_AUTH_B64="$(printf '%s:%s' "$CI_REGISTRY_USER" "$CI_REGISTRY_PASSWORD" | base64 | tr -d '\n')"
       cat > /kaniko/.docker/config.json <<EOF
       {
         "auths": {
           "${AR_HOST}": {
-            "auth": "${AUTH_B64}"
+            "auth": "${GCP_AUTH_B64}"
+          },
+          "${CI_REGISTRY}": {
+            "auth": "${GITLAB_AUTH_B64}"
           }
         }
       }
       EOF
+
     - echo 'precedence ::ffff:0:0/96  100' > /etc/gai.conf || true
     - |
       /kaniko/executor \
@@ -289,7 +307,9 @@ backend:containerise:
         --dockerfile "${CI_PROJECT_DIR}/backend/Dockerfile" \
         --custom-platform linux/amd64 \
         --destination "${BACKEND_IMAGE_URI}:${CI_COMMIT_SHA}" \
-        --destination "${BACKEND_IMAGE_URI}:latest"
+        --destination "${BACKEND_IMAGE_URI}:latest" \
+        --destination "${GITLAB_BACKEND_IMAGE_URI}:${CI_COMMIT_SHA}" \
+        --destination "${GITLAB_BACKEND_IMAGE_URI}:latest"
 
 deploy:sit:
   stage: deploy
