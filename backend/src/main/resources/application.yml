@@ -9,12 +9,6 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
-  sql:
-    init:
-      mode: always
-      data-locations:
-        - classpath:db/data/*.sql
-
 server:
   port: ${PORT:8080}
 
