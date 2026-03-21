@@ -90,6 +90,9 @@ const QuotationsPricingBreakdown = ({
             color: "text.secondary",
             letterSpacing: 0.5,
             mb: 1,
+            borderTop: "1px solid",
+            borderColor: "divider",
+            pt: 2,
           }}
         >
           RULES APPLIED
