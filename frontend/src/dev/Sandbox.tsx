@@ -19,8 +19,8 @@ const Sandbox = () => {
           {
             ruleName: "Loyalty Discount",
             ruleDescription: "Returning customer discount applied",
-            ruleAmount: "-€1.00",
-            type: "positive",
+            ruleAmount: "+€1.00",
+            type: "negative",
           },
           {
             ruleName: "Age Limit Check",
