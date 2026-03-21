@@ -153,6 +153,96 @@ const QuotationsPricingBreakdown = ({
               {finalPremium}
             </Typography>
           </Box>
+
+<Box
+  sx={{
+    mt: 2,
+    p: 2,
+    borderRadius: 2,
+    backgroundColor: "grey.100",
+  }}
+>
+  {/* Base price */}
+  <Box
+    display="flex"
+    justifyContent="space-between"
+    alignItems="center"
+    mb={0.5}
+  >
+    <Typography sx={{ fontSize: 12, color: "text.secondary" }}>
+      Base Price
+    </Typography>
+
+    <Typography sx={{ fontSize: 12 }}>
+      {basePrice}
+    </Typography>
+  </Box>
+
+  {/* Rules that change price */}
+  {rules
+    .filter((rule) => rule.type !== "neutral")
+    .map((rule, index) => (
+      <Box
+        key={index}
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={0.5}
+      >
+        <Typography sx={{ fontSize: 12, color: "text.secondary" }}>
+          {rule.ruleName}
+        </Typography>
+
+        <Typography
+          sx={{
+            fontSize: 12,
+            color:
+              rule.type === "negative"
+                ? "error.main"
+                : rule.type === "positive"
+                ? "success.main"
+                : "text.primary",
+          }}
+        >
+          {rule.ruleAmount}
+        </Typography>
+      </Box>
+    ))}
+
+  {/* Divider */}
+  <Box
+    sx={{
+      borderTop: "1px solid",
+      borderColor: "divider",
+      mt: 1,
+      pt: 1,
+    }}
+  >
+    <Box
+      display="flex"
+      justifyContent="space-between"
+      alignItems="center"
+    >
+      <Typography
+        sx={{
+          fontSize: 12,
+          fontWeight: 600,
+        }}
+      >
+        Total
+      </Typography>
+
+      <Typography
+        sx={{
+          fontSize: 12,
+          fontWeight: 600,
+        }}
+      >
+        {finalPremium}
+      </Typography>
+    </Box>
+  </Box>
+</Box>
         </Box>
       </Paper>
     </Box>
