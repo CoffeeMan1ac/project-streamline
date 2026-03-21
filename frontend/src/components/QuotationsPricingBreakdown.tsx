@@ -1,6 +1,6 @@
 import { Box, Typography, Paper } from "@mui/material";
 import AttachMoneyOutlinedIcon from "@mui/icons-material/AttachMoneyOutlined";
-import RuleApplied from "./ruleApplied";
+import RuleApplied from "./RuleApplied";
 
 const QuotationsPricingBreakdown = () => {
   return (
@@ -81,6 +81,7 @@ const QuotationsPricingBreakdown = () => {
   ruleName="Device Age Validation"
   ruleDescription="Device age 18 months - premium loading applied"
   ruleAmount="+€1.50"
+  type="positive"
 />
         <Box height={16} />
 

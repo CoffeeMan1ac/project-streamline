@@ -1,17 +1,36 @@
 import { Box, Typography, Paper } from "@mui/material";
 import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
+import TrendingDownOutlinedIcon from '@mui/icons-material/TrendingDownOutlined';
+import HorizontalRuleOutlinedIcon from '@mui/icons-material/HorizontalRuleOutlined';
 
 type RuleAppliedProps = {
   ruleName: string;
   ruleDescription: string;
   ruleAmount: string;
+  type : "neutral" | "positive" | "negative";
 };
 
 const RuleApplied = ({
   ruleName,
   ruleDescription,
   ruleAmount,
+  type,
 }: RuleAppliedProps) => {
+
+  let icon;
+  let color;
+
+  if (type === "negative") {
+    icon = <TrendingUpOutlinedIcon sx={{ fontSize: 16, color: "error.main", mt: "2px" }} />;
+    color = "error.main";
+  } else if (type === "positive") {
+    icon = <TrendingDownOutlinedIcon sx={{ fontSize: 16, color: "success.main", mt: "2px" }} />;
+    color = "success.main";
+  } else {
+    icon = <HorizontalRuleOutlinedIcon sx={{ fontSize: 16, color: "text.secondary", mt: "2px" }} />;
+    color = "text.secondary";
+  }
+  
   return (
     <Paper
       elevation={0}
@@ -25,14 +44,7 @@ const RuleApplied = ({
     >
       <Box display="flex" justifyContent="space-between" alignItems="flex-start">
         <Box display="flex" alignItems="flex-start" gap={1}>
-          <TrendingUpOutlinedIcon
-            sx={{
-              fontSize: 16,
-              color: "error.main",
-              mt: "2px",
-            }}
-          />
-
+          {icon}
           <Box>
             <Typography
               sx={{
@@ -59,7 +71,7 @@ const RuleApplied = ({
           sx={{
             fontSize: 14,
             fontWeight: 600,
-            color: "error.main",
+            color: color,
             ml: 2,
             whiteSpace: "nowrap",
           }}
