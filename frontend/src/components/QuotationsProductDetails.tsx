@@ -1,7 +1,11 @@
 import { Box, Typography, Paper } from "@mui/material";
 import ArchiveOutlinedIcon from "@mui/icons-material/ArchiveOutlined";
 
-const QuotationsProductDetails = () => {
+type QuoteProductDetailsProps = {
+  productName: string;
+};
+
+const QuotationsProductDetails = ({ productName }: QuoteProductDetailsProps) => {
   return (
     <Box width="40%">
       <Paper
@@ -19,7 +23,6 @@ const QuotationsProductDetails = () => {
               fontSize: 16,
               fontWeight: 600,
               lineHeight: 1,
-              fontStyle: "bold",
             }}
           >
             Product Details
@@ -42,7 +45,7 @@ const QuotationsProductDetails = () => {
             fontWeight: 500,
           }}
         >
-          Premium Shield
+          {productName}
         </Typography>
       </Paper>
     </Box>
