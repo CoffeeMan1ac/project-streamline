@@ -150,7 +150,7 @@ const QuotationsPricingBreakdown = ({
               mt: 2,
               p: 2,
               borderRadius: 2,
-              backgroundColor: "grey.100",
+              backgroundColor: "background.paper",
             }}
           >
             {/* Base price */}
