@@ -1,5 +1,5 @@
 import { Box, Typography, Paper } from "@mui/material";
-import ArchiveOutlinedIcon from '@mui/icons-material/ArchiveOutlined';
+import ArchiveOutlinedIcon from "@mui/icons-material/ArchiveOutlined";
 
 const QuotationsProductDetails = () => {
   return (
@@ -22,27 +22,27 @@ const QuotationsProductDetails = () => {
               fontStyle: "bold",
             }}
           >
-                Product Details
-            </Typography>
+            Product Details
+          </Typography>
         </Box>
-          <Typography
-            sx={{
-              fontSize: 11,
-              color: "text.secondary",
-              fontWeight: 600,
-              letterSpacing: 0.5,
-              mb: 0.5,
-            }}
-          >
-            Product
+        <Typography
+          sx={{
+            fontSize: 11,
+            color: "text.secondary",
+            fontWeight: 600,
+            letterSpacing: 0.5,
+            mb: 0.5,
+          }}
+        >
+          Product
         </Typography>
-          <Typography
-            sx={{
-              fontSize: 14,
-              fontWeight: 500,
-            }}
-          >
-            Premium Shield
+        <Typography
+          sx={{
+            fontSize: 14,
+            fontWeight: 500,
+          }}
+        >
+          Premium Shield
         </Typography>
       </Paper>
     </Box>
