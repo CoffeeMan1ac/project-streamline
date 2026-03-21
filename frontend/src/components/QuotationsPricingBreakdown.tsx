@@ -2,7 +2,26 @@ import { Box, Typography, Paper } from "@mui/material";
 import AttachMoneyOutlinedIcon from "@mui/icons-material/AttachMoneyOutlined";
 import RuleApplied from "./RuleApplied";
 
-const QuotationsPricingBreakdown = () => {
+type Rule = {
+  ruleName: string;
+  ruleDescription: string;
+  ruleAmount: string;
+  type: "neutral" | "positive" | "negative";
+};
+
+type QuotationsPricingBreakdownProps = {
+  basePrice: string;
+  premiumName: string;
+  finalPremium: string;
+  rules: Rule[];
+};
+
+const QuotationsPricingBreakdown = ({
+  basePrice,
+  premiumName,
+  finalPremium,
+  rules,
+}: QuotationsPricingBreakdownProps) => {
   return (
     <Box width="60%">
       <Paper
@@ -49,7 +68,7 @@ const QuotationsPricingBreakdown = () => {
                 color: "text.secondary",
               }}
             >
-              Starting premium for Premium Shield
+              Starting premium for {premiumName}
             </Typography>
           </Box>
 
@@ -59,7 +78,7 @@ const QuotationsPricingBreakdown = () => {
               fontWeight: 600,
             }}
           >
-            €10.00
+            {basePrice}
           </Typography>
         </Box>
 
@@ -76,13 +95,16 @@ const QuotationsPricingBreakdown = () => {
           RULES APPLIED
         </Typography>
 
-        {/* RULES COMPONENT WILL GO HERE */}
+        {/* loop through rules*/}
+        {rules.map((rule, index) => (
           <RuleApplied
-  ruleName="Device Age Validation"
-  ruleDescription="Device age 18 months - premium loading applied"
-  ruleAmount="+€1.50"
-  type="positive"
-/>
+            key={index}
+            ruleName={rule.ruleName}
+            ruleDescription={rule.ruleDescription}
+            ruleAmount={rule.ruleAmount}
+            type={rule.type}
+          />
+        ))}
         <Box height={16} />
 
         {/* Final Premium */}
@@ -125,7 +147,7 @@ const QuotationsPricingBreakdown = () => {
                 color: "primary.main",
               }}
             >
-              €12.50
+              {finalPremium}
             </Typography>
           </Box>
         </Box>
