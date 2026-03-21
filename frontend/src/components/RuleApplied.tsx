@@ -1,22 +1,16 @@
 import { Box, Typography, Paper } from "@mui/material";
 import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
-import TrendingDownOutlinedIcon from '@mui/icons-material/TrendingDownOutlined';
-import HorizontalRuleOutlinedIcon from '@mui/icons-material/HorizontalRuleOutlined';
+import TrendingDownOutlinedIcon from "@mui/icons-material/TrendingDownOutlined";
+import HorizontalRuleOutlinedIcon from "@mui/icons-material/HorizontalRuleOutlined";
 
 type RuleAppliedProps = {
   ruleName: string;
   ruleDescription: string;
   ruleAmount: string;
-  type : "neutral" | "positive" | "negative";
+  type: "neutral" | "positive" | "negative";
 };
 
-const RuleApplied = ({
-  ruleName,
-  ruleDescription,
-  ruleAmount,
-  type,
-}: RuleAppliedProps) => {
-
+const RuleApplied = ({ ruleName, ruleDescription, ruleAmount, type }: RuleAppliedProps) => {
   let icon;
   let color;
 
@@ -30,7 +24,7 @@ const RuleApplied = ({
     icon = <HorizontalRuleOutlinedIcon sx={{ fontSize: 16, color: "text.secondary", mt: "2px" }} />;
     color = "text.secondary";
   }
-  
+
   return (
     <Paper
       elevation={0}
