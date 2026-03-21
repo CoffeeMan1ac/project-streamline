@@ -21,7 +21,7 @@ const QuotePersonalDetails = ({
   address,
 }: QuotePersonalDetailsProps) => {
   return (
-    <Box width="40%">
+    <Box width={{ xs: "100%", md: "40%" }}>
       <Paper
         sx={{
           p: 3,
