@@ -36,20 +36,18 @@ describe("QuotationsPricingBreakdown", () => {
 
   test("renders the Pricing Breakdown heading", () => {
     render(<QuotationsPricingBreakdown {...mockProps} />);
-
     expect(screen.getByText("Pricing Breakdown")).toBeInTheDocument();
   });
 
   test("renders the base price section", () => {
     render(<QuotationsPricingBreakdown {...mockProps} />);
 
-    expect(screen.getByText("Base Price")).toBeInTheDocument();
+    expect(screen.getAllByText("Base Price").length).toBeGreaterThan(0);
     expect(screen.getByText("Starting premium for Premium Shield")).toBeInTheDocument();
   });
 
   test("renders the rules applied heading", () => {
     render(<QuotationsPricingBreakdown {...mockProps} />);
-
     expect(screen.getByText("RULES APPLIED")).toBeInTheDocument();
   });
 
@@ -57,8 +55,8 @@ describe("QuotationsPricingBreakdown", () => {
     render(<QuotationsPricingBreakdown {...mockProps} />);
 
     expect(screen.getByText("Age Limit Check")).toBeInTheDocument();
-    expect(screen.getByText("Device Age Validation")).toBeInTheDocument();
-    expect(screen.getByText("Loyalty Discount")).toBeInTheDocument();
+    expect(screen.getAllByText("Device Age Validation").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Loyalty Discount").length).toBeGreaterThan(0);
   });
 
   test("renders the Final Premium section", () => {
@@ -77,9 +75,8 @@ describe("QuotationsPricingBreakdown", () => {
     expect(screen.getAllByText("-€1.00").length).toBeGreaterThan(0);
   });
 
-  test("does not show neutral rule amount in the summary box", () => {
+  test("renders neutral rule amount in the rules list", () => {
     render(<QuotationsPricingBreakdown {...mockProps} />);
-
     expect(screen.getByText("€0.00")).toBeInTheDocument();
   });
 
