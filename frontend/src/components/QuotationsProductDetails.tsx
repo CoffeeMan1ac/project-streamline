@@ -1,4 +1,5 @@
 import { Box, Typography, Paper } from "@mui/material";
+import ArchiveOutlinedIcon from '@mui/icons-material/ArchiveOutlined';
 
 const QuotationsProductDetails = () => {
   return (
@@ -11,12 +12,14 @@ const QuotationsProductDetails = () => {
           borderColor: "divider",
         }}
       >
-        <Box>
+        <Box display="flex" alignItems="center" gap={1} mb={2}>
+          <ArchiveOutlinedIcon color="primary" />
           <Typography
             sx={{
               fontSize: 16,
               fontWeight: 600,
               lineHeight: 1,
+              fontStyle: "bold",
             }}
           >
                 Product Details
