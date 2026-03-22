@@ -7,7 +7,7 @@ type QuoteProductDetailsProps = {
 
 const QuotationsProductDetails = ({ productName }: QuoteProductDetailsProps) => {
   return (
-    <Box width="40%">
+    <Box>
       <Paper
         sx={{
           p: 3,

@@ -6,7 +6,7 @@ import QuotePersonalDetails from "../components/QuotePersonalDetails";
 
 const QuoteDetailsPage = () => {
   return (
-    <Box sx={{ p: 3 }}>
+    <Box width="70%" sx={{ p: 3 }}>
       <QuotationDetails quotationId="123" timeStamp="today" status="ACCEPTED"/>
 
       <Box

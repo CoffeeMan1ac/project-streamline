@@ -23,7 +23,7 @@ const QuotationsPricingBreakdown = ({
   rules,
 }: QuotationsPricingBreakdownProps) => {
   return (
-    <Box width="60%">
+    <Box>
       <Paper
         sx={{
           p: 3,
