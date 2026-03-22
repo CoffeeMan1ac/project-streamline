@@ -1,13 +1,28 @@
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import QuotationDetails from "../components/QuotationDetails";
 import QuotationsPricingBreakdown from "../components/QuotationsPricingBreakdown";
 import QuotationsProductDetails from "../components/QuotationsProductDetails";
 import QuotePersonalDetails from "../components/QuotePersonalDetails";
+import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
+import { useNavigate } from "react-router-dom";
 
 const QuoteDetailsPage = () => {
+  const navigate = useNavigate();
   return (
-    <Box display="flex" justifyContent="center" sx={{ p: 3 }}>
-        <Box width="100%" sx={{ p: 3 }}>
+    <Box display="flex" flexDirection="column" alignItems="center" sx={{ p: 3 }}>
+      <Box width="100%" maxWidth="1200px">
+        <Button
+          onClick={() => navigate("/quotes")}
+          variant="text"
+          size="small"
+          sx={{ color: "text.secondary", mb: 2 }}
+        >
+          <NavigateBeforeIcon />
+          Back to Quotations
+        </Button>
+      </Box>
+
+        <Box width="100%" >
         <QuotationDetails quotationId="PS-2024-001234" timeStamp="2024-03-15 14:30" status="ACCEPTED"/>
 
         <Box
