@@ -14,6 +14,7 @@ import BackOfficeLoginPage from "./pages/BackOfficeLoginPage";
 import Sandbox from "./dev/Sandbox";
 import OutcomePage from "./pages/OutcomePage";
 import QuotesManagementPage from "./pages/QuotesManagementPage";
+import QuoteDetailsPage from "./pages/QuoteDetailsPage";
 
 function AppContent() {
   const [mode, setMode] = useState<"light" | "dark">(
@@ -42,6 +43,7 @@ function AppContent() {
           <Route path="/outcome" element={<OutcomePage />} />
           <Route path="/login" element={<BackOfficeLoginPage />} />
           <Route path="/sandbox" element={<Sandbox />} />
+          <Route path="/quoteDetails" element={<QuoteDetailsPage />} />
         </Route>
 
         <Route element={<ProtectedRoute />}>
