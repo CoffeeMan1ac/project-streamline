@@ -43,7 +43,6 @@ function AppContent() {
           <Route path="/outcome" element={<OutcomePage />} />
           <Route path="/login" element={<BackOfficeLoginPage />} />
           <Route path="/sandbox" element={<Sandbox />} />
-          <Route path="/quoteDetails" element={<QuoteDetailsPage />} />
         </Route>
 
         <Route element={<ProtectedRoute />}>
@@ -60,6 +59,7 @@ function AppContent() {
             <Route path="/rules" element={<RulesManagementPage />} />
             <Route path="/products" element={<ProductManagementPage />} />
             <Route path="/quotes" element={<QuotesManagementPage />} />
+            <Route path="/details" element={<QuoteDetailsPage />} />
           </Route>
         </Route>
 

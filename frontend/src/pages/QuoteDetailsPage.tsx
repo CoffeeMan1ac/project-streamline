@@ -7,8 +7,8 @@ import QuotePersonalDetails from "../components/QuotePersonalDetails";
 const QuoteDetailsPage = () => {
   return (
     <Box display="flex" justifyContent="center" sx={{ p: 3 }}>
-        <Box width="80%" sx={{ p: 3 }}>
-        <QuotationDetails quotationId="123" timeStamp="today" status="ACCEPTED"/>
+        <Box width="100%" sx={{ p: 3 }}>
+        <QuotationDetails quotationId="PS-2024-001234" timeStamp="2024-03-15 14:30" status="ACCEPTED"/>
 
         <Box
             sx={{
