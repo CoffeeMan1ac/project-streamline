@@ -3,12 +3,15 @@ package com.munichre.streamline.quote.service;
 import com.munichre.streamline.decision.dto.Decision;
 import com.munichre.streamline.decision.service.DecisionService;
 import com.munichre.streamline.product.model.Product;
+import com.munichre.streamline.product.model.ProductField;
 import com.munichre.streamline.product.service.ProductService;
 import com.munichre.streamline.quote.api.dto.QuoteDetail;
 import com.munichre.streamline.quote.api.dto.QuoteRequest;
 import com.munichre.streamline.quote.api.dto.QuoteResponse;
 import com.munichre.streamline.quote.api.dto.QuoteSummary;
+import com.munichre.streamline.quote.exception.MissingRequiredFieldsException;
 import com.munichre.streamline.quote.exception.QuoteNotFoundException;
+import com.munichre.streamline.quote.model.ApplicantData;
 import com.munichre.streamline.quote.model.Quotation;
 import com.munichre.streamline.quote.model.QuotationStatus;
 import com.munichre.streamline.quote.repository.QuotationRepository;
@@ -27,10 +30,13 @@ public class QuotationService {
   private static final char[] LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
 
   private final DecisionService decisionService;
+  private final ProductService productService;
   private final QuotationRepository quotationRepository;
   private final ProductService productService;
 
   public QuoteResponse createQuote(QuoteRequest quoteRequest) {
+    validateRequiredProductFields(quoteRequest);
+
     Decision decision = decisionService.decide(quoteRequest);
     Product product = productService.getProduct(quoteRequest.productId());
 
@@ -109,5 +115,24 @@ public class QuotationService {
       ref = generateReference();
     } while (quotationRepository.existsByReference(ref));
     return ref;
+  }
+
+  private void validateRequiredProductFields(QuoteRequest request) {
+    Product product = productService.getProduct(request.productId());
+    List<ProductField> fields = product.getProductFields();
+    if (fields == null || fields.isEmpty()) return;
+
+    ApplicantData data = request.applicantData();
+
+    List<String> missing =
+        fields.stream()
+            .filter(f -> Boolean.TRUE.equals(f.getRequired()))
+            .map(ProductField::getName)
+            .filter(name -> data == null || data.get(name) == null)
+            .toList();
+
+    if (!missing.isEmpty()) {
+      throw new MissingRequiredFieldsException(missing);
+    }
   }
 }
