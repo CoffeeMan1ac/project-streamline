@@ -21,6 +21,7 @@ import com.munichre.streamline.product.api.dto.UpdateTagRequestDto;
 import com.munichre.streamline.product.exception.CoverageCategoryNotFoundException;
 import com.munichre.streamline.product.exception.CoverageNotFoundException;
 import com.munichre.streamline.product.exception.DuplicateTagCodeException;
+import com.munichre.streamline.product.exception.InvalidProductFieldException;
 import com.munichre.streamline.product.exception.ProductNotFoundException;
 import com.munichre.streamline.product.exception.ProductTagNotFoundException;
 import com.munichre.streamline.product.exception.ProductTypeNotFoundException;
@@ -262,6 +263,52 @@ public class ProductService {
 
     Coverage saved = coverageRepository.save(coverage);
     return new CoverageOptionDto(saved.getId(), saved.getCode(), saved.getLabel());
+  }
+
+  @Transactional(readOnly = true)
+  public List<ProductFieldDto> getProductFormFields(UUID productId) {
+    Product product =
+        productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException(productId));
+    List<ProductField> fields = product.getProductFields();
+    if (fields == null) return List.of();
+    return fields.stream()
+        .map(
+            f ->
+                new ProductFieldDto(
+                    f.getName(), f.getType(), f.getLabel(), f.getRequired(), f.getOptions()))
+        .toList();
+  }
+
+  @Transactional
+  public List<ProductFieldDto> updateProductFormFields(
+      UUID productId, List<ProductFieldDto> fields) {
+    Product product =
+        productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException(productId));
+
+    for (ProductFieldDto field : fields) {
+      if (field.name() == null || field.name().isBlank()) {
+        throw new InvalidProductFieldException("Each product field must have a name.");
+      }
+      if (field.type() == null || field.type().isBlank()) {
+        throw new InvalidProductFieldException("Each product field must have a type.");
+      }
+      if (field.label() == null || field.label().isBlank()) {
+        throw new InvalidProductFieldException("Each product field must have a label.");
+      }
+    }
+
+    List<ProductField> productFields =
+        fields.stream()
+            .map(
+                f ->
+                    new ProductField(
+                        f.name(), f.type(), f.label(), f.required(), f.options()))
+            .toList();
+
+    product.setProductFields(productFields);
+    productRepository.save(product);
+
+    return fields;
   }
 
   @Transactional
