@@ -6,6 +6,9 @@ import static org.mockito.Mockito.when;
 
 import com.munichre.streamline.exception.BaseApplicationException;
 import com.munichre.streamline.exception.dto.ErrorResponseDto;
+import com.munichre.streamline.product.exception.CoverageNotFoundException;
+import com.munichre.streamline.product.exception.ProductTagNotFoundException;
+import com.munichre.streamline.product.exception.ProductTypeNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -94,5 +98,44 @@ class GlobalExceptionHandlerTest {
     assertThat(response.getBody().status()).isEqualTo(400);
     assertThat(response.getBody().message()).contains("applicantData");
     assertThat(response.getBody().path()).isEqualTo(uri);
+  }
+
+  @Test
+  @DisplayName("ProductTypeNotFoundException should return 404")
+  void shouldReturn404ForProductTypeNotFound() {
+    when(request.getRequestURI()).thenReturn("/backoffice/products");
+
+    ResponseEntity<ErrorResponseDto> response =
+        globalExceptionHandler.handleApplicationException(
+            new ProductTypeNotFoundException(), request);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    assertThat(response.getBody().status()).isEqualTo(404);
+  }
+
+  @Test
+  @DisplayName("ProductTagNotFoundException should return 404")
+  void shouldReturn404ForProductTagNotFound() {
+    when(request.getRequestURI()).thenReturn("/backoffice/products");
+
+    ResponseEntity<ErrorResponseDto> response =
+        globalExceptionHandler.handleApplicationException(
+            new ProductTagNotFoundException(UUID.randomUUID()), request);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    assertThat(response.getBody().status()).isEqualTo(404);
+  }
+
+  @Test
+  @DisplayName("CoverageNotFoundException should return 404")
+  void shouldReturn404ForCoverageNotFound() {
+    when(request.getRequestURI()).thenReturn("/backoffice/products/coverages");
+
+    ResponseEntity<ErrorResponseDto> response =
+        globalExceptionHandler.handleApplicationException(
+            new CoverageNotFoundException(UUID.randomUUID()), request);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    assertThat(response.getBody().status()).isEqualTo(404);
   }
 }
