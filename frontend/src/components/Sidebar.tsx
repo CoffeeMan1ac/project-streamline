@@ -29,6 +29,7 @@ const Sidebar = ({ toggleSidebar, open, toggleTheme, mode }: SidebarProps) => {
   const getActiveFromPath = (path: string) => {
     if (path.startsWith("/rules")) return "rules";
     if (path.startsWith("/products")) return "products";
+    if (path.startsWith("/quotations")) return "quotes";
     if (path.startsWith("/quotes")) return "quotes";
     return "rules";
   };

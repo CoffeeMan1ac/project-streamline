@@ -4,6 +4,16 @@ import { describe, test, expect, vi, beforeEach } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import QuotesManagementPage from "../QuotesManagementPage";
 
+const mockNavigate = vi.fn();
+
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual("react-router-dom");
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  };
+});
+
 vi.mock("../../components/QuotesSearchBar", () => ({
   default: ({
     searchQuery,
@@ -81,6 +91,7 @@ describe("QuotesManagementPage", () => {
   beforeEach(() => {
     cleanup();
     vi.clearAllMocks();
+    mockNavigate.mockClear();
   });
 
   const renderPage = () =>
@@ -201,12 +212,11 @@ describe("QuotesManagementPage", () => {
   test("calls onViewDetails with correct id", async () => {
     const http = await import("../../api/http");
     vi.mocked(http.default.get).mockResolvedValueOnce({ data: mockQuotations });
-    vi.spyOn(console, "log").mockImplementation(() => {});
     renderPage();
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /view 1/i })).toBeInTheDocument();
     });
     fireEvent.click(screen.getByRole("button", { name: /view 1/i }));
-    expect(console.log).toHaveBeenCalledWith("View details for quotation:", "1");
+    expect(mockNavigate).toHaveBeenCalledWith("/quotations/1");
   });
 });

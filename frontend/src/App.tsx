@@ -59,7 +59,7 @@ function AppContent() {
             <Route path="/rules" element={<RulesManagementPage />} />
             <Route path="/products" element={<ProductManagementPage />} />
             <Route path="/quotes" element={<QuotesManagementPage />} />
-            <Route path="/details" element={<QuoteDetailsPage />} />
+            <Route path="/quotations/:id" element={<QuoteDetailsPage />} />
           </Route>
         </Route>
 

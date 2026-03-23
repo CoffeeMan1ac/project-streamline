@@ -5,6 +5,7 @@ import { CircularProgress, Alert } from "@mui/material";
 import http from "../api/http";
 import QuotesSearchBar from "../components/QuotesSearchBar";
 import QuotesTable from "../components/QuotesTable";
+import { useNavigate } from "react-router-dom";
 
 type QuotationStatus = "accepted" | "rejected";
 
@@ -25,6 +26,7 @@ const QuotesManagementPage = () => {
   const [quotations, setQuotations] = useState<QuotationResponseDto[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const navigate = useNavigate();
 
   const fetchQuotations = async () => {
     try {
@@ -59,9 +61,8 @@ const QuotesManagementPage = () => {
     });
 
   const handleViewDetails = (id: string) => {
-    console.log("View details for quotation:", id);
+    navigate(`/quotations/${id}`);
   };
-
   return (
     <Box sx={{ mx: { xs: 2, sm: 3, md: 4, lg: 8, xl: 20 }, my: 4 }}>
       <Box>
