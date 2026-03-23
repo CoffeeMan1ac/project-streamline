@@ -10,11 +10,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.munichre.streamline.decision.model.DecisionStatus;
 import com.munichre.streamline.rule.api.dto.RuleCreateRequest;
 import com.munichre.streamline.rule.api.dto.RuleReorderRequest;
 import com.munichre.streamline.rule.api.dto.RuleResponse;
 import com.munichre.streamline.rule.api.dto.RuleUpdateRequest;
-import com.munichre.streamline.decision.model.DecisionStatus;
 import com.munichre.streamline.rule.model.MatchCriteria;
 import com.munichre.streamline.rule.model.Operator;
 import com.munichre.streamline.rule.model.RuleConfig;
@@ -205,8 +205,7 @@ class RuleControllerTest {
       var when = new RuleConfig.When(MatchCriteria.ALL, List.of(condition));
       var then = new RuleConfig.Then(DecisionStatus.ACCEPT, null, BigDecimal.TEN, false);
       var config = new RuleConfig(when, then);
-      var request =
-          new RuleCreateRequest(productId, "Age Check", "desc", true, "reason", config);
+      var request = new RuleCreateRequest(productId, "Age Check", "desc", true, "reason", config);
 
       when(ruleService.validateRule(any(RuleCreateRequest.class))).thenReturn(List.of());
 
@@ -223,8 +222,7 @@ class RuleControllerTest {
     @Test
     @DisplayName("should return 400 with single error")
     void returns400WithSingleError() throws Exception {
-      var request =
-          new RuleCreateRequest(productId, "Rule", null, true, null, null);
+      var request = new RuleCreateRequest(productId, "Rule", null, true, null, null);
 
       when(ruleService.validateRule(any(RuleCreateRequest.class)))
           .thenReturn(List.of("Rule config is required."));
@@ -242,15 +240,12 @@ class RuleControllerTest {
     @Test
     @DisplayName("should return 400 with multiple errors")
     void returns400WithMultipleErrors() throws Exception {
-      var request =
-          new RuleCreateRequest(null, "", null, true, null, null);
+      var request = new RuleCreateRequest(null, "", null, true, null, null);
 
       when(ruleService.validateRule(any(RuleCreateRequest.class)))
           .thenReturn(
               List.of(
-                  "Rule name is required.",
-                  "Product ID is required.",
-                  "Rule config is required."));
+                  "Rule name is required.", "Product ID is required.", "Rule config is required."));
 
       mockMvc
           .perform(
