@@ -7,6 +7,7 @@ import com.munichre.streamline.product.api.dto.CreateCoverageRequestDto;
 import com.munichre.streamline.product.api.dto.CreateProductRequestDto;
 import com.munichre.streamline.product.api.dto.CreateTagRequestDto;
 import com.munichre.streamline.product.api.dto.ProductDto;
+import com.munichre.streamline.product.api.dto.ProductFieldDto;
 import com.munichre.streamline.product.api.dto.ProductOptionDto;
 import com.munichre.streamline.product.api.dto.TagOptionDto;
 import com.munichre.streamline.product.api.dto.UpdateCoverageRequestDto;
@@ -82,6 +83,17 @@ public class BackofficeProductController {
   public ResponseEntity<TagOptionDto> updateTag(
       @PathVariable UUID id, @RequestBody UpdateTagRequestDto request) {
     return ResponseEntity.ok(productService.updateTag(id, request));
+  }
+
+  @GetMapping("/{id}/form-fields")
+  public ResponseEntity<List<ProductFieldDto>> getFormFields(@PathVariable UUID id) {
+    return ResponseEntity.ok(productService.getProductFormFields(id));
+  }
+
+  @PutMapping("/{id}/form-fields")
+  public ResponseEntity<List<ProductFieldDto>> updateFormFields(
+      @PathVariable UUID id, @RequestBody List<ProductFieldDto> fields) {
+    return ResponseEntity.ok(productService.updateProductFormFields(id, fields));
   }
 
   @GetMapping("/{id}")
