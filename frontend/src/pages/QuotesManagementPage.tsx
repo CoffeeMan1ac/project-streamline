@@ -58,7 +58,11 @@ const QuotesManagementPage = () => {
     .filter((q) => {
       if (statusFilter === "all") return true;
       return q.status.toLowerCase() === statusFilter;
-    });
+    })
+    .map((q) => ({
+      ...q,
+      premium: q.premium !== null ? `€${q.premium}` : null,
+    }));
 
   const handleViewDetails = (id: string) => {
     navigate(`/quotations/${id}`);
