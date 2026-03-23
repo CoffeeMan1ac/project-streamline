@@ -1,4 +1,4 @@
-import EditTag from "../components/editTag";
+import EditTag from "../components/EditTag";
 const Sandbox = () => {
   return (
     <>

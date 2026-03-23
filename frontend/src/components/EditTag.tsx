@@ -9,14 +9,25 @@ import {
   IconButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { useState } from "react";
 
 const EditTag = () => {
+  const [open, setOpen] = useState(true);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleUpdate = () => {
+    setOpen(false);
+  };
   return (
-    <Dialog open maxWidth="md" fullWidth>
+    <Dialog open={open} maxWidth="md" fullWidth>
       <DialogTitle sx={{ fontWeight: "bold" }}>
         Edit Tag
         <IconButton
           sx={{ position: "absolute", right: 12, top: 12 }}
+          onClick={handleClose}
         >
           <CloseIcon />
         </IconButton>
@@ -189,8 +200,8 @@ const EditTag = () => {
             mt: 4,
           }}
         >
-          <Button variant="outlined">Cancel</Button>
-          <Button variant="contained">Update Tag</Button>
+          <Button variant="outlined" onClick={handleClose}>Cancel</Button>
+          <Button variant="contained" onClick={handleUpdate}>Update Tag</Button>
         </Box>
       </DialogContent>
     </Dialog>
