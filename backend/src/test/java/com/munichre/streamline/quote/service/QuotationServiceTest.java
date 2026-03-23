@@ -81,8 +81,7 @@ class QuotationServiceTest {
       when(productService.getProduct(productId)).thenReturn(mockProduct);
       when(decisionService.decide(mockRequest)).thenReturn(mockDecision);
       when(quotationRepository.existsByReference(anyString())).thenReturn(false);
-      when(quotationRepository.save(any(Quotation.class)))
-          .thenAnswer(invocation -> invocation.getArgument(0));
+      when(quotationRepository.save(any(Quotation.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
       QuoteResponse response = quotationService.createQuote(mockRequest);
 
@@ -149,8 +148,7 @@ class QuotationServiceTest {
       when(productService.getProduct(productId)).thenReturn(mockProduct);
       when(decisionService.decide(request)).thenReturn(mockDecision);
       when(quotationRepository.existsByReference(anyString())).thenReturn(false);
-      when(quotationRepository.save(any(Quotation.class)))
-          .thenAnswer(inv -> inv.getArgument(0));
+      when(quotationRepository.save(any(Quotation.class))).thenAnswer(inv -> inv.getArgument(0));
 
       QuoteResponse response = quotationService.createQuote(request);
       assertThat(response).isNotNull();
@@ -198,8 +196,7 @@ class QuotationServiceTest {
       when(productService.getProduct(productId)).thenReturn(mockProduct);
       when(decisionService.decide(mockRequest)).thenReturn(mockDecision);
       when(quotationRepository.existsByReference(anyString())).thenReturn(false);
-      when(quotationRepository.save(any(Quotation.class)))
-          .thenAnswer(inv -> inv.getArgument(0));
+      when(quotationRepository.save(any(Quotation.class))).thenAnswer(inv -> inv.getArgument(0));
 
       QuoteResponse response = quotationService.createQuote(mockRequest);
       assertThat(response).isNotNull();
