@@ -13,14 +13,14 @@ import {
 } from "@mui/material";
 
 interface Quotation {
-  id: string;
   reference: string;
-  customerName: string;
-  customerEmail: string;
-  product: string;
-  status: "accepted" | "rejected";
+  customerName: string | null;
+  customerEmail: string | null;
+  product: string | null;
+  status: "ACCEPTED" | "DECLINED" | "REFER";
   premium: string | null;
-  date: string;
+  createdAt: string;
+  reason: string | null;
 }
 
 interface QuotationTableProps {
@@ -57,15 +57,15 @@ const QuotationTable: React.FC<QuotationTableProps> = ({ quotations, onViewDetai
             <TableBody>
               {quotations.map((quotation) => (
                 <QuotationRow
-                  key={quotation.id}
+                  key={quotation.reference}
                   reference={quotation.reference}
-                  customerName={quotation.customerName}
-                  customerEmail={quotation.customerEmail}
-                  product={quotation.product}
+                  customerName={quotation.customerName ?? "—"}
+                  customerEmail={quotation.customerEmail ?? "—"}
+                  product={quotation.product ?? "—"}
                   status={quotation.status}
-                  premium={quotation.premium}
-                  date={quotation.date}
-                  onViewDetails={() => onViewDetails(quotation.id)}
+                  premium={quotation.premium !== null ? `€${quotation.premium}` : null}
+                  date={new Date(quotation.createdAt).toLocaleDateString()}
+                  onViewDetails={() => onViewDetails(quotation.reference)}
                 />
               ))}
             </TableBody>

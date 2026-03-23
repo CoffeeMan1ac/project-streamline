@@ -7,17 +7,17 @@ import QuotesSearchBar from "../components/QuotesSearchBar";
 import QuotesTable from "../components/QuotesTable";
 import { useNavigate } from "react-router-dom";
 
-type QuotationStatus = "accepted" | "rejected";
+// type QuotationStatus = "accepted" | "rejected";
 
 type QuotationResponseDto = {
-  id: string;
   reference: string;
-  customerName: string;
-  customerEmail: string;
-  product: string;
-  status: QuotationStatus;
-  premium: string | null;
-  date: string;
+  status: "ACCEPTED" | "DECLINED" | "REFER";
+  premium: number | null;
+  createdAt: string;
+  reason: string | null;
+  customerName: string | null;
+  customerEmail: string | null;
+  product: string | null;
 };
 
 const QuotesManagementPage = () => {
@@ -32,7 +32,7 @@ const QuotesManagementPage = () => {
     try {
       setLoading(true);
       setError(null);
-      const { data } = await http.get<QuotationResponseDto[]>("/backoffice/quotations");
+      const { data } = await http.get<QuotationResponseDto[]>("/backoffice/quote/recent");
       setQuotations(data);
     } catch {
       setError("Failed to load quotations. Please try again.");
@@ -50,14 +50,14 @@ const QuotesManagementPage = () => {
       const query = searchQuery.toLowerCase();
       return (
         q.reference.toLowerCase().includes(query) ||
-        q.customerName.toLowerCase().includes(query) ||
-        q.customerEmail.toLowerCase().includes(query) ||
-        q.product.toLowerCase().includes(query)
+        (q.customerName?.toLowerCase().includes(query) ?? false) ||
+        (q.customerEmail?.toLowerCase().includes(query) ?? false) ||
+        (q.product?.toLowerCase().includes(query) ?? false)
       );
     })
     .filter((q) => {
       if (statusFilter === "all") return true;
-      return q.status === statusFilter;
+      return q.status.toLowerCase() === statusFilter;
     });
 
   const handleViewDetails = (id: string) => {

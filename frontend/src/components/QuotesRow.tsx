@@ -10,7 +10,7 @@ interface QuotesRowProps {
   customerName: string;
   customerEmail: string;
   product: string;
-  status: "accepted" | "rejected";
+  status: "ACCEPTED" | "DECLINED" | "REFER";
   premium: string | null;
   date: string;
   onViewDetails: () => void;
@@ -27,15 +27,20 @@ const QuotesRow: React.FC<QuotesRowProps> = ({
   onViewDetails,
 }) => {
   const statusConfig = {
-    accepted: {
+    ACCEPTED: {
       label: "accepted",
       icon: <CheckCircleOutlineIcon sx={{ fontSize: 18, color: "success.main" }} />,
       chipSx: { backgroundColor: "success.light", color: "success.dark", fontWeight: 500 },
     },
-    rejected: {
-      label: "rejected",
+    DECLINED: {
+      label: "declined",
       icon: <CancelOutlinedIcon sx={{ fontSize: 18, color: "error.main" }} />,
       chipSx: { backgroundColor: "rgba(211, 47, 47, 0.16)", color: "error.dark", fontWeight: 500 },
+    },
+    REFER: {
+      label: "refer",
+      icon: <CancelOutlinedIcon sx={{ fontSize: 18, color: "warning.main" }} />,
+      chipSx: { backgroundColor: "warning.light", color: "warning.dark", fontWeight: 500 },
     },
   };
 

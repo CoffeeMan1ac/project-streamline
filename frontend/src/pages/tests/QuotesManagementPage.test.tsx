@@ -127,7 +127,7 @@ describe("QuotesManagementPage", () => {
     const http = await import("../../api/http");
     renderPage();
     await waitFor(() => {
-      expect(http.default.get).toHaveBeenCalledWith("/backoffice/quotations");
+      expect(http.default.get).toHaveBeenCalledWith("/backoffice/quote/recent");
     });
   });
 

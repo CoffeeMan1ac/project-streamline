@@ -5,24 +5,24 @@ import QuotesTable from "../QuotesTable";
 
 const mockQuotations = [
   {
-    id: "1",
     reference: "PS-2024-001234",
     customerName: "John Smith",
     customerEmail: "john.smith@email.com",
     product: "Premium Shield",
-    status: "accepted" as const,
+    status: "ACCEPTED" as const,
     premium: "€12.50",
-    date: "2024-03-15 14:30",
+    createdAt: "2024-03-15T14:30:00",
+    reason: null,
   },
   {
-    id: "2",
     reference: "PS-2024-001235",
     customerName: "Sarah O'Connor",
     customerEmail: "sarah.oconnor@email.com",
     product: "Standard Shield",
-    status: "rejected" as const,
+    status: "DECLINED" as const,
     premium: null,
-    date: "2024-03-15 13:15",
+    createdAt: "2024-03-15T13:15:00",
+    reason: "Not eligible",
   },
 ];
 
@@ -75,20 +75,20 @@ describe("QuotesTable", () => {
     expect(screen.getByText("sarah.oconnor@email.com")).toBeInTheDocument();
   });
 
-  test("calls onViewDetails with correct id when view details is clicked", () => {
+  test("calls onViewDetails with correct reference when view details is clicked", () => {
     const onViewDetails = vi.fn();
     render(<QuotesTable {...defaultProps} onViewDetails={onViewDetails} />);
     const buttons = screen.getAllByTestId("view-details-button");
     fireEvent.click(buttons[0]);
-    expect(onViewDetails).toHaveBeenCalledWith("1");
+    expect(onViewDetails).toHaveBeenCalledWith("PS-2024-001234");
   });
 
-  test("calls onViewDetails with correct id for second row", () => {
+  test("calls onViewDetails with correct reference for second row", () => {
     const onViewDetails = vi.fn();
     render(<QuotesTable {...defaultProps} onViewDetails={onViewDetails} />);
     const buttons = screen.getAllByTestId("view-details-button");
     fireEvent.click(buttons[1]);
-    expect(onViewDetails).toHaveBeenCalledWith("2");
+    expect(onViewDetails).toHaveBeenCalledWith("PS-2024-001235");
   });
 
   test("renders correct number of view details buttons", () => {

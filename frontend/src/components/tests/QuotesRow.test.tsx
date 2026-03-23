@@ -9,7 +9,7 @@ const defaultProps = {
   customerName: "John Smith",
   customerEmail: "john.smith@email.com",
   product: "Premium Shield",
-  status: "accepted" as const,
+  status: "ACCEPTED" as const,
   premium: "€12.50",
   date: "2024-03-15 14:30",
   onViewDetails: vi.fn(),
@@ -67,12 +67,17 @@ describe("QuotesRow", () => {
 
   test("renders accepted status chip", () => {
     renderRow();
-    expect(screen.getByTestId("status-chip-accepted")).toBeInTheDocument();
+    expect(screen.getByTestId("status-chip-ACCEPTED")).toBeInTheDocument();
   });
 
-  test("renders rejected status chip", () => {
-    renderRow({ status: "rejected" as const });
-    expect(screen.getByTestId("status-chip-rejected")).toBeInTheDocument();
+  test("renders declined status chip", () => {
+    renderRow({ status: "DECLINED" as const });
+    expect(screen.getByTestId("status-chip-DECLINED")).toBeInTheDocument();
+  });
+
+  test("renders refer status chip", () => {
+    renderRow({ status: "REFER" as const });
+    expect(screen.getByTestId("status-chip-REFER")).toBeInTheDocument();
   });
 
   test("renders check circle icon for accepted", () => {
@@ -80,8 +85,8 @@ describe("QuotesRow", () => {
     expect(screen.getByTestId("CheckCircleOutlineIcon")).toBeInTheDocument();
   });
 
-  test("renders cancel icon for rejected", () => {
-    renderRow({ status: "rejected" as const });
+  test("renders cancel icon for declined", () => {
+    renderRow({ status: "DECLINED" as const });
     expect(screen.getByTestId("CancelOutlinedIcon")).toBeInTheDocument();
   });
 
