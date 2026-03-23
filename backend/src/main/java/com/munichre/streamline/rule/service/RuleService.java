@@ -2,15 +2,17 @@ package com.munichre.streamline.rule.service;
 
 import com.munichre.streamline.product.model.Product;
 import com.munichre.streamline.product.service.ProductService;
-import com.munichre.streamline.rule.api.dto.RuleCreateRequest; // Recommended New DTO
+import com.munichre.streamline.rule.api.dto.RuleCreateRequest;
 import com.munichre.streamline.rule.api.dto.RuleReorderRequest;
 import com.munichre.streamline.rule.api.dto.RuleResponse;
 import com.munichre.streamline.rule.api.dto.RuleUpdateRequest;
 import com.munichre.streamline.rule.exception.RuleNotAssignedToProductException;
 import com.munichre.streamline.rule.exception.RuleNotFoundException;
 import com.munichre.streamline.rule.model.Rule;
+import com.munichre.streamline.rule.model.RuleConfig;
 import com.munichre.streamline.rule.repository.RuleRepository;
 import io.micrometer.common.lang.NonNull;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -127,5 +129,50 @@ public class RuleService {
 
   public List<Rule> findByProductIdAndActiveTrueOrderByPriorityAsc(UUID productid) {
     return ruleRepository.findByProductIdAndActiveTrueOrderByPriorityAsc(productid);
+  }
+
+  public List<String> validateRule(RuleCreateRequest request) {
+    List<String> errors = new ArrayList<>();
+
+    if (request.name() == null || request.name().isBlank()) {
+      errors.add("Rule name is required.");
+    }
+
+    if (request.product() == null) {
+      errors.add("Product ID is required.");
+    }
+
+    RuleConfig config = request.ruleConfig();
+    if (config == null) {
+      errors.add("Rule config is required.");
+      return errors;
+    }
+
+    if (config.when() == null) {
+      errors.add("Rule config 'when' block is required.");
+    } else if (config.when().conditions() == null || config.when().conditions().isEmpty()) {
+      errors.add("Rule must have at least one condition.");
+    } else {
+      for (int i = 0; i < config.when().conditions().size(); i++) {
+        RuleConfig.Condition c = config.when().conditions().get(i);
+        if (c.field() == null || c.field().isBlank()) {
+          errors.add("Condition " + (i + 1) + ": field is required.");
+        }
+        if (c.operator() == null) {
+          errors.add("Condition " + (i + 1) + ": operator is required.");
+        }
+        if (c.value() == null || c.value().isBlank()) {
+          errors.add("Condition " + (i + 1) + ": value is required.");
+        }
+      }
+    }
+
+    if (config.then() == null) {
+      errors.add("Rule config 'then' block is required.");
+    } else if (config.then().decision() == null) {
+      errors.add("Rule decision is required.");
+    }
+
+    return errors;
   }
 }
