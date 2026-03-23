@@ -14,8 +14,12 @@ import com.munichre.streamline.rule.api.dto.RuleCreateRequest;
 import com.munichre.streamline.rule.api.dto.RuleReorderRequest;
 import com.munichre.streamline.rule.api.dto.RuleResponse;
 import com.munichre.streamline.rule.api.dto.RuleUpdateRequest;
+import com.munichre.streamline.decision.model.DecisionStatus;
+import com.munichre.streamline.rule.model.MatchCriteria;
+import com.munichre.streamline.rule.model.Operator;
 import com.munichre.streamline.rule.model.RuleConfig;
 import com.munichre.streamline.rule.service.RuleService;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -188,6 +192,74 @@ class RuleControllerTest {
 
       verify(ruleService).updateRule(eq(ruleId), any(RuleUpdateRequest.class));
       verifyNoMoreInteractions(ruleService);
+    }
+  }
+
+  @Nested
+  @DisplayName("POST /rules/validate")
+  class ValidateRule {
+    @Test
+    @DisplayName("should return 200 with valid=true for a valid rule")
+    void returns200WhenValid() throws Exception {
+      var condition = new RuleConfig.Condition("age", Operator.GREATER_THAN, "18");
+      var when = new RuleConfig.When(MatchCriteria.ALL, List.of(condition));
+      var then = new RuleConfig.Then(DecisionStatus.ACCEPT, null, BigDecimal.TEN, false);
+      var config = new RuleConfig(when, then);
+      var request =
+          new RuleCreateRequest(productId, "Age Check", "desc", true, "reason", config);
+
+      when(ruleService.validateRule(any(RuleCreateRequest.class))).thenReturn(List.of());
+
+      mockMvc
+          .perform(
+              post(baseUrl + "/validate")
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(objectMapper.writeValueAsString(request)))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.valid").value(true))
+          .andExpect(jsonPath("$.errors.length()").value(0));
+    }
+
+    @Test
+    @DisplayName("should return 400 with single error")
+    void returns400WithSingleError() throws Exception {
+      var request =
+          new RuleCreateRequest(productId, "Rule", null, true, null, null);
+
+      when(ruleService.validateRule(any(RuleCreateRequest.class)))
+          .thenReturn(List.of("Rule config is required."));
+
+      mockMvc
+          .perform(
+              post(baseUrl + "/validate")
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(objectMapper.writeValueAsString(request)))
+          .andExpect(status().isBadRequest())
+          .andExpect(jsonPath("$.valid").value(false))
+          .andExpect(jsonPath("$.errors.length()").value(1));
+    }
+
+    @Test
+    @DisplayName("should return 400 with multiple errors")
+    void returns400WithMultipleErrors() throws Exception {
+      var request =
+          new RuleCreateRequest(null, "", null, true, null, null);
+
+      when(ruleService.validateRule(any(RuleCreateRequest.class)))
+          .thenReturn(
+              List.of(
+                  "Rule name is required.",
+                  "Product ID is required.",
+                  "Rule config is required."));
+
+      mockMvc
+          .perform(
+              post(baseUrl + "/validate")
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(objectMapper.writeValueAsString(request)))
+          .andExpect(status().isBadRequest())
+          .andExpect(jsonPath("$.valid").value(false))
+          .andExpect(jsonPath("$.errors.length()").value(3));
     }
   }
 }
