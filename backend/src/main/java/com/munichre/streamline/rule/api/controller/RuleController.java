@@ -6,6 +6,7 @@ import com.munichre.streamline.rule.api.dto.RuleCreateRequest;
 import com.munichre.streamline.rule.api.dto.RuleReorderRequest;
 import com.munichre.streamline.rule.api.dto.RuleResponse;
 import com.munichre.streamline.rule.api.dto.RuleUpdateRequest;
+import com.munichre.streamline.rule.api.dto.RuleValidationResponse;
 import com.munichre.streamline.rule.service.RuleService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -21,6 +22,16 @@ import org.springframework.web.bind.annotation.*;
 public class RuleController {
 
   private final RuleService ruleService;
+
+  @PostMapping("/validate")
+  public ResponseEntity<RuleValidationResponse> validateRule(
+      @RequestBody RuleCreateRequest request) {
+    List<String> errors = ruleService.validateRule(request);
+    if (errors.isEmpty()) {
+      return ResponseEntity.ok(new RuleValidationResponse(true, List.of()));
+    }
+    return ResponseEntity.badRequest().body(new RuleValidationResponse(false, errors));
+  }
 
   @PostMapping
   public ResponseEntity<RuleResponse> createRule(@Valid @RequestBody RuleCreateRequest request) {
