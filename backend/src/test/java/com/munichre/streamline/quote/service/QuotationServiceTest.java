@@ -81,7 +81,8 @@ class QuotationServiceTest {
       when(productService.getProduct(productId)).thenReturn(mockProduct);
       when(decisionService.decide(mockRequest)).thenReturn(mockDecision);
       when(quotationRepository.existsByReference(anyString())).thenReturn(false);
-      when(quotationRepository.save(any(Quotation.class))).thenAnswer(invocation -> invocation.getArgument(0));
+      when(quotationRepository.save(any(Quotation.class)))
+          .thenAnswer(invocation -> invocation.getArgument(0));
 
       QuoteResponse response = quotationService.createQuote(mockRequest);
 
