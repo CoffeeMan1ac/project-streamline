@@ -17,7 +17,8 @@ public record QuoteDetail(
     ApplicantData customerInput,
     BigDecimal premium,
     long processingTimeMs,
-    LocalDateTime createdAt) {
+    LocalDateTime createdAt,
+    String productName) {
 
   public static QuoteDetail from(Quotation quotation) {
     return new QuoteDetail(
@@ -29,6 +30,7 @@ public record QuoteDetail(
         quotation.getCustomerInput(),
         quotation.getPremium(),
         quotation.getProcessingTimeMs(),
-        quotation.getCreatedAt());
+        quotation.getCreatedAt(),
+        quotation.getProduct() != null ? quotation.getProduct().getName() : null);
   }
 }

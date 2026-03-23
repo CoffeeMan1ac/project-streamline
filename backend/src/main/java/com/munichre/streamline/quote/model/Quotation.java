@@ -1,5 +1,6 @@
 package com.munichre.streamline.quote.model;
 
+import com.munichre.streamline.product.model.Product;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -48,4 +49,8 @@ public class Quotation {
   private long processingTimeMs;
 
   @CreationTimestamp private LocalDateTime createdAt;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "product_id")
+  private Product product;
 }

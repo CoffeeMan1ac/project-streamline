@@ -2,6 +2,8 @@ package com.munichre.streamline.quote.service;
 
 import com.munichre.streamline.decision.dto.Decision;
 import com.munichre.streamline.decision.service.DecisionService;
+import com.munichre.streamline.product.model.Product;
+import com.munichre.streamline.product.service.ProductService;
 import com.munichre.streamline.quote.api.dto.QuoteDetail;
 import com.munichre.streamline.quote.api.dto.QuoteRequest;
 import com.munichre.streamline.quote.api.dto.QuoteResponse;
@@ -26,9 +28,11 @@ public class QuotationService {
 
   private final DecisionService decisionService;
   private final QuotationRepository quotationRepository;
+  private final ProductService productService;
 
   public QuoteResponse createQuote(QuoteRequest quoteRequest) {
     Decision decision = decisionService.decide(quoteRequest);
+    Product product = productService.getProduct(quoteRequest.productId());
 
     Quotation quotation =
         Quotation.builder()
@@ -39,6 +43,7 @@ public class QuotationService {
             .customerInput(quoteRequest.applicantData())
             .premium(decision.premium())
             .processingTimeMs(decision.processingTimeMs())
+            .product(product)
             .build();
 
     Quotation savedQuotation = quotationRepository.save(quotation);
