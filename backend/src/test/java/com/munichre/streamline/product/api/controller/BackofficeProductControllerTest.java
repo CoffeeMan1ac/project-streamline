@@ -13,6 +13,7 @@ import com.munichre.streamline.product.api.dto.CoverageOptionDto;
 import com.munichre.streamline.product.api.dto.CreateCoverageRequestDto;
 import com.munichre.streamline.product.api.dto.CreateProductRequestDto;
 import com.munichre.streamline.product.api.dto.CreateTagRequestDto;
+import com.munichre.streamline.product.api.dto.ProductFieldDto;
 import com.munichre.streamline.product.api.dto.ProductOptionDto;
 import com.munichre.streamline.product.api.dto.TagOptionDto;
 import com.munichre.streamline.product.api.dto.UpdateCoverageRequestDto;
@@ -21,6 +22,8 @@ import com.munichre.streamline.product.api.dto.UpdateTagRequestDto;
 import com.munichre.streamline.product.exception.CoverageCategoryNotFoundException;
 import com.munichre.streamline.product.exception.CoverageNotFoundException;
 import com.munichre.streamline.product.exception.DuplicateTagCodeException;
+import com.munichre.streamline.product.exception.InvalidProductFieldException;
+import com.munichre.streamline.product.exception.ProductNotFoundException;
 import com.munichre.streamline.product.exception.ProductTagNotFoundException;
 import com.munichre.streamline.product.service.ProductService;
 import java.math.BigDecimal;
@@ -365,6 +368,95 @@ class BackofficeProductControllerTest {
               put("/backoffice/products/tags/{id}", id)
                   .contentType(MediaType.APPLICATION_JSON)
                   .content(objectMapper.writeValueAsString(request)))
+          .andExpect(status().isNotFound());
+    }
+  }
+
+  @Nested
+  @DisplayName("GET /backoffice/products/{id}/form-fields")
+  class GetFormFields {
+    @Test
+    void returns200WithFields() throws Exception {
+      UUID id = UUID.randomUUID();
+      List<ProductFieldDto> fields =
+          List.of(new ProductFieldDto("make", "text", "Phone Make", true, null));
+
+      when(productService.getProductFormFields(id)).thenReturn(fields);
+
+      mockMvc
+          .perform(get("/backoffice/products/{id}/form-fields", id))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.length()").value(1))
+          .andExpect(jsonPath("$[0].name").value("make"));
+
+      verify(productService).getProductFormFields(id);
+    }
+
+    @Test
+    void returns404WhenProductNotFound() throws Exception {
+      UUID id = UUID.randomUUID();
+
+      when(productService.getProductFormFields(id)).thenThrow(new ProductNotFoundException(id));
+
+      mockMvc
+          .perform(get("/backoffice/products/{id}/form-fields", id))
+          .andExpect(status().isNotFound());
+    }
+  }
+
+  @Nested
+  @DisplayName("PUT /backoffice/products/{id}/form-fields")
+  class UpdateFormFields {
+    @Test
+    void returns200OnValidReplacement() throws Exception {
+      UUID id = UUID.randomUUID();
+      List<ProductFieldDto> fields =
+          List.of(new ProductFieldDto("make", "text", "Phone Make", true, null));
+
+      when(productService.updateProductFormFields(eq(id), any())).thenReturn(fields);
+
+      mockMvc
+          .perform(
+              put("/backoffice/products/{id}/form-fields", id)
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(objectMapper.writeValueAsString(fields)))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$[0].name").value("make"));
+
+      verify(productService).updateProductFormFields(eq(id), any());
+    }
+
+    @Test
+    void returns400WhenFieldMissingRequiredAttribute() throws Exception {
+      UUID id = UUID.randomUUID();
+      List<ProductFieldDto> fields =
+          List.of(new ProductFieldDto(null, "text", "Label", true, null));
+
+      when(productService.updateProductFormFields(eq(id), any()))
+          .thenThrow(new InvalidProductFieldException("Each product field must have a name."));
+
+      mockMvc
+          .perform(
+              put("/backoffice/products/{id}/form-fields", id)
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(objectMapper.writeValueAsString(fields)))
+          .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void returns404WhenProductNotFound() throws Exception {
+      UUID id = UUID.randomUUID();
+      List<ProductFieldDto> fields =
+          List.of(new ProductFieldDto("make", "text", "Phone Make", true, null));
+
+      when(productService.updateProductFormFields(eq(id), any()))
+          .thenThrow(new ProductNotFoundException(id));
+
+      mockMvc
+          .perform(
+              put("/backoffice/products/{id}/form-fields", id)
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(objectMapper.writeValueAsString(fields)))
           .andExpect(status().isNotFound());
     }
   }
