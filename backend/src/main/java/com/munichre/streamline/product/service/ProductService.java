@@ -303,10 +303,7 @@ public class ProductService {
 
     List<ProductField> productFields =
         fields.stream()
-            .map(
-                f ->
-                    new ProductField(
-                        f.name(), f.type(), f.label(), f.required(), f.options()))
+            .map(f -> new ProductField(f.name(), f.type(), f.label(), f.required(), f.options()))
             .toList();
 
     product.setProductFields(productFields);
