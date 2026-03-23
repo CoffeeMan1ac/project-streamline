@@ -268,7 +268,9 @@ public class ProductService {
   @Transactional(readOnly = true)
   public List<ProductFieldDto> getProductFormFields(UUID productId) {
     Product product =
-        productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException(productId));
+        productRepository
+            .findById(productId)
+            .orElseThrow(() -> new ProductNotFoundException(productId));
     List<ProductField> fields = product.getProductFields();
     if (fields == null) return List.of();
     return fields.stream()
@@ -283,7 +285,9 @@ public class ProductService {
   public List<ProductFieldDto> updateProductFormFields(
       UUID productId, List<ProductFieldDto> fields) {
     Product product =
-        productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException(productId));
+        productRepository
+            .findById(productId)
+            .orElseThrow(() -> new ProductNotFoundException(productId));
 
     for (ProductFieldDto field : fields) {
       if (field.name() == null || field.name().isBlank()) {
