@@ -61,9 +61,8 @@ const QuotesManagementPage = () => {
     })
     .map((q) => ({
       ...q,
-      premium: q.premium !== null ? `€${q.premium}` : null,
+      premium: q.premium !== null ? `${q.premium}` : null,
     }));
-
   const handleViewDetails = (id: string) => {
     navigate(`/quotations/${id}`);
   };
