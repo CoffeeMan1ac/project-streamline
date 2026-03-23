@@ -9,6 +9,7 @@ import static org.mockito.Mockito.*;
 import com.munichre.streamline.decision.dto.Decision;
 import com.munichre.streamline.decision.model.DecisionStatus;
 import com.munichre.streamline.decision.service.DecisionService;
+import com.munichre.streamline.product.service.ProductService;
 import com.munichre.streamline.quote.api.dto.QuoteRequest;
 import com.munichre.streamline.quote.api.dto.QuoteResponse;
 import com.munichre.streamline.quote.exception.QuoteNotFoundException;
@@ -33,6 +34,8 @@ class QuotationServiceTest {
   @Mock private DecisionService decisionService;
 
   @Mock private QuotationRepository quotationRepository;
+
+  @Mock private ProductService productService;
 
   @InjectMocks private QuotationService quotationService;
 
