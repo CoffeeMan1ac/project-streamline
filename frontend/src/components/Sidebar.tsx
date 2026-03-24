@@ -10,7 +10,7 @@ import { auth } from "../config/firebase";
 import { Brightness4, Brightness7 } from "@mui/icons-material";
 import { useAuth } from "../context/AuthContext";
 import { useTheme, useMediaQuery } from "@mui/material";
-import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
+import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
 
 const EXPANDED_WIDTH = 260;
 const COLLAPSED_WIDTH = 64;
@@ -74,7 +74,7 @@ const Sidebar = ({ toggleSidebar, open, toggleTheme, mode }: SidebarProps) => {
       label: "Tags Management",
       icon: <LocalOfferOutlinedIcon />,
       path: "/tags",
-    }
+    },
   ];
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));

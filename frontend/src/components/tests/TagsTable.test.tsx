@@ -27,13 +27,7 @@ describe("TagsTable", () => {
   ];
 
   test("renders table header and summary", () => {
-    render(
-      <TagsTable
-        tags={mockTags}
-        onEditTag={vi.fn()}
-        onDeleteTag={vi.fn()}
-      />
-    );
+    render(<TagsTable tags={mockTags} onEditTag={vi.fn()} onDeleteTag={vi.fn()} />);
 
     expect(screen.getByText("Tags")).toBeInTheDocument();
     expect(screen.getByText("Showing 2 tags")).toBeInTheDocument();
@@ -45,13 +39,7 @@ describe("TagsTable", () => {
   });
 
   test("renders all tag rows", () => {
-    render(
-      <TagsTable
-        tags={mockTags}
-        onEditTag={vi.fn()}
-        onDeleteTag={vi.fn()}
-      />
-    );
+    render(<TagsTable tags={mockTags} onEditTag={vi.fn()} onDeleteTag={vi.fn()} />);
 
     expect(screen.getByText("Best Value")).toBeInTheDocument();
     expect(screen.getByText("best-value")).toBeInTheDocument();
@@ -65,13 +53,7 @@ describe("TagsTable", () => {
   });
 
   test("renders singular summary when there is one tag", () => {
-    render(
-      <TagsTable
-        tags={[mockTags[0]]}
-        onEditTag={vi.fn()}
-        onDeleteTag={vi.fn()}
-      />
-    );
+    render(<TagsTable tags={[mockTags[0]]} onEditTag={vi.fn()} onDeleteTag={vi.fn()} />);
 
     expect(screen.getByText("Showing 1 tag")).toBeInTheDocument();
   });
@@ -80,13 +62,7 @@ describe("TagsTable", () => {
     const user = userEvent.setup();
     const onEditTag = vi.fn();
 
-    render(
-      <TagsTable
-        tags={mockTags}
-        onEditTag={onEditTag}
-        onDeleteTag={vi.fn()}
-      />
-    );
+    render(<TagsTable tags={mockTags} onEditTag={onEditTag} onDeleteTag={vi.fn()} />);
 
     const buttons = screen.getAllByRole("button");
     await user.click(buttons[0]);
@@ -99,13 +75,7 @@ describe("TagsTable", () => {
     const user = userEvent.setup();
     const onDeleteTag = vi.fn();
 
-    render(
-      <TagsTable
-        tags={mockTags}
-        onEditTag={vi.fn()}
-        onDeleteTag={onDeleteTag}
-      />
-    );
+    render(<TagsTable tags={mockTags} onEditTag={vi.fn()} onDeleteTag={onDeleteTag} />);
 
     const buttons = screen.getAllByRole("button");
     await user.click(buttons[1]);
