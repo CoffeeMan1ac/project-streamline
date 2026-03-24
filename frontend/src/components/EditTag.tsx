@@ -9,7 +9,7 @@ import {
   IconButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const colorOptions = [
   {
@@ -44,16 +44,65 @@ const colorOptions = [
   },
 ];
 
-const EditTag = () => {
-  const [open, setOpen] = useState(true);
-  const [selectedColor, setSelectedColor] = useState("green");
+type EditTagProps = {
+  open: boolean;
+  onClose: () => void;
+  onUpdate: (data: { name: string; key: string; color: string }) => void;
+  initialValues?: {
+    name?: string;
+    key?: string;
+    color?: string;
+  };
+};
 
-  const handleClose = () => {
-    setOpen(false);
+const EditTag = ({
+  open,
+  onClose,
+  onUpdate,
+  initialValues,
+}: EditTagProps) => {
+
+  const [tagName, setTagName] = useState("");
+  const [tagKey, setTagKey] = useState("");
+  const [selectedColor, setSelectedColor] = useState("green");
+  const [errors, setErrors] = useState<{ name?: string; key?: string }>({});
+
+  useEffect(() => {
+    if (open) {
+      setTagName(initialValues?.name ?? "");
+      setTagKey(initialValues?.key ?? "");
+      setSelectedColor(initialValues?.color ?? "green");
+      setErrors({});
+    }
+  }, [open, initialValues]);
+
+  const validate = () => {
+    const nextErrors: { name?: string; key?: string } = {};
+
+    if (!tagName.trim()) {
+      nextErrors.name = "Tag name is required";
+    }
+
+    if (!tagKey.trim()) {
+      nextErrors.key = "Tag key is required";
+    } else if (!/^[a-z0-9-]+$/.test(tagKey)) {
+      nextErrors.key = "Use lowercase letters, numbers, and hyphens only";
+    }
+
+    setErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
   };
 
-  const handleUpdate = () => {
-    setOpen(false);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validate()) return;
+
+    onUpdate({
+      name: tagName.trim(),
+      key: tagKey.trim(),
+      color: selectedColor,
+    });
   };
 
   return (
@@ -62,20 +111,27 @@ const EditTag = () => {
         Edit Tag
         <IconButton
           sx={{ position: "absolute", right: 12, top: 12 }}
-          onClick={handleClose}
+          onClick={onClose}
         >
           <CloseIcon />
         </IconButton>
       </DialogTitle>
 
       <DialogContent>
+        <Box component="form" onSubmit={handleSubmit}>
         {/* Tag Name */}
         <Box sx={{ mb: 3 }}>
           <Typography sx={{ mb: 1, fontWeight: 600 }}>
             Tag Name *
           </Typography>
 
-          <TextField fullWidth />
+          <TextField
+            fullWidth
+            value={tagName}
+            onChange={(e) => setTagName(e.target.value)}
+            error={!!errors.name}
+            helperText={errors.name}
+          />
         </Box>
 
         {/* Tag Key */}
@@ -86,7 +142,10 @@ const EditTag = () => {
 
           <TextField
             fullWidth
-            helperText="Used internally for identification (lowercase, hyphen-separated)"
+            value={tagKey}
+            onChange={(e) => setTagKey(e.target.value)}
+            error={!!errors.key}
+            helperText={errors.key || "Used internally for identification (lowercase, hyphen-separated)"}
           />
         </Box>
 
@@ -103,7 +162,6 @@ const EditTag = () => {
                 onClick={() => setSelectedColor(color.key)}
                 sx={{
                   flex: 1,
-                  height: 140,
                   borderRadius: 4,
                   border:
                     selectedColor === color.key
@@ -119,6 +177,7 @@ const EditTag = () => {
                   justifyContent: "center",
                   cursor: "pointer",
                   transition: "all 0.15s ease",
+                  py: 3,
                 }}
               >
                 <Box
@@ -146,12 +205,13 @@ const EditTag = () => {
             mt: 4,
           }}
         >
-          <Button variant="outlined" onClick={handleClose}>
+          <Button variant="outlined" onClick={onClose}>
             Cancel
           </Button>
-          <Button variant="contained" onClick={handleUpdate}>
+          <Button variant="contained" type="submit">
             Update Tag
           </Button>
+        </Box>
         </Box>
       </DialogContent>
     </Dialog>
