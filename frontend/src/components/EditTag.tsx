@@ -100,10 +100,14 @@ const EditTag = ({ open, onClose, onUpdate, initialValues }: EditTagProps) => {
   };
 
   return (
-    <Dialog open={open} maxWidth="sm" fullWidth>
+    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle sx={{ fontWeight: "bold" }}>
         Edit Tag
-        <IconButton sx={{ position: "absolute", right: 12, top: 12 }} onClick={onClose}>
+        <IconButton
+          aria-label="Close dialog"
+          sx={{ position: "absolute", right: 12, top: 12 }}
+          onClick={onClose}
+        >
           <CloseIcon />
         </IconButton>
       </DialogTitle>
