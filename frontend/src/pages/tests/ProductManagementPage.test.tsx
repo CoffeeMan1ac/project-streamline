@@ -338,4 +338,72 @@ describe("ProductManagementPage", () => {
       expect(productService.getProducts).toHaveBeenCalledTimes(2);
     });
   });
+
+  test("filters products by retired status shows all non-active/inactive", async () => {
+    const { productService } = await import("../../services/productService");
+    vi.mocked(productService.getProducts).mockResolvedValueOnce({
+      data: [
+        { ...mockProduct, id: "p1", active: true },
+        { ...mockProduct, id: "p2", active: false },
+      ],
+    } as any);
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: /edit p1/i })).toBeInTheDocument();
+    });
+
+    const combobox = screen.getByRole("combobox");
+    fireEvent.mouseDown(combobox);
+    fireEvent.click(screen.getByText("Retired"));
+
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: /edit p1/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /edit p2/i })).toBeInTheDocument();
+    });
+  });
+
+  test("renders products with tags", async () => {
+    const { productService } = await import("../../services/productService");
+    vi.mocked(productService.getProducts).mockResolvedValueOnce({
+      data: [
+        {
+          ...mockProduct,
+          id: "p1",
+          tags: [
+            { id: "t1", code: "POPULAR", label: "Most Popular" },
+          ],
+        },
+      ],
+    } as any);
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: /edit p1/i })).toBeInTheDocument();
+    });
+  });
+
+  test("closes edit dialog via onClose (backdrop/escape)", async () => {
+    const { productService } = await import("../../services/productService");
+    vi.mocked(productService.getProducts).mockResolvedValueOnce({
+      data: [mockProduct],
+    } as any);
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: /edit product-1/i })).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: /edit product-1/i }));
+    expect(screen.getByText("Edit Product Modal")).toBeInTheDocument();
+
+    fireEvent.click(document.querySelector(".MuiBackdrop-root")!);
+
+    await waitFor(() => {
+      expect(screen.queryByText("Edit Product Modal")).not.toBeInTheDocument();
+    });
+  });
 });

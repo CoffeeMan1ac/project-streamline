@@ -290,4 +290,37 @@ describe("RulesManagementPage", () => {
       expect(screen.queryByText("Edit Rule Modal")).not.toBeInTheDocument();
     });
   });
+
+  test("updates rules state after successful toggle", async () => {
+    const http = await import("../../api/http");
+    vi.mocked(http.default.get)
+      .mockResolvedValueOnce({ data: [] })
+      .mockResolvedValueOnce({
+        data: [
+          {
+            id: "rule-1",
+            productId: "product-1",
+            name: "Test Rule",
+            priority: 1,
+            active: true,
+            ruleConfig: {
+              when: { conditions: [] },
+              then: { decision: "ACCEPT", premiumDelta: null, premiumOverride: null },
+            },
+          },
+        ],
+      });
+
+    renderPage(["/rules?product=product-1"]);
+
+    await waitFor(() => {
+      expect(http.default.get).toHaveBeenCalledWith("/backoffice/rules?product=product-1");
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: /toggle rule/i }));
+
+    await waitFor(() => {
+      expect(http.default.patch).toHaveBeenCalledWith("/backoffice/rules/rule-1", { active: false });
+    });
+  });
 });

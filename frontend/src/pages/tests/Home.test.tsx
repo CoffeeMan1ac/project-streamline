@@ -4,11 +4,13 @@ import { describe, test, expect, vi, beforeEach } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import Home from "../Home";
 
+let mockHash = "";
+
 vi.mock("react-router-dom", async () => {
   const actual = await vi.importActual("react-router-dom");
   return {
     ...actual,
-    useLocation: () => ({ hash: "", pathname: "/" }),
+    useLocation: () => ({ hash: mockHash, pathname: "/" }),
   };
 });
 
@@ -23,6 +25,7 @@ vi.mock("../../components/ProductSection", () => ({
 describe("Home", () => {
   beforeEach(() => {
     cleanup();
+    mockHash = "";
   });
 
   test("renders hero section", () => {
@@ -44,25 +47,26 @@ describe("Home", () => {
   });
 
   test("scrolls to quotes section when hash is #quotes", () => {
-    vi.mock("react-router-dom", async () => {
-      const actual = await vi.importActual("react-router-dom");
-      return {
-        ...actual,
-        useLocation: () => ({ hash: "#quotes", pathname: "/" }),
-      };
-    });
+    mockHash = "#quotes";
 
     const scrollIntoViewMock = vi.fn();
     vi.spyOn(document, "getElementById").mockReturnValue({
       scrollIntoView: scrollIntoViewMock,
     } as any);
 
+    vi.stubGlobal("requestAnimationFrame", (cb: FrameRequestCallback) => {
+      cb(0);
+      return 0;
+    });
+
     render(
-      <MemoryRouter initialEntries={["/#quotes"]}>
+      <MemoryRouter>
         <Home />
       </MemoryRouter>
     );
 
-    expect(screen.getByText("Hero Section")).toBeInTheDocument();
+    expect(scrollIntoViewMock).toHaveBeenCalledWith({ behavior: "smooth", block: "start" });
+
+    vi.unstubAllGlobals();
   });
 });
