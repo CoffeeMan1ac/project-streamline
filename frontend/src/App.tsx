@@ -15,6 +15,7 @@ import Sandbox from "./dev/Sandbox";
 import OutcomePage from "./pages/OutcomePage";
 import QuotesManagementPage from "./pages/QuotesManagementPage";
 import QuoteDetailsPage from "./pages/QuoteDetailsPage";
+import TagsManagementPage from "./pages/TagsManagementPage";
 
 function AppContent() {
   const [mode, setMode] = useState<"light" | "dark">(
@@ -60,6 +61,7 @@ function AppContent() {
             <Route path="/products" element={<ProductManagementPage />} />
             <Route path="/quotes" element={<QuotesManagementPage />} />
             <Route path="/quotations/:id" element={<QuoteDetailsPage />} />
+            <Route path="/tags" element={<TagsManagementPage />} />
           </Route>
         </Route>
 
