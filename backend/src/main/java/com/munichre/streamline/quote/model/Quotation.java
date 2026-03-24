@@ -1,5 +1,6 @@
 package com.munichre.streamline.quote.model;
 
+import com.munichre.streamline.decision.model.DecisionTraceEntry;
 import com.munichre.streamline.product.model.Product;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
@@ -42,6 +43,10 @@ public class Quotation {
   @Column(columnDefinition = "jsonb")
   @JdbcTypeCode(SqlTypes.JSON)
   private ApplicantData customerInput;
+
+  @Column(columnDefinition = "jsonb")
+  @JdbcTypeCode(SqlTypes.JSON)
+  private List<DecisionTraceEntry> decisionTrace;
 
   @Column private BigDecimal premium;
 
