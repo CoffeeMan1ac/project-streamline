@@ -15,32 +15,32 @@ const colorOptions = [
   {
     key: "green",
     label: "Green",
-    borderColor: "#6EDC8C",
-    backgroundColor: "#DFF3E5",
+    borderColor: "#34C759",
+    backgroundColor: "#C7F0D4",
   },
   {
     key: "blue",
     label: "Blue",
-    borderColor: "#8BBBF1",
-    backgroundColor: "#E3F0FC",
+    borderColor: "#3B82F6",
+    backgroundColor: "#CFE3FF",
   },
   {
     key: "orange",
     label: "Orange",
-    borderColor: "#F0AE5E",
-    backgroundColor: "#FFF4E8",
+    borderColor: "#F59E0B",
+    backgroundColor: "#FFE2B8",
   },
   {
     key: "purple",
     label: "Purple",
-    borderColor: "#C49AE9",
-    backgroundColor: "#F5EFFC",
+    borderColor: "#A855F7",
+    backgroundColor: "#E5CCFF",
   },
   {
     key: "red",
     label: "Red",
-    borderColor: "#EF9AA6",
-    backgroundColor: "#FDEFF1",
+    borderColor: "#EF4444",
+    backgroundColor: "#FFD1D1",
   },
 ];
 
@@ -100,7 +100,7 @@ const EditTag = ({ open, onClose, onUpdate, initialValues }: EditTagProps) => {
   };
 
   return (
-    <Dialog open={open} maxWidth="md" fullWidth>
+    <Dialog open={open} maxWidth="sm" fullWidth>
       <DialogTitle sx={{ fontWeight: "bold" }}>
         Edit Tag
         <IconButton sx={{ position: "absolute", right: 12, top: 12 }} onClick={onClose}>
