@@ -10,3 +10,6 @@ ALTER COLUMN created_at SET NOT NULL;
 
 ALTER TABLE quotations
 ADD COLUMN customer_input JSONB;
+
+ALTER TABLE quotations
+ADD COLUMN product_id UUID;
