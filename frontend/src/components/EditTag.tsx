@@ -11,8 +11,42 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { useState } from "react";
 
+const colorOptions = [
+  {
+    key: "green",
+    label: "Green",
+    borderColor: "#6EDC8C",
+    backgroundColor: "#DFF3E5",
+  },
+  {
+    key: "blue",
+    label: "Blue",
+    borderColor: "#8BBBF1",
+    backgroundColor: "#E3F0FC",
+  },
+  {
+    key: "orange",
+    label: "Orange",
+    borderColor: "#F0AE5E",
+    backgroundColor: "#FFF4E8",
+  },
+  {
+    key: "purple",
+    label: "Purple",
+    borderColor: "#C49AE9",
+    backgroundColor: "#F5EFFC",
+  },
+  {
+    key: "red",
+    label: "Red",
+    borderColor: "#EF9AA6",
+    backgroundColor: "#FDEFF1",
+  },
+];
+
 const EditTag = () => {
   const [open, setOpen] = useState(true);
+  const [selectedColor, setSelectedColor] = useState("green");
 
   const handleClose = () => {
     setOpen(false);
@@ -21,6 +55,7 @@ const EditTag = () => {
   const handleUpdate = () => {
     setOpen(false);
   };
+
   return (
     <Dialog open={open} maxWidth="md" fullWidth>
       <DialogTitle sx={{ fontWeight: "bold" }}>
@@ -40,7 +75,7 @@ const EditTag = () => {
             Tag Name *
           </Typography>
 
-          <TextField fullWidth value="Green" />
+          <TextField fullWidth />
         </Box>
 
         {/* Tag Key */}
@@ -51,7 +86,6 @@ const EditTag = () => {
 
           <TextField
             fullWidth
-            value="green"
             helperText="Used internally for identification (lowercase, hyphen-separated)"
           />
         </Box>
@@ -62,132 +96,44 @@ const EditTag = () => {
             Color *
           </Typography>
 
-          <Box sx={{ display: "flex", gap: 2 }}>
-            <Box
-              sx={{
-                width: 120,
-                height: 140,
-                borderRadius: 2,
-                border: "2px solid #6EDC8C",
-                backgroundColor: "#DFF3E5",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
+          <Box sx={{ display: "flex", gap: 2, width: "100%" }}>
+            {colorOptions.map((color) => (
               <Box
+                key={color.key}
+                onClick={() => setSelectedColor(color.key)}
                 sx={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: "50%",
-                  border: "4px solid #6EDC8C",
-                  backgroundColor: "#EAF8EE",
-                  mb: 1,
+                  flex: 1,
+                  height: 140,
+                  borderRadius: 4,
+                  border:
+                    selectedColor === color.key
+                      ? `3px solid ${color.borderColor}`
+                      : "3px solid #ddd",
+                  backgroundColor:
+                    selectedColor === color.key
+                      ? color.backgroundColor
+                      : "transparent",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  transition: "all 0.15s ease",
                 }}
-              />
-              <Typography>Green</Typography>
-            </Box>
-
-            <Box
-              sx={{
-                width: 120,
-                height: 140,
-                borderRadius: 2,
-                border: "2px solid #ddd",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Box
-                sx={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: "50%",
-                  border: "4px solid #8BBBF1",
-                  backgroundColor: "#EEF5FD",
-                  mb: 1,
-                }}
-              />
-              <Typography>Blue</Typography>
-            </Box>
-
-            <Box
-              sx={{
-                width: 120,
-                height: 140,
-                borderRadius: 2,
-                border: "2px solid #ddd",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Box
-                sx={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: "50%",
-                  border: "4px solid #F0AE5E",
-                  backgroundColor: "#FFF4E8",
-                  mb: 1,
-                }}
-              />
-              <Typography>Orange</Typography>
-            </Box>
-
-            <Box
-              sx={{
-                width: 120,
-                height: 140,
-                borderRadius: 2,
-                border: "2px solid #ddd",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Box
-                sx={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: "50%",
-                  border: "4px solid #C49AE9",
-                  backgroundColor: "#F5EFFC",
-                  mb: 1,
-                }}
-              />
-              <Typography>Purple</Typography>
-            </Box>
-
-            <Box
-              sx={{
-                width: 120,
-                height: 140,
-                borderRadius: 2,
-                border: "2px solid #ddd",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Box
-                sx={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: "50%",
-                  border: "4px solid #EF9AA6",
-                  backgroundColor: "#FDEFF1",
-                  mb: 1,
-                }}
-              />
-              <Typography>Red</Typography>
-            </Box>
+              >
+                <Box
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: "50%",
+                    border: `3px solid ${color.borderColor}`,
+                    backgroundColor: color.backgroundColor,
+                    mb: 1,
+                  }}
+                />
+                <Typography>{color.label}</Typography>
+              </Box>
+            ))}
           </Box>
         </Box>
 
@@ -200,8 +146,12 @@ const EditTag = () => {
             mt: 4,
           }}
         >
-          <Button variant="outlined" onClick={handleClose}>Cancel</Button>
-          <Button variant="contained" onClick={handleUpdate}>Update Tag</Button>
+          <Button variant="outlined" onClick={handleClose}>
+            Cancel
+          </Button>
+          <Button variant="contained" onClick={handleUpdate}>
+            Update Tag
+          </Button>
         </Box>
       </DialogContent>
     </Dialog>
