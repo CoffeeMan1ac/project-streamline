@@ -9,11 +9,7 @@ const Sandbox = () => {
     setOpen(false);
   };
 
-  const handleUpdate = (data: {
-    name: string;
-    key: string;
-    color: string;
-  }) => {
+  const handleUpdate = (data: { name: string; key: string; color: string }) => {
     console.log("Updated tag:", data);
     setOpen(false);
   };

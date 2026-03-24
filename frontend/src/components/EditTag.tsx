@@ -55,13 +55,7 @@ type EditTagProps = {
   };
 };
 
-const EditTag = ({
-  open,
-  onClose,
-  onUpdate,
-  initialValues,
-}: EditTagProps) => {
-
+const EditTag = ({ open, onClose, onUpdate, initialValues }: EditTagProps) => {
   const [tagName, setTagName] = useState("");
   const [tagKey, setTagKey] = useState("");
   const [selectedColor, setSelectedColor] = useState("green");
@@ -109,109 +103,100 @@ const EditTag = ({
     <Dialog open={open} maxWidth="md" fullWidth>
       <DialogTitle sx={{ fontWeight: "bold" }}>
         Edit Tag
-        <IconButton
-          sx={{ position: "absolute", right: 12, top: 12 }}
-          onClick={onClose}
-        >
+        <IconButton sx={{ position: "absolute", right: 12, top: 12 }} onClick={onClose}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>
 
       <DialogContent>
         <Box component="form" onSubmit={handleSubmit}>
-        {/* Tag Name */}
-        <Box sx={{ mb: 3 }}>
-          <Typography sx={{ mb: 1, fontWeight: 600 }}>
-            Tag Name *
-          </Typography>
+          {/* Tag Name */}
+          <Box sx={{ mb: 3 }}>
+            <Typography sx={{ mb: 1, fontWeight: 600 }}>Tag Name *</Typography>
 
-          <TextField
-            fullWidth
-            value={tagName}
-            onChange={(e) => setTagName(e.target.value)}
-            error={!!errors.name}
-            helperText={errors.name}
-          />
-        </Box>
-
-        {/* Tag Key */}
-        <Box sx={{ mb: 3 }}>
-          <Typography sx={{ mb: 1, fontWeight: 600 }}>
-            Tag Key *
-          </Typography>
-
-          <TextField
-            fullWidth
-            value={tagKey}
-            onChange={(e) => setTagKey(e.target.value)}
-            error={!!errors.key}
-            helperText={errors.key || "Used internally for identification (lowercase, hyphen-separated)"}
-          />
-        </Box>
-
-        {/* Colors */}
-        <Box sx={{ mb: 3 }}>
-          <Typography sx={{ mb: 2, fontWeight: 600 }}>
-            Color *
-          </Typography>
-
-          <Box sx={{ display: "flex", gap: 2, width: "100%" }}>
-            {colorOptions.map((color) => (
-              <Box
-                key={color.key}
-                onClick={() => setSelectedColor(color.key)}
-                sx={{
-                  flex: 1,
-                  borderRadius: 4,
-                  border:
-                    selectedColor === color.key
-                      ? `3px solid ${color.borderColor}`
-                      : "3px solid #ddd",
-                  backgroundColor:
-                    selectedColor === color.key
-                      ? color.backgroundColor
-                      : "transparent",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  cursor: "pointer",
-                  transition: "all 0.15s ease",
-                  py: 3,
-                }}
-              >
-                <Box
-                  sx={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: "50%",
-                    border: `3px solid ${color.borderColor}`,
-                    backgroundColor: color.backgroundColor,
-                    mb: 1,
-                  }}
-                />
-                <Typography>{color.label}</Typography>
-              </Box>
-            ))}
+            <TextField
+              fullWidth
+              value={tagName}
+              onChange={(e) => setTagName(e.target.value)}
+              error={!!errors.name}
+              helperText={errors.name}
+            />
           </Box>
-        </Box>
 
-        {/* Buttons */}
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "flex-end",
-            gap: 2,
-            mt: 4,
-          }}
-        >
-          <Button variant="outlined" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button variant="contained" type="submit">
-            Update Tag
-          </Button>
-        </Box>
+          {/* Tag Key */}
+          <Box sx={{ mb: 3 }}>
+            <Typography sx={{ mb: 1, fontWeight: 600 }}>Tag Key *</Typography>
+
+            <TextField
+              fullWidth
+              value={tagKey}
+              onChange={(e) => setTagKey(e.target.value)}
+              error={!!errors.key}
+              helperText={
+                errors.key || "Used internally for identification (lowercase, hyphen-separated)"
+              }
+            />
+          </Box>
+
+          {/* Colors */}
+          <Box sx={{ mb: 3 }}>
+            <Typography sx={{ mb: 2, fontWeight: 600 }}>Color *</Typography>
+
+            <Box sx={{ display: "flex", gap: 2, width: "100%" }}>
+              {colorOptions.map((color) => (
+                <Box
+                  key={color.key}
+                  onClick={() => setSelectedColor(color.key)}
+                  sx={{
+                    flex: 1,
+                    borderRadius: 4,
+                    border:
+                      selectedColor === color.key
+                        ? `3px solid ${color.borderColor}`
+                        : "3px solid #ddd",
+                    backgroundColor:
+                      selectedColor === color.key ? color.backgroundColor : "transparent",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: "pointer",
+                    transition: "all 0.15s ease",
+                    py: 3,
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: "50%",
+                      border: `3px solid ${color.borderColor}`,
+                      backgroundColor: color.backgroundColor,
+                      mb: 1,
+                    }}
+                  />
+                  <Typography>{color.label}</Typography>
+                </Box>
+              ))}
+            </Box>
+          </Box>
+
+          {/* Buttons */}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              gap: 2,
+              mt: 4,
+            }}
+          >
+            <Button variant="outlined" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button variant="contained" type="submit">
+              Update Tag
+            </Button>
+          </Box>
         </Box>
       </DialogContent>
     </Dialog>
