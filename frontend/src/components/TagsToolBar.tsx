@@ -121,10 +121,16 @@ const TagsToolBar = ({ totalTags, showingTags }: TagsToolBarProps) => {
         }}
       >
         <Typography variant="body2">
-          Total Tags: <Box component="span" sx={{ color: "text.primary", fontWeight: 700 }}>{totalTags}</Box>
+          Total Tags:{" "}
+          <Box component="span" sx={{ color: "text.primary", fontWeight: 700 }}>
+            {totalTags}
+          </Box>
         </Typography>
         <Typography variant="body2">
-          Showing: <Box component="span" sx={{ color: "text.primary", fontWeight: 700 }}>{showingTags}</Box>
+          Showing:{" "}
+          <Box component="span" sx={{ color: "text.primary", fontWeight: 700 }}>
+            {showingTags}
+          </Box>
         </Typography>
       </Stack>
     </Paper>

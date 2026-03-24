@@ -24,11 +24,7 @@ interface TagsTableProps {
   onDeleteTag: (id: string) => void;
 }
 
-const TagsTable: React.FC<TagsTableProps> = ({
-  tags,
-  onEditTag,
-  onDeleteTag,
-}) => {
+const TagsTable: React.FC<TagsTableProps> = ({ tags, onEditTag, onDeleteTag }) => {
   return (
     <Box border={1} borderColor="divider" borderRadius={2} bgcolor={"background.paper"}>
       <Box sx={{ p: 2, borderBottom: 1, borderColor: "divider" }}>

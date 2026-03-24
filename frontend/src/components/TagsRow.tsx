@@ -1,6 +1,6 @@
 import React from "react";
 import { TableRow, TableCell, Typography, Box, IconButton } from "@mui/material";
-import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
+import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -45,7 +45,17 @@ const TagsRow: React.FC<TagsRowProps> = ({
       </TableCell>
 
       <TableCell>
-        <Typography variant="body2" fontWeight={700} sx={{ color: "text.secondary", bgcolor: "background.default", p: 0.5, borderRadius: 1, display: "inline-block" }}>
+        <Typography
+          variant="body2"
+          fontWeight={700}
+          sx={{
+            color: "text.secondary",
+            bgcolor: "background.default",
+            p: 0.5,
+            borderRadius: 1,
+            display: "inline-block",
+          }}
+        >
           {tagKey}
         </Typography>
       </TableCell>
