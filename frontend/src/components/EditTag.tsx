@@ -9,7 +9,7 @@ import {
   IconButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const colorOptions = [
   {
@@ -56,19 +56,10 @@ type EditTagProps = {
 };
 
 const EditTag = ({ open, onClose, onUpdate, initialValues }: EditTagProps) => {
-  const [tagName, setTagName] = useState("");
-  const [tagKey, setTagKey] = useState("");
-  const [selectedColor, setSelectedColor] = useState("green");
+  const [tagName, setTagName] = useState(() => initialValues?.name ?? "");
+  const [tagKey, setTagKey] = useState(() => initialValues?.key ?? "");
+  const [selectedColor, setSelectedColor] = useState(() => initialValues?.color ?? "green");
   const [errors, setErrors] = useState<{ name?: string; key?: string }>({});
-
-  useEffect(() => {
-    if (open) {
-      setTagName(initialValues?.name ?? "");
-      setTagKey(initialValues?.key ?? "");
-      setSelectedColor(initialValues?.color ?? "green");
-      setErrors({});
-    }
-  }, [open, initialValues]);
 
   const validate = () => {
     const nextErrors: { name?: string; key?: string } = {};
