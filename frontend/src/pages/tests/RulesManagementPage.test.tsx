@@ -320,7 +320,9 @@ describe("RulesManagementPage", () => {
     fireEvent.click(screen.getByRole("button", { name: /toggle rule/i }));
 
     await waitFor(() => {
-      expect(http.default.patch).toHaveBeenCalledWith("/backoffice/rules/rule-1", { active: false });
+      expect(http.default.patch).toHaveBeenCalledWith("/backoffice/rules/rule-1", {
+        active: false,
+      });
     });
   });
 });

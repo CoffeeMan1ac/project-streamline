@@ -371,9 +371,7 @@ describe("ProductManagementPage", () => {
         {
           ...mockProduct,
           id: "p1",
-          tags: [
-            { id: "t1", code: "POPULAR", label: "Most Popular" },
-          ],
+          tags: [{ id: "t1", code: "POPULAR", label: "Most Popular" }],
         },
       ],
     } as any);
