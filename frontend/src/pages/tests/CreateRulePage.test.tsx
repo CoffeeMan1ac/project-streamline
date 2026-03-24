@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom/vitest";
-import { render, screen, fireEvent, within, cleanup, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent, within, cleanup } from "@testing-library/react";
 import { describe, test, expect, vi, beforeEach, afterAll, beforeAll } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import CreateRulePage from "../CreateRulePage";
