@@ -1,105 +1,58 @@
 import React from "react";
-import { TableRow, TableCell, Chip, Typography, Box, Button } from "@mui/material";
+import { TableRow, TableCell, Typography, Box, IconButton } from "@mui/material";
 import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
-import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 interface TagsRowProps {
-  reference: string;
-  customerName: string;
-  customerEmail: string;
-  product: string;
-  status: "accepted" | "rejected";
-  premium: string | null;
-  date: string;
-  onViewDetails: () => void;
+  tagName: string;
+  tagKey: string;
+  lastModified: string;
+  modifiedBy: string;
+  onEdit: () => void;
+  onDelete: () => void;
 }
 
 const TagsRow: React.FC<TagsRowProps> = ({
-  reference,
-  customerName,
-  customerEmail,
-  product,
-  status,
-  premium,
-  date,
-  onViewDetails,
+  tagName,
+  tagKey,
+  lastModified,
+  modifiedBy,
+  onEdit,
+  onDelete,
 }) => {
-  const statusConfig = {
-    accepted: {
-      label: "accepted",
-      icon: <CheckCircleOutlineIcon sx={{ fontSize: 18, color: "success.main" }} />,
-      chipSx: { backgroundColor: "success.light", color: "success.dark", fontWeight: 500 },
-    },
-    rejected: {
-      label: "rejected",
-      icon: <CancelOutlinedIcon sx={{ fontSize: 18, color: "error.main" }} />,
-      chipSx: { backgroundColor: "rgba(211, 47, 47, 0.16)", color: "error.dark", fontWeight: 500 },
-    },
-  };
-
-  const config = statusConfig[status];
-
   return (
     <TableRow>
       <TableCell>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <ArticleOutlinedIcon sx={{ fontSize: 16, color: "text.secondary" }} />
           <Typography variant="body2" color="primary" sx={{ fontWeight: 500, cursor: "pointer" }}>
-            {reference}
+            {tagName}
           </Typography>
         </Box>
       </TableCell>
 
       <TableCell>
         <Typography variant="body2" fontWeight={700}>
-          {customerName}
-        </Typography>
-        <Typography variant="caption" color="text.secondary">
-          {customerEmail}
+          {tagKey}
         </Typography>
       </TableCell>
 
       <TableCell>
-        <Typography variant="body2">{product}</Typography>
-      </TableCell>
-
-      <TableCell>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          {config.icon}
-          <Chip
-            label={config.label}
-            size="small"
-            sx={config.chipSx}
-            data-testid={`status-chip-${status}`}
-          />
-        </Box>
-      </TableCell>
-
-      <TableCell>
-        <Typography variant="body2" fontWeight={700}>
-          {premium ?? "—"}
+        <Typography variant="body2">{lastModified}</Typography>
+        <Typography variant="body2" color="text.secondary">
+          by: {modifiedBy}
         </Typography>
       </TableCell>
 
       <TableCell>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <CalendarTodayOutlinedIcon sx={{ fontSize: 14, color: "text.secondary" }} />
-          <Typography variant="body2">{date}</Typography>
-        </Box>
-      </TableCell>
+        <IconButton size="small" color="primary" onClick={onEdit}>
+          <EditIcon fontSize="small" />
+        </IconButton>
 
-      <TableCell>
-        <Button
-          size="small"
-          color="primary"
-          onClick={onViewDetails}
-          data-testid="view-details-button"
-          sx={{ textTransform: "none", fontWeight: 500 }}
-        >
-          View Details
-        </Button>
+        <IconButton size="small" color="error" onClick={onDelete}>
+          <DeleteIcon fontSize="small" />
+        </IconButton>
       </TableCell>
     </TableRow>
   );
