@@ -6,13 +6,14 @@ import Navbar from "../Navbar";
 import { useAuth } from "../../context/AuthContext";
 
 const mockNavigate = vi.fn();
+let mockLocation = { pathname: "/", hash: "" };
 
 vi.mock("react-router-dom", async () => {
   const actual = await vi.importActual("react-router-dom");
   return {
     ...actual,
     useNavigate: () => mockNavigate,
-    useLocation: () => ({ pathname: "/", hash: "" }),
+    useLocation: () => mockLocation,
   };
 });
 
@@ -35,6 +36,7 @@ describe("Navbar", () => {
   beforeEach(() => {
     cleanup();
     mockNavigate.mockClear();
+    mockLocation = { pathname: "/", hash: "" };
     vi.mocked(useAuth).mockReturnValue({ user: null, loading: false });
     vi.spyOn(console, "error").mockImplementation(() => {});
   });
@@ -171,5 +173,22 @@ describe("Navbar", () => {
       pathname: "/",
       hash: "#quotes",
     });
+  });
+
+  test("scrolls to quotes section when already on /#quotes", () => {
+    mockLocation = { pathname: "/", hash: "#quotes" };
+    const mockScrollIntoView = vi.fn();
+    document.getElementById = vi.fn().mockReturnValue({ scrollIntoView: mockScrollIntoView });
+
+    render(
+      <MemoryRouter>
+        <Navbar mode="light" toggleTheme={vi.fn()} />
+      </MemoryRouter>
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /get a quote/i }));
+
+    expect(mockScrollIntoView).toHaveBeenCalledWith({ behavior: "smooth", block: "start" });
+    expect(mockNavigate).not.toHaveBeenCalled();
   });
 });

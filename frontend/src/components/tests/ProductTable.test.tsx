@@ -73,4 +73,12 @@ describe("ProductTable", () => {
     fireEvent.click(editButtons[0]);
     expect(onEditProduct).toHaveBeenCalledWith("1");
   });
+
+  test("calls onToggleProductActive with correct id when toggle is clicked", () => {
+    const onToggleProductActive = vi.fn();
+    renderTable({ onToggleProductActive });
+    const toggleButtons = screen.getAllByTestId("toggle-button");
+    fireEvent.click(toggleButtons[0]);
+    expect(onToggleProductActive).toHaveBeenCalledWith("1");
+  });
 });
