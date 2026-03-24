@@ -77,7 +77,7 @@ public class DecisionService {
                 .ruleDescription(rule.getDescription())
                 .isOverride(isOverride)
                 .adjustmentAmount(isOverride ? outcome.premiumOverride() : difference)
-                .outcome(outcome.decision().toString())
+                .outcome(outcome.decision() != null ? outcome.decision().toString() : null)
                 .build());
 
         if (outcome.isTerminal()) {
