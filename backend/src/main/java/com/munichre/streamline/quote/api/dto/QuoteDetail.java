@@ -1,5 +1,6 @@
 package com.munichre.streamline.quote.api.dto;
 
+import com.munichre.streamline.decision.model.DecisionTraceEntry;
 import com.munichre.streamline.quote.model.ApplicantData;
 import com.munichre.streamline.quote.model.Quotation;
 import com.munichre.streamline.quote.model.QuotationStatus;
@@ -14,6 +15,7 @@ public record QuoteDetail(
     QuotationStatus status,
     String reason,
     List<String> rulesApplied,
+    List<DecisionTraceEntry> decisionTrace,
     ApplicantData customerInput,
     BigDecimal premium,
     long processingTimeMs,
@@ -27,6 +29,7 @@ public record QuoteDetail(
         quotation.getStatus(),
         quotation.getReason(),
         quotation.getRulesApplied(),
+        quotation.getDecisionTrace(),
         quotation.getCustomerInput(),
         quotation.getPremium(),
         quotation.getProcessingTimeMs(),
