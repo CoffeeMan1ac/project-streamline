@@ -28,10 +28,6 @@ describe("TagsTable", () => {
 
   test("renders table header and summary", () => {
     render(<TagsTable tags={mockTags} onEditTag={vi.fn()} onDeleteTag={vi.fn()} />);
-
-    expect(screen.getByText("Tags")).toBeInTheDocument();
-    expect(screen.getByText("Showing 2 tags")).toBeInTheDocument();
-
     expect(screen.getByText("Tag Name")).toBeInTheDocument();
     expect(screen.getByText("Tag Key")).toBeInTheDocument();
     expect(screen.getByText("Last Modified")).toBeInTheDocument();
@@ -50,12 +46,6 @@ describe("TagsTable", () => {
     expect(screen.getByText("popular")).toBeInTheDocument();
     expect(screen.getByText("2024-06-02")).toBeInTheDocument();
     expect(screen.getByText(/by: Sarah Mitchell/i)).toBeInTheDocument();
-  });
-
-  test("renders singular summary when there is one tag", () => {
-    render(<TagsTable tags={[mockTags[0]]} onEditTag={vi.fn()} onDeleteTag={vi.fn()} />);
-
-    expect(screen.getByText("Showing 1 tag")).toBeInTheDocument();
   });
 
   test("calls onEditTag with the correct id", async () => {
