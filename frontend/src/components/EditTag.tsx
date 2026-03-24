@@ -145,10 +145,9 @@ const EditTag = ({ open, onClose, onUpdate, initialValues }: EditTagProps) => {
                   sx={{
                     flex: 1,
                     borderRadius: 4,
-                    border:
-                      selectedColor === color.key
-                        ? `3px solid ${color.borderColor}`
-                        : "3px solid #ddd",
+                    borderWidth: 3,
+                    borderStyle: "solid",
+                    borderColor: selectedColor === color.key ? color.borderColor : "divider",
                     backgroundColor:
                       selectedColor === color.key ? color.backgroundColor : "transparent",
                     display: "flex",
