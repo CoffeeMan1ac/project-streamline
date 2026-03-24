@@ -25,15 +25,27 @@ const TagsRow: React.FC<TagsRowProps> = ({
     <TableRow>
       <TableCell>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <LocalOfferOutlinedIcon sx={{ fontSize: 16, color: "text.secondary" }} />
-          <Typography variant="body2" color="primary" sx={{ fontWeight: 500, cursor: "pointer" }}>
+          <Box
+            sx={{
+              bgcolor: "background.default",
+              color: "background.default",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              p: 0.5,
+              borderRadius: 1,
+            }}
+          >
+            <LocalOfferOutlinedIcon sx={{ fontSize: 20, color: "primary.main" }} />
+          </Box>
+          <Typography variant="body2" sx={{ fontWeight: 500, cursor: "pointer" }}>
             {tagName}
           </Typography>
         </Box>
       </TableCell>
 
       <TableCell>
-        <Typography variant="body2" fontWeight={700}>
+        <Typography variant="body2" fontWeight={700} sx={{ color: "text.secondary", bgcolor: "background.default", p: 0.5, borderRadius: 1, display: "inline-block" }}>
           {tagKey}
         </Typography>
       </TableCell>
