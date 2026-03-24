@@ -61,6 +61,7 @@ class QuotationServiceTest {
             DecisionStatus.ACCEPT,
             "All rules passed",
             List.of("AGE_CHECK", "BMI_CHECK"),
+            List.of(),
             new BigDecimal("250.00"),
             120L,
             true,
