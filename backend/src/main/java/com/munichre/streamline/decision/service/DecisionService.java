@@ -1,6 +1,7 @@
 package com.munichre.streamline.decision.service;
 
 import com.munichre.streamline.decision.dto.Decision;
+import com.munichre.streamline.decision.model.DecisionTraceEntry;
 import com.munichre.streamline.product.model.Product;
 import com.munichre.streamline.product.service.ProductService;
 import com.munichre.streamline.quote.api.dto.QuoteRequest;
@@ -57,20 +58,34 @@ public class DecisionService {
     PremiumState premium = new PremiumState(product.getBaseRate(), BigDecimal.ZERO);
 
     List<String> rulesApplied = new ArrayList<>();
+    List<DecisionTraceEntry> trace = new ArrayList<>();
 
     for (Rule rule : rules) {
       if (rule.isTriggeredBy(applicantData)) {
-        rulesApplied.add(rule.getName());
+        PremiumState previous = premium;
 
         final Then outcome = rule.getRuleConfig().then();
         premium = outcome.apply(premium);
 
+        Boolean isOverride = outcome.premiumOverride() != null;
+        BigDecimal difference = premium.calculateTotal().subtract(previous.calculateTotal());
+
+        rulesApplied.add(rule.getName());
+        trace.add(DecisionTraceEntry.builder()
+            .ruleName(rule.getName())
+            .ruleDescription(rule.getDescription())
+            .isOverride(isOverride)
+            .adjustmentAmount(isOverride ? outcome.premiumOverride() : difference)
+            .outcome(outcome.decision().toString())
+            .build()
+        );
+
         if (outcome.isTerminal()) {
-          return new Decision(rule, rulesApplied, premium, startTime);
+          return new Decision(rule, rulesApplied, trace, premium, startTime);
         }
       }
     }
 
-    return Decision.allRulesPassed(premium, startTime, rulesApplied);
+    return Decision.allRulesPassed(premium, startTime, rulesApplied, trace);
   }
 }
