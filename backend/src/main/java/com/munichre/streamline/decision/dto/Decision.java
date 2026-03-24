@@ -1,6 +1,7 @@
 package com.munichre.streamline.decision.dto;
 
 import com.munichre.streamline.decision.model.DecisionStatus;
+import com.munichre.streamline.decision.model.DecisionTraceEntry;
 import com.munichre.streamline.rule.model.PremiumState;
 import com.munichre.streamline.rule.model.Rule;
 import java.math.BigDecimal;
@@ -10,6 +11,7 @@ public record Decision(
     DecisionStatus status,
     String reason,
     List<String> rulesApplied,
+    List<DecisionTraceEntry> decisionTrace,
     BigDecimal premium,
     long processingTimeMs,
     boolean evaluationStopped,
@@ -30,6 +32,7 @@ public record Decision(
         DecisionStatus.ACCEPT,
         NO_RULES_REASON_MESSAGE,
         List.of(),
+        List.of(),
         baseRate,
         System.currentTimeMillis() - startTime,
         false,
@@ -37,22 +40,24 @@ public record Decision(
   }
 
   public static Decision allRulesPassed(
-      PremiumState premium, long startTime, List<String> rulesApplied) {
+      PremiumState premium, long startTime, List<String> rulesApplied, List<DecisionTraceEntry> decisionTrace) {
     return new Decision(
         DecisionStatus.ACCEPT,
         ALL_RULES_PASSED_MESSAGE,
         rulesApplied,
+        decisionTrace,
         premium.calculateTotal(),
         System.currentTimeMillis() - startTime,
         false,
         null);
   }
 
-  public Decision(Rule rule, List<String> rules, PremiumState premium, long start) {
+  public Decision(Rule rule, List<String> rules, List<DecisionTraceEntry> decisionTrace, PremiumState premium, long start) {
     this(
         rule.getRuleConfig().then().decision(),
         rule.getReason(),
         rules,
+        decisionTrace,
         premium.calculateTotal(),
         System.currentTimeMillis() - start,
         true,
