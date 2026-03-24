@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DecisionTraceEntry {
-    private String ruleName;
-    private String ruleDescription;
-    private Boolean isOverride;
-    private BigDecimal adjustmentAmount;
-    private String outcome;
+  private String ruleName;
+  private String ruleDescription;
+  private Boolean isOverride;
+  private BigDecimal adjustmentAmount;
+  private String outcome;
 }

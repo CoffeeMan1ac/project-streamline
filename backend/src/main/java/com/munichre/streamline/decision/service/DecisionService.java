@@ -71,14 +71,14 @@ public class DecisionService {
         BigDecimal difference = premium.calculateTotal().subtract(previous.calculateTotal());
 
         rulesApplied.add(rule.getName());
-        trace.add(DecisionTraceEntry.builder()
-            .ruleName(rule.getName())
-            .ruleDescription(rule.getDescription())
-            .isOverride(isOverride)
-            .adjustmentAmount(isOverride ? outcome.premiumOverride() : difference)
-            .outcome(outcome.decision().toString())
-            .build()
-        );
+        trace.add(
+            DecisionTraceEntry.builder()
+                .ruleName(rule.getName())
+                .ruleDescription(rule.getDescription())
+                .isOverride(isOverride)
+                .adjustmentAmount(isOverride ? outcome.premiumOverride() : difference)
+                .outcome(outcome.decision().toString())
+                .build());
 
         if (outcome.isTerminal()) {
           return new Decision(rule, rulesApplied, trace, premium, startTime);

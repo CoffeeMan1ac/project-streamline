@@ -40,7 +40,10 @@ public record Decision(
   }
 
   public static Decision allRulesPassed(
-      PremiumState premium, long startTime, List<String> rulesApplied, List<DecisionTraceEntry> decisionTrace) {
+      PremiumState premium,
+      long startTime,
+      List<String> rulesApplied,
+      List<DecisionTraceEntry> decisionTrace) {
     return new Decision(
         DecisionStatus.ACCEPT,
         ALL_RULES_PASSED_MESSAGE,
@@ -52,7 +55,12 @@ public record Decision(
         null);
   }
 
-  public Decision(Rule rule, List<String> rules, List<DecisionTraceEntry> decisionTrace, PremiumState premium, long start) {
+  public Decision(
+      Rule rule,
+      List<String> rules,
+      List<DecisionTraceEntry> decisionTrace,
+      PremiumState premium,
+      long start) {
     this(
         rule.getRuleConfig().then().decision(),
         rule.getReason(),
