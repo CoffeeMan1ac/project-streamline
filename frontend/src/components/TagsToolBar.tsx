@@ -17,7 +17,12 @@ import { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
 
-const TagsToolBar = () => {
+interface TagsToolBarProps {
+  totalTags: number;
+  showingTags: number;
+}
+
+const TagsToolBar = ({ totalTags, showingTags }: TagsToolBarProps) => {
   const [filter, setFilter] = useState<string>("all");
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -116,10 +121,10 @@ const TagsToolBar = () => {
         }}
       >
         <Typography variant="body2">
-          Total Tags: <Box component="span" sx={{ color: "text.primary", fontWeight: 700 }}>4</Box>
+          Total Tags: <Box component="span" sx={{ color: "text.primary", fontWeight: 700 }}>{totalTags}</Box>
         </Typography>
         <Typography variant="body2">
-          Showing: <Box component="span" sx={{ color: "text.primary", fontWeight: 700 }}>4</Box>
+          Showing: <Box component="span" sx={{ color: "text.primary", fontWeight: 700 }}>{showingTags}</Box>
         </Typography>
       </Stack>
     </Paper>
