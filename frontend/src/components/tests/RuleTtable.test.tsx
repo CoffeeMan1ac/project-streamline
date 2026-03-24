@@ -3,8 +3,19 @@ import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import { describe, test, expect, vi, beforeEach } from "vitest";
 import RuleTable from "../RuleTable";
 
+let capturedOnDragEnd: ((event: unknown) => void) | null = null;
+
 vi.mock("@dnd-kit/core", () => ({
-  DndContext: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  DndContext: ({
+    children,
+    onDragEnd,
+  }: {
+    children: React.ReactNode;
+    onDragEnd: (event: unknown) => void;
+  }) => {
+    capturedOnDragEnd = onDragEnd;
+    return <>{children}</>;
+  },
   closestCenter: vi.fn(),
   PointerSensor: vi.fn(),
   useSensor: vi.fn(),
@@ -140,5 +151,33 @@ describe("RuleTable", () => {
     const editButtons = screen.getAllByTestId("EditIcon");
     fireEvent.click(editButtons[0].closest("button")!);
     expect(onEditRule).toHaveBeenCalledWith("1");
+  });
+
+  test("handleDragEnd does nothing when over is null", () => {
+    const onReorderRule = vi.fn();
+    render(<RuleTable {...defaultProps} onReorderRule={onReorderRule} />);
+    capturedOnDragEnd!({ active: { id: "1" }, over: null });
+    expect(onReorderRule).not.toHaveBeenCalled();
+  });
+
+  test("handleDragEnd does nothing when dragging onto itself", () => {
+    const onReorderRule = vi.fn();
+    render(<RuleTable {...defaultProps} onReorderRule={onReorderRule} />);
+    capturedOnDragEnd!({ active: { id: "1" }, over: { id: "1" } });
+    expect(onReorderRule).not.toHaveBeenCalled();
+  });
+
+  test("handleDragEnd does nothing when over rule not found", () => {
+    const onReorderRule = vi.fn();
+    render(<RuleTable {...defaultProps} onReorderRule={onReorderRule} />);
+    capturedOnDragEnd!({ active: { id: "1" }, over: { id: "999" } });
+    expect(onReorderRule).not.toHaveBeenCalled();
+  });
+
+  test("handleDragEnd calls onReorderRule with correct args on valid drag", () => {
+    const onReorderRule = vi.fn();
+    render(<RuleTable {...defaultProps} onReorderRule={onReorderRule} />);
+    capturedOnDragEnd!({ active: { id: "1" }, over: { id: "2" } });
+    expect(onReorderRule).toHaveBeenCalledWith("1", 2);
   });
 });

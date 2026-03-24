@@ -6,13 +6,14 @@ import Sidebar from "../Sidebar";
 import { useAuth } from "../../context/AuthContext";
 
 const mockNavigate = vi.fn();
+let mockPathname = "/rules";
 
 vi.mock("react-router-dom", async () => {
   const actual = await vi.importActual("react-router-dom");
   return {
     ...actual,
     useNavigate: () => mockNavigate,
-    useLocation: () => ({ pathname: "/rules" }),
+    useLocation: () => ({ pathname: mockPathname }),
   };
 });
 
@@ -31,6 +32,15 @@ vi.mock("firebase/auth", async (importOriginal) => {
 
 vi.mock("../../config/firebase", () => ({ auth: {} }));
 
+let mockIsMobile = false;
+vi.mock("@mui/material", async () => {
+  const actual = await vi.importActual("@mui/material");
+  return {
+    ...actual,
+    useMediaQuery: () => mockIsMobile,
+  };
+});
+
 afterEach(() => {
   cleanup();
 });
@@ -38,6 +48,8 @@ afterEach(() => {
 describe("Sidebar", () => {
   beforeEach(() => {
     mockNavigate.mockClear();
+    mockPathname = "/rules";
+    mockIsMobile = false;
   });
 
   test("renders sidebar buttons", () => {
@@ -215,6 +227,50 @@ describe("Sidebar", () => {
     );
     fireEvent.click(screen.getByTestId("ViewInArOutlinedIcon").closest("button")!);
     expect(mockNavigate).toHaveBeenCalledWith("/products");
+  });
+
+  test("highlights products nav item when on /products path", () => {
+    mockPathname = "/products";
+    vi.mocked(useAuth).mockReturnValue({ user: null, loading: false });
+    render(
+      <MemoryRouter>
+        <Sidebar toggleSidebar={vi.fn()} open={true} toggleTheme={vi.fn()} mode="light" />
+      </MemoryRouter>
+    );
+    expect(screen.getByText("Products Management")).toBeInTheDocument();
+  });
+
+  test("highlights quotes nav item when on /quotations path", () => {
+    mockPathname = "/quotations/123";
+    vi.mocked(useAuth).mockReturnValue({ user: null, loading: false });
+    render(
+      <MemoryRouter>
+        <Sidebar toggleSidebar={vi.fn()} open={true} toggleTheme={vi.fn()} mode="light" />
+      </MemoryRouter>
+    );
+    expect(screen.getByText("Quotations")).toBeInTheDocument();
+  });
+
+  test("highlights quotes nav item when on /quotes path", () => {
+    mockPathname = "/quotes";
+    vi.mocked(useAuth).mockReturnValue({ user: null, loading: false });
+    render(
+      <MemoryRouter>
+        <Sidebar toggleSidebar={vi.fn()} open={true} toggleTheme={vi.fn()} mode="light" />
+      </MemoryRouter>
+    );
+    expect(screen.getByText("Quotations")).toBeInTheDocument();
+  });
+
+  test("defaults to rules active on unknown path", () => {
+    mockPathname = "/unknown";
+    vi.mocked(useAuth).mockReturnValue({ user: null, loading: false });
+    render(
+      <MemoryRouter>
+        <Sidebar toggleSidebar={vi.fn()} open={true} toggleTheme={vi.fn()} mode="light" />
+      </MemoryRouter>
+    );
+    expect(screen.getByText("Rules Management")).toBeInTheDocument();
   });
 
   test("calls signOut and navigates to login when collapsed logout icon is clicked", async () => {
