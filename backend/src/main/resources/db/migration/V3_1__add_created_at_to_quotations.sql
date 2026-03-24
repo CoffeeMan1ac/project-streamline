@@ -7,3 +7,6 @@ WHERE created_at IS NULL;
 
 ALTER TABLE quotations
 ALTER COLUMN created_at SET NOT NULL;
+
+ALTER TABLE quotations
+ADD COLUMN customer_input JSONB;
