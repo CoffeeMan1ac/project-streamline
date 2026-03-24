@@ -9,7 +9,6 @@ import {
   TableContainer,
   Paper,
   Box,
-  Typography,
 } from "@mui/material";
 
 interface TagsTableProps {
@@ -27,14 +26,6 @@ interface TagsTableProps {
 const TagsTable: React.FC<TagsTableProps> = ({ tags, onEditTag, onDeleteTag }) => {
   return (
     <Box border={1} borderColor="divider" borderRadius={2} bgcolor={"background.paper"}>
-      <Box sx={{ p: 2, borderBottom: 1, borderColor: "divider" }}>
-        <Typography variant="h6" sx={{ fontWeight: 600 }}>
-          Tags
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Showing {tags.length} tag{tags.length !== 1 ? "s" : ""}
-        </Typography>
-      </Box>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
