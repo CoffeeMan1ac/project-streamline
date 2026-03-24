@@ -1,6 +1,6 @@
 import React from "react";
 import { TableRow, TableCell, Typography, Box, IconButton } from "@mui/material";
-import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
+import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -25,7 +25,7 @@ const TagsRow: React.FC<TagsRowProps> = ({
     <TableRow>
       <TableCell>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <ArticleOutlinedIcon sx={{ fontSize: 16, color: "text.secondary" }} />
+          <LocalOfferOutlinedIcon sx={{ fontSize: 16, color: "text.secondary" }} />
           <Typography variant="body2" color="primary" sx={{ fontWeight: 500, cursor: "pointer" }}>
             {tagName}
           </Typography>
