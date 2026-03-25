@@ -69,4 +69,10 @@ public class RuleController {
     RuleResponse response = ruleService.updateRule(id, request);
     return ResponseEntity.ok(response);
   }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> deleteRule(@PathVariable UUID id) {
+    ruleService.deleteRule(id);
+    return ResponseEntity.noContent().build();
+  }
 }

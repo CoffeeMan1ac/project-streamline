@@ -17,6 +17,7 @@ interface RuleRowProps {
   premium: string;
   onToggleActive: () => void;
   onEdit: () => void;
+  onDelete: () => void;
 }
 
 const RuleRow: React.FC<RuleRowProps> = ({
@@ -29,6 +30,7 @@ const RuleRow: React.FC<RuleRowProps> = ({
   premium,
   onToggleActive,
   onEdit,
+  onDelete,
 }) => {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
   const style = { transform: CSS.Transform.toString(transform), transition };
@@ -75,7 +77,7 @@ const RuleRow: React.FC<RuleRowProps> = ({
           <EditIcon fontSize="small" />
         </IconButton>
 
-        <IconButton size="small" color="error">
+        <IconButton size="small" color="error" onClick={onDelete}>
           <DeleteIcon fontSize="small" />
         </IconButton>
       </TableCell>

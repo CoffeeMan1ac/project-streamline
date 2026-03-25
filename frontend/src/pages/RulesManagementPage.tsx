@@ -126,6 +126,15 @@ const RulesManagementPage = () => {
     setEditRuleId(id);
   };
 
+  const handleDeleteRule = async (id: string) => {
+    try {
+      await http.delete(`/backoffice/rules/${id}`);
+      fetchRules();
+    } catch (err) {
+      console.error("Failed to delete rule:", err);
+    }
+  };
+
   const selectedProductName = products.find((p) => p.id === selectedProduct)?.name;
   const numberOfActiveRules = rules.filter((rule) => rule.active).length;
   const numberOfInactiveRules = rules.length - numberOfActiveRules;
@@ -190,6 +199,7 @@ const RulesManagementPage = () => {
           onToggleRuleActive={handleToggleRuleActive}
           onEditRule={handleEditRule}
           onReorderRule={handleReorderRule}
+          onDeleteRule={handleDeleteRule}
         />
       </Box>
 

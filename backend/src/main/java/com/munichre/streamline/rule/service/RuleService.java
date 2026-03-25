@@ -81,6 +81,13 @@ public class RuleService {
   }
 
   @Transactional
+  public void deleteRule(@NonNull UUID id) {
+    Rule rule = findRule(id);
+    rule.setDeleted(true);
+    ruleRepository.save(rule);
+  }
+
+  @Transactional
   public List<RuleResponse> reorderRule(RuleReorderRequest request) {
     final UUID productId = request.product();
     final UUID ruleId = request.rule();

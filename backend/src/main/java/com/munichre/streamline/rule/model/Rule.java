@@ -11,9 +11,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
 
+@SQLRestriction("deleted = false")
 @Entity
 @Table(name = "rules")
 @Data
@@ -52,6 +54,9 @@ public class Rule {
   @CreationTimestamp private LocalDateTime createdAt;
 
   @UpdateTimestamp private LocalDateTime updatedAt;
+
+  @Column(nullable = false)
+  private boolean deleted = false;
 
   public boolean isTriggeredBy(ApplicantData applicantData) {
     if (this.ruleConfig == null || this.ruleConfig.when() == null) return false;

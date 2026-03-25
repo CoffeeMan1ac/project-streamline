@@ -31,6 +31,7 @@ interface RuleTableProps {
   onToggleRuleActive: (order: number) => void;
   onEditRule: (id: string) => void;
   onReorderRule: (ruleId: string, newPriority: number) => void;
+  onDeleteRule: (id: string) => void;
 }
 
 const RuleTable: React.FC<RuleTableProps> = ({
@@ -41,6 +42,7 @@ const RuleTable: React.FC<RuleTableProps> = ({
   onToggleRuleActive,
   onEditRule,
   onReorderRule,
+  onDeleteRule,
 }) => {
   const sensors = useSensors(useSensor(PointerSensor));
 
@@ -91,6 +93,7 @@ const RuleTable: React.FC<RuleTableProps> = ({
                     {...rule}
                     onToggleActive={() => onToggleRuleActive(rule.order)}
                     onEdit={() => onEditRule(rule.id)}
+                    onDelete={() => onDeleteRule(rule.id)}
                   />
                 ))}
               </TableBody>
