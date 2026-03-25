@@ -1,3 +1,5 @@
+-- ${flyway:timestamp}
+
 -- Standard Shield
 INSERT INTO
     product_exclusions (product_id, coverage_id)

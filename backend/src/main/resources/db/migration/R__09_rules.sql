@@ -1,3 +1,5 @@
+-- ${flyway:timestamp}
+
 INSERT INTO
   rules (
     id,

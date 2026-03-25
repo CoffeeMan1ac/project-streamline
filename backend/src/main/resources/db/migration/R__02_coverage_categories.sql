@@ -1,3 +1,5 @@
+-- ${flyway:timestamp}
+
 INSERT INTO
     coverage_categories (id, code, label, created_at, updated_at)
 VALUES

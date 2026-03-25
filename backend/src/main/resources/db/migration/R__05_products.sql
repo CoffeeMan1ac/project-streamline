@@ -1,3 +1,5 @@
+-- ${flyway:timestamp}
+
 INSERT INTO products (
   id,
   base_rate,

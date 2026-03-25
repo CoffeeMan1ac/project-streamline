@@ -1,3 +1,5 @@
+-- ${flyway:timestamp}
+
 -- Standard Shield Green
 INSERT INTO
     product_coverages (product_id, coverage_id)

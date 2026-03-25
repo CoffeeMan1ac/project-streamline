@@ -1,3 +1,5 @@
+-- ${flyway:timestamp}
+
 INSERT INTO
     product_types (id, code, label, created_at, updated_at)
 VALUES

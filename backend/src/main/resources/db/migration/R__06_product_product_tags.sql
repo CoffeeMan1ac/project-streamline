@@ -1,3 +1,5 @@
+-- ${flyway:timestamp}
+
 INSERT INTO
     product_product_tags (product_id, product_tag_id)
 VALUES
