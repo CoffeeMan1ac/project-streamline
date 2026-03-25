@@ -9,12 +9,10 @@ const TagsManagementPage = () => {
   return (
     <Box sx={{ mx: { xs: 2, sm: 3, md: 4, lg: 8, xl: 20 }, my: 4 }}>
       <Stack spacing={3}>
-        {/* Header portion */}
         <Box>
           <Typography variant="h4" gutterBottom sx={{ fontWeight: 700 }}>
             Tags Management
           </Typography>
-
           <Typography variant="body1" gutterBottom color="text.secondary">
             Manage product tags that determine how products are rendered
           </Typography>
@@ -22,34 +20,10 @@ const TagsManagementPage = () => {
         <TagsToolBar totalTags={totalTags} showingTags={showingTags} />
         <TagsTable
           tags={[
-            {
-              id: "1",
-              tagName: "Best Value",
-              tagKey: "best-value",
-              lastModified: "2024-06-01",
-              modifiedBy: "Emma Thompson",
-            },
-            {
-              id: "2",
-              tagName: "Green",
-              tagKey: "green",
-              lastModified: "2024-06-02",
-              modifiedBy: "Sarah Mitchell",
-            },
-            {
-              id: "3",
-              tagName: "Popular",
-              tagKey: "popular",
-              lastModified: "2024-06-03",
-              modifiedBy: "Sarah Mitchell",
-            },
-            {
-              id: "4",
-              tagName: "Promotion",
-              tagKey: "promotion",
-              lastModified: "2024-06-04",
-              modifiedBy: "Michael Brown",
-            },
+            { id: "1", tagName: "Best Value", tagKey: "best-value" },
+            { id: "2", tagName: "Green", tagKey: "green" },
+            { id: "3", tagName: "Popular", tagKey: "popular" },
+            { id: "4", tagName: "Promotion", tagKey: "promotion" },
           ]}
           onEditTag={(id) => console.log("Edit tag", id)}
           onDeleteTag={(id) => console.log("Delete tag", id)}

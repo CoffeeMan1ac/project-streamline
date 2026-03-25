@@ -7,20 +7,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 interface TagsRowProps {
   tagName: string;
   tagKey: string;
-  lastModified: string;
-  modifiedBy: string;
   onEdit: () => void;
   onDelete: () => void;
 }
 
-const TagsRow: React.FC<TagsRowProps> = ({
-  tagName,
-  tagKey,
-  lastModified,
-  modifiedBy,
-  onEdit,
-  onDelete,
-}) => {
+const TagsRow: React.FC<TagsRowProps> = ({ tagName, tagKey, onEdit, onDelete }) => {
   return (
     <TableRow>
       <TableCell>
@@ -28,7 +19,6 @@ const TagsRow: React.FC<TagsRowProps> = ({
           <Box
             sx={{
               bgcolor: "background.default",
-              color: "background.default",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -61,17 +51,9 @@ const TagsRow: React.FC<TagsRowProps> = ({
       </TableCell>
 
       <TableCell>
-        <Typography variant="body2">{lastModified}</Typography>
-        <Typography variant="body2" color="text.secondary">
-          by: {modifiedBy}
-        </Typography>
-      </TableCell>
-
-      <TableCell>
         <IconButton size="small" color="primary" onClick={onEdit}>
           <EditIcon fontSize="small" />
         </IconButton>
-
         <IconButton size="small" color="error" onClick={onDelete}>
           <DeleteIcon fontSize="small" />
         </IconButton>

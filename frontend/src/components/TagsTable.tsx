@@ -16,8 +16,6 @@ interface TagsTableProps {
     id: string;
     tagName: string;
     tagKey: string;
-    lastModified: string;
-    modifiedBy: string;
   }[];
   onEditTag: (id: string) => void;
   onDeleteTag: (id: string) => void;
@@ -25,14 +23,13 @@ interface TagsTableProps {
 
 const TagsTable: React.FC<TagsTableProps> = ({ tags, onEditTag, onDeleteTag }) => {
   return (
-    <Box border={1} borderColor="divider" borderRadius={2} bgcolor={"background.paper"}>
+    <Box border={1} borderColor="divider" borderRadius={2} bgcolor="background.paper">
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow sx={{ bgcolor: "background.default" }}>
               <TableCell>Tag Name</TableCell>
               <TableCell>Tag Key</TableCell>
-              <TableCell>Last Modified</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -42,8 +39,6 @@ const TagsTable: React.FC<TagsTableProps> = ({ tags, onEditTag, onDeleteTag }) =
                 key={tag.id}
                 tagName={tag.tagName}
                 tagKey={tag.tagKey}
-                lastModified={tag.lastModified}
-                modifiedBy={tag.modifiedBy}
                 onEdit={() => onEditTag(tag.id)}
                 onDelete={() => onDeleteTag(tag.id)}
               />
