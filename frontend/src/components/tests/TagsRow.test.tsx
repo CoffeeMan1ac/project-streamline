@@ -12,8 +12,6 @@ describe("TagsRow", () => {
   const defaultProps = {
     tagName: "Best Value",
     tagKey: "best-value",
-    lastModified: "2024-06-01",
-    modifiedBy: "Emma Thompson",
     onEdit: vi.fn(),
     onDelete: vi.fn(),
   };
@@ -29,8 +27,6 @@ describe("TagsRow", () => {
 
     expect(screen.getByText("Best Value")).toBeInTheDocument();
     expect(screen.getByText("best-value")).toBeInTheDocument();
-    expect(screen.getByText("2024-06-01")).toBeInTheDocument();
-    expect(screen.getByText(/by: Emma Thompson/i)).toBeInTheDocument();
   });
 
   test("renders edit and delete buttons", () => {
