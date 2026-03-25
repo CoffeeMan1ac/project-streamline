@@ -1,5 +1,3 @@
--- ${flyway:timestamp}
-
 INSERT INTO
   rules (
     id,
@@ -22,7 +20,7 @@ VALUES
     'This product is unavailable in the selected country',
     1,
     true,
-    '{"when":{"match":"one","conditions":[{"field":"country","operator":"EQUALS","value":"uk"}, {"field":"country","operator":"EQUALS","value":"usa"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null},"stop":false}',
+    '{"when":{"match":"ANY","conditions":[{"field":"country","operator":"EQUALS","value":"uk"}, {"field":"country","operator":"EQUALS","value":"usa"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
     now ()
   ),
@@ -34,7 +32,7 @@ VALUES
     'This mobile phone can not be insured if it is damaged.',
     2,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"damaged"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"damaged"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
     now ()
   ),
@@ -46,7 +44,7 @@ VALUES
     'This mobile phone can not be insured as it is over 4 years old.',
     3,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneAge","operator":"EQUALS","value":"4+ years"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneAge","operator":"EQUALS","value":"4+ years"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
     now ()
   ),
@@ -58,7 +56,7 @@ VALUES
     'A 10% Student Discount has been applied',
     4,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"occupation","operator":"EQUALS","value":"student"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":-0.1},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"occupation","operator":"EQUALS","value":"student"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":-0.1,"stop":false}}',
     now (),
     now ()
   ),
@@ -70,7 +68,7 @@ VALUES
     'This mobile phone has been lightly used and thus will have a higher premium.',
     5,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"lightly used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"lightly used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1,"stop":false}}',
     now (),
     now ()
   ),
@@ -82,7 +80,7 @@ VALUES
     'This mobile phone is in good condition and thus will have a higher premium.',
     6,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"good"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.2},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"good"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.2,"stop":false}}',
     now (),
     now ()
   ),
@@ -94,7 +92,7 @@ VALUES
     'This mobile phone has been heavily used and thus will have a higher premium.',
     7,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"heavily used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.3},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"heavily used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.3,"stop":false}}',
     now (),
     now ()
   ),
@@ -106,7 +104,7 @@ VALUES
     'The samsung galaxy note 7 has manufacturing issues and is not insurable.',
     8,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneModel","operator":"EQUALS","value":"Galaxy Note 7"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneModel","operator":"EQUALS","value":"Galaxy Note 7"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
     now ()
   ),
@@ -118,7 +116,7 @@ VALUES
     'Apple phones are more likely to be involved in higher cost claims.',
     9,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneMake","operator":"EQUALS","value":"Apple"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneMake","operator":"EQUALS","value":"Apple"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1,"stop":false}}',
     now (),
     now ()
   ),
@@ -130,7 +128,7 @@ VALUES
     'Teach Union agreed pricing.',
     10,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"occupation","operator":"EQUALS","value":"Teacher"}]},"then":{"decision":"ACCEPT","premiumOverride":5.99,"premiumDelta":null},"stop":true}',
+    '{"when":{"match":"ALL","conditions":[{"field":"occupation","operator":"EQUALS","value":"Teacher"}]},"then":{"decision":"ACCEPT","premiumOverride":5.99,"premiumDelta":null,"stop":true}}',
     now (),
     now ()
   ),
@@ -142,7 +140,7 @@ VALUES
     'This product is unavailable in the selected country',
     1,
     true,
-    '{"when":{"match":"one","conditions":[{"field":"country","operator":"EQUALS","value":"uk"}, {"field":"country","operator":"EQUALS","value":"usa"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null},"stop":false}',
+    '{"when":{"match":"ANY","conditions":[{"field":"country","operator":"EQUALS","value":"uk"}, {"field":"country","operator":"EQUALS","value":"usa"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
     now ()
   ),
@@ -154,7 +152,7 @@ VALUES
     'The samsung galaxy note 7 has manufacturing issues and is not insurable.',
     2,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneModel","operator":"EQUALS","value":"Galaxy Note 7"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneModel","operator":"EQUALS","value":"Galaxy Note 7"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
     now ()
   ),
@@ -166,7 +164,7 @@ VALUES
     'This mobile phone can not be insured if it is damaged.',
     3,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"damaged"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"damaged"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
     now ()
   ),
@@ -178,7 +176,7 @@ VALUES
     'This mobile phone can not be insured as it is over 4 years old.',
     4,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneAge","operator":"EQUALS","value":"4+ years"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneAge","operator":"EQUALS","value":"4+ years"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
     now ()
   ),
@@ -190,7 +188,7 @@ VALUES
     'A 10% Student Discount has been applied',
     5,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"occupation","operator":"EQUALS","value":"student"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":-0.1},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"occupation","operator":"EQUALS","value":"student"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":-0.1,"stop":false}}',
     now (),
     now ()
   ),
@@ -202,7 +200,7 @@ VALUES
     'This mobile phone has been lightly used and thus will have a higher premium.',
     6,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"lightly used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"lightly used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1,"stop":false}}',
     now (),
     now ()
   ),
@@ -214,7 +212,7 @@ VALUES
     'This mobile phone is in good condition and thus will have a higher premium.',
     7,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"good"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.2},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"good"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.2,"stop":false}}',
     now (),
     now ()
   ),
@@ -226,7 +224,7 @@ VALUES
     'This mobile phone has been heavily used and thus will have a higher premium.',
     8,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"heavily used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.3},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"heavily used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.3,"stop":false}}',
     now (),
     now ()
   ),
@@ -238,7 +236,7 @@ VALUES
     'Apple phones are more likely to be involved in higher cost claims.',
     9,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneMake","operator":"EQUALS","value":"Apple"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneMake","operator":"EQUALS","value":"Apple"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1,"stop":false}}',
     now (),
     now ()
   ),
@@ -250,7 +248,7 @@ VALUES
     'Teach Union agreed pricing.',
     10,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"occupation","operator":"EQUALS","value":"Teacher"}]},"then":{"decision":"ACCEPT","premiumOverride":7.99,"premiumDelta":null},"stop":true}',
+    '{"when":{"match":"ALL","conditions":[{"field":"occupation","operator":"EQUALS","value":"Teacher"}]},"then":{"decision":"ACCEPT","premiumOverride":7.99,"premiumDelta":null,"stop":true}}',
     now (),
     now ()
   ),
@@ -262,7 +260,7 @@ VALUES
     'The samsung galaxy note 7 has manufacturing issues and is not insurable.',
     1,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneModel","operator":"EQUALS","value":"Galaxy Note 7"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneModel","operator":"EQUALS","value":"Galaxy Note 7"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
     now ()
   ),
@@ -274,7 +272,7 @@ VALUES
     'This mobile phone can not be insured if it is damaged.',
     2,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"damaged"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"damaged"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
     now ()
   ),
@@ -286,7 +284,7 @@ VALUES
     'This mobile phone can not be insured as it is over 4 years old.',
     3,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneAge","operator":"EQUALS","value":"4+ years"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneAge","operator":"EQUALS","value":"4+ years"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
     now ()
   ),
@@ -298,7 +296,7 @@ VALUES
     'A 10% Student Discount has been applied',
     4,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"occupation","operator":"EQUALS","value":"student"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":-0.1},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"occupation","operator":"EQUALS","value":"student"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":-0.1,"stop":false}}',
     now (),
     now ()
   ),
@@ -310,7 +308,7 @@ VALUES
     'This mobile phone has been lightly used and thus will have a higher premium.',
     5,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"lightly used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"lightly used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1,"stop":false}}',
     now (),
     now ()
   ),
@@ -322,7 +320,7 @@ VALUES
     'This mobile phone is in good condition and thus will have a higher premium.',
     6,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"good"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.2},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"good"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.2,"stop":false}}',
     now (),
     now ()
   ),
@@ -334,7 +332,7 @@ VALUES
     'This mobile phone has been heavily used and thus will have a higher premium.',
     7,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"heavily used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.3},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"heavily used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.3,"stop":false}}',
     now (),
     now ()
   ),
@@ -346,7 +344,7 @@ VALUES
     'Apple phones are more likely to be involved in higher cost claims.',
     8,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneMake","operator":"EQUALS","value":"Apple"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneMake","operator":"EQUALS","value":"Apple"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1,"stop":false}}',
     now (),
     now ()
   ),
@@ -358,362 +356,359 @@ VALUES
     'Teach Union agreed pricing.',
     9,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"occupation","operator":"EQUALS","value":"Teacher"}]},"then":{"decision":"ACCEPT","premiumOverride":9.99,"premiumDelta":null},"stop":true}',
+    '{"when":{"match":"ALL","conditions":[{"field":"occupation","operator":"EQUALS","value":"Teacher"}]},"then":{"decision":"ACCEPT","premiumOverride":9.99,"premiumDelta":null,"stop":true}}',
     now (),
     now ()
   ),
-  -- Standard Shield Green (bd7e7bd6-201f-466a-9155-74757a2b4b95)
   (
     '488fef05-dc14-47f0-a77c-465eb9fabf8f',
-    'bd7e7bd6-201f-466a-9155-74757a2b4b95',
+    'bd7e7bd6-201f-466a-9155-74757a2b4b95', -- Standard Shield Green
     'Product not available in the selected country',
     'This product is unavailable in the selected country',
     'This product is unavailable in the selected country',
     1,
     true,
-    '{"when":{"match":"one","conditions":[{"field":"country","operator":"EQUALS","value":"uk"}, {"field":"country","operator":"EQUALS","value":"usa"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null},"stop":false}',
+    '{"when":{"match":"ANY","conditions":[{"field":"country","operator":"EQUALS","value":"uk"}, {"field":"country","operator":"EQUALS","value":"usa"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
     now ()
   ),
   (
     'dde0eb84-dbfd-49d4-a39e-e961b07e7cac',
-    'bd7e7bd6-201f-466a-9155-74757a2b4b95',
+    'bd7e7bd6-201f-466a-9155-74757a2b4b95', -- Standard Shield Green
     'Decline if phone is damaged',
     'This mobile phone can not be insured if it is damaged.',
     'This mobile phone can not be insured if it is damaged.',
     2,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"damaged"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"damaged"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
     now ()
   ),
   (
     '39cd57e9-c3f6-4d32-b34f-6a1d2f1dc80c',
-    'bd7e7bd6-201f-466a-9155-74757a2b4b95',
+    'bd7e7bd6-201f-466a-9155-74757a2b4b95', -- Standard Shield Green
     'Decline if phone is too old',
     'This mobile phone can not be insured as it is over 4 years old.',
     'This mobile phone can not be insured as it is over 4 years old.',
     3,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneAge","operator":"EQUALS","value":"4+ years"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneAge","operator":"EQUALS","value":"4+ years"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
     now ()
   ),
   (
     '83862a5b-8d60-4596-826f-b4420e92725a',
-    'bd7e7bd6-201f-466a-9155-74757a2b4b95',
+    'bd7e7bd6-201f-466a-9155-74757a2b4b95', -- Standard Shield Green
     'Student Discount',
     '10% Student Discount',
     'A 10% Student Discount has been applied',
     4,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"occupation","operator":"EQUALS","value":"student"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":-0.1},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"occupation","operator":"EQUALS","value":"student"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":-0.1,"stop":false}}',
     now (),
     now ()
   ),
   (
     '7a3563a4-3e7b-4b0f-b1d9-3c0ff42ca8e6',
-    'bd7e7bd6-201f-466a-9155-74757a2b4b95',
+    'bd7e7bd6-201f-466a-9155-74757a2b4b95', -- Standard Shield Green
     'Lightly Damaged Phone',
     '10% Delta for lightly used phone',
     'This mobile phone has been lightly used and thus will have a higher premium.',
     5,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"lightly used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"lightly used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1,"stop":false}}',
     now (),
     now ()
   ),
   (
     '203560f7-6253-42de-b61a-a85d98633b05',
-    'bd7e7bd6-201f-466a-9155-74757a2b4b95',
+    'bd7e7bd6-201f-466a-9155-74757a2b4b95', -- Standard Shield Green
     'Good condition phone',
     '20% Delta for good condition phone',
     'This mobile phone is in good condition and thus will have a higher premium.',
     6,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"good"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.2},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"good"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.2,"stop":false}}',
     now (),
     now ()
   ),
   (
     '966899ec-cbd7-4936-8169-7dac8942dbcd',
-    'bd7e7bd6-201f-466a-9155-74757a2b4b95',
+    'bd7e7bd6-201f-466a-9155-74757a2b4b95', -- Standard Shield Green
     'Heavily used phone',
     '30% Delta for heavily used phone',
     'This mobile phone has been heavily used and thus will have a higher premium.',
     7,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"heavily used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.3},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"heavily used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.3,"stop":false}}',
     now (),
     now ()
   ),
   (
     'fcfa3332-0162-4c6f-beba-b38545f2f91c',
-    'bd7e7bd6-201f-466a-9155-74757a2b4b95',
+    'bd7e7bd6-201f-466a-9155-74757a2b4b95', -- Standard Shield Green
     'Samsung Galaxy Note 7 Auto Decline',
     'The samsung galaxy note 7 has manufacturing issues and is not insurable.',
     'The samsung galaxy note 7 has manufacturing issues and is not insurable.',
     8,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneModel","operator":"EQUALS","value":"Galaxy Note 7"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneModel","operator":"EQUALS","value":"Galaxy Note 7"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
     now ()
   ),
   (
     '0c994dc8-abf0-4f35-87fe-9b36d9903d72',
-    'bd7e7bd6-201f-466a-9155-74757a2b4b95',
+    'bd7e7bd6-201f-466a-9155-74757a2b4b95', -- Standard Shield Green
     'Apple Tax',
     'Apple phones are more likely to be involved in higher cost claims.',
     'Apple phones are more likely to be involved in higher cost claims.',
     9,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneMake","operator":"EQUALS","value":"Apple"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneMake","operator":"EQUALS","value":"Apple"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1,"stop":false}}',
     now (),
     now ()
   ),
   (
     '166077e4-77a9-465b-834a-87f258209e3a',
-    'bd7e7bd6-201f-466a-9155-74757a2b4b95',
+    'bd7e7bd6-201f-466a-9155-74757a2b4b95', -- Standard Shield Green
     'Teacher Union Pricing',
     'Teach Union agreed pricing.',
     'Teach Union agreed pricing.',
     10,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"occupation","operator":"EQUALS","value":"Teacher"}]},"then":{"decision":"ACCEPT","premiumOverride":3.99,"premiumDelta":null},"stop":true}',
+    '{"when":{"match":"ALL","conditions":[{"field":"occupation","operator":"EQUALS","value":"Teacher"}]},"then":{"decision":"ACCEPT","premiumOverride":3.99,"premiumDelta":null,"stop":true}}',
     now (),
     now ()
   ),
-  -- Premium Shield Green (e4c364c6-962f-48bc-9eea-c36ac5091dc9)
   (
     'bb7fde20-0176-4d1a-9b67-ce07f291376f',
-    'e4c364c6-962f-48bc-9eea-c36ac5091dc9',
+    'e4c364c6-962f-48bc-9eea-c36ac5091dc9', -- Premium Shield Green
     'Product not available in the selected country',
     'This product is unavailable in the selected country',
     'This product is unavailable in the selected country',
     1,
     true,
-    '{"when":{"match":"one","conditions":[{"field":"country","operator":"EQUALS","value":"uk"}, {"field":"country","operator":"EQUALS","value":"usa"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null},"stop":false}',
+    '{"when":{"match":"ANY","conditions":[{"field":"country","operator":"EQUALS","value":"uk"}, {"field":"country","operator":"EQUALS","value":"usa"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
     now ()
   ),
   (
     '1afc33a1-109e-4de1-a139-d3ca0b295a59',
-    'e4c364c6-962f-48bc-9eea-c36ac5091dc9',
+    'e4c364c6-962f-48bc-9eea-c36ac5091dc9', -- Premium Shield Green
     'Samsung Galaxy Note 7 Auto Decline',
     'The samsung galaxy note 7 has manufacturing issues and is not insurable.',
     'The samsung galaxy note 7 has manufacturing issues and is not insurable.',
     2,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneModel","operator":"EQUALS","value":"Galaxy Note 7"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneModel","operator":"EQUALS","value":"Galaxy Note 7"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
     now ()
   ),
   (
     'b6ae5c5c-ee8d-49d3-85c5-ed551fb3358a',
-    'e4c364c6-962f-48bc-9eea-c36ac5091dc9',
+    'e4c364c6-962f-48bc-9eea-c36ac5091dc9', -- Premium Shield Green
     'Decline if phone is damaged',
     'This mobile phone can not be insured if it is damaged.',
     'This mobile phone can not be insured if it is damaged.',
     3,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"damaged"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"damaged"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
     now ()
   ),
   (
     '03d2f83a-f4cb-48a8-8def-5d2f0df5b492',
-    'e4c364c6-962f-48bc-9eea-c36ac5091dc9',
+    'e4c364c6-962f-48bc-9eea-c36ac5091dc9', -- Premium Shield Green
     'Decline if phone is too old',
     'This mobile phone can not be insured as it is over 4 years old.',
     'This mobile phone can not be insured as it is over 4 years old.',
     4,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneAge","operator":"EQUALS","value":"4+ years"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneAge","operator":"EQUALS","value":"4+ years"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
     now ()
   ),
   (
     '8023b61e-a8e4-4dfd-bc1a-538c0d91f7e9',
-    'e4c364c6-962f-48bc-9eea-c36ac5091dc9',
+    'e4c364c6-962f-48bc-9eea-c36ac5091dc9', -- Premium Shield Green
     'Student Discount',
     '10% Student Discount',
     'A 10% Student Discount has been applied',
     5,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"occupation","operator":"EQUALS","value":"student"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":-0.1},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"occupation","operator":"EQUALS","value":"student"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":-0.1,"stop":false}}',
     now (),
     now ()
   ),
   (
     '2670d53b-4749-47b2-a2fb-cd50998389ff',
-    'e4c364c6-962f-48bc-9eea-c36ac5091dc9',
+    'e4c364c6-962f-48bc-9eea-c36ac5091dc9', -- Premium Shield Green
     'Lightly Damaged Phone',
     '10% Delta for lightly used phone',
     'This mobile phone has been lightly used and thus will have a higher premium.',
     6,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"lightly used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"lightly used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1,"stop":false}}',
     now (),
     now ()
   ),
   (
     '2258168e-7cca-4515-8a94-c18617a09c84',
-    'e4c364c6-962f-48bc-9eea-c36ac5091dc9',
+    'e4c364c6-962f-48bc-9eea-c36ac5091dc9', -- Premium Shield Green
     'Good condition phone',
     '20% Delta for good condition phone',
     'This mobile phone is in good condition and thus will have a higher premium.',
     7,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"good"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.2},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"good"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.2,"stop":false}}',
     now (),
     now ()
   ),
   (
     '2e9403ce-5360-4053-98f7-7fab910fec9f',
-    'e4c364c6-962f-48bc-9eea-c36ac5091dc9',
+    'e4c364c6-962f-48bc-9eea-c36ac5091dc9', -- Premium Shield Green
     'Heavily used phone',
     '30% Delta for heavily used phone',
     'This mobile phone has been heavily used and thus will have a higher premium.',
     8,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"heavily used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.3},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"heavily used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.3,"stop":false}}',
     now (),
     now ()
   ),
   (
     '982410a9-5a5b-4924-88d5-dc2055e11907',
-    'e4c364c6-962f-48bc-9eea-c36ac5091dc9',
+    'e4c364c6-962f-48bc-9eea-c36ac5091dc9', -- Premium Shield Green
     'Apple Tax',
     'Apple phones are more likely to be involved in higher cost claims.',
     'Apple phones are more likely to be involved in higher cost claims.',
     9,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneMake","operator":"EQUALS","value":"Apple"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneMake","operator":"EQUALS","value":"Apple"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1,"stop":false}}',
     now (),
     now ()
   ),
   (
     'd0c8dc18-ae46-47ef-84bf-fe554e20a90d',
-    'e4c364c6-962f-48bc-9eea-c36ac5091dc9',
+    'e4c364c6-962f-48bc-9eea-c36ac5091dc9', -- Premium Shield Green
     'Teacher Union Pricing',
     'Teach Union agreed pricing.',
     'Teach Union agreed pricing.',
     10,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"occupation","operator":"EQUALS","value":"Teacher"}]},"then":{"decision":"ACCEPT","premiumOverride":5.99,"premiumDelta":null},"stop":true}',
+    '{"when":{"match":"ALL","conditions":[{"field":"occupation","operator":"EQUALS","value":"Teacher"}]},"then":{"decision":"ACCEPT","premiumOverride":5.99,"premiumDelta":null,"stop":true}}',
     now (),
     now ()
   ),
-  -- Global Shield Green (4ca1c734-42b2-46b9-8710-b40800f89157)
   (
     '003bdbee-4ac8-42c7-8e37-c7fee14d13d5',
-    '4ca1c734-42b2-46b9-8710-b40800f89157',
+    '4ca1c734-42b2-46b9-8710-b40800f89157', -- Global Shield Green
     'Samsung Galaxy Note 7 Auto Decline',
     'The samsung galaxy note 7 has manufacturing issues and is not insurable.',
     'The samsung galaxy note 7 has manufacturing issues and is not insurable.',
     1,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneModel","operator":"EQUALS","value":"Galaxy Note 7"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneModel","operator":"EQUALS","value":"Galaxy Note 7"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
     now ()
   ),
   (
     'bcc90bf0-a2b1-4632-84ab-1a8fdb129b99',
-    '4ca1c734-42b2-46b9-8710-b40800f89157',
+    '4ca1c734-42b2-46b9-8710-b40800f89157', -- Global Shield Green
     'Decline if phone is damaged',
     'This mobile phone can not be insured if it is damaged.',
     'This mobile phone can not be insured if it is damaged.',
     2,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"damaged"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"damaged"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
     now ()
   ),
   (
     'fe97bf20-f5d5-46c0-95c8-1610d414ffc9',
-    '4ca1c734-42b2-46b9-8710-b40800f89157',
+    '4ca1c734-42b2-46b9-8710-b40800f89157', -- Global Shield Green
     'Decline if phone is too old',
     'This mobile phone can not be insured as it is over 4 years old.',
     'This mobile phone can not be insured as it is over 4 years old.',
     3,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneAge","operator":"EQUALS","value":"4+ years"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneAge","operator":"EQUALS","value":"4+ years"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
     now ()
   ),
   (
     '51f08e2b-9674-4f66-91db-b09bcfa5027e',
-    '4ca1c734-42b2-46b9-8710-b40800f89157',
+    '4ca1c734-42b2-46b9-8710-b40800f89157', -- Global Shield Green
     'Student Discount',
     '10% Student Discount',
     'A 10% Student Discount has been applied',
     4,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"occupation","operator":"EQUALS","value":"student"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":-0.1},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"occupation","operator":"EQUALS","value":"student"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":-0.1,"stop":false}}',
     now (),
     now ()
   ),
   (
     '11b13c09-5d58-4dd7-8f83-4745224bee2b',
-    '4ca1c734-42b2-46b9-8710-b40800f89157',
+    '4ca1c734-42b2-46b9-8710-b40800f89157', -- Global Shield Green
     'Lightly Damaged Phone',
     '10% Delta for lightly used phone',
     'This mobile phone has been lightly used and thus will have a higher premium.',
     5,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"lightly used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"lightly used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1,"stop":false}}',
     now (),
     now ()
   ),
   (
     '435cc692-49d1-4a8f-8d9d-1b4f4b910970',
-    '4ca1c734-42b2-46b9-8710-b40800f89157',
+    '4ca1c734-42b2-46b9-8710-b40800f89157', -- Global Shield Green
     'Good condition phone',
     '20% Delta for good condition phone',
     'This mobile phone is in good condition and thus will have a higher premium.',
     6,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"good"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.2},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"good"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.2,"stop":false}}',
     now (),
     now ()
   ),
   (
     '08c80e16-5986-4cb7-a6cd-a96af31a33d9',
-    '4ca1c734-42b2-46b9-8710-b40800f89157',
+    '4ca1c734-42b2-46b9-8710-b40800f89157', -- Global Shield Green
     'Heavily used phone',
     '30% Delta for heavily used phone',
     'This mobile phone has been heavily used and thus will have a higher premium.',
     7,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"heavily used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.3},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"heavily used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.3,"stop":false}}',
     now (),
     now ()
   ),
   (
     '2c98912f-b560-4c69-95e0-32bd8bddeda6',
-    '4ca1c734-42b2-46b9-8710-b40800f89157',
+    '4ca1c734-42b2-46b9-8710-b40800f89157', -- Global Shield Green
     'Apple Tax',
     'Apple phones are more likely to be involved in higher cost claims.',
     'Apple phones are more likely to be involved in higher cost claims.',
     8,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"phoneMake","operator":"EQUALS","value":"Apple"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1},"stop":false}',
+    '{"when":{"match":"ALL","conditions":[{"field":"phoneMake","operator":"EQUALS","value":"Apple"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1,"stop":false}}',
     now (),
     now ()
   ),
   (
     '224ac066-0582-448a-a9eb-ed6ddc73b406',
-    '4ca1c734-42b2-46b9-8710-b40800f89157',
+    '4ca1c734-42b2-46b9-8710-b40800f89157', -- Global Shield Green
     'Teacher Union Pricing',
     'Teach Union agreed pricing.',
     'Teach Union agreed pricing.',
     9,
     true,
-    '{"when":{"match":"all","conditions":[{"field":"occupation","operator":"EQUALS","value":"Teacher"}]},"then":{"decision":"ACCEPT","premiumOverride":5.99,"premiumDelta":null},"stop":true}',
+    '{"when":{"match":"ALL","conditions":[{"field":"occupation","operator":"EQUALS","value":"Teacher"}]},"then":{"decision":"ACCEPT","premiumOverride":5.99,"premiumDelta":null,"stop":true}}',
     now (),
     now ()
-  ) ON CONFLICT (id) DO
-UPDATE
+  )
+ON CONFLICT (id) DO UPDATE
 SET
   product_id = EXCLUDED.product_id,
   name = EXCLUDED.name,
