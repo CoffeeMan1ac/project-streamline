@@ -28,6 +28,7 @@ const defaultProps = {
   premium: "€10.00",
   onToggleActive: vi.fn(),
   onEdit: vi.fn(),
+  onDelete: vi.fn(),
 };
 
 const renderRow = (props = {}) =>

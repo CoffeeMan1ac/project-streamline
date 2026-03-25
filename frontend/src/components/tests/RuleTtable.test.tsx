@@ -67,6 +67,7 @@ const defaultProps = {
   onToggleRuleActive: vi.fn(),
   onEditRule: vi.fn(),
   onReorderRule: vi.fn(),
+  onDeleteRule: vi.fn(),
 };
 
 describe("RuleTable", () => {
