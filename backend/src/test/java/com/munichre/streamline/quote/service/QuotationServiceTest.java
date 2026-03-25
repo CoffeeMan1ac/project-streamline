@@ -41,8 +41,6 @@ class QuotationServiceTest {
 
   @Mock private QuotationRepository quotationRepository;
 
-  @Mock private ProductService productService;
-
   @InjectMocks private QuotationService quotationService;
 
   private UUID productId;

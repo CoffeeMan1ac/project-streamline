@@ -32,7 +32,6 @@ public class QuotationService {
   private final DecisionService decisionService;
   private final ProductService productService;
   private final QuotationRepository quotationRepository;
-  private final ProductService productService;
 
   public QuoteResponse createQuote(QuoteRequest quoteRequest) {
     validateRequiredProductFields(quoteRequest);
