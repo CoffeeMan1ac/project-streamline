@@ -193,7 +193,7 @@ public class ProductService {
 
   public List<TagOptionDto> getAllTags() {
     return productTagRepository.findAllTags().stream()
-        .map(t -> new TagOptionDto(t.getId(), t.getCode(), t.getLabel()))
+        .map(t -> new TagOptionDto(t.getId(), t.getCode(), t.getLabel(), t.getColor()))
         .toList();
   }
 
@@ -206,9 +206,10 @@ public class ProductService {
     ProductTag tag = new ProductTag();
     tag.setCode(request.code());
     tag.setLabel(request.label());
+    tag.setColor(request.color());
 
     ProductTag saved = tagRepository.save(tag);
-    return new TagOptionDto(saved.getId(), saved.getCode(), saved.getLabel());
+    return new TagOptionDto(saved.getId(), saved.getCode(), saved.getLabel(), saved.getColor());
   }
 
   @Transactional
@@ -217,9 +218,10 @@ public class ProductService {
         tagRepository.findById(id).orElseThrow(() -> new ProductTagNotFoundException(id));
 
     tag.setLabel(request.label());
+    tag.setColor(request.color());
 
     ProductTag saved = tagRepository.save(tag);
-    return new TagOptionDto(saved.getId(), saved.getCode(), saved.getLabel());
+    return new TagOptionDto(saved.getId(), saved.getCode(), saved.getLabel(), saved.getColor());
   }
 
   public List<CoverageOptionDto> getAllCoverages() {
@@ -409,7 +411,7 @@ public class ProductService {
     }
 
     private static ProductTagDto toProductTagDto(ProductTagRowDto row) {
-      return new ProductTagDto(row.id(), row.code(), row.label());
+      return new ProductTagDto(row.id(), row.code(), row.label(), row.color());
     }
   }
 }

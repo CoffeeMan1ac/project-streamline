@@ -1,3 +1,3 @@
 package com.munichre.streamline.product.api.dto;
 
-public record CreateTagRequestDto(String code, String label) {}
+public record CreateTagRequestDto(String code, String label, String color) {}

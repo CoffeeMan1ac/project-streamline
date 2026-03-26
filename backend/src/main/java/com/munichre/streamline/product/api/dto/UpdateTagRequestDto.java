@@ -1,3 +1,3 @@
 package com.munichre.streamline.product.api.dto;
 
-public record UpdateTagRequestDto(String label) {}
+public record UpdateTagRequestDto(String label, String color) {}

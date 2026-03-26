@@ -17,7 +17,7 @@ public interface ProductTagRepository extends Repository<Product, UUID> {
       """
     SELECT new com.munichre.streamline.product.repository.dto.ProductTagRowDto(
     p.id,
-      t.id, t.code, t.label
+      t.id, t.code, t.label, t.color
     )
     FROM Product p
     JOIN p.tags t

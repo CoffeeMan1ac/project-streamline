@@ -1,0 +1,1 @@
+ALTER TABLE product_tags ADD COLUMN color VARCHAR(50);

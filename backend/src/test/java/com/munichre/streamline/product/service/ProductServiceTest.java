@@ -287,7 +287,8 @@ public class ProductServiceTest {
           productId,
           UUID.nameUUIDFromBytes(("tag-" + productId + "-" + n).getBytes()),
           "TAG CODE " + n,
-          "TAG LABEL " + n);
+          "TAG LABEL " + n,
+          "#FF0000");
     }
 
     private static ProductDto expectedProduct(
@@ -331,7 +332,7 @@ public class ProductServiceTest {
     }
 
     private static ProductTagDto expectedTag(ProductTagRowDto r) {
-      return new ProductTagDto(r.id(), r.code(), r.label());
+      return new ProductTagDto(r.id(), r.code(), r.label(), r.color());
     }
 
     private static List<ProductTagDto> expectedTags(List<ProductTagRowDto> tagRows) {

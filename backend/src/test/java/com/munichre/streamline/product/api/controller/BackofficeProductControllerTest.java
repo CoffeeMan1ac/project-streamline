@@ -300,8 +300,8 @@ class BackofficeProductControllerTest {
   class CreateTag {
     @Test
     void returns201Created() throws Exception {
-      CreateTagRequestDto request = new CreateTagRequestDto("NEW_TAG", "New Tag");
-      TagOptionDto response = new TagOptionDto(UUID.randomUUID(), "NEW_TAG", "New Tag");
+      CreateTagRequestDto request = new CreateTagRequestDto("NEW_TAG", "New Tag", "#FF0000");
+      TagOptionDto response = new TagOptionDto(UUID.randomUUID(), "NEW_TAG", "New Tag", "#FF0000");
 
       when(productService.createTag(any(CreateTagRequestDto.class))).thenReturn(response);
 
@@ -319,7 +319,7 @@ class BackofficeProductControllerTest {
 
     @Test
     void returns400WhenDuplicateCode() throws Exception {
-      CreateTagRequestDto request = new CreateTagRequestDto("EXISTING", "Tag");
+      CreateTagRequestDto request = new CreateTagRequestDto("EXISTING", "Tag", "#FF0000");
 
       when(productService.createTag(any(CreateTagRequestDto.class)))
           .thenThrow(new DuplicateTagCodeException("EXISTING"));
@@ -339,8 +339,8 @@ class BackofficeProductControllerTest {
     @Test
     void returns200Ok() throws Exception {
       UUID id = UUID.randomUUID();
-      UpdateTagRequestDto request = new UpdateTagRequestDto("Updated Label");
-      TagOptionDto response = new TagOptionDto(id, "TAG_CODE", "Updated Label");
+      UpdateTagRequestDto request = new UpdateTagRequestDto("Updated Label", "#FF0000");
+      TagOptionDto response = new TagOptionDto(id, "TAG_CODE", "Updated Label", "#FF0000");
 
       when(productService.updateTag(eq(id), any(UpdateTagRequestDto.class))).thenReturn(response);
 
@@ -358,7 +358,7 @@ class BackofficeProductControllerTest {
     @Test
     void returns404WhenTagNotFound() throws Exception {
       UUID id = UUID.randomUUID();
-      UpdateTagRequestDto request = new UpdateTagRequestDto("Label");
+      UpdateTagRequestDto request = new UpdateTagRequestDto("Label", "#FF0000");
 
       when(productService.updateTag(eq(id), any(UpdateTagRequestDto.class)))
           .thenThrow(new ProductTagNotFoundException(id));

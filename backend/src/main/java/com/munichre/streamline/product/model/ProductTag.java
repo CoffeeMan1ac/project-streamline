@@ -26,6 +26,9 @@ public class ProductTag {
   @Column(nullable = false)
   private String label;
 
+  @Column(name = "color")
+  private String color;
+
   @CreationTimestamp private LocalDateTime createdAt;
 
   @UpdateTimestamp private LocalDateTime updatedAt;
