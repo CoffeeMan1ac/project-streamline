@@ -61,8 +61,8 @@ describe("Sidebar", () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText(/Rules Management/i)).toBeInTheDocument();
-    expect(screen.getByText(/Products Management/i)).toBeInTheDocument();
+    expect(screen.getByText(/Rules/i)).toBeInTheDocument();
+    expect(screen.getByText(/Products/i)).toBeInTheDocument();
   });
 
   test("renders admin user info", () => {
@@ -133,7 +133,7 @@ describe("Sidebar", () => {
         <Sidebar toggleSidebar={vi.fn()} open={true} toggleTheme={vi.fn()} mode="light" />
       </MemoryRouter>
     );
-    fireEvent.click(screen.getByText("Rules Management"));
+    fireEvent.click(screen.getByText("Rules"));
     expect(mockNavigate).toHaveBeenCalledWith("/rules");
   });
 
@@ -144,7 +144,7 @@ describe("Sidebar", () => {
         <Sidebar toggleSidebar={vi.fn()} open={true} toggleTheme={vi.fn()} mode="light" />
       </MemoryRouter>
     );
-    fireEvent.click(screen.getByText("Products Management"));
+    fireEvent.click(screen.getByText("Products"));
     expect(mockNavigate).toHaveBeenCalledWith("/products");
   });
 
@@ -237,7 +237,7 @@ describe("Sidebar", () => {
         <Sidebar toggleSidebar={vi.fn()} open={true} toggleTheme={vi.fn()} mode="light" />
       </MemoryRouter>
     );
-    expect(screen.getByText("Products Management")).toBeInTheDocument();
+    expect(screen.getByText("Products")).toBeInTheDocument();
   });
 
   test("highlights quotes nav item when on /quotations path", () => {
@@ -270,7 +270,7 @@ describe("Sidebar", () => {
         <Sidebar toggleSidebar={vi.fn()} open={true} toggleTheme={vi.fn()} mode="light" />
       </MemoryRouter>
     );
-    expect(screen.getByText("Rules Management")).toBeInTheDocument();
+    expect(screen.getByText("Rules")).toBeInTheDocument();
   });
 
   test("calls signOut and navigates to login when collapsed logout icon is clicked", async () => {

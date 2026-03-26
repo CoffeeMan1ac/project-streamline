@@ -53,13 +53,13 @@ const Sidebar = ({ toggleSidebar, open, toggleTheme, mode }: SidebarProps) => {
   const navItems = [
     {
       key: "rules",
-      label: "Rules Management",
+      label: "Rules",
       icon: <FeedOutlinedIcon />,
       path: "/rules",
     },
     {
       key: "products",
-      label: "Products Management",
+      label: "Products",
       icon: <ViewInArOutlinedIcon />,
       path: "/products",
     },
@@ -71,7 +71,7 @@ const Sidebar = ({ toggleSidebar, open, toggleTheme, mode }: SidebarProps) => {
     },
     {
       key: "tags",
-      label: "Tags Management",
+      label: "Tags",
       icon: <LocalOfferOutlinedIcon />,
       path: "/tags",
     },

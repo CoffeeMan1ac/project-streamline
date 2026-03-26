@@ -45,6 +45,12 @@ const QuotationsSearchBar = ({
               </InputAdornment>
             ),
           },
+          htmlInput: {
+            sx: {
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            },
+          },
         }}
       />
       <FormControl size="small" sx={{ flex: 1, minWidth: { xs: "100%", sm: 150 } }}>
