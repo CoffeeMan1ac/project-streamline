@@ -6,6 +6,7 @@ type Rule = {
   ruleName: string;
   ruleDescription: string;
   ruleAmount: string;
+  isOverride: boolean;
   type: "neutral" | "positive" | "negative";
 };
 
@@ -94,15 +95,20 @@ const QuotationsPricingBreakdown = ({
         </Typography>
 
         {/* loop through rules*/}
-        {rules.map((rule, index) => (
-          <RuleApplied
-            key={index}
-            ruleName={rule.ruleName}
-            ruleDescription={rule.ruleDescription}
-            ruleAmount={rule.ruleAmount}
-            type={rule.type}
-          />
-        ))}
+        {(() => {
+          const overrideIndex = rules.findIndex((r) => r.isOverride);
+          return rules.map((rule, index) => (
+            <RuleApplied
+              key={index}
+              ruleName={rule.ruleName}
+              ruleDescription={rule.ruleDescription}
+              ruleAmount={rule.ruleAmount}
+              type={rule.type}
+              isOverride={rule.isOverride}
+              isSuperseded={overrideIndex !== -1 && index < overrideIndex}
+            />
+          ));
+        })()}
         <Box height={16} />
 
         {/* Final Premium */}
@@ -161,35 +167,60 @@ const QuotationsPricingBreakdown = ({
             </Box>
 
             {/* Rules that change price */}
-            {rules
-              .filter((rule) => rule.type !== "neutral")
-              .map((rule, index) => (
-                <Box
-                  key={index}
-                  display="flex"
-                  justifyContent="space-between"
-                  alignItems="center"
-                  mb={0.5}
-                >
-                  <Typography sx={{ fontSize: 12, color: "text.secondary" }}>
-                    {rule.ruleName}
-                  </Typography>
+            {(() => {
+              const overrideIndex = rules.findIndex((r) => r.isOverride);
+              return rules
+                .filter((rule) => rule.type !== "neutral")
+                .map((rule, index) => {
+                  const isSuperseded = overrideIndex !== -1 && index < overrideIndex;
+                  return (
+                    <Box
+                      key={index}
+                      display="flex"
+                      justifyContent="space-between"
+                      alignItems="center"
+                      mb={0.5}
+                    >
+                      <Typography
+                        sx={{
+                          fontSize: 12,
+                          color: isSuperseded ? "text.disabled" : "text.secondary",
+                          textDecoration: isSuperseded ? "line-through" : "none",
+                        }}
+                      >
+                        {rule.ruleName}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontSize: 12,
+                          color: isSuperseded
+                            ? "text.disabled"
+                            : rule.type === "negative"
+                              ? "error.main"
+                              : rule.type === "positive"
+                                ? "success.main"
+                                : "text.primary",
+                          textDecoration: isSuperseded ? "line-through" : "none",
+                        }}
+                      >
+                        {rule.ruleAmount}
+                      </Typography>
+                    </Box>
+                  );
+                });
+            })()}
 
-                  <Typography
-                    sx={{
-                      fontSize: 12,
-                      color:
-                        rule.type === "negative"
-                          ? "error.main"
-                          : rule.type === "positive"
-                            ? "success.main"
-                            : "text.primary",
-                    }}
-                  >
-                    {rule.ruleAmount}
-                  </Typography>
-                </Box>
-              ))}
+            {/* Show override row clearly */}
+            {rules.some((r) => r.isOverride) && (
+              <Box display="flex" justifyContent="space-between" alignItems="center" mb={0.5}>
+                <Typography sx={{ fontSize: 12, color: "warning.dark", fontWeight: 600 }}>
+                  ⚡ Override applied
+                </Typography>
+                <Typography sx={{ fontSize: 12, color: "warning.dark", fontWeight: 600 }}>
+                  {rules.find((r) => r.isOverride)?.ruleAmount}
+                </Typography>
+              </Box>
+            )}
 
             {/* Divider */}
             <Box

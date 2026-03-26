@@ -71,6 +71,7 @@ const QuoteDetailsPage = () => {
   const rules = (quote.decisionTrace ?? []).map((entry) => ({
     ruleName: entry.ruleName,
     ruleDescription: entry.ruleDescription ?? "",
+    isOverride: entry.isOverride ?? false,
     ruleAmount:
       entry.adjustmentAmount !== null
         ? entry.adjustmentAmount > 0
