@@ -83,8 +83,14 @@ public class RuleService {
   @Transactional
   public void deleteRule(@NonNull UUID id) {
     Rule rule = findRule(id);
+    Integer deletedPriority = rule.getPriority();
+    UUID productId = rule.getProduct().getId();
+
     rule.setDeleted(true);
     ruleRepository.save(rule);
+
+    // Shift all rules after the deleted one down by 1 to close the gap
+    ruleRepository.decrementPriorityBetween(productId, deletedPriority + 1, Integer.MAX_VALUE);
   }
 
   @Transactional
