@@ -5,5 +5,5 @@ CREATE SEQUENCE IF NOT EXISTS quote_reference_seq
     NO MAXVALUE
     CACHE 1;
 
-ALTER TABLE quotation
+ALTER TABLE quotations
     ADD CONSTRAINT uk_quotation_reference UNIQUE (reference);
