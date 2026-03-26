@@ -12,10 +12,12 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.Where;
 import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "products")
+@Where(clause = "deleted = false")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -74,6 +76,9 @@ public class Product {
    */
   @Column(nullable = false)
   private Boolean active = true;
+
+  @Column(nullable = false)
+  private boolean deleted = false;
 
   @CreationTimestamp private LocalDateTime createdAt;
 

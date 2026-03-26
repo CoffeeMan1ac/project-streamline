@@ -24,12 +24,14 @@ interface ProductTableProps {
   }[];
   onEditProduct: (id: string) => void;
   onToggleProductActive: (id: string) => void;
+  onDeleteProduct: (id: string) => void;
 }
 
 const ProductTable: React.FC<ProductTableProps> = ({
   products,
   onEditProduct,
   onToggleProductActive,
+  onDeleteProduct,
 }) => {
   return (
     <Box
@@ -65,6 +67,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
                 tags={product.tags}
                 onToggleActive={() => onToggleProductActive(product.id)}
                 onEdit={() => onEditProduct(product.id)}
+                onDelete={() => onDeleteProduct(product.id)}
               />
             ))}
           </TableBody>

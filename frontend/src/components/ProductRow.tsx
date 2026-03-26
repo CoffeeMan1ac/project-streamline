@@ -16,6 +16,7 @@ interface ProductRowProps {
   tags?: string[];
   onToggleActive: () => void;
   onEdit: () => void;
+  onDelete: () => void;
 }
 
 const tagConfig: Record<
@@ -46,6 +47,7 @@ const ProductRow: React.FC<ProductRowProps> = ({
   tags = [],
   onToggleActive,
   onEdit,
+  onDelete,
 }) => {
   return (
     <TableRow>
@@ -117,7 +119,7 @@ const ProductRow: React.FC<ProductRowProps> = ({
           <IconButton size="small" color="inherit" onClick={onEdit} data-testid="edit-button">
             <EditIcon fontSize="small" />
           </IconButton>
-          <IconButton size="small" color="error">
+          <IconButton size="small" color="error" onClick={onDelete}>
             <DeleteIcon fontSize="small" />
           </IconButton>
         </Box>

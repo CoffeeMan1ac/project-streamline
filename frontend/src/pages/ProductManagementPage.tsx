@@ -21,6 +21,7 @@ import CreateProductPage from "./CreateProductPage";
 import ProductTable from "../components/ProductTable";
 import { productService, type ProductDto } from "../services/productService";
 import { useMediaQuery, useTheme } from "@mui/material";
+import http from "../api/http";
 
 const ProductManagementPage = () => {
   const [editProductId, setEditProductId] = useState<string | null>(null);
@@ -56,6 +57,15 @@ const ProductManagementPage = () => {
       setProducts((prev) => prev.map((p) => (p.id === id ? { ...p, active: !p.active } : p)));
     } catch {
       setError("Failed to update product. Please try again.");
+    }
+  };
+
+  const handleDeleteProduct = async (id: string) => {
+    try {
+      await http.delete(`/backoffice/products/${id}`);
+      fetchProducts();
+    } catch {
+      setError("Failed to delete product. Please try again.");
     }
   };
 
@@ -184,6 +194,7 @@ const ProductManagementPage = () => {
             products={filteredProducts}
             onEditProduct={(id) => setEditProductId(id)}
             onToggleProductActive={handleToggleProductActive}
+            onDeleteProduct={handleDeleteProduct}
           />
         )}
       </Box>

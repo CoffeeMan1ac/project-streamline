@@ -107,4 +107,10 @@ public class BackofficeProductController {
     productService.updateProduct(id, request);
     return ResponseEntity.ok().build();
   }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> deleteProduct(@PathVariable UUID id) {
+    productService.deleteProduct(id);
+    return ResponseEntity.noContent().build();
+  }
 }

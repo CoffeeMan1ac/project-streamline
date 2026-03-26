@@ -322,6 +322,14 @@ public class ProductService {
     productRepository.save(product);
   }
 
+  @Transactional
+  public void deleteProduct(UUID id) {
+    Product product =
+        productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
+    product.setDeleted(true);
+    productRepository.save(product);
+  }
+
   public ProductType getProductType(UUID productTypeId) {
     return productTypeRepository.findProductTypeById(productTypeId);
   }
