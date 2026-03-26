@@ -10,6 +10,7 @@ import {
 } from "@dnd-kit/core";
 import type { DragEndEvent } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import {
   Table,
   TableBody,
@@ -89,7 +90,12 @@ const RuleTable: React.FC<RuleTableProps> = ({
           {numberOfActiveRules || 0} active, {numberOfInactiveRules || 0} inactive
         </Typography>
       </Box>
-      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+        modifiers={[restrictToVerticalAxis]}
+      >
         <TableContainer component={Paper} sx={{ maxWidth: "100%" }}>
           <Table sx={{ minWidth: { xs: "unset", sm: 650 } }}>
             <TableHead>

@@ -39,7 +39,7 @@ const RuleRow: React.FC<RuleRowProps> = ({
   return (
     <TableRow ref={setNodeRef} style={style}>
       <TableCell>
-        <IconButton size="small" {...attributes} {...listeners}>
+        <IconButton size="small" {...attributes} {...listeners} sx={{ touchAction: "none" }}>
           <DragIndicatorIcon />
         </IconButton>
       </TableCell>
