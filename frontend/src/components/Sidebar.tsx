@@ -33,6 +33,7 @@ const Sidebar = ({ toggleSidebar, open, toggleTheme, mode }: SidebarProps) => {
     if (path.startsWith("/quotations")) return "quotes";
     if (path.startsWith("/quotes")) return "quotes";
     if (path.startsWith("/tags")) return "tags";
+    if (path.startsWith("/coverages")) return "coverages";
     return "rules";
   };
 
@@ -74,6 +75,12 @@ const Sidebar = ({ toggleSidebar, open, toggleTheme, mode }: SidebarProps) => {
       label: "Tags",
       icon: <LocalOfferOutlinedIcon />,
       path: "/tags",
+    },
+    {
+      key: "coverages",
+      label: "Coverages Management",
+      icon: <LocalOfferOutlinedIcon />,
+      path: "/coverages",
     },
   ];
   const theme = useTheme();
