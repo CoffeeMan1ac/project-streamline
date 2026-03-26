@@ -1,5 +1,5 @@
 import React from "react";
-import { TableRow, TableCell, Chip, IconButton } from "@mui/material";
+import { TableRow, TableCell, Chip, IconButton, Box } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
@@ -15,6 +15,7 @@ interface RuleRowProps {
   numberOfConditions: number;
   decision: string;
   premium: string;
+  earlyExit?: boolean;
   onToggleActive: () => void;
   onEdit: () => void;
   onDelete: () => void;
@@ -28,6 +29,7 @@ const RuleRow: React.FC<RuleRowProps> = ({
   numberOfConditions,
   decision,
   premium,
+  earlyExit,
   onToggleActive,
   onEdit,
   onDelete,
@@ -43,7 +45,18 @@ const RuleRow: React.FC<RuleRowProps> = ({
       </TableCell>
       <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>{order}</TableCell>
 
-      <TableCell>{ruleName}</TableCell>
+      <TableCell>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          {ruleName}
+          {earlyExit && (
+            <Chip
+              label="Early Exit"
+              size="small"
+              sx={{ backgroundColor: "#EEF2FF", color: "#6366F1", fontWeight: 500 }}
+            />
+          )}
+        </Box>
+      </TableCell>
 
       <TableCell>
         <Chip

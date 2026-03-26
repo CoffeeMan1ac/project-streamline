@@ -13,6 +13,7 @@ import {
   FormControlLabel,
   InputLabel,
   Button,
+  Switch,
 } from "@mui/material";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import http from "../api/http";
@@ -96,6 +97,7 @@ const EditRulePage = ({ id, products = [], onClose, onSave }: EditRulePageProps)
   const [overrideValue, setOverrideValue] = useState("");
   const [deltaValue, setDeltaValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [earlyExit, setEarlyExit] = useState(false);
 
   // start with one empty condition by default
   const [conditions, setConditions] = useState<Condition[]>([
@@ -232,7 +234,7 @@ const EditRulePage = ({ id, products = [], onClose, onSave }: EditRulePageProps)
               premiumOutcome === "override" && overrideValue ? parseFloat(overrideValue) : null,
             premiumDelta:
               premiumOutcome === "delta" && deltaValue ? parseFloat(deltaValue) / 100 : null,
-            stop: false,
+            stop: earlyExit,
           },
         },
       };
@@ -674,7 +676,31 @@ const EditRulePage = ({ id, products = [], onClose, onSave }: EditRulePageProps)
                 )}
               </>
             )}
-
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                mb: 3,
+                p: 2,
+                bgcolor: "background.default",
+                borderRadius: 2,
+              }}
+            >
+              <Box>
+                <Typography variant="body1" fontWeight="bold" sx={{ color: "text.primary" }}>
+                  Early Exit
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Stop evaluating further rules if this rule matches
+                </Typography>
+              </Box>
+              <Switch
+                checked={earlyExit}
+                onChange={(e) => setEarlyExit(e.target.checked)}
+                disabled={isLoading}
+              />
+            </Box>
             <hr
               style={{
                 borderColor: "#d0d0d0f9",

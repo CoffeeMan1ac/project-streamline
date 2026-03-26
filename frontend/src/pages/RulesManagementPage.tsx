@@ -24,6 +24,7 @@ type Rule = {
   numberOfConditions: number;
   decision: string;
   premium: string;
+  earlyExit?: boolean;
 };
 
 type RuleResponseDto = {
@@ -40,6 +41,7 @@ type RuleResponseDto = {
       decision: string;
       premiumDelta: number | null;
       premiumOverride: number | null;
+      stop: boolean;
     };
   };
 };
@@ -59,6 +61,7 @@ const mapRuleResponseToRule = (dto: RuleResponseDto): Rule => ({
         : dto.ruleConfig.then.premiumOverride
           ? `€${dto.ruleConfig.then.premiumOverride}`
           : "-",
+  earlyExit: dto.ruleConfig.then.stop ?? false,
 });
 
 const RulesManagementPage = () => {
