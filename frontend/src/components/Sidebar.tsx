@@ -66,7 +66,7 @@ const Sidebar = ({ toggleSidebar, open, toggleTheme, mode }: SidebarProps) => {
     },
     {
       key: "quotes",
-      label: "Quotations",
+      label: "Quotations Management",
       icon: <SearchOutlinedIcon />,
       path: "/quotes",
     },
