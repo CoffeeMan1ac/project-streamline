@@ -82,23 +82,6 @@ describe("CreateTag", () => {
     expect(mockCreate).not.toHaveBeenCalled();
   });
 
-  test("shows validation error for invalid key", async () => {
-    const user = userEvent.setup();
-
-    render(<CreateTag open={true} onClose={vi.fn()} onCreate={vi.fn()} />);
-
-    const inputs = screen.getAllByRole("textbox");
-
-    await user.type(inputs[0], "Test");
-    await user.type(inputs[1], "Invalid Key");
-
-    await user.click(screen.getByRole("button", { name: /create tag/i }));
-
-    expect(
-      screen.getByText(/use lowercase letters, numbers, and hyphens only/i)
-    ).toBeInTheDocument();
-  });
-
   test("submits valid form", async () => {
     const user = userEvent.setup();
     const mockCreate = vi.fn();

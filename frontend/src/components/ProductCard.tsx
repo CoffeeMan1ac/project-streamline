@@ -50,7 +50,7 @@ interface ProductCardProps {
 }
 
 const tagColorMap: Record<string, { border: string; chip: string; text: string }> = {
-  green: { border: "#34C759", chip: "#34C759", text: "#34C759" },
+  green: { border: "#28A745", chip: "#28A745", text: "#28A745" },
   blue: { border: "primary.main", chip: "primary.main", text: "primary.main" },
   orange: { border: "#F59E0B", chip: "#F59E0B", text: "#F59E0B" },
   purple: { border: "#A855F7", chip: "#A855F7", text: "#A855F7" },
@@ -156,7 +156,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           component={RouterLink}
           to={`/quote?productId=${product.id}`}
         >
-          Get a Quote
+          Get a {isGreen ? "Green " : ""}Quote
         </Button>
       </CardContent>
     </Card>

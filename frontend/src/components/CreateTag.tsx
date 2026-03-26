@@ -15,7 +15,7 @@ const colorOptions = [
   {
     key: "green",
     label: "Green",
-    borderColor: "#34C759",
+    borderColor: "#28A745",
     backgroundColor: "#C7F0D4",
   },
   {
@@ -65,8 +65,6 @@ const CreateTag = ({ open, onClose, onCreate }: CreateTagProps) => {
 
     if (!tagKey.trim()) {
       nextErrors.key = "Tag key is required";
-    } else if (!/^[a-z0-9-]+$/.test(tagKey)) {
-      nextErrors.key = "Use lowercase letters, numbers, and hyphens only";
     }
 
     setErrors(nextErrors);
@@ -122,9 +120,7 @@ const CreateTag = ({ open, onClose, onCreate }: CreateTagProps) => {
               value={tagKey}
               onChange={(e) => setTagKey(e.target.value)}
               error={!!errors.key}
-              helperText={
-                errors.key || "Used internally for identification (lowercase, hyphen-separated)"
-              }
+              helperText={errors.key || "Used internally for identification"}
             />
           </Box>
 
