@@ -44,6 +44,8 @@ const QuotationDetails = ({ quotationId, timeStamp, status }: QuotationDetailsPr
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          flexWrap: "wrap",
+          gap: 1,
         }}
       >
         <Box>
@@ -60,7 +62,7 @@ const QuotationDetails = ({ quotationId, timeStamp, status }: QuotationDetailsPr
             </Typography>
           </Box>
         </Box>
-        <Box display="flex" alignItems="center" gap={1}>
+        <Box display="flex" alignItems="center" gap={1} sx={{ flexShrink: 0 }}>
           <StatusIcon sx={{ fontSize: 25, color: `${statusColor}.main` }} />
           <Chip
             label={statusLabel}
