@@ -28,6 +28,7 @@ type QuoteDetailDto = {
   processingTimeMs: number;
   createdAt: string;
   productName: string | null;
+  baseRate: number | null;
 };
 
 const QuoteDetailsPage = () => {
@@ -144,7 +145,7 @@ const QuoteDetailsPage = () => {
 
           <Box sx={{ width: { xs: "100%", md: "60%" } }}>
             <QuotationsPricingBreakdown
-              basePrice={quote.premium !== null ? `€${quote.premium.toFixed(2)}` : "—"}
+              basePrice={quote.baseRate !== null ? `€${quote.baseRate.toFixed(2)}` : "—"}
               premiumName={quote.productName ?? ""}
               finalPremium={quote.premium !== null ? `€${quote.premium.toFixed(2)}` : "—"}
               rules={rules}

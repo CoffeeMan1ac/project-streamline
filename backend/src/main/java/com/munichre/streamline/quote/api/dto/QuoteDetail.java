@@ -18,6 +18,7 @@ public record QuoteDetail(
     List<DecisionTraceEntry> decisionTrace,
     ApplicantData customerInput,
     BigDecimal premium,
+    BigDecimal baseRate,
     long processingTimeMs,
     LocalDateTime createdAt,
     String productName) {
@@ -32,6 +33,7 @@ public record QuoteDetail(
         quotation.getDecisionTrace(),
         quotation.getCustomerInput(),
         quotation.getPremium(),
+        quotation.getProduct() != null ? quotation.getProduct().getBaseRate() : null,
         quotation.getProcessingTimeMs(),
         quotation.getCreatedAt(),
         quotation.getProduct() != null ? quotation.getProduct().getName() : null);

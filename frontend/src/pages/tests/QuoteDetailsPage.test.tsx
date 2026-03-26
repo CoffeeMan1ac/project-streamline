@@ -36,6 +36,7 @@ vi.mock("../../api/http", () => ({
           postalCode: "D01",
           country: "ireland",
         },
+        baseRate: 10.5,
         premium: 13.19,
         processingTimeMs: 18,
         createdAt: "2026-03-26T00:03:43.329944",
