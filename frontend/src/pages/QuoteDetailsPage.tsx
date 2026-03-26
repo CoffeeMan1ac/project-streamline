@@ -1,18 +1,98 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, CircularProgress } from "@mui/material";
 import QuotationDetails from "../components/QuotationDetails";
 import QuotationsPricingBreakdown from "../components/QuotationsPricingBreakdown";
 import QuotationsProductDetails from "../components/QuotationsProductDetails";
 import QuotePersonalDetails from "../components/QuotePersonalDetails";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import http from "../api/http";
+
+type DecisionTraceEntry = {
+  ruleName: string;
+  ruleDescription: string;
+  isOverride: boolean;
+  adjustmentAmount: number | null;
+  outcome: string | null;
+};
+
+type QuoteDetailDto = {
+  id: string;
+  reference: string;
+  status: "ACCEPTED" | "DECLINED" | "REFER";
+  reason: string | null;
+  rulesApplied: string[];
+  decisionTrace: DecisionTraceEntry[];
+  customerInput: Record<string, string>;
+  premium: number | null;
+  processingTimeMs: number;
+  createdAt: string;
+  productName: string | null;
+};
 
 const QuoteDetailsPage = () => {
   const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  const [quote, setQuote] = useState<QuoteDetailDto | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!id) return;
+    http
+      .get<QuoteDetailDto>(`/backoffice/quote/${id}`)
+      .then((res) => setQuote(res.data))
+      .catch((err) => console.error("Failed to fetch quote:", err))
+      .finally(() => setLoading(false));
+  }, [id]);
+
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" py={8}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (!quote) return null;
+
+  const fullName =
+    `${quote.customerInput?.firstName ?? ""} ${quote.customerInput?.lastName ?? ""}`.trim();
+  const address = [
+    quote.customerInput?.address1,
+    quote.customerInput?.address2,
+    quote.customerInput?.city,
+    quote.customerInput?.postalCode,
+    quote.customerInput?.country,
+  ]
+    .filter(Boolean)
+    .join(", ");
+
+  const rules = (quote.decisionTrace ?? []).map((entry) => ({
+    ruleName: entry.ruleName,
+    ruleDescription: entry.ruleDescription ?? "",
+    ruleAmount:
+      entry.adjustmentAmount !== null
+        ? entry.adjustmentAmount > 0
+          ? `+€${entry.adjustmentAmount.toFixed(2)}`
+          : entry.adjustmentAmount < 0
+            ? `-€${Math.abs(entry.adjustmentAmount).toFixed(2)}`
+            : "€0.00"
+        : (entry.outcome ?? ""),
+    type:
+      entry.outcome === "DECLINE" || entry.outcome === "REFER"
+        ? ("neutral" as const)
+        : entry.adjustmentAmount && entry.adjustmentAmount > 0
+          ? ("negative" as const)
+          : entry.adjustmentAmount && entry.adjustmentAmount < 0
+            ? ("positive" as const)
+            : ("neutral" as const),
+  }));
+
   return (
     <Box display="flex" flexDirection="column" alignItems="center" sx={{ p: 3 }}>
       <Box width="100%" maxWidth="1200px">
         <Button
-          onClick={() => navigate("/quotes")}
+          onClick={() => navigate("/quotations")}
           variant="text"
           size="small"
           sx={{ color: "text.secondary", mb: 2 }}
@@ -24,9 +104,15 @@ const QuoteDetailsPage = () => {
 
       <Box width="100%">
         <QuotationDetails
-          quotationId="PS-2024-001234"
-          timeStamp="2024-03-15 14:30"
-          status="ACCEPTED"
+          quotationId={quote.reference}
+          timeStamp={new Date(quote.createdAt).toLocaleString()}
+          status={
+            quote.status === "DECLINED"
+              ? "REJECTED"
+              : quote.status === "REFER"
+                ? "PENDING"
+                : "ACCEPTED"
+          }
         />
 
         <Box
@@ -35,6 +121,7 @@ const QuoteDetailsPage = () => {
             gap: 3,
             mt: 3,
             alignItems: "flex-start",
+            flexDirection: { xs: "column", md: "row" },
           }}
         >
           <Box
@@ -42,45 +129,25 @@ const QuoteDetailsPage = () => {
               display: "flex",
               flexDirection: "column",
               gap: 3,
-              width: "40%",
+              width: { xs: "100%", md: "40%" },
             }}
           >
             <QuotePersonalDetails
-              fullName="John Smith"
-              email="john.smith@email.com"
-              phone="+353 87 123 4567"
-              dateOfBirth="15 May 1992"
-              address="123 Main Street, Dublin 2, Ireland"
+              fullName={fullName}
+              email={quote.customerInput?.emailAddress ?? ""}
+              phone={quote.customerInput?.phoneNumber ?? ""}
+              dateOfBirth={quote.customerInput?.dateOfBirth ?? ""}
+              address={address}
             />
-
-            <QuotationsProductDetails productName="Premium Shield" />
+            <QuotationsProductDetails productName={quote.productName ?? "—"} />
           </Box>
 
-          <Box sx={{ width: "60%" }}>
+          <Box sx={{ width: { xs: "100%", md: "60%" } }}>
             <QuotationsPricingBreakdown
-              basePrice="€10.00"
-              premiumName="Premium Shield"
-              finalPremium="€12.50"
-              rules={[
-                {
-                  ruleName: "Age Limit Check",
-                  ruleDescription: "Customer age 32 within acceptable range",
-                  ruleAmount: "€0.00",
-                  type: "neutral",
-                },
-                {
-                  ruleName: "Device Age Validation",
-                  ruleDescription: "Device age 18 months - premium loading applied",
-                  ruleAmount: "+€1.50",
-                  type: "negative",
-                },
-                {
-                  ruleName: "Loyalty Discount",
-                  ruleDescription: "Returning customer discount applied",
-                  ruleAmount: "-€1.00",
-                  type: "positive",
-                },
-              ]}
+              basePrice={quote.premium !== null ? `€${quote.premium.toFixed(2)}` : "—"}
+              premiumName={quote.productName ?? ""}
+              finalPremium={quote.premium !== null ? `€${quote.premium.toFixed(2)}` : "—"}
+              rules={rules}
             />
           </Box>
         </Box>
