@@ -28,4 +28,41 @@ describe("CoveragesManagementPage", () => {
       screen.getByText("Manage insurance coverage types and descriptions")
     ).toBeInTheDocument();
   });
+
+  test("renders all coverage names", () => {
+    renderPage();
+    expect(screen.getByText("Accidental Damage")).toBeInTheDocument();
+    expect(screen.getByText("Battery Replacement")).toBeInTheDocument();
+    expect(screen.getByText("Data Recovery")).toBeInTheDocument();
+    expect(screen.getByText("Extended Warranty")).toBeInTheDocument();
+    expect(screen.getByText("Liquid Damage")).toBeInTheDocument();
+    expect(screen.getByText("Screen Damage")).toBeInTheDocument();
+    expect(screen.getAllByText("Theft").length).toBeGreaterThan(0);
+    expect(screen.getByText("Worldwide Coverage")).toBeInTheDocument();
+  });
+
+  test("renders coverage descriptions", () => {
+    renderPage();
+    const descriptions = screen.getAllByText(/coverage for/i);
+    expect(descriptions.length).toBeGreaterThan(0);
+  });
+
+  test("renders category chips", () => {
+    renderPage();
+    const categories = ["Damage", "Warranty", "Theft", "Other"];
+    categories.forEach((category) => {
+      const chips = screen.getAllByText(category);
+      expect(chips.length).toBeGreaterThan(0);
+    });
+  });
+
+  test("renders used in products counts", () => {
+    renderPage();
+    const numbers = screen.getAllByText(/\d+/);
+    const hasProductNumbers = numbers.some((number) => {
+      const row = number.closest("tr");
+      return row && row.textContent?.includes("products");
+    });
+    expect(hasProductNumbers).toBe(true);
+  });
 });
