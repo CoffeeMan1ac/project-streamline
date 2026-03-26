@@ -64,7 +64,6 @@ function AppContent() {
             <Route path="/quotations/:id" element={<QuoteDetailsPage />} />
             <Route path="/tags" element={<TagsManagementPage />} />
             <Route path="/coverages" element={<CoveragesManagementPage />} />
-
           </Route>
         </Route>
 
