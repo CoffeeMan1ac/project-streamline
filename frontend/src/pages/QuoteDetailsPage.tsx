@@ -92,7 +92,7 @@ const QuoteDetailsPage = () => {
     <Box display="flex" flexDirection="column" alignItems="center" sx={{ p: 3 }}>
       <Box width="100%" maxWidth="1200px">
         <Button
-          onClick={() => navigate("/quotations")}
+          onClick={() => navigate("/quotes")}
           variant="text"
           size="small"
           sx={{ color: "text.secondary", mb: 2 }}
