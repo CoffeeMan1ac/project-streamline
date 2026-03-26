@@ -11,6 +11,7 @@ import { Brightness4, Brightness7 } from "@mui/icons-material";
 import { useAuth } from "../context/AuthContext";
 import { useTheme, useMediaQuery } from "@mui/material";
 import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
+import LayersOutlinedIcon from "@mui/icons-material/LayersOutlined";
 
 const EXPANDED_WIDTH = 260;
 const COLLAPSED_WIDTH = 64;
@@ -79,7 +80,7 @@ const Sidebar = ({ toggleSidebar, open, toggleTheme, mode }: SidebarProps) => {
     {
       key: "coverages",
       label: "Coverages Management",
-      icon: <LocalOfferOutlinedIcon />,
+      icon: <LayersOutlinedIcon />,
       path: "/coverages",
     },
   ];

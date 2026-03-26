@@ -20,7 +20,7 @@ const categoryConfig: Record<string, { color: string; bg: string }> = {
   Other: { color: "#4a148c", bg: "#f3e5f5" },
 };
 
-const CoverageRow: React.FC<CoverageRowProps> = ({
+const CoveragesRow: React.FC<CoverageRowProps> = ({
   coverageName,
   description,
   category,
@@ -89,4 +89,4 @@ const CoverageRow: React.FC<CoverageRowProps> = ({
   );
 };
 
-export default CoverageRow;
+export default CoveragesRow;
