@@ -20,8 +20,6 @@ export interface Product {
   id: string;
   name: string;
   price: string;
-  mostPopular: boolean;
-  green: boolean;
   tags: ProductTag[];
   coverages: CoverageDetail[];
   exclusions: CoverageDetail[];
@@ -44,22 +42,31 @@ export interface ProductTag {
   id: string;
   code: string;
   label: string;
+  color?: string;
 }
 
 interface ProductCardProps {
   product: Product;
 }
 
+const tagColorMap: Record<string, { border: string; chip: string; text: string }> = {
+  green: { border: "#34C759", chip: "#34C759", text: "#34C759" },
+  blue: { border: "primary.main", chip: "primary.main", text: "primary.main" },
+  orange: { border: "#F59E0B", chip: "#F59E0B", text: "#F59E0B" },
+  purple: { border: "#A855F7", chip: "#A855F7", text: "#A855F7" },
+  red: { border: "#EF4444", chip: "#EF4444", text: "#EF4444" },
+};
+
+const defaultColors = { border: "primary.main", chip: "primary.main", text: "primary.main" };
+
 const ProductCard = ({ product }: ProductCardProps) => {
-  const hasHighlightedBorder = product.mostPopular || product.green;
-  const cardBorderColor = product.green
-    ? "success.light"
-    : product.mostPopular
-      ? "primary.main"
-      : "grey.300";
+  const primaryTag = product.tags?.[0];
+  const colors = (primaryTag?.color && tagColorMap[primaryTag.color]) || defaultColors;
+  const hasHighlightedBorder = !!primaryTag;
+
   return (
     <Card
-      elevation={product.mostPopular ? 6 : 2}
+      elevation={hasHighlightedBorder ? 6 : 2}
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -68,24 +75,24 @@ const ProductCard = ({ product }: ProductCardProps) => {
         borderRadius: 3,
         position: "relative",
         border: hasHighlightedBorder ? "2px solid" : "1px solid",
-        borderColor: cardBorderColor,
+        borderColor: colors.border,
         transition: "transform 0.2s ease-in-out",
-        "&:hover": {
-          transform: "translateY(-4px)", // Subtle hover effect
-        },
+        "&:hover": { transform: "translateY(-4px)" },
       }}
     >
       <CardContent sx={{ p: 4, display: "flex", flexDirection: "column", flex: 1 }}>
         <Box sx={{ display: "flex", justifyContent: "left", gap: 1, mb: 2, flexWrap: "wrap" }}>
-          {product.tags?.map((tag) => (
-            <Chip
-              key={tag.id}
-              label={tag.label}
-              size="small"
-              color="primary"
-              sx={{ bgcolor: product.green ? "success.main" : "primary.main" }}
-            />
-          ))}
+          {product.tags?.map((tag) => {
+            const chipColor = (tag.color && tagColorMap[tag.color]?.chip) || defaultColors.chip;
+            return (
+              <Chip
+                key={tag.id}
+                label={tag.label}
+                size="small"
+                sx={{ bgcolor: chipColor, color: "white", fontWeight: 600 }}
+              />
+            );
+          })}
         </Box>
 
         <Typography fontWeight="bold" variant="h6" gutterBottom sx={{ mt: 0 }}>
@@ -93,12 +100,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
         </Typography>
 
         <Box display="flex" alignItems="baseline" mb={2}>
-          <Typography
-            variant="h4"
-            component="span"
-            fontWeight="bold"
-            color={product.green ? "success.main" : "primary.main"}
-          >
+          <Typography variant="h4" component="span" fontWeight="bold" sx={{ color: colors.text }}>
             {product.price}
           </Typography>
           <Typography variant="subtitle2" component="span" sx={{ ml: 0.5 }}>
@@ -116,13 +118,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
                   <CheckCircleOutlineIcon fontSize="small" sx={{ color: "success.main" }} />
                 )}
               </ListItemIcon>
-
               <ListItemText
                 primary={coverage.label}
-                primaryTypographyProps={{
-                  variant: "body2",
-                  color: "text.primary",
-                }}
+                primaryTypographyProps={{ variant: "body2", color: "text.primary" }}
               />
             </ListItem>
           ))}
@@ -132,7 +130,6 @@ const ProductCard = ({ product }: ProductCardProps) => {
               <ListItemIcon sx={{ minWidth: 32 }}>
                 <CancelOutlinedIcon fontSize="small" sx={{ color: "text.secondary" }} />
               </ListItemIcon>
-
               <ListItemText
                 primary={exclusion.label}
                 primaryTypographyProps={{
@@ -148,21 +145,16 @@ const ProductCard = ({ product }: ProductCardProps) => {
         <Button
           fullWidth
           variant="contained"
-          color="primary" // keep a valid palette color
           size="large"
           sx={{
             mt: "auto",
-            textDecoration: "none",
-            bgcolor: product.green ? "success.main" : "primary.main",
-            "&:hover": {
-              bgcolor: product.green ? "success.main" : "primary.dark",
-              color: "white",
-            },
+            bgcolor: colors.chip,
+            "&:hover": { bgcolor: colors.chip, filter: "brightness(0.9)", color: "white" },
           }}
           component={RouterLink}
           to={`/quote?productId=${product.id}`}
         >
-          Get a {product.green ? "Green" : ""} Quote
+          Get a Quote
         </Button>
       </CardContent>
     </Card>

@@ -11,13 +11,16 @@ import {
   Box,
 } from "@mui/material";
 
+interface Tag {
+  id: string;
+  tagName: string;
+  tagKey: string;
+  color?: string;
+}
+
 interface TagsTableProps {
-  tags: {
-    id: string;
-    tagName: string;
-    tagKey: string;
-  }[];
-  onEditTag: (id: string) => void;
+  tags: Tag[];
+  onEditTag: (id: string, label: string, color: string) => void;
   onDeleteTag: (id: string) => void;
 }
 
@@ -30,6 +33,7 @@ const TagsTable: React.FC<TagsTableProps> = ({ tags, onEditTag, onDeleteTag }) =
             <TableRow sx={{ bgcolor: "background.default" }}>
               <TableCell>Tag Name</TableCell>
               <TableCell>Tag Key</TableCell>
+              <TableCell>Colour</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -37,9 +41,11 @@ const TagsTable: React.FC<TagsTableProps> = ({ tags, onEditTag, onDeleteTag }) =
             {tags.map((tag) => (
               <TagsRow
                 key={tag.id}
+                id={tag.id}
                 tagName={tag.tagName}
                 tagKey={tag.tagKey}
-                onEdit={() => onEditTag(tag.id)}
+                color={tag.color}
+                onEdit={(label, color) => onEditTag(tag.id, label, color)}
                 onDelete={() => onDeleteTag(tag.id)}
               />
             ))}

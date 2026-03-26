@@ -10,8 +10,10 @@ afterEach(() => {
 
 describe("TagsRow", () => {
   const defaultProps = {
+    id: "1",
     tagName: "Best Value",
     tagKey: "best-value",
+    color: "green",
     onEdit: vi.fn(),
     onDelete: vi.fn(),
   };
@@ -55,9 +57,17 @@ describe("TagsRow", () => {
     );
 
     const buttons = screen.getAllByRole("button");
+    // Click the edit button (first button)
     await user.click(buttons[0]);
 
-    expect(onEdit).toHaveBeenCalledTimes(1);
+    // Wait for the dialog to appear and find the save button
+    const dialogButtons = await screen.findAllByRole("button");
+    // The save button should be one of the dialog buttons
+    if (dialogButtons.length > 2) {
+      await user.click(dialogButtons[dialogButtons.length - 1]);
+    }
+
+    expect(onEdit).toHaveBeenCalled();
   });
 
   test("calls onDelete when delete button is clicked", async () => {

@@ -1,10 +1,26 @@
 import "@testing-library/jest-dom/vitest";
-import { render, screen, cleanup } from "@testing-library/react";
-import { describe, test, expect, afterEach } from "vitest";
+import { render, screen, cleanup, waitFor } from "@testing-library/react";
+import { describe, test, expect, afterEach, vi, beforeEach } from "vitest";
 import TagsManagementPage from "../TagsManagementPage";
+import * as httpModule from "../../api/http";
+
+vi.mock("../../api/http");
 
 afterEach(() => {
   cleanup();
+});
+
+beforeEach(() => {
+  vi.mocked(httpModule.default.get).mockResolvedValue({
+    data: [
+      {
+        id: "1",
+        code: "best-value",
+        label: "Best Value",
+        color: "green",
+      },
+    ],
+  });
 });
 
 describe("TagsManagementPage", () => {
@@ -27,9 +43,11 @@ describe("TagsManagementPage", () => {
     expect(screen.getByRole("button", { name: /create tag/i })).toBeInTheDocument();
   });
 
-  test("renders table section", () => {
+  test("renders table section", async () => {
     render(<TagsManagementPage />);
 
-    expect(screen.getByText("Tag Name")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText("Tag Name")).toBeInTheDocument();
+    });
   });
 });

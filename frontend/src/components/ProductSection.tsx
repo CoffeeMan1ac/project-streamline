@@ -32,8 +32,6 @@ const ProductSection = () => {
           id: product.id,
           name: product.name,
           price: `€${product.baseRate.toFixed(2)}`,
-          mostPopular: product.tags.find((tag) => tag.code === "POPULAR"),
-          green: product.tags.find((tag) => tag.code === "GREEN"),
           tags: product.tags,
           coverages: product.coverages.map((coverage) => ({
             ...coverage,
