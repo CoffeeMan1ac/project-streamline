@@ -8,7 +8,6 @@ const testProducts = [
   {
     id: "1",
     productName: "Standard Shield",
-    modifiedBy: "Michael Brown",
     status: "active",
     active: true,
     price: "€9.99/month",
@@ -17,7 +16,6 @@ const testProducts = [
   {
     id: "2",
     productName: "Premium Shield",
-    modifiedBy: "Sarah Mitchell",
     status: "inactive",
     active: false,
     price: "€14.99/month",
@@ -59,12 +57,6 @@ describe("ProductTable", () => {
     renderTable();
     expect(screen.getByText("Standard Shield")).toBeInTheDocument();
     expect(screen.getByText("Premium Shield")).toBeInTheDocument();
-  });
-
-  test("renders modified by text", () => {
-    renderTable();
-    expect(screen.getByText("Modified by Michael Brown")).toBeInTheDocument();
-    expect(screen.getByText("Modified by Sarah Mitchell")).toBeInTheDocument();
   });
 
   test("calls onEditProduct with correct id when edit is clicked", () => {

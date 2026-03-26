@@ -8,7 +8,6 @@ import ArchiveOutlinedIcon from "@mui/icons-material/ArchiveOutlined";
 
 interface ProductRowProps {
   productName: string;
-  modifiedBy: string;
   status: string;
   active: boolean;
   price: string;
@@ -39,7 +38,6 @@ const tagConfig: Record<
 
 const ProductRow: React.FC<ProductRowProps> = ({
   productName,
-  modifiedBy,
   status,
   active,
   price,
@@ -81,9 +79,6 @@ const ProductRow: React.FC<ProductRowProps> = ({
             );
           })}
         </Box>
-        <Typography variant="caption" color="text.secondary">
-          Modified by {modifiedBy}
-        </Typography>
       </TableCell>
 
       <TableCell>

@@ -15,7 +15,6 @@ interface ProductTableProps {
   products: {
     id: string;
     productName: string;
-    modifiedBy: string;
     status: string;
     active: boolean;
     price: string;
@@ -59,7 +58,6 @@ const ProductTable: React.FC<ProductTableProps> = ({
               <ProductRow
                 key={product.id}
                 productName={product.productName}
-                modifiedBy={product.modifiedBy}
                 status={product.status}
                 active={product.active}
                 price={product.price}

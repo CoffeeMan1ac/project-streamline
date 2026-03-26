@@ -339,31 +339,6 @@ describe("ProductManagementPage", () => {
     });
   });
 
-  test("filters products by retired status shows all non-active/inactive", async () => {
-    const { productService } = await import("../../services/productService");
-    vi.mocked(productService.getProducts).mockResolvedValueOnce({
-      data: [
-        { ...mockProduct, id: "p1", active: true },
-        { ...mockProduct, id: "p2", active: false },
-      ],
-    } as any);
-
-    renderPage();
-
-    await waitFor(() => {
-      expect(screen.getByRole("button", { name: /edit p1/i })).toBeInTheDocument();
-    });
-
-    const combobox = screen.getByRole("combobox");
-    fireEvent.mouseDown(combobox);
-    fireEvent.click(screen.getByText("Retired"));
-
-    await waitFor(() => {
-      expect(screen.getByRole("button", { name: /edit p1/i })).toBeInTheDocument();
-      expect(screen.getByRole("button", { name: /edit p2/i })).toBeInTheDocument();
-    });
-  });
-
   test("renders products with tags", async () => {
     const { productService } = await import("../../services/productService");
     vi.mocked(productService.getProducts).mockResolvedValueOnce({

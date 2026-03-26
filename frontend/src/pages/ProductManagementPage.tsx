@@ -80,7 +80,6 @@ const ProductManagementPage = () => {
     .map((p) => ({
       id: p.id,
       productName: p.name,
-      modifiedBy: "-",
       status: p.active ? "active" : "inactive",
       active: p.active,
       price: `€${p.baseRate.toFixed(2)}/mo`,
@@ -157,7 +156,6 @@ const ProductManagementPage = () => {
                 <MenuItem value="all">All Products</MenuItem>
                 <MenuItem value="active">Active</MenuItem>
                 <MenuItem value="inactive">Inactive</MenuItem>
-                <MenuItem value="retired">Retired</MenuItem>
               </Select>
             </FormControl>
             <Button
