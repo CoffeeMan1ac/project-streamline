@@ -15,7 +15,6 @@ import com.munichre.streamline.quote.model.ApplicantData;
 import com.munichre.streamline.quote.model.Quotation;
 import com.munichre.streamline.quote.model.QuotationStatus;
 import com.munichre.streamline.quote.repository.QuotationRepository;
-import java.security.SecureRandom;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -26,8 +25,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class QuotationService {
 
-  private static final SecureRandom RNG = new SecureRandom();
   private static final char[] LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+  private static final int LETTER_COMBINATIONS = 26 * 26 * 26;
+  private static final int MAX_REFERENCE_SPACE = 1000 * LETTER_COMBINATIONS;
 
   private final DecisionService decisionService;
   private final ProductService productService;
@@ -39,9 +39,12 @@ public class QuotationService {
     Decision decision = decisionService.decide(quoteRequest);
     Product product = productService.getProduct(quoteRequest.productId());
 
+    Long seq = quotationRepository.getNextReferenceValue();
+    String reference = formatReference(seq);
+
     Quotation quotation =
         Quotation.builder()
-            .reference(generateUniqueReference())
+            .reference(reference)
             .status(QuotationStatus.from(decision.status()))
             .reason(decision.reason())
             .rulesApplied(decision.rulesApplied())
@@ -101,20 +104,21 @@ public class QuotationService {
     return quotations.stream().map(QuoteSummary::from).toList();
   }
 
-  private String generateReference() {
-    int numbers = RNG.nextInt(1000); // 000-999
-    char a = LETTERS[RNG.nextInt(26)];
-    char b = LETTERS[RNG.nextInt(26)];
-    char c = LETTERS[RNG.nextInt(26)];
-    return String.format("%03d%c%c%c", numbers, a, b, c);
-  }
+  private String formatReference(Long seq) {
+    long index = seq - 1;
 
-  private String generateUniqueReference() {
-    String ref;
-    do {
-      ref = generateReference();
-    } while (quotationRepository.existsByReference(ref));
-    return ref;
+    if (index < 0 || index >= MAX_REFERENCE_SPACE) {
+      throw new IllegalStateException("Reference space exhausted");
+    }
+
+    int numberPart = (int) (index / LETTER_COMBINATIONS);
+    int letterIndex = (int) (index % LETTER_COMBINATIONS);
+
+    char first = LETTERS[letterIndex / (26 * 26)];
+    char second = LETTERS[(letterIndex / 26) % 26];
+    char third = LETTERS[letterIndex % 26];
+
+    return "%03d%c%c%c".formatted(numberPart, first, second, third);
   }
 
   private void validateRequiredProductFields(QuoteRequest request) {
