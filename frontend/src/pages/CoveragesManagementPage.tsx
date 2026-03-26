@@ -1,6 +1,8 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { useState } from "react";
 import CoveragesTable from "../components/CoveragesTable";
+import CoveragesSearchBar from "../components/CoveragesSearchBar";
 
 const testCoverages = [
   {
@@ -62,6 +64,21 @@ const testCoverages = [
 ];
 
 const CoveragesManagementPage = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+
+  const filteredCoverages = testCoverages.filter((coverage) => {
+    const matchesSearch =
+      coverage.coverageName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      coverage.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = categoryFilter === "all" || coverage.category === categoryFilter;
+    return matchesSearch && matchesCategory;
+  });
+
+  const handleCreateCoverage = () => {
+    console.log("create coverage");
+  };
+
   return (
     <Box sx={{ mx: { xs: 2, sm: 3, md: 4, lg: 8, xl: 20 }, my: 4 }}>
       <Box
@@ -71,6 +88,7 @@ const CoveragesManagementPage = () => {
           alignItems: "flex-start",
           flexWrap: "wrap",
           gap: 2,
+          mb: 3,
         }}
       >
         <Box>
@@ -83,9 +101,19 @@ const CoveragesManagementPage = () => {
         </Box>
       </Box>
 
+      <CoveragesSearchBar
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        categoryFilter={categoryFilter}
+        onCategoryFilterChange={setCategoryFilter}
+        totalCoverages={testCoverages.length}
+        showingCoverages={filteredCoverages.length}
+        onCreateCoverage={handleCreateCoverage}
+      />
+
       <Box sx={{ mt: 4 }}>
         <CoveragesTable
-          coverages={testCoverages}
+          coverages={filteredCoverages}
           onEdit={(id) => console.log("edit", id)}
           onDelete={(id) => console.log("delete", id)}
         />
