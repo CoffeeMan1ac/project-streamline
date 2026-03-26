@@ -61,16 +61,19 @@ const QuotationDetails = ({ quotationId, timeStamp, status }: QuotationDetailsPr
           </Box>
         </Box>
         <Box display="flex" alignItems="center" gap={1}>
-          <StatusIcon color={statusColor} sx={{ fontSize: 25 }} />
-
+          <StatusIcon sx={{ fontSize: 25, color: `${statusColor}.main` }} />
           <Chip
             label={statusLabel}
-            color={statusColor}
-            variant="outlined"
+            size="medium"
             sx={{
-              fontWeight: 600,
-              bgcolor: `${statusColor}.light`,
+              fontWeight: 700,
+              fontSize: 13,
+              letterSpacing: 0.5,
               px: 1,
+              bgcolor: `${statusColor}.light`,
+              color: "text.primary",
+              border: "1px solid",
+              borderColor: `${statusColor}.main`,
             }}
           />
         </Box>

@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom/vitest";
 import { render, screen, cleanup, fireEvent, waitFor } from "@testing-library/react";
-import { describe, test, expect, vi, afterEach, beforeEach } from "vitest";
+import { describe, test, expect, vi, afterEach } from "vitest";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import QuoteDetailsPage from "../QuoteDetailsPage";
 
