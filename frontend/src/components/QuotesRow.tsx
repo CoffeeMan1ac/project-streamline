@@ -47,7 +47,10 @@ const QuotesRow: React.FC<QuotesRowProps> = ({
   const config = statusConfig[status];
 
   return (
-    <TableRow>
+    <TableRow
+      onClick={onViewDetails}
+      sx={{ cursor: "pointer", "&:hover": { bgcolor: "action.hover" } }}
+    >
       <TableCell>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <ArticleOutlinedIcon sx={{ fontSize: 16, color: "text.secondary" }} />
@@ -88,18 +91,21 @@ const QuotesRow: React.FC<QuotesRowProps> = ({
         </Typography>
       </TableCell>
 
-      <TableCell>
+      <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <CalendarTodayOutlinedIcon sx={{ fontSize: 14, color: "text.secondary" }} />
           <Typography variant="body2">{date}</Typography>
         </Box>
       </TableCell>
 
-      <TableCell>
+      <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>
         <Button
           size="small"
           color="primary"
-          onClick={onViewDetails}
+          onClick={(e) => {
+            e.stopPropagation();
+            onViewDetails();
+          }}
           data-testid="view-details-button"
           sx={{ textTransform: "none", fontWeight: 500 }}
         >

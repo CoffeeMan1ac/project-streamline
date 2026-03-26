@@ -50,8 +50,8 @@ const QuotationTable: React.FC<QuotationTableProps> = ({ quotations, onViewDetai
                 <TableCell>PRODUCT</TableCell>
                 <TableCell>STATUS</TableCell>
                 <TableCell>PREMIUM</TableCell>
-                <TableCell>DATE</TableCell>
-                <TableCell>ACTIONS</TableCell>
+                <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>DATE</TableCell>
+                <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>ACTIONS</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
