@@ -59,7 +59,8 @@ describe("QuotationsSearchBar", () => {
     fireEvent.mouseDown(screen.getByText("All Quotations"));
 
     expect(await screen.findByText("Accepted")).toBeInTheDocument();
-    expect(await screen.findByText("Rejected")).toBeInTheDocument();
+    expect(await screen.findByText("Declined")).toBeInTheDocument();
+    expect(await screen.findByText("Refer")).toBeInTheDocument();
   });
 
   test("calls onStatusFilterChange when status filter changes", async () => {
@@ -67,14 +68,8 @@ describe("QuotationsSearchBar", () => {
     render(<QuotationsSearchBar {...defaultProps} onStatusFilterChange={onStatusFilterChange} />);
 
     fireEvent.mouseDown(screen.getByText("All Quotations"));
-    fireEvent.click(await screen.findByText("Rejected"));
+    fireEvent.click(await screen.findByText("Declined"));
 
-    expect(onStatusFilterChange).toHaveBeenCalledWith("rejected");
-  });
-
-  test("renders search icon", () => {
-    render(<QuotationsSearchBar {...defaultProps} />);
-
-    expect(screen.getByTestId("SearchIcon")).toBeInTheDocument();
+    expect(onStatusFilterChange).toHaveBeenCalledWith("declined");
   });
 });

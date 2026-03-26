@@ -56,7 +56,8 @@ const QuotationsSearchBar = ({
         >
           <MenuItem value="all">All Quotations</MenuItem>
           <MenuItem value="accepted">Accepted</MenuItem>
-          <MenuItem value="rejected">Rejected</MenuItem>
+          <MenuItem value="declined">Declined</MenuItem>
+          <MenuItem value="refer">Refer</MenuItem>
         </Select>
       </FormControl>
     </Paper>
