@@ -8,7 +8,6 @@ const plan: Product = {
   id: "uuid-123",
   name: "Basic",
   price: "€9.00",
-  mostPopular: false,
   coverages: [
     {
       id: "",
@@ -33,7 +32,6 @@ const plan: Product = {
       green: false,
     },
   ],
-  green: false,
   tags: [],
 };
 
@@ -41,15 +39,13 @@ const popularPlan: Product = {
   ...plan,
   name: "Pro",
   price: "€19.00",
-  mostPopular: true,
-  tags: [{ id: "1", code: "POPULAR", label: "Most Popular" }],
+  tags: [{ id: "1", code: "POPULAR", label: "Most Popular", color: "blue" }],
 };
 
 const greenPlan: Product = {
   ...plan,
   name: "Green",
-  green: true,
-  tags: [{ id: "1", code: "GREEN", label: "Eco Friendly" }],
+  tags: [{ id: "1", code: "GREEN", label: "Eco Friendly", color: "green" }],
 };
 
 describe("ProductCard", () => {

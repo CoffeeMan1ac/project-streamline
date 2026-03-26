@@ -61,6 +61,8 @@ const defaultColors = { border: "primary.main", chip: "primary.main", text: "pri
 
 const ProductCard = ({ product }: ProductCardProps) => {
   const primaryTag = product.tags?.[0];
+  const isGreen = primaryTag?.color === "green";
+  const isPopular = primaryTag?.color === "blue";
   const colors = (primaryTag?.color && tagColorMap[primaryTag.color]) || defaultColors;
   const hasHighlightedBorder = !!primaryTag;
 
@@ -74,8 +76,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
         height: "100%",
         borderRadius: 3,
         position: "relative",
-        border: hasHighlightedBorder ? "2px solid" : "1px solid",
-        borderColor: colors.border,
+        border: isPopular ? "2px solid" : "1px solid",
+        borderColor: isGreen ? colors.border : isPopular ? colors.border : "grey.300",
         transition: "transform 0.2s ease-in-out",
         "&:hover": { transform: "translateY(-4px)" },
       }}
