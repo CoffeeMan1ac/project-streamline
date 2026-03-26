@@ -74,11 +74,13 @@ const QuoteDetailsPage = () => {
     isOverride: entry.isOverride ?? false,
     ruleAmount:
       entry.adjustmentAmount !== null
-        ? entry.adjustmentAmount > 0
-          ? `+€${entry.adjustmentAmount.toFixed(2)}`
-          : entry.adjustmentAmount < 0
-            ? `-€${Math.abs(entry.adjustmentAmount).toFixed(2)}`
-            : "€0.00"
+        ? entry.isOverride
+          ? `€${entry.adjustmentAmount.toFixed(2)}`
+          : entry.adjustmentAmount > 0
+            ? `+€${entry.adjustmentAmount.toFixed(2)}`
+            : entry.adjustmentAmount < 0
+              ? `-€${Math.abs(entry.adjustmentAmount).toFixed(2)}`
+              : "€0.00"
         : (entry.outcome ?? ""),
     type:
       entry.outcome === "DECLINE" || entry.outcome === "REFER"
