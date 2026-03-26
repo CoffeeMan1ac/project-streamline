@@ -35,6 +35,7 @@ describe("ProductTable", () => {
       products: testProducts,
       onEditProduct: vi.fn(),
       onToggleProductActive: vi.fn(),
+      onDeleteProduct: vi.fn(),
       ...overrides,
     };
 

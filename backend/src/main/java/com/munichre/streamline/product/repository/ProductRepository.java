@@ -14,93 +14,77 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
 
   @Query(
       """
-              SELECT new com.munichre.streamline.product.repository.dto.ProductRowDto(
-                p.id,
-                p.baseRate,
-                p.name,
-                p.description,
-                p.startDate,
-                p.endDate,
-                p.active,
-                t.id,
-                t.code,
-                t.label
-              )
-              FROM Product p
-              JOIN p.type t
-              WHERE p.active = true
-                AND p.startDate <= :now
-                AND (p.endDate is null or p.endDate >= :now)
-              ORDER BY p.baseRate asc
-            """)
+            SELECT new com.munichre.streamline.product.repository.dto.ProductRowDto(
+              p.id, p.baseRate, p.name, p.description,
+              p.startDate, p.endDate, p.active,
+              t.id, t.code, t.label
+            )
+            FROM Product p
+            JOIN p.type t
+            WHERE p.active = true
+              AND p.startDate <= :now
+              AND (p.endDate is null or p.endDate >= :now)
+              AND p.deleted = false
+            ORDER BY p.baseRate asc
+          """)
   List<ProductRowDto> findActiveProductRows(@Param("now") LocalDateTime now);
 
   @Query(
       """
-              SELECT new com.munichre.streamline.product.repository.dto.ProductRowDto(
-                p.id,
-                p.baseRate,
-                p.name,
-                p.description,
-                p.startDate,
-                p.endDate,
-                p.active,
-                t.id,
-                t.code,
-                t.label
-              )
-              FROM Product p
-              JOIN p.type t
-              WHERE NOT (p.active = true
-                AND p.startDate <= :now
-                AND (p.endDate is null or p.endDate >= :now))
-              ORDER BY p.baseRate asc
-            """)
+            SELECT new com.munichre.streamline.product.repository.dto.ProductRowDto(
+              p.id, p.baseRate, p.name, p.description,
+              p.startDate, p.endDate, p.active,
+              t.id, t.code, t.label
+            )
+            FROM Product p
+            JOIN p.type t
+            WHERE NOT (p.active = true
+              AND p.startDate <= :now
+              AND (p.endDate is null or p.endDate >= :now))
+              AND p.deleted = false
+            ORDER BY p.baseRate asc
+          """)
   List<ProductRowDto> findInactiveProductRows(@Param("now") LocalDateTime now);
 
   @Query(
       """
-              SELECT new com.munichre.streamline.product.repository.dto.ProductRowDto(
-                p.id,
-                p.baseRate,
-                p.name,
-                p.description,
-                p.startDate,
-                p.endDate,
-                p.active,
-                t.id,
-                t.code,
-                t.label
-              )
-              FROM Product p
-              JOIN p.type t
-              ORDER BY p.baseRate asc
-            """)
+            SELECT new com.munichre.streamline.product.repository.dto.ProductRowDto(
+              p.id, p.baseRate, p.name, p.description,
+              p.startDate, p.endDate, p.active,
+              t.id, t.code, t.label
+            )
+            FROM Product p
+            JOIN p.type t
+            WHERE p.deleted = false
+            ORDER BY p.baseRate asc
+          """)
   List<ProductRowDto> findProductRows();
 
   @Query(
       """
-              SELECT new com.munichre.streamline.product.api.dto.ProductOptionDto(
-                p.id,
-                p.name
-              )
-              FROM Product p
-              WHERE p.active = TRUE
-                AND p.startDate <= :now
-                AND (p.endDate IS NULL OR p.endDate >= :now)
-              ORDER BY p.baseRate ASC
-            """)
+            SELECT new com.munichre.streamline.product.api.dto.ProductOptionDto(
+              p.id,
+              p.name
+            )
+            FROM Product p
+            WHERE p.active = TRUE
+              AND p.startDate <= :now
+              AND (p.endDate IS NULL OR p.endDate >= :now)
+              AND p.deleted = false
+            ORDER BY p.baseRate ASC
+          """)
   List<ProductOptionDto> findActiveProductOptions(@Param("now") LocalDateTime now);
 
   @Query(
       """
-              SELECT new com.munichre.streamline.product.api.dto.ProductOptionDto(
-                p.id,
-                p.name
-              )
-              FROM Product p
-              ORDER BY p.baseRate ASC
-            """)
+            SELECT new com.munichre.streamline.product.api.dto.ProductOptionDto(
+              p.id,
+              p.name
+            )
+            FROM Product p
+            WHERE p.deleted = false
+            ORDER BY p.baseRate ASC
+          """)
   List<ProductOptionDto> findProductOptions();
 
   @Query(

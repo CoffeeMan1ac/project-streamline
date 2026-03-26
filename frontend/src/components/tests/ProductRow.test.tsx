@@ -20,6 +20,7 @@ describe("ProductRow", () => {
       tags: [],
       onToggleActive: vi.fn(),
       onEdit: vi.fn(),
+      onDelete: vi.fn(),
       ...overrides,
     };
 
