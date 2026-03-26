@@ -9,7 +9,8 @@ INSERT INTO
     active,
     rule_config,
     created_at,
-    updated_at
+    updated_at,
+    deleted
   )
 VALUES
   (
@@ -22,7 +23,8 @@ VALUES
     true,
     '{"when":{"match":"ANY","conditions":[{"field":"country","operator":"EQUALS","value":"uk"}, {"field":"country","operator":"EQUALS","value":"usa"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '5b3297ff-1502-410c-9507-a79fa96ee57d',
@@ -34,7 +36,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"damaged"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '16f4e8e9-bbc3-4f82-bba5-2a0b6fad2546',
@@ -46,7 +49,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneAge","operator":"EQUALS","value":"4+ years"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '227e6aa9-e78c-4022-9fdf-45f9c90d4d88',
@@ -58,7 +62,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"occupation","operator":"EQUALS","value":"student"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":-0.1,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     'e04707eb-9a58-4767-89f0-4118b7b121e5',
@@ -70,7 +75,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"lightly used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '133b7601-89aa-4146-bdde-0b864082ccef',
@@ -82,7 +88,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"good"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.2,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '0deb1413-c895-4592-b683-0d813e796f97',
@@ -94,7 +101,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"heavily used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.3,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     'e6a21e12-2f26-4dc7-9946-2b95992eb5a6',
@@ -106,7 +114,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneModel","operator":"EQUALS","value":"Galaxy Note 7"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '81c81fab-7e3f-4d9c-be9d-85a1c7b2f0d8',
@@ -118,7 +127,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneMake","operator":"EQUALS","value":"Apple"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     'b1d96efa-61a8-42b9-9f26-6ef9d0ba7ec3',
@@ -130,7 +140,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"occupation","operator":"EQUALS","value":"Teacher"}]},"then":{"decision":"ACCEPT","premiumOverride":5.99,"premiumDelta":null,"stop":true}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     'ca66832d-1904-48ce-ac21-079abd7bf64a',
@@ -142,7 +153,8 @@ VALUES
     true,
     '{"when":{"match":"ANY","conditions":[{"field":"country","operator":"EQUALS","value":"uk"}, {"field":"country","operator":"EQUALS","value":"usa"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '0c4760c6-dbfc-4cf4-9bed-4e998a32553f',
@@ -154,7 +166,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneModel","operator":"EQUALS","value":"Galaxy Note 7"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '9e0b0c67-edaf-4528-a5b4-87e607b821b5',
@@ -166,7 +179,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"damaged"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     'd9866c96-4da9-4b71-91d5-4e4ff4219e5a',
@@ -178,7 +192,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneAge","operator":"EQUALS","value":"4+ years"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     'e194f57b-706a-436a-a325-acd0290478fd',
@@ -190,7 +205,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"occupation","operator":"EQUALS","value":"student"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":-0.1,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '888b3676-74a5-4dd9-91b9-adf013cd4115',
@@ -202,7 +218,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"lightly used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     'b12f139b-2194-42a7-992d-1fe73cf8a74c',
@@ -214,7 +231,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"good"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.2,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     'fa3f8353-2e0d-45bd-8e3c-4e7aec04eced',
@@ -226,7 +244,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"heavily used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.3,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '058802c9-1554-407e-b0db-bbdb561374f5',
@@ -238,7 +257,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneMake","operator":"EQUALS","value":"Apple"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     'c98272c3-833e-4f0d-aa18-f0c691906a59',
@@ -250,7 +270,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"occupation","operator":"EQUALS","value":"Teacher"}]},"then":{"decision":"ACCEPT","premiumOverride":7.99,"premiumDelta":null,"stop":true}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '0a3e4d33-ee0a-4219-9342-086a4ad217c1',
@@ -262,7 +283,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneModel","operator":"EQUALS","value":"Galaxy Note 7"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     'cb3db399-2ba3-4f8a-9426-bf1816f7c00e',
@@ -274,7 +296,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"damaged"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '1bf6459f-9a27-4b0e-bc38-dbbf21fd09e2',
@@ -286,7 +309,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneAge","operator":"EQUALS","value":"4+ years"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     'ec54ff77-eb8c-4b27-baaf-03f20392aa0d',
@@ -298,7 +322,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"occupation","operator":"EQUALS","value":"student"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":-0.1,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '5270f510-4201-4dd6-b4dc-5b6a44354db0',
@@ -310,7 +335,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"lightly used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     'f2b68d86-088e-4aeb-86c5-d1946cc136a2',
@@ -322,7 +348,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"good"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.2,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     'cb6c9256-0b3e-42ca-9f8d-046e6abb8f70',
@@ -334,7 +361,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"heavily used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.3,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     'e8218679-1b23-447b-a90d-6146cb3a69b9',
@@ -346,7 +374,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneMake","operator":"EQUALS","value":"Apple"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '6b58ae74-d6ef-4f9a-b1c2-de6275e0a203',
@@ -358,7 +387,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"occupation","operator":"EQUALS","value":"Teacher"}]},"then":{"decision":"ACCEPT","premiumOverride":9.99,"premiumDelta":null,"stop":true}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '488fef05-dc14-47f0-a77c-465eb9fabf8f',
@@ -370,7 +400,8 @@ VALUES
     true,
     '{"when":{"match":"ANY","conditions":[{"field":"country","operator":"EQUALS","value":"uk"}, {"field":"country","operator":"EQUALS","value":"usa"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     'dde0eb84-dbfd-49d4-a39e-e961b07e7cac',
@@ -382,7 +413,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"damaged"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '39cd57e9-c3f6-4d32-b34f-6a1d2f1dc80c',
@@ -394,7 +426,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneAge","operator":"EQUALS","value":"4+ years"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '83862a5b-8d60-4596-826f-b4420e92725a',
@@ -406,7 +439,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"occupation","operator":"EQUALS","value":"student"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":-0.1,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '7a3563a4-3e7b-4b0f-b1d9-3c0ff42ca8e6',
@@ -418,7 +452,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"lightly used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '203560f7-6253-42de-b61a-a85d98633b05',
@@ -430,7 +465,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"good"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.2,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '966899ec-cbd7-4936-8169-7dac8942dbcd',
@@ -442,7 +478,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"heavily used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.3,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     'fcfa3332-0162-4c6f-beba-b38545f2f91c',
@@ -454,7 +491,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneModel","operator":"EQUALS","value":"Galaxy Note 7"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '0c994dc8-abf0-4f35-87fe-9b36d9903d72',
@@ -466,7 +504,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneMake","operator":"EQUALS","value":"Apple"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '166077e4-77a9-465b-834a-87f258209e3a',
@@ -478,7 +517,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"occupation","operator":"EQUALS","value":"Teacher"}]},"then":{"decision":"ACCEPT","premiumOverride":3.99,"premiumDelta":null,"stop":true}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     'bb7fde20-0176-4d1a-9b67-ce07f291376f',
@@ -490,7 +530,8 @@ VALUES
     true,
     '{"when":{"match":"ANY","conditions":[{"field":"country","operator":"EQUALS","value":"uk"}, {"field":"country","operator":"EQUALS","value":"usa"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '1afc33a1-109e-4de1-a139-d3ca0b295a59',
@@ -502,7 +543,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneModel","operator":"EQUALS","value":"Galaxy Note 7"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     'b6ae5c5c-ee8d-49d3-85c5-ed551fb3358a',
@@ -514,7 +556,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"damaged"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '03d2f83a-f4cb-48a8-8def-5d2f0df5b492',
@@ -526,7 +569,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneAge","operator":"EQUALS","value":"4+ years"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '8023b61e-a8e4-4dfd-bc1a-538c0d91f7e9',
@@ -538,7 +582,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"occupation","operator":"EQUALS","value":"student"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":-0.1,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '2670d53b-4749-47b2-a2fb-cd50998389ff',
@@ -550,7 +595,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"lightly used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '2258168e-7cca-4515-8a94-c18617a09c84',
@@ -562,7 +608,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"good"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.2,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '2e9403ce-5360-4053-98f7-7fab910fec9f',
@@ -574,7 +621,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"heavily used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.3,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '982410a9-5a5b-4924-88d5-dc2055e11907',
@@ -586,7 +634,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneMake","operator":"EQUALS","value":"Apple"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     'd0c8dc18-ae46-47ef-84bf-fe554e20a90d',
@@ -598,7 +647,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"occupation","operator":"EQUALS","value":"Teacher"}]},"then":{"decision":"ACCEPT","premiumOverride":5.99,"premiumDelta":null,"stop":true}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '003bdbee-4ac8-42c7-8e37-c7fee14d13d5',
@@ -610,7 +660,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneModel","operator":"EQUALS","value":"Galaxy Note 7"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     'bcc90bf0-a2b1-4632-84ab-1a8fdb129b99',
@@ -622,7 +673,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"damaged"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     'fe97bf20-f5d5-46c0-95c8-1610d414ffc9',
@@ -634,7 +686,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneAge","operator":"EQUALS","value":"4+ years"}]},"then":{"decision":"DECLINE","premiumOverride":null,"premiumDelta":null,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '51f08e2b-9674-4f66-91db-b09bcfa5027e',
@@ -646,7 +699,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"occupation","operator":"EQUALS","value":"student"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":-0.1,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '11b13c09-5d58-4dd7-8f83-4745224bee2b',
@@ -658,7 +712,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"lightly used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '435cc692-49d1-4a8f-8d9d-1b4f4b910970',
@@ -670,7 +725,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"good"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.2,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '08c80e16-5986-4cb7-a6cd-a96af31a33d9',
@@ -682,7 +738,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneCondition","operator":"EQUALS","value":"heavily used"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.3,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '2c98912f-b560-4c69-95e0-32bd8bddeda6',
@@ -694,7 +751,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"phoneMake","operator":"EQUALS","value":"Apple"}]},"then":{"decision":"ACCEPT","premiumOverride":null,"premiumDelta":0.1,"stop":false}}',
     now (),
-    now ()
+    now (),
+    false
   ),
   (
     '224ac066-0582-448a-a9eb-ed6ddc73b406',
@@ -706,7 +764,8 @@ VALUES
     true,
     '{"when":{"match":"ALL","conditions":[{"field":"occupation","operator":"EQUALS","value":"Teacher"}]},"then":{"decision":"ACCEPT","premiumOverride":5.99,"premiumDelta":null,"stop":true}}',
     now (),
-    now ()
+    now (),
+    false
   )
 ON CONFLICT (id) DO UPDATE
 SET
@@ -717,4 +776,5 @@ SET
   priority = EXCLUDED.priority,
   active = EXCLUDED.active,
   rule_config = EXCLUDED.rule_config,
+  deleted = EXCLUDED.deleted,
   updated_at = now ();

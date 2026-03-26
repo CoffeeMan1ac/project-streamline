@@ -10,7 +10,8 @@ INSERT INTO products (
   end_date,
   active,
   created_at,
-  updated_at
+  updated_at,
+  deleted
 )
 VALUES
 (
@@ -23,7 +24,8 @@ VALUES
   NULL,
   true,
   now(),
-  now()
+  now(),
+  false
 ),
 (
   '1ef9d485-b72c-4983-8aa9-5daeb4693709',
@@ -35,7 +37,8 @@ VALUES
   NULL,
   true,
   now(),
-  now()
+  now(),
+  false
 ),
 (
   'e4c364c6-962f-48bc-9eea-c36ac5091dc9',
@@ -47,7 +50,8 @@ VALUES
   NULL,
   true,
   now(),
-  now()
+  now(),
+  false
 ),
 (
   '5f257c25-924a-440a-87c0-e3d8efa635a4',
@@ -59,7 +63,8 @@ VALUES
   NULL,
   true,
   now(),
-  now()
+  now(),
+  false
 ),
 (
   '4ca1c734-42b2-46b9-8710-b40800f89157',
@@ -71,7 +76,8 @@ VALUES
   NULL,
   true,
   now(),
-  now()
+  now(),
+  false
 ),
 (
   '90e4ad03-2505-41db-a5b6-03bd84cca6df',
@@ -83,14 +89,16 @@ VALUES
   NULL,
   true,
   now(),
-  now()
+  now(),
+  false
 )
 ON CONFLICT (id) DO UPDATE SET
-  base_rate      = EXCLUDED.base_rate,
-  name           = EXCLUDED.name,
-  product_type_id= EXCLUDED.product_type_id,
-  description    = EXCLUDED.description,
-  start_date     = EXCLUDED.start_date,
-  end_date       = EXCLUDED.end_date,
-  active         = EXCLUDED.active,
-  updated_at     = now();
+  base_rate       = EXCLUDED.base_rate,
+  name            = EXCLUDED.name,
+  product_type_id = EXCLUDED.product_type_id,
+  description     = EXCLUDED.description,
+  start_date      = EXCLUDED.start_date,
+  end_date        = EXCLUDED.end_date,
+  active          = EXCLUDED.active,
+  deleted         = EXCLUDED.deleted,
+  updated_at      = now();
