@@ -89,7 +89,7 @@ describe("QuoteDetailsPage", () => {
       expect(screen.getByRole("button", { name: /back to quotations/i })).toBeInTheDocument();
     });
     fireEvent.click(screen.getByRole("button", { name: /back to quotations/i }));
-    expect(mockNavigate).toHaveBeenCalledWith("/quotations");
+    expect(mockNavigate).toHaveBeenCalledWith("/quotes");
   });
 
   test("renders quotation details component", async () => {
