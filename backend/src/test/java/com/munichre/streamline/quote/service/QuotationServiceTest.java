@@ -3,7 +3,6 @@ package com.munichre.streamline.quote.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 import com.munichre.streamline.decision.dto.Decision;
@@ -79,7 +78,7 @@ class QuotationServiceTest {
     void shouldCreateQuoteAndMapFields() {
       when(productService.getProduct(productId)).thenReturn(mockProduct);
       when(decisionService.decide(mockRequest)).thenReturn(mockDecision);
-      when(quotationRepository.existsByReference(anyString())).thenReturn(false);
+      when(quotationRepository.getNextReferenceValue()).thenReturn(1L);
       when(quotationRepository.save(any(Quotation.class)))
           .thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -88,19 +87,6 @@ class QuotationServiceTest {
       assertThat(response).isNotNull();
       verify(decisionService).decide(mockRequest);
       verify(quotationRepository).save(any(Quotation.class));
-    }
-
-    @Test
-    @DisplayName("Should loop and retry reference generation if a collision occurs")
-    void shouldHandleReferenceCollision() {
-      when(productService.getProduct(productId)).thenReturn(mockProduct);
-      when(decisionService.decide(mockRequest)).thenReturn(mockDecision);
-      when(quotationRepository.existsByReference(anyString())).thenReturn(true).thenReturn(false);
-      when(quotationRepository.save(any(Quotation.class))).thenReturn(mockQuotation);
-
-      quotationService.createQuote(mockRequest);
-
-      verify(quotationRepository, times(2)).existsByReference(anyString());
     }
   }
 
@@ -147,7 +133,7 @@ class QuotationServiceTest {
 
       when(productService.getProduct(productId)).thenReturn(mockProduct);
       when(decisionService.decide(request)).thenReturn(mockDecision);
-      when(quotationRepository.existsByReference(anyString())).thenReturn(false);
+      when(quotationRepository.getNextReferenceValue()).thenReturn(1L);
       when(quotationRepository.save(any(Quotation.class))).thenAnswer(inv -> inv.getArgument(0));
 
       QuoteResponse response = quotationService.createQuote(request);
@@ -195,7 +181,7 @@ class QuotationServiceTest {
 
       when(productService.getProduct(productId)).thenReturn(mockProduct);
       when(decisionService.decide(mockRequest)).thenReturn(mockDecision);
-      when(quotationRepository.existsByReference(anyString())).thenReturn(false);
+      when(quotationRepository.getNextReferenceValue()).thenReturn(1L);
       when(quotationRepository.save(any(Quotation.class))).thenAnswer(inv -> inv.getArgument(0));
 
       QuoteResponse response = quotationService.createQuote(mockRequest);
