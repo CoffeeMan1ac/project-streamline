@@ -1,73 +1,55 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { CircularProgress, Alert } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import CoveragesTable from "../components/CoveragesTable";
 import CoveragesSearchBar from "../components/CoveragesSearchBar";
+import http from "../api/http";
 
-const testCoverages = [
-  {
-    id: "1",
-    coverageName: "Accidental Damage",
-    description: "Coverage for unintentional physical damage to the device",
-    category: "Damage",
-    usedInProducts: 5,
-  },
-  {
-    id: "2",
-    coverageName: "Battery Replacement",
-    description: "Coverage for battery degradation and replacement",
-    category: "Warranty",
-    usedInProducts: 0,
-  },
-  {
-    id: "3",
-    coverageName: "Data Recovery",
-    description: "Service to recover lost or corrupted data",
-    category: "Other",
-    usedInProducts: 1,
-  },
-  {
-    id: "4",
-    coverageName: "Extended Warranty",
-    description: "Extended manufacturer warranty coverage",
-    category: "Warranty",
-    usedInProducts: 4,
-  },
-  {
-    id: "5",
-    coverageName: "Liquid Damage",
-    description: "Coverage for damage caused by liquids",
-    category: "Damage",
-    usedInProducts: 3,
-  },
-  {
-    id: "6",
-    coverageName: "Screen Damage",
-    description: "Specific coverage for screen cracks and breaks",
-    category: "Damage",
-    usedInProducts: 2,
-  },
-  {
-    id: "7",
-    coverageName: "Theft",
-    description: "Protection against theft or robbery of the device",
-    category: "Theft",
-    usedInProducts: 6,
-  },
-  {
-    id: "8",
-    coverageName: "Worldwide Coverage",
-    description: "Protection coverage that works internationally",
-    category: "Other",
-    usedInProducts: 2,
-  },
-];
+interface CoverageDto {
+  id: string;
+  coverageName: string;
+  description: string;
+  category: string;
+  usedInProducts: number;
+}
 
 const CoveragesManagementPage = () => {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [coverages, setCoverages] = useState<CoverageDto[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
+  const navigate = useNavigate();
 
-  const filteredCoverages = testCoverages.filter((coverage) => {
+  const fetchCoverages = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const { data } = await http.get<CoverageDto[]>("/backoffice/coverages");
+      setCoverages(data);
+    } catch {
+      setError("Failed to load coverages. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCoverages();
+  }, []);
+
+  const handleDeleteCoverage = async (id: string) => {
+    try {
+      await http.delete(`/backoffice/coverages/${id}`);
+      setCoverages((prev) => prev.filter((c) => c.id !== id));
+    } catch {
+      setError("Failed to delete coverage. Please try again.");
+    }
+  };
+
+  const filteredCoverages = coverages.filter((coverage) => {
     const matchesSearch =
       coverage.coverageName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       coverage.description.toLowerCase().includes(searchQuery.toLowerCase());
@@ -76,7 +58,11 @@ const CoveragesManagementPage = () => {
   });
 
   const handleCreateCoverage = () => {
-    console.log("create coverage");
+    navigate("/coverages/create");
+  };
+
+  const handleEditCoverage = (id: string) => {
+    navigate(`/coverages/${id}`);
   };
 
   return (
@@ -88,7 +74,6 @@ const CoveragesManagementPage = () => {
           alignItems: "flex-start",
           flexWrap: "wrap",
           gap: 2,
-          mb: 3,
         }}
       >
         <Box>
@@ -101,23 +86,35 @@ const CoveragesManagementPage = () => {
         </Box>
       </Box>
 
-      <CoveragesSearchBar
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        categoryFilter={categoryFilter}
-        onCategoryFilterChange={setCategoryFilter}
-        totalCoverages={testCoverages.length}
-        showingCoverages={filteredCoverages.length}
-        onCreateCoverage={handleCreateCoverage}
-      />
-
-      <Box sx={{ mt: 4 }}>
-        <CoveragesTable
-          coverages={filteredCoverages}
-          onEdit={(id) => console.log("edit", id)}
-          onDelete={(id) => console.log("delete", id)}
+      <Box sx={{ my: 4 }}>
+        <CoveragesSearchBar
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          categoryFilter={categoryFilter}
+          onCategoryFilterChange={setCategoryFilter}
+          totalCoverages={coverages.length}
+          showingCoverages={filteredCoverages.length}
+          onCreateCoverage={handleCreateCoverage}
         />
       </Box>
+
+      {error && (
+        <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
+          {error}
+        </Alert>
+      )}
+
+      {loading ? (
+        <Box display="flex" justifyContent="center" py={8}>
+          <CircularProgress />
+        </Box>
+      ) : (
+        <CoveragesTable
+          coverages={filteredCoverages}
+          onEdit={handleEditCoverage}
+          onDelete={handleDeleteCoverage}
+        />
+      )}
     </Box>
   );
 };
