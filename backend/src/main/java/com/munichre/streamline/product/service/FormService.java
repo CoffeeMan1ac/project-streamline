@@ -81,7 +81,9 @@ public class FormService {
     if (input.fieldIds() != null) {
       for (UUID fieldId : input.fieldIds()) {
         Field field =
-            fieldRepository.findById(fieldId).orElseThrow(() -> new FieldNotFoundException(fieldId));
+            fieldRepository
+                .findById(fieldId)
+                .orElseThrow(() -> new FieldNotFoundException(fieldId));
         fields.add(field);
       }
     }

@@ -117,8 +117,7 @@ class FormControllerTest {
       UUID fieldId = UUID.randomUUID();
       FormSectionInput section =
           new FormSectionInput("personal", "Personal Info", 0, List.of(fieldId));
-      CreateFormRequestDto request =
-          new CreateFormRequestDto("Form", "Desc", List.of(section));
+      CreateFormRequestDto request = new CreateFormRequestDto("Form", "Desc", List.of(section));
 
       when(formService.createForm(any(CreateFormRequestDto.class)))
           .thenThrow(new FieldNotFoundException(fieldId));
