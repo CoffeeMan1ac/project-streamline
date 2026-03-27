@@ -28,6 +28,7 @@ import com.munichre.streamline.product.model.ProductType;
 import com.munichre.streamline.product.repository.CoverageCategoryRepository;
 import com.munichre.streamline.product.repository.CoverageRepository;
 import com.munichre.streamline.product.repository.FieldRepository;
+import com.munichre.streamline.product.repository.FormRepository;
 import com.munichre.streamline.product.repository.ProductCoverageRepository;
 import com.munichre.streamline.product.repository.ProductRepository;
 import com.munichre.streamline.product.repository.ProductTagRepository;
@@ -65,6 +66,7 @@ public class ProductServiceTest {
   @Mock private CoverageRepository coverageRepository;
   @Mock private CoverageCategoryRepository coverageCategoryRepository;
   @Mock private FieldRepository fieldRepository;
+  @Mock private FormRepository formRepository;
   @Mock private TagRepository tagRepository;
 
   private Clock clock;
@@ -81,6 +83,7 @@ public class ProductServiceTest {
             coverageRepository,
             coverageCategoryRepository,
             fieldRepository,
+            formRepository,
             productTagRepository,
             tagRepository,
             productTypeRepository,
@@ -319,7 +322,8 @@ public class ProductServiceTest {
           new ProductTypeDto(productRow.typeId(), productRow.typeCode(), productRow.typeLabel()),
           coverages,
           exclusions,
-          List.of());
+          List.of(),
+          null);
     }
 
     private static CoverageDto expectedCoverage(ProductCoverageRowDto r) {

@@ -52,7 +52,8 @@ class CustomerProductControllerTest {
               null,
               List.of(),
               List.of(),
-              List.of());
+              List.of(),
+              null);
 
       ProductDto p2 =
           new ProductDto(
@@ -67,7 +68,8 @@ class CustomerProductControllerTest {
               null,
               List.of(),
               List.of(),
-              List.of());
+              List.of(),
+              null);
 
       when(productService.getActiveProducts()).thenReturn(List.of(p1, p2));
 
