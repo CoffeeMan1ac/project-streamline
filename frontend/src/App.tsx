@@ -17,6 +17,7 @@ import QuotesManagementPage from "./pages/QuotesManagementPage";
 import QuoteDetailsPage from "./pages/QuoteDetailsPage";
 import TagsManagementPage from "./pages/TagsManagementPage";
 import CoveragesManagementPage from "./pages/CoveragesManagementPage";
+import EditCoveragePage from "./pages/EditCoveragePage";
 
 function AppContent() {
   const [mode, setMode] = useState<"light" | "dark">(
@@ -64,6 +65,7 @@ function AppContent() {
             <Route path="/quotations/:id" element={<QuoteDetailsPage />} />
             <Route path="/tags" element={<TagsManagementPage />} />
             <Route path="/coverages" element={<CoveragesManagementPage />} />
+            <Route path="/coverages/:id" element={<EditCoveragePage />} />
           </Route>
         </Route>
 
