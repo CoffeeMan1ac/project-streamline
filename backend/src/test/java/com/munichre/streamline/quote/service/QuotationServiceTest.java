@@ -89,7 +89,6 @@ class QuotationServiceTest {
       verify(quotationRepository).save(any(Quotation.class));
     }
 
-
     @Test
     @DisplayName("Should loop and retry reference generation if a collision occurs")
     void shouldHandleReferenceCollision() {
