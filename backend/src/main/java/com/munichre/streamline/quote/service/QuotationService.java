@@ -2,6 +2,8 @@ package com.munichre.streamline.quote.service;
 
 import com.munichre.streamline.decision.dto.Decision;
 import com.munichre.streamline.decision.service.DecisionService;
+import com.munichre.streamline.product.model.Field;
+import com.munichre.streamline.product.model.Form;
 import com.munichre.streamline.product.model.Product;
 import com.munichre.streamline.product.model.ProductField;
 import com.munichre.streamline.product.service.ProductService;
@@ -125,17 +127,30 @@ public class QuotationService {
 
   private void validateRequiredProductFields(QuoteRequest request) {
     Product product = productService.getProduct(request.productId());
-    List<ProductField> fields = product.getProductFields();
-    if (fields == null || fields.isEmpty()) return;
-
     ApplicantData data = request.applicantData();
 
-    List<String> missing =
-        fields.stream()
-            .filter(f -> Boolean.TRUE.equals(f.getRequired()))
-            .map(ProductField::getName)
-            .filter(name -> data == null || data.get(name) == null)
-            .toList();
+    List<String> missing;
+
+    // Prefer form-based fields if a form is assigned; fall back to legacy JSONB
+    Form form = product.getForm();
+    if (form != null && form.getSections() != null) {
+      missing =
+          form.getSections().stream()
+              .flatMap(s -> s.getFields().stream())
+              .filter(f -> Boolean.TRUE.equals(f.getRequired()))
+              .map(Field::getCode)
+              .filter(code -> data == null || data.get(code) == null)
+              .toList();
+    } else {
+      List<ProductField> fields = product.getProductFields();
+      if (fields == null || fields.isEmpty()) return;
+      missing =
+          fields.stream()
+              .filter(f -> Boolean.TRUE.equals(f.getRequired()))
+              .map(ProductField::getName)
+              .filter(name -> data == null || data.get(name) == null)
+              .toList();
+    }
 
     if (!missing.isEmpty()) {
       throw new MissingRequiredFieldsException(missing);
