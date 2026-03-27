@@ -259,8 +259,7 @@ class QuotationServiceTest {
     @DisplayName("Should prefer form over legacy JSONB when both are set")
     void shouldPreferFormOverJsonb() {
       setUpFormOnProduct(List.of(makeField("email", true)));
-      mockProduct.setProductFields(
-          List.of(new ProductField("make", "text", "Make", true, null)));
+      mockProduct.setProductFields(List.of(new ProductField("make", "text", "Make", true, null)));
 
       ApplicantData data = new ApplicantData();
       data.put("make", "Apple");
