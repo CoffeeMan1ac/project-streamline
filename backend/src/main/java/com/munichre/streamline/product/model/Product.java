@@ -57,9 +57,14 @@ public class Product {
       inverseJoinColumns = @JoinColumn(name = "coverage_id"))
   private Set<Coverage> exclusions;
 
+  /** @deprecated Use {@link #form} instead. Retained for backward compatibility. */
   @JdbcTypeCode(SqlTypes.JSON)
   @Column(name = "product_fields", columnDefinition = "jsonb")
   private List<ProductField> productFields;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "form_id")
+  private Form form;
 
   /** When the product was launched, or when it should be launched. */
   @Column(nullable = false)
