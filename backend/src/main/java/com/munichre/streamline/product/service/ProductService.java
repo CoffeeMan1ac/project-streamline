@@ -7,8 +7,10 @@ import com.munichre.streamline.product.api.dto.CoverageCategoryDto;
 import com.munichre.streamline.product.api.dto.CoverageDto;
 import com.munichre.streamline.product.api.dto.CoverageOptionDto;
 import com.munichre.streamline.product.api.dto.CreateCoverageRequestDto;
+import com.munichre.streamline.product.api.dto.CreateFieldRequestDto;
 import com.munichre.streamline.product.api.dto.CreateProductRequestDto;
 import com.munichre.streamline.product.api.dto.CreateTagRequestDto;
+import com.munichre.streamline.product.api.dto.FieldDto;
 import com.munichre.streamline.product.api.dto.ProductDto;
 import com.munichre.streamline.product.api.dto.ProductFieldDto;
 import com.munichre.streamline.product.api.dto.ProductOptionDto;
@@ -16,23 +18,28 @@ import com.munichre.streamline.product.api.dto.ProductTagDto;
 import com.munichre.streamline.product.api.dto.ProductTypeDto;
 import com.munichre.streamline.product.api.dto.TagOptionDto;
 import com.munichre.streamline.product.api.dto.UpdateCoverageRequestDto;
+import com.munichre.streamline.product.api.dto.UpdateFieldRequestDto;
 import com.munichre.streamline.product.api.dto.UpdateProductRequestDto;
 import com.munichre.streamline.product.api.dto.UpdateTagRequestDto;
 import com.munichre.streamline.product.exception.CoverageCategoryNotFoundException;
 import com.munichre.streamline.product.exception.CoverageNotFoundException;
+import com.munichre.streamline.product.exception.DuplicateFieldCodeException;
 import com.munichre.streamline.product.exception.DuplicateTagCodeException;
+import com.munichre.streamline.product.exception.FieldNotFoundException;
 import com.munichre.streamline.product.exception.InvalidProductFieldException;
 import com.munichre.streamline.product.exception.ProductNotFoundException;
 import com.munichre.streamline.product.exception.ProductTagNotFoundException;
 import com.munichre.streamline.product.exception.ProductTypeNotFoundException;
 import com.munichre.streamline.product.model.Coverage;
 import com.munichre.streamline.product.model.CoverageCategory;
+import com.munichre.streamline.product.model.Field;
 import com.munichre.streamline.product.model.Product;
 import com.munichre.streamline.product.model.ProductField;
 import com.munichre.streamline.product.model.ProductTag;
 import com.munichre.streamline.product.model.ProductType;
 import com.munichre.streamline.product.repository.CoverageCategoryRepository;
 import com.munichre.streamline.product.repository.CoverageRepository;
+import com.munichre.streamline.product.repository.FieldRepository;
 import com.munichre.streamline.product.repository.ProductCoverageRepository;
 import com.munichre.streamline.product.repository.ProductRepository;
 import com.munichre.streamline.product.repository.ProductTagRepository;
@@ -60,6 +67,7 @@ public class ProductService {
   private final ProductCoverageRepository productCoverageRepository;
   private final CoverageRepository coverageRepository;
   private final CoverageCategoryRepository coverageCategoryRepository;
+  private final FieldRepository fieldRepository;
   private final ProductTagRepository productTagRepository;
   private final TagRepository tagRepository;
   private final ProductTypeRepository productTypeRepository;
@@ -265,6 +273,67 @@ public class ProductService {
 
     Coverage saved = coverageRepository.save(coverage);
     return new CoverageOptionDto(saved.getId(), saved.getCode(), saved.getLabel());
+  }
+
+  public List<FieldDto> getAllFields() {
+    return fieldRepository.findAll().stream()
+        .map(
+            f ->
+                new FieldDto(
+                    f.getId(),
+                    f.getCode(),
+                    f.getType(),
+                    f.getLabel(),
+                    f.getRequired(),
+                    f.getRegexPattern(),
+                    f.getOptions()))
+        .toList();
+  }
+
+  @Transactional
+  public FieldDto createField(CreateFieldRequestDto request) {
+    if (fieldRepository.existsByCode(request.code())) {
+      throw new DuplicateFieldCodeException(request.code());
+    }
+
+    Field field = new Field();
+    field.setCode(request.code());
+    field.setType(request.type());
+    field.setLabel(request.label());
+    field.setRequired(request.required() != null ? request.required() : false);
+    field.setRegexPattern(request.regexPattern());
+    field.setOptions(request.options());
+
+    Field saved = fieldRepository.save(field);
+    return new FieldDto(
+        saved.getId(),
+        saved.getCode(),
+        saved.getType(),
+        saved.getLabel(),
+        saved.getRequired(),
+        saved.getRegexPattern(),
+        saved.getOptions());
+  }
+
+  @Transactional
+  public FieldDto updateField(UUID id, UpdateFieldRequestDto request) {
+    Field field = fieldRepository.findById(id).orElseThrow(() -> new FieldNotFoundException(id));
+
+    field.setType(request.type());
+    field.setLabel(request.label());
+    field.setRequired(request.required() != null ? request.required() : false);
+    field.setRegexPattern(request.regexPattern());
+    field.setOptions(request.options());
+
+    Field saved = fieldRepository.save(field);
+    return new FieldDto(
+        saved.getId(),
+        saved.getCode(),
+        saved.getType(),
+        saved.getLabel(),
+        saved.getRequired(),
+        saved.getRegexPattern(),
+        saved.getOptions());
   }
 
   @Transactional(readOnly = true)
