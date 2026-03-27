@@ -4,13 +4,16 @@ import static com.munichre.streamline.constant.ApiRoutes.BACKOFFICE_API_BASE;
 
 import com.munichre.streamline.product.api.dto.CoverageOptionDto;
 import com.munichre.streamline.product.api.dto.CreateCoverageRequestDto;
+import com.munichre.streamline.product.api.dto.CreateFieldRequestDto;
 import com.munichre.streamline.product.api.dto.CreateProductRequestDto;
 import com.munichre.streamline.product.api.dto.CreateTagRequestDto;
+import com.munichre.streamline.product.api.dto.FieldDto;
 import com.munichre.streamline.product.api.dto.ProductDto;
 import com.munichre.streamline.product.api.dto.ProductFieldDto;
 import com.munichre.streamline.product.api.dto.ProductOptionDto;
 import com.munichre.streamline.product.api.dto.TagOptionDto;
 import com.munichre.streamline.product.api.dto.UpdateCoverageRequestDto;
+import com.munichre.streamline.product.api.dto.UpdateFieldRequestDto;
 import com.munichre.streamline.product.api.dto.UpdateProductRequestDto;
 import com.munichre.streamline.product.api.dto.UpdateTagRequestDto;
 import com.munichre.streamline.product.service.ProductService;
@@ -83,6 +86,22 @@ public class BackofficeProductController {
   public ResponseEntity<TagOptionDto> updateTag(
       @PathVariable UUID id, @RequestBody UpdateTagRequestDto request) {
     return ResponseEntity.ok(productService.updateTag(id, request));
+  }
+
+  @GetMapping("/fields")
+  public ResponseEntity<List<FieldDto>> getFields() {
+    return ResponseEntity.ok(productService.getAllFields());
+  }
+
+  @PostMapping("/fields")
+  public ResponseEntity<FieldDto> createField(@RequestBody CreateFieldRequestDto request) {
+    return ResponseEntity.status(HttpStatus.CREATED).body(productService.createField(request));
+  }
+
+  @PutMapping("/fields/{id}")
+  public ResponseEntity<FieldDto> updateField(
+      @PathVariable UUID id, @RequestBody UpdateFieldRequestDto request) {
+    return ResponseEntity.ok(productService.updateField(id, request));
   }
 
   @GetMapping("/{id}/form-fields")
