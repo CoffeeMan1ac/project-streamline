@@ -8,7 +8,9 @@ import {
   Select,
   MenuItem,
   Button,
+  Paper,
 } from "@mui/material";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import http from "../api/http";
 
 interface EditCoveragePageProps {
@@ -21,6 +23,7 @@ const EditCoveragePage = ({ id, onClose, onSave }: EditCoveragePageProps) => {
   const [coverageName, setCoverageName] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
+  const [usedInProducts, setUsedInProducts] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({
     coverageName: "",
@@ -37,6 +40,7 @@ const EditCoveragePage = ({ id, onClose, onSave }: EditCoveragePageProps) => {
         setCoverageName(data.coverageName);
         setDescription(data.description);
         setCategory(data.category);
+        setUsedInProducts(data.usedInProducts);
       } catch (err) {
         console.error("Failed to fetch coverage:", err);
       }
@@ -170,6 +174,34 @@ const EditCoveragePage = ({ id, onClose, onSave }: EditCoveragePageProps) => {
               {errors.category}
             </div>
           )}
+
+          <Paper
+            elevation={0}
+            sx={{
+              border: 1,
+              borderColor: "rgba(25, 118, 210, 0.3)",
+              borderRadius: 2,
+              bgcolor: "rgba(25, 118, 210, 0.04)",
+              p: 2,
+              mb: 3,
+              display: "flex",
+              alignItems: "flex-start",
+              gap: 2,
+            }}
+          >
+            <CheckCircleOutlineIcon
+              sx={{ color: "rgba(25, 118, 210, 0.7)", fontSize: 20, mt: 0.5 }}
+            />
+            <Box>
+              <Typography variant="body2" fontWeight="bold" sx={{ color: "text.primary" }}>
+                This coverage is currently used in {usedInProducts} product
+                {usedInProducts !== 1 ? "s" : ""}
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                Changes will affect all products using this coverage
+              </Typography>
+            </Box>
+          </Paper>
 
           <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 2 }}>
             <Button variant="text" disabled={isLoading} onClick={onClose}>

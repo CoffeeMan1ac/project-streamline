@@ -87,6 +87,34 @@ describe("EditCoveragePage", () => {
     expect(f.getByRole("button", { name: /Cancel/i })).toBeInTheDocument();
   });
 
+  test("renders usage info box", async () => {
+    const http = await import("../../api/http");
+    vi.mocked(http.default.get).mockResolvedValueOnce({ data: mockCoverage });
+    renderWithRouter();
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(/This coverage is currently used in 5 products/i)
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/Changes will affect all products using this coverage/i)
+      ).toBeInTheDocument();
+      expect(screen.getByTestId("CheckCircleOutlineIcon")).toBeInTheDocument();
+    });
+  });
+
+  test("renders usage info box with singular product text when usedInProducts is 1", async () => {
+    const http = await import("../../api/http");
+    vi.mocked(http.default.get).mockResolvedValueOnce({
+      data: { ...mockCoverage, usedInProducts: 1 },
+    });
+    renderWithRouter();
+
+    await waitFor(() => {
+      expect(screen.getByText(/This coverage is currently used in 1 product/i)).toBeInTheDocument();
+    });
+  });
+
   test("fetches coverage data on mount", async () => {
     const http = await import("../../api/http");
     vi.mocked(http.default.get).mockResolvedValueOnce({ data: mockCoverage });
@@ -179,12 +207,14 @@ describe("EditCoveragePage", () => {
       expect(screen.getByText("Damage")).toBeInTheDocument();
     });
 
-    const f = within(form);
-    const select = f.getByRole("combobox");
+    const select = screen.getByRole("combobox");
     fireEvent.mouseDown(select);
-    fireEvent.click(screen.getByText("Warranty"));
 
-    expect(f.getByText("Warranty")).toBeInTheDocument();
+    const warrantyOption = await screen.findByRole("option", { name: "Warranty" });
+    fireEvent.click(warrantyOption);
+
+    // The selected value should now be "Warranty" in the combobox
+    expect(screen.getByRole("combobox")).toHaveTextContent("Warranty");
   });
 
   test("submits form with updated data", async () => {
@@ -203,20 +233,22 @@ describe("EditCoveragePage", () => {
       expect(screen.getByDisplayValue("Accidental Damage")).toBeInTheDocument();
     });
 
-    const f = within(form);
-    const coverageNameInput = f.getByPlaceholderText("e.g., Accidental Damage");
+    const coverageNameInput = screen.getByPlaceholderText("e.g., Accidental Damage");
     fireEvent.change(coverageNameInput, { target: { value: "Updated Coverage" } });
 
-    const descriptionInput = f.getByPlaceholderText(
+    const descriptionInput = screen.getByPlaceholderText(
       "e.g., Coverage for unintentional physical damage to the device"
     );
     fireEvent.change(descriptionInput, { target: { value: "Updated description" } });
 
-    const select = f.getByRole("combobox");
+    const select = screen.getByRole("combobox");
     fireEvent.mouseDown(select);
-    fireEvent.click(screen.getByText("Warranty"));
 
-    fireEvent.click(f.getByRole("button", { name: /Update Coverage/i }));
+    const warrantyOption = await screen.findByRole("option", { name: "Warranty" });
+    fireEvent.click(warrantyOption);
+
+    const submitButton = screen.getByRole("button", { name: /Update Coverage/i });
+    fireEvent.click(submitButton);
 
     await waitFor(() => {
       expect(http.default.patch).toHaveBeenCalledWith("/backoffice/coverages/1", {
