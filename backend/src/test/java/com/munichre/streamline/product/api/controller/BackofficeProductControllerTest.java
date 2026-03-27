@@ -458,8 +458,7 @@ class BackofficeProductControllerTest {
     @Test
     void returns404WhenFieldNotFound() throws Exception {
       UUID id = UUID.randomUUID();
-      UpdateFieldRequestDto request =
-          new UpdateFieldRequestDto("text", "Label", true, null, null);
+      UpdateFieldRequestDto request = new UpdateFieldRequestDto("text", "Label", true, null, null);
 
       when(productService.updateField(eq(id), any(UpdateFieldRequestDto.class)))
           .thenThrow(new FieldNotFoundException(id));

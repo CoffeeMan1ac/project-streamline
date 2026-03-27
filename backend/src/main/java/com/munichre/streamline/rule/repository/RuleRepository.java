@@ -53,21 +53,21 @@ public interface RuleRepository extends JpaRepository<Rule, UUID> {
   @Modifying(clearAutomatically = true, flushAutomatically = true)
   @Query(
       """
-    UPDATE Rule r
-    SET r.priority = r.priority + 1
-    WHERE r.product.id = :productId
-      AND r.priority BETWEEN :start AND :end
-  """)
+        UPDATE Rule r
+        SET r.priority = r.priority + 1
+        WHERE r.product.id = :productId
+          AND r.priority BETWEEN :start AND :end
+      """)
   void incrementPriorityBetween(UUID productId, Integer start, Integer end);
 
   @Modifying(clearAutomatically = true, flushAutomatically = true)
   @Query(
       """
-    UPDATE Rule r
-    SET r.priority = r.priority - 1
-    WHERE r.product.id = :productId
-      AND r.priority BETWEEN :start AND :end
-  """)
+        UPDATE Rule r
+        SET r.priority = r.priority - 1
+        WHERE r.product.id = :productId
+          AND r.priority BETWEEN :start AND :end
+      """)
   void decrementPriorityBetween(UUID productId, Integer start, Integer end);
 
   @Query("SELECT MAX(r.priority) FROM Rule r WHERE r.product.id = :productId")

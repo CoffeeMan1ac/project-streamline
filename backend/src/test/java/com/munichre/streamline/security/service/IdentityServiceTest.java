@@ -82,7 +82,8 @@ class IdentityServiceTest {
 
   @Test
   @DisplayName(
-      "Should throw UnauthenticatedException when token is anonymous even if 'authenticated' is true")
+      "Should throw UnauthenticatedException when token is anonymous even if 'authenticated' is"
+          + " true")
   void shouldThrowExceptionWhenAuthenticatedAnonymousToken() {
     AnonymousAuthenticationToken anonymousToken = mock(AnonymousAuthenticationToken.class);
     when(securityContext.getAuthentication()).thenReturn(anonymousToken);

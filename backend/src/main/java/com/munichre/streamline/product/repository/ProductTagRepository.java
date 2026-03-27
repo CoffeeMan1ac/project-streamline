@@ -15,23 +15,23 @@ public interface ProductTagRepository extends Repository<Product, UUID> {
 
   @Query(
       """
-    SELECT new com.munichre.streamline.product.repository.dto.ProductTagRowDto(
-    p.id,
-      t.id, t.code, t.label, t.color
-    )
-    FROM Product p
-    JOIN p.tags t
-    WHERE p.id in :productIds
-  """)
+        SELECT new com.munichre.streamline.product.repository.dto.ProductTagRowDto(
+        p.id,
+          t.id, t.code, t.label, t.color
+        )
+        FROM Product p
+        JOIN p.tags t
+        WHERE p.id in :productIds
+      """)
   List<ProductTagRowDto> findTagRowsByProductIds(@Param("productIds") Collection<UUID> productIds);
 
   @Query(
       """
-    SELECT pt
-    FROM ProductTag pt
-    WHERE pt.id
-    IN :tagIds
-  """)
+        SELECT pt
+        FROM ProductTag pt
+        WHERE pt.id
+        IN :tagIds
+      """)
   Set<ProductTag> findTagModelsByIds(@Param("tagIds") Collection<UUID> tagIds);
 
   @Query("SELECT pt FROM ProductTag pt ORDER BY pt.label ASC")
