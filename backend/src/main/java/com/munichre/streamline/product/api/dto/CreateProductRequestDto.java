@@ -21,4 +21,5 @@ public class CreateProductRequestDto {
   List<UUID> coverages;
   List<UUID> exclusions;
   List<UUID> tags;
+  UUID formId;
 }

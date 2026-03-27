@@ -18,4 +18,5 @@ public class UpdateProductRequestDto {
   List<UUID> coverages;
   List<UUID> exclusions;
   List<UUID> tags;
+  UUID formId;
 }

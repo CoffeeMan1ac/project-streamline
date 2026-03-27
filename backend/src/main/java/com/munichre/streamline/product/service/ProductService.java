@@ -26,6 +26,7 @@ import com.munichre.streamline.product.exception.CoverageNotFoundException;
 import com.munichre.streamline.product.exception.DuplicateFieldCodeException;
 import com.munichre.streamline.product.exception.DuplicateTagCodeException;
 import com.munichre.streamline.product.exception.FieldNotFoundException;
+import com.munichre.streamline.product.exception.FormNotFoundException;
 import com.munichre.streamline.product.exception.InvalidProductFieldException;
 import com.munichre.streamline.product.exception.ProductNotFoundException;
 import com.munichre.streamline.product.exception.ProductTagNotFoundException;
@@ -33,6 +34,7 @@ import com.munichre.streamline.product.exception.ProductTypeNotFoundException;
 import com.munichre.streamline.product.model.Coverage;
 import com.munichre.streamline.product.model.CoverageCategory;
 import com.munichre.streamline.product.model.Field;
+import com.munichre.streamline.product.model.Form;
 import com.munichre.streamline.product.model.Product;
 import com.munichre.streamline.product.model.ProductField;
 import com.munichre.streamline.product.model.ProductTag;
@@ -40,6 +42,7 @@ import com.munichre.streamline.product.model.ProductType;
 import com.munichre.streamline.product.repository.CoverageCategoryRepository;
 import com.munichre.streamline.product.repository.CoverageRepository;
 import com.munichre.streamline.product.repository.FieldRepository;
+import com.munichre.streamline.product.repository.FormRepository;
 import com.munichre.streamline.product.repository.ProductCoverageRepository;
 import com.munichre.streamline.product.repository.ProductRepository;
 import com.munichre.streamline.product.repository.ProductTagRepository;
@@ -68,6 +71,7 @@ public class ProductService {
   private final CoverageRepository coverageRepository;
   private final CoverageCategoryRepository coverageCategoryRepository;
   private final FieldRepository fieldRepository;
+  private final FormRepository formRepository;
   private final ProductTagRepository productTagRepository;
   private final TagRepository tagRepository;
   private final ProductTypeRepository productTypeRepository;
@@ -194,6 +198,15 @@ public class ProductService {
     Set<Coverage> exclusions = productCoverageRepository.findExclusionModels(exclusionsIds);
     if (exclusionsIds.size() != exclusions.size()) throw new CoverageNotFoundException();
     product.setExclusions(exclusions);
+
+    // Form (optional)
+    if (productRequest.getFormId() != null) {
+      Form form =
+          formRepository
+              .findById(productRequest.getFormId())
+              .orElseThrow(() -> new FormNotFoundException(productRequest.getFormId()));
+      product.setForm(form);
+    }
 
     Product saved = productRepository.saveAndFlush(product);
     return getProductDto(saved.getId());
@@ -435,6 +448,17 @@ public class ProductService {
     Set<ProductTag> tags = productTagRepository.findTagModelsByIds(tagIds);
     if (tagIds.size() != tags.size()) throw new ProductTagNotFoundException();
     product.setTags(tags);
+
+    // Form (optional)
+    if (request.getFormId() != null) {
+      Form form =
+          formRepository
+              .findById(request.getFormId())
+              .orElseThrow(() -> new FormNotFoundException(request.getFormId()));
+      product.setForm(form);
+    } else {
+      product.setForm(null);
+    }
 
     productRepository.save(product);
   }
