@@ -10,6 +10,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import http from "../api/http";
 
 const CreateCoveragePage = () => {
   const navigate = useNavigate();
@@ -46,7 +47,13 @@ const CreateCoveragePage = () => {
     setIsLoading(true);
 
     try {
-      console.log({ coverageName, description, category });
+      const payload = {
+        coverageName,
+        description,
+        category,
+      };
+
+      await http.post("/backoffice/coverages", payload);
       navigate("/coverages");
     } catch (err) {
       console.error(err);
