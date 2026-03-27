@@ -11,17 +11,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.munichre.streamline.product.api.dto.CoverageOptionDto;
 import com.munichre.streamline.product.api.dto.CreateCoverageRequestDto;
+import com.munichre.streamline.product.api.dto.CreateFieldRequestDto;
 import com.munichre.streamline.product.api.dto.CreateProductRequestDto;
 import com.munichre.streamline.product.api.dto.CreateTagRequestDto;
+import com.munichre.streamline.product.api.dto.FieldDto;
 import com.munichre.streamline.product.api.dto.ProductFieldDto;
 import com.munichre.streamline.product.api.dto.ProductOptionDto;
 import com.munichre.streamline.product.api.dto.TagOptionDto;
 import com.munichre.streamline.product.api.dto.UpdateCoverageRequestDto;
+import com.munichre.streamline.product.api.dto.UpdateFieldRequestDto;
 import com.munichre.streamline.product.api.dto.UpdateProductRequestDto;
 import com.munichre.streamline.product.api.dto.UpdateTagRequestDto;
 import com.munichre.streamline.product.exception.CoverageCategoryNotFoundException;
 import com.munichre.streamline.product.exception.CoverageNotFoundException;
+import com.munichre.streamline.product.exception.DuplicateFieldCodeException;
 import com.munichre.streamline.product.exception.DuplicateTagCodeException;
+import com.munichre.streamline.product.exception.FieldNotFoundException;
 import com.munichre.streamline.product.exception.InvalidProductFieldException;
 import com.munichre.streamline.product.exception.ProductNotFoundException;
 import com.munichre.streamline.product.exception.ProductTagNotFoundException;
@@ -366,6 +371,102 @@ class BackofficeProductControllerTest {
       mockMvc
           .perform(
               put("/backoffice/products/tags/{id}", id)
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(objectMapper.writeValueAsString(request)))
+          .andExpect(status().isNotFound());
+    }
+  }
+
+  @Nested
+  @DisplayName("GET /backoffice/products/fields")
+  class GetFields {
+    @Test
+    void returnsFields() throws Exception {
+      when(productService.getAllFields()).thenReturn(List.of());
+      mockMvc.perform(get("/backoffice/products/fields")).andExpect(status().isOk());
+      verify(productService).getAllFields();
+    }
+  }
+
+  @Nested
+  @DisplayName("POST /backoffice/products/fields")
+  class CreateField {
+    @Test
+    void returns201Created() throws Exception {
+      CreateFieldRequestDto request =
+          new CreateFieldRequestDto("phone_make", "text", "Phone Make", true, null, null);
+      FieldDto response =
+          new FieldDto(UUID.randomUUID(), "phone_make", "text", "Phone Make", true, null, null);
+
+      when(productService.createField(any(CreateFieldRequestDto.class))).thenReturn(response);
+
+      mockMvc
+          .perform(
+              post("/backoffice/products/fields")
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(objectMapper.writeValueAsString(request)))
+          .andExpect(status().isCreated())
+          .andExpect(jsonPath("$.code").value("phone_make"))
+          .andExpect(jsonPath("$.label").value("Phone Make"));
+
+      verify(productService).createField(any(CreateFieldRequestDto.class));
+    }
+
+    @Test
+    void returns400WhenDuplicateCode() throws Exception {
+      CreateFieldRequestDto request =
+          new CreateFieldRequestDto("phone_make", "text", "Phone Make", true, null, null);
+
+      when(productService.createField(any(CreateFieldRequestDto.class)))
+          .thenThrow(new DuplicateFieldCodeException("phone_make"));
+
+      mockMvc
+          .perform(
+              post("/backoffice/products/fields")
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(objectMapper.writeValueAsString(request)))
+          .andExpect(status().isBadRequest());
+    }
+  }
+
+  @Nested
+  @DisplayName("PUT /backoffice/products/fields/{id}")
+  class UpdateField {
+    @Test
+    void returns200Ok() throws Exception {
+      UUID id = UUID.randomUUID();
+      UpdateFieldRequestDto request =
+          new UpdateFieldRequestDto("text", "Updated Label", true, "^[A-Z]+$", null);
+      FieldDto response =
+          new FieldDto(id, "phone_make", "text", "Updated Label", true, "^[A-Z]+$", null);
+
+      when(productService.updateField(eq(id), any(UpdateFieldRequestDto.class)))
+          .thenReturn(response);
+
+      mockMvc
+          .perform(
+              put("/backoffice/products/fields/{id}", id)
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(objectMapper.writeValueAsString(request)))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.label").value("Updated Label"))
+          .andExpect(jsonPath("$.regexPattern").value("^[A-Z]+$"));
+
+      verify(productService).updateField(eq(id), any(UpdateFieldRequestDto.class));
+    }
+
+    @Test
+    void returns404WhenFieldNotFound() throws Exception {
+      UUID id = UUID.randomUUID();
+      UpdateFieldRequestDto request =
+          new UpdateFieldRequestDto("text", "Label", true, null, null);
+
+      when(productService.updateField(eq(id), any(UpdateFieldRequestDto.class)))
+          .thenThrow(new FieldNotFoundException(id));
+
+      mockMvc
+          .perform(
+              put("/backoffice/products/fields/{id}", id)
                   .contentType(MediaType.APPLICATION_JSON)
                   .content(objectMapper.writeValueAsString(request)))
           .andExpect(status().isNotFound());
