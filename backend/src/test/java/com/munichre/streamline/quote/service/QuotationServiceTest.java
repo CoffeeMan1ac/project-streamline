@@ -8,6 +8,9 @@ import static org.mockito.Mockito.*;
 import com.munichre.streamline.decision.dto.Decision;
 import com.munichre.streamline.decision.model.DecisionStatus;
 import com.munichre.streamline.decision.service.DecisionService;
+import com.munichre.streamline.product.model.Field;
+import com.munichre.streamline.product.model.Form;
+import com.munichre.streamline.product.model.FormSection;
 import com.munichre.streamline.product.model.Product;
 import com.munichre.streamline.product.model.ProductField;
 import com.munichre.streamline.product.service.ProductService;
@@ -19,6 +22,7 @@ import com.munichre.streamline.quote.model.ApplicantData;
 import com.munichre.streamline.quote.model.Quotation;
 import com.munichre.streamline.quote.repository.QuotationRepository;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -186,6 +190,88 @@ class QuotationServiceTest {
 
       QuoteResponse response = quotationService.createQuote(mockRequest);
       assertThat(response).isNotNull();
+    }
+  }
+
+  @Nested
+  @DisplayName("createQuote: Form-Based Field Validation")
+  class FormBasedFieldValidation {
+
+    private Field makeField(String code, boolean required) {
+      Field field = new Field();
+      field.setCode(code);
+      field.setType("text");
+      field.setLabel(code);
+      field.setRequired(required);
+      return field;
+    }
+
+    private void setUpFormOnProduct(List<Field> fields) {
+      FormSection section = new FormSection();
+      section.setName("personal");
+      section.setLabel("Personal Info");
+      section.setDisplayOrder(0);
+      section.setFields(fields);
+
+      Form form = new Form();
+      form.setName("Test Form");
+      form.setSections(new ArrayList<>(List.of(section)));
+      section.setForm(form);
+
+      mockProduct.setForm(form);
+      mockProduct.setProductFields(null);
+    }
+
+    @Test
+    @DisplayName("Should pass when all form-based required fields are present")
+    void shouldPassWithFormFields() {
+      setUpFormOnProduct(List.of(makeField("make", true)));
+
+      ApplicantData data = new ApplicantData();
+      data.put("make", "Apple");
+      QuoteRequest request = new QuoteRequest(productId, data);
+
+      when(productService.getProduct(productId)).thenReturn(mockProduct);
+      when(decisionService.decide(request)).thenReturn(mockDecision);
+      when(quotationRepository.getNextReferenceValue()).thenReturn(1L);
+      when(quotationRepository.save(any(Quotation.class))).thenAnswer(inv -> inv.getArgument(0));
+
+      QuoteResponse response = quotationService.createQuote(request);
+      assertThat(response).isNotNull();
+    }
+
+    @Test
+    @DisplayName("Should throw when form-based required field is missing")
+    void shouldThrowWhenFormFieldMissing() {
+      setUpFormOnProduct(List.of(makeField("email", true)));
+
+      ApplicantData data = new ApplicantData();
+      QuoteRequest request = new QuoteRequest(productId, data);
+
+      when(productService.getProduct(productId)).thenReturn(mockProduct);
+
+      assertThatThrownBy(() -> quotationService.createQuote(request))
+          .isInstanceOf(MissingRequiredFieldsException.class)
+          .hasMessageContaining("email");
+    }
+
+    @Test
+    @DisplayName("Should prefer form over legacy JSONB when both are set")
+    void shouldPreferFormOverJsonb() {
+      setUpFormOnProduct(List.of(makeField("email", true)));
+      mockProduct.setProductFields(
+          List.of(new ProductField("make", "text", "Make", true, null)));
+
+      ApplicantData data = new ApplicantData();
+      data.put("make", "Apple");
+      QuoteRequest request = new QuoteRequest(productId, data);
+
+      when(productService.getProduct(productId)).thenReturn(mockProduct);
+
+      // Form requires "email" which is missing — should fail even though "make" is present
+      assertThatThrownBy(() -> quotationService.createQuote(request))
+          .isInstanceOf(MissingRequiredFieldsException.class)
+          .hasMessageContaining("email");
     }
   }
 }
