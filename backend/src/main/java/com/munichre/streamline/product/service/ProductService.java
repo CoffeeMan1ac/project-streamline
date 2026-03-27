@@ -11,6 +11,8 @@ import com.munichre.streamline.product.api.dto.CreateFieldRequestDto;
 import com.munichre.streamline.product.api.dto.CreateProductRequestDto;
 import com.munichre.streamline.product.api.dto.CreateTagRequestDto;
 import com.munichre.streamline.product.api.dto.FieldDto;
+import com.munichre.streamline.product.api.dto.FormDto;
+import com.munichre.streamline.product.api.dto.FormSectionDto;
 import com.munichre.streamline.product.api.dto.ProductDto;
 import com.munichre.streamline.product.api.dto.ProductFieldDto;
 import com.munichre.streamline.product.api.dto.ProductOptionDto;
@@ -35,6 +37,7 @@ import com.munichre.streamline.product.model.Coverage;
 import com.munichre.streamline.product.model.CoverageCategory;
 import com.munichre.streamline.product.model.Field;
 import com.munichre.streamline.product.model.Form;
+import com.munichre.streamline.product.model.FormSection;
 import com.munichre.streamline.product.model.Product;
 import com.munichre.streamline.product.model.ProductField;
 import com.munichre.streamline.product.model.ProductTag;
@@ -114,12 +117,19 @@ public class ProductService {
         productTagRepository.findTagRowsByProductIds(productIds).stream()
             .collect(groupingBy(ProductTagRowDto::productId));
 
+    List<Product> products = productRepository.findAllById(productIds);
+
     Map<UUID, List<ProductField>> fieldsByProduct =
-        productRepository.findAllById(productIds).stream()
+        products.stream()
             .collect(
                 toMap(
                     Product::getId,
                     p -> p.getProductFields() != null ? p.getProductFields() : List.of()));
+
+    Map<UUID, Form> formByProduct =
+        products.stream()
+            .filter(p -> p.getForm() != null)
+            .collect(toMap(Product::getId, Product::getForm));
 
     return productRows.stream()
         .map(
@@ -129,7 +139,8 @@ public class ProductService {
                     coveragesByProduct.getOrDefault(row.id(), List.of()),
                     exclusionsByProduct.getOrDefault(row.id(), List.of()),
                     tagsByProduct.getOrDefault(row.id(), List.of()),
-                    fieldsByProduct.getOrDefault(row.id(), List.of())))
+                    fieldsByProduct.getOrDefault(row.id(), List.of()),
+                    formByProduct.get(row.id())))
         .toList();
   }
 
@@ -470,7 +481,8 @@ public class ProductService {
         List<ProductCoverageRowDto> coverageRows,
         List<ProductCoverageRowDto> exclusionRows,
         List<ProductTagRowDto> tags,
-        List<ProductField> productFields) {
+        List<ProductField> productFields,
+        Form form) {
       return new ProductDto(
           row.id(),
           row.baseRate(),
@@ -483,7 +495,43 @@ public class ProductService {
           new ProductTypeDto(row.typeId(), row.typeCode(), row.typeLabel()),
           mapCoverages(coverageRows),
           mapCoverages(exclusionRows),
-          mapProductFields(productFields));
+          mapProductFields(productFields),
+          mapForm(form));
+    }
+
+    private static FormDto mapForm(Form form) {
+      if (form == null) return null;
+      List<FormSectionDto> sectionDtos =
+          form.getSections() != null
+              ? form.getSections().stream()
+                  .map(ProductAssembler::mapFormSection)
+                  .toList()
+              : List.of();
+      return new FormDto(form.getId(), form.getName(), form.getDescription(), sectionDtos);
+    }
+
+    private static FormSectionDto mapFormSection(FormSection section) {
+      List<FieldDto> fieldDtos =
+          section.getFields() != null
+              ? section.getFields().stream()
+                  .map(
+                      f ->
+                          new FieldDto(
+                              f.getId(),
+                              f.getCode(),
+                              f.getType(),
+                              f.getLabel(),
+                              f.getRequired(),
+                              f.getRegexPattern(),
+                              f.getOptions()))
+                  .toList()
+              : List.of();
+      return new FormSectionDto(
+          section.getId(),
+          section.getName(),
+          section.getLabel(),
+          section.getDisplayOrder(),
+          fieldDtos);
     }
 
     private static List<ProductFieldDto> mapProductFields(List<ProductField> fields) {

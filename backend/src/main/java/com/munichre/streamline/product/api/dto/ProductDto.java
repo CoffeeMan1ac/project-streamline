@@ -17,4 +17,5 @@ public record ProductDto(
     ProductTypeDto type,
     List<CoverageDto> coverages,
     List<CoverageDto> exclusions,
-    List<ProductFieldDto> productFields) {}
+    List<ProductFieldDto> productFields,
+    FormDto form) {}
