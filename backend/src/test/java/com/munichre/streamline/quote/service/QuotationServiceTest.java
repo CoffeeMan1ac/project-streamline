@@ -133,7 +133,7 @@ class QuotationServiceTest {
 
       when(productService.getProduct(productId)).thenReturn(mockProduct);
       when(decisionService.decide(request)).thenReturn(mockDecision);
-      when(quotationRepository.existsByReference(anyString())).thenReturn(false);
+      when(quotationRepository.getNextReferenceValue()).thenReturn(1L);
       when(quotationRepository.save(any(Quotation.class))).thenAnswer(inv -> inv.getArgument(0));
 
       QuoteResponse response = quotationService.createQuote(request);
@@ -181,7 +181,7 @@ class QuotationServiceTest {
 
       when(productService.getProduct(productId)).thenReturn(mockProduct);
       when(decisionService.decide(mockRequest)).thenReturn(mockDecision);
-      when(quotationRepository.existsByReference(anyString())).thenReturn(false);
+      when(quotationRepository.getNextReferenceValue()).thenReturn(1L);
       when(quotationRepository.save(any(Quotation.class))).thenAnswer(inv -> inv.getArgument(0));
 
       QuoteResponse response = quotationService.createQuote(mockRequest);
