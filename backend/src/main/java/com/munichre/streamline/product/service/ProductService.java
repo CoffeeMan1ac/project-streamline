@@ -503,9 +503,7 @@ public class ProductService {
       if (form == null) return null;
       List<FormSectionDto> sectionDtos =
           form.getSections() != null
-              ? form.getSections().stream()
-                  .map(ProductAssembler::mapFormSection)
-                  .toList()
+              ? form.getSections().stream().map(ProductAssembler::mapFormSection).toList()
               : List.of();
       return new FormDto(form.getId(), form.getName(), form.getDescription(), sectionDtos);
     }
