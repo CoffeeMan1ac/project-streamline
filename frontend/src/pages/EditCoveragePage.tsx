@@ -154,7 +154,11 @@ const EditCoveragePage = ({ open, coverageId, onClose, onSave }: EditCoveragePag
               placeholder="e.g., ACCIDENTAL_DAMAGE"
               value={code}
               onChange={(e) => {
-                setCode(e.target.value);
+                const formatted = e.target.value
+                  .toUpperCase()
+                  .replace(/\s/g, "_")
+                  .replace(/[^A-Z0-9_]/g, "");
+                setCode(formatted);
                 setErrors((prev) => ({ ...prev, code: "" }));
               }}
               error={!!errors.code}
