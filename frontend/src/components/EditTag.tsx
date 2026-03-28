@@ -125,9 +125,9 @@ const EditTag = ({ open, onClose, onUpdate, initialValues }: EditTagProps) => {
               value={tagKey}
               onChange={(e) => {
                 const formatted = e.target.value
-                  .toUpperCase()
-                  .replace(/\s/g, "_")
-                  .replace(/[^A-Z0-9_]/g, "");
+                  .toLowerCase()
+                  .replace(/\s/g, "-")
+                  .replace(/[^a-z0-9-]/g, "");
                 setTagKey(formatted);
               }}
               error={!!errors.key}

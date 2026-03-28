@@ -63,7 +63,12 @@ describe("TagsTable", () => {
 
     await waitFor(() => {
       expect(onEditTag).toHaveBeenCalledTimes(1);
-      expect(onEditTag).toHaveBeenCalledWith("1", expect.any(String), expect.any(String));
+      expect(onEditTag).toHaveBeenCalledWith(
+        "1",
+        expect.any(String),
+        expect.any(String),
+        expect.any(String)
+      );
     });
   });
 
