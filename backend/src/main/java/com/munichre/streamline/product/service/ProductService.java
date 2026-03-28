@@ -310,6 +310,7 @@ public class ProductService {
             .findById(request.categoryId())
             .orElseThrow(() -> new CoverageCategoryNotFoundException(request.categoryId()));
 
+    coverage.setCode(request.code());
     coverage.setLabel(request.label());
     coverage.setCategory(category);
 

@@ -41,7 +41,7 @@ const EditCoveragePage = ({ open, coverageId, onClose, onSave }: EditCoveragePag
   const [categories, setCategories] = useState<CoverageCategory[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
-  const [errors, setErrors] = useState({ label: "", categoryId: "" });
+  const [errors, setErrors] = useState({ code: "", label: "", categoryId: "" });
 
   useEffect(() => {
     if (!open) return;
@@ -81,7 +81,7 @@ const EditCoveragePage = ({ open, coverageId, onClose, onSave }: EditCoveragePag
     setCode("");
     setLabel("");
     setCategoryId("");
-    setErrors({ label: "", categoryId: "" });
+    setErrors({ code: "", label: "", categoryId: "" });
   };
 
   const handleClose = () => {
@@ -90,7 +90,8 @@ const EditCoveragePage = ({ open, coverageId, onClose, onSave }: EditCoveragePag
   };
 
   const validateForm = () => {
-    const newErrors = { label: "", categoryId: "" };
+    const newErrors = { code: "", label: "", categoryId: "" };
+    if (!code) newErrors.code = "Required";
     if (!label) newErrors.label = "Required";
     if (!categoryId) newErrors.categoryId = "Required";
     setErrors(newErrors);
@@ -104,6 +105,7 @@ const EditCoveragePage = ({ open, coverageId, onClose, onSave }: EditCoveragePag
     setIsLoading(true);
     try {
       await http.put(`/backoffice/products/coverages/${coverageId}`, {
+        code,
         label,
         categoryId,
       });
@@ -145,9 +147,21 @@ const EditCoveragePage = ({ open, coverageId, onClose, onSave }: EditCoveragePag
         ) : (
           <Box component="form" onSubmit={handleSubmit}>
             <Typography variant="body1" fontWeight="bold" gutterBottom>
-              Code
+              Code *
             </Typography>
-            <TextField fullWidth value={code} disabled sx={{ mb: 3 }} />
+            <TextField
+              fullWidth
+              placeholder="e.g., ACCIDENTAL_DAMAGE"
+              value={code}
+              onChange={(e) => {
+                setCode(e.target.value);
+                setErrors((prev) => ({ ...prev, code: "" }));
+              }}
+              error={!!errors.code}
+              helperText={errors.code}
+              disabled={isLoading}
+              sx={{ mb: 3 }}
+            />
 
             <Typography variant="body1" fontWeight="bold" gutterBottom>
               Label *

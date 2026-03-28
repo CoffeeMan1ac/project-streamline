@@ -232,7 +232,10 @@ describe("CoveragesManagementPage", () => {
       expect(screen.getByRole("button", { name: /edit 1/i })).toBeInTheDocument();
     });
     fireEvent.click(screen.getByRole("button", { name: /edit 1/i }));
-    expect(mockNavigate).toHaveBeenCalledWith("/coverages/1");
+    // Modal should open with the coverage id
+    await waitFor(() => {
+      expect(screen.getByText("Edit Coverage")).toBeInTheDocument();
+    });
   });
 
   test("shows error alert when fetching coverages fails", async () => {
@@ -267,6 +270,9 @@ describe("CoveragesManagementPage", () => {
       expect(screen.getByTestId("create-coverage-button")).toBeInTheDocument();
     });
     fireEvent.click(screen.getByTestId("create-coverage-button"));
-    expect(mockNavigate).toHaveBeenCalledWith("/coverages/create");
+    // Modal should open for creating coverage
+    await waitFor(() => {
+      expect(screen.getByText("Create New Coverage")).toBeInTheDocument();
+    });
   });
 });
