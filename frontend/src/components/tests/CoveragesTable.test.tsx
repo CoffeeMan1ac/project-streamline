@@ -37,6 +37,7 @@ describe("CoveragesTable", () => {
     const props = {
       coverages: testCoverages,
       onEdit: vi.fn(),
+      onDelete: vi.fn(),
       ...overrides,
     };
 

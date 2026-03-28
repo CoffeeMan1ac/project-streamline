@@ -75,6 +75,15 @@ const CoveragesManagementPage = () => {
     fetchCoverages();
   };
 
+  const handleDeleteCoverage = async (id: string) => {
+    try {
+      await http.delete(`/backoffice/products/coverages/${id}`);
+      setCoverages((prev) => prev.filter((c) => c.id !== id));
+    } catch {
+      setError("This coverage is currently used by one or more products and cannot be deleted.");
+    }
+  };
+
   return (
     <Box sx={{ mx: { xs: 2, sm: 3, md: 4, lg: 8, xl: 20 }, my: 4 }}>
       <Box
@@ -120,7 +129,11 @@ const CoveragesManagementPage = () => {
           <CircularProgress />
         </Box>
       ) : (
-        <CoveragesTable coverages={filteredCoverages} onEdit={handleEditCoverage} />
+        <CoveragesTable
+          coverages={filteredCoverages}
+          onEdit={handleEditCoverage}
+          onDelete={handleDeleteCoverage}
+        />
       )}
 
       <CreateCoveragePage

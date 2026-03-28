@@ -21,9 +21,10 @@ interface CoverageOptionDto {
 interface CoveragesTableProps {
   coverages: CoverageOptionDto[];
   onEdit: (id: string) => void;
+  onDelete: (id: string) => void;
 }
 
-const CoveragesTable: React.FC<CoveragesTableProps> = ({ coverages, onEdit }) => {
+const CoveragesTable: React.FC<CoveragesTableProps> = ({ coverages, onEdit, onDelete }) => {
   return (
     <Box
       border={1}
@@ -49,6 +50,7 @@ const CoveragesTable: React.FC<CoveragesTableProps> = ({ coverages, onEdit }) =>
                 label={coverage.label}
                 categoryLabel={coverage.categoryLabel}
                 onEdit={() => onEdit(coverage.id)}
+                onDelete={() => onDelete(coverage.id)}
               />
             ))}
           </TableBody>

@@ -9,6 +9,7 @@ const defaultProps = {
   label: "Accidental Damage",
   categoryLabel: "Damage",
   onEdit: vi.fn(),
+  onDelete: vi.fn(),
 };
 
 const renderRow = (overrides = {}) =>

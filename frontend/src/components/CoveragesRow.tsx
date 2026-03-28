@@ -2,12 +2,14 @@ import React from "react";
 import { TableRow, TableCell, Chip, IconButton, Typography, Box } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import ShieldOutlinedIcon from "@mui/icons-material/ShieldOutlined";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 interface CoverageRowProps {
   code: string;
   label: string;
   categoryLabel: string;
   onEdit: () => void;
+  onDelete: () => void;
 }
 
 const categoryConfig: Record<string, { color: string; bg: string }> = {
@@ -23,7 +25,13 @@ const categoryConfig: Record<string, { color: string; bg: string }> = {
   Other: { color: "#616161", bg: "#f5f5f5" },
 };
 
-const CoveragesRow: React.FC<CoverageRowProps> = ({ code, label, categoryLabel, onEdit }) => {
+const CoveragesRow: React.FC<CoverageRowProps> = ({
+  code,
+  label,
+  categoryLabel,
+  onEdit,
+  onDelete,
+}) => {
   const config = categoryConfig[categoryLabel] ?? { color: "#616161", bg: "#f5f5f5" };
 
   return (
@@ -70,6 +78,9 @@ const CoveragesRow: React.FC<CoverageRowProps> = ({ code, label, categoryLabel, 
       <TableCell>
         <IconButton size="small" color="primary" onClick={onEdit} data-testid="edit-button">
           <EditIcon fontSize="small" />
+        </IconButton>
+        <IconButton size="small" color="error" onClick={onDelete} data-testid="delete-button">
+          <DeleteIcon fontSize="small" />
         </IconButton>
       </TableCell>
     </TableRow>
