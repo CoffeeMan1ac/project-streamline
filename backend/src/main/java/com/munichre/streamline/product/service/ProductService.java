@@ -269,6 +269,12 @@ public class ProductService {
         .toList();
   }
 
+  public List<CoverageCategoryDto> getAllCoverageCategories() {
+    return coverageCategoryRepository.findAll().stream()
+        .map(c -> new CoverageCategoryDto(c.getId(), c.getCode(), c.getLabel()))
+        .toList();
+  }
+
   @Transactional
   public CoverageOptionDto createCoverage(CreateCoverageRequestDto request) {
     CoverageCategory category =

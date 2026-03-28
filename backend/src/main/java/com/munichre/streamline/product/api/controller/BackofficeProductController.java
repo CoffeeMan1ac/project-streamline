@@ -2,6 +2,7 @@ package com.munichre.streamline.product.api.controller;
 
 import static com.munichre.streamline.constant.ApiRoutes.BACKOFFICE_API_BASE;
 
+import com.munichre.streamline.product.api.dto.CoverageCategoryDto;
 import com.munichre.streamline.product.api.dto.CoverageOptionDto;
 import com.munichre.streamline.product.api.dto.CreateCoverageRequestDto;
 import com.munichre.streamline.product.api.dto.CreateFieldRequestDto;
@@ -131,5 +132,10 @@ public class BackofficeProductController {
   public ResponseEntity<Void> deleteProduct(@PathVariable UUID id) {
     productService.deleteProduct(id);
     return ResponseEntity.noContent().build();
+  }
+
+  @GetMapping("/coverage-categories")
+  public ResponseEntity<List<CoverageCategoryDto>> getCoverageCategories() {
+    return ResponseEntity.ok(productService.getAllCoverageCategories());
   }
 }
