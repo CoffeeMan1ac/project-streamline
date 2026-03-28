@@ -23,6 +23,12 @@ const QuotationsPricingBreakdown = ({
   finalPremium,
   rules,
 }: QuotationsPricingBreakdownProps) => {
+  // Find the LAST override index — everything before it is superseded
+  const lastOverrideIndex = rules.reduce(
+    (last, rule, index) => (rule.isOverride ? index : last),
+    -1
+  );
+
   return (
     <Box>
       <Paper
@@ -94,21 +100,17 @@ const QuotationsPricingBreakdown = ({
           RULES APPLIED
         </Typography>
 
-        {/* loop through rules*/}
-        {(() => {
-          const overrideIndex = rules.findIndex((r) => r.isOverride);
-          return rules.map((rule, index) => (
-            <RuleApplied
-              key={index}
-              ruleName={rule.ruleName}
-              ruleDescription={rule.ruleDescription}
-              ruleAmount={rule.ruleAmount}
-              type={rule.type}
-              isOverride={rule.isOverride}
-              isSuperseded={overrideIndex !== -1 && index < overrideIndex}
-            />
-          ));
-        })()}
+        {rules.map((rule, index) => (
+          <RuleApplied
+            key={index}
+            ruleName={rule.ruleName}
+            ruleDescription={rule.ruleDescription}
+            ruleAmount={rule.ruleAmount}
+            type={rule.type}
+            isOverride={rule.isOverride}
+            isSuperseded={lastOverrideIndex !== -1 && index < lastOverrideIndex}
+          />
+        ))}
         <Box height={16} />
 
         {/* Final Premium */}
@@ -162,65 +164,51 @@ const QuotationsPricingBreakdown = ({
             {/* Base price */}
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={0.5}>
               <Typography sx={{ fontSize: 12, color: "text.secondary" }}>Base Price</Typography>
-
               <Typography sx={{ fontSize: 12 }}>{basePrice}</Typography>
             </Box>
 
             {/* Rules that change price */}
-            {(() => {
-              const overrideIndex = rules.findIndex((r) => r.isOverride);
-              return rules
-                .filter((rule) => rule.type !== "neutral")
-                .map((rule, index) => {
-                  const isSuperseded = overrideIndex !== -1 && index < overrideIndex;
-                  return (
-                    <Box
-                      key={index}
-                      display="flex"
-                      justifyContent="space-between"
-                      alignItems="center"
-                      mb={0.5}
+            {rules
+              .filter((rule) => rule.type !== "neutral")
+              .map((rule, filteredIndex) => {
+                // Find this rule's original index to determine if superseded
+                const originalIndex = rules.indexOf(rule);
+                const isSuperseded = lastOverrideIndex !== -1 && originalIndex < lastOverrideIndex;
+                return (
+                  <Box
+                    key={filteredIndex}
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    mb={0.5}
+                  >
+                    <Typography
+                      sx={{
+                        fontSize: 12,
+                        color: isSuperseded ? "text.disabled" : "text.secondary",
+                        textDecoration: isSuperseded ? "line-through" : "none",
+                      }}
                     >
-                      <Typography
-                        sx={{
-                          fontSize: 12,
-                          color: isSuperseded ? "text.disabled" : "text.secondary",
-                          textDecoration: isSuperseded ? "line-through" : "none",
-                        }}
-                      >
-                        {rule.ruleName}
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontSize: 12,
-                          color: isSuperseded
-                            ? "text.disabled"
-                            : rule.type === "negative"
-                              ? "error.main"
-                              : rule.type === "positive"
-                                ? "success.main"
-                                : "text.primary",
-                          textDecoration: isSuperseded ? "line-through" : "none",
-                        }}
-                      >
-                        {rule.ruleAmount}
-                      </Typography>
-                    </Box>
-                  );
-                });
-            })()}
-
-            {/* Show override row clearly */}
-            {rules.some((r) => r.isOverride) && (
-              <Box display="flex" justifyContent="space-between" alignItems="center" mb={0.5}>
-                <Typography sx={{ fontSize: 12, color: "warning.dark", fontWeight: 600 }}>
-                  ⚡ Override applied
-                </Typography>
-                <Typography sx={{ fontSize: 12, color: "warning.dark", fontWeight: 600 }}>
-                  {rules.find((r) => r.isOverride)?.ruleAmount}
-                </Typography>
-              </Box>
-            )}
+                      {rule.ruleName}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontSize: 12,
+                        color: isSuperseded
+                          ? "text.disabled"
+                          : rule.type === "negative"
+                            ? "error.main"
+                            : rule.type === "positive"
+                              ? "success.main"
+                              : "text.primary",
+                        textDecoration: isSuperseded ? "line-through" : "none",
+                      }}
+                    >
+                      {rule.ruleAmount}
+                    </Typography>
+                  </Box>
+                );
+              })}
 
             {/* Divider */}
             <Box
