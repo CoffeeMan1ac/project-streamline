@@ -2,9 +2,10 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useEffect, useMemo, useState } from "react";
 import { CircularProgress, Alert } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import CoveragesTable from "../components/CoveragesTable";
 import CoveragesSearchBar from "../components/CoveragesSearchBar";
+import CreateCoveragePage from "./CreateCoveragePage";
+import EditCoveragePage from "./EditCoveragePage";
 import http from "../api/http";
 
 interface CoverageOptionDto {
@@ -21,7 +22,10 @@ const CoveragesManagementPage = () => {
   const [coverages, setCoverages] = useState<CoverageOptionDto[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
-  const navigate = useNavigate();
+
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editCoverageId, setEditCoverageId] = useState<string | null>(null);
 
   const fetchCoverages = async () => {
     try {
@@ -59,11 +63,16 @@ const CoveragesManagementPage = () => {
   });
 
   const handleCreateCoverage = () => {
-    navigate("/coverages/create");
+    setCreateModalOpen(true);
   };
 
   const handleEditCoverage = (id: string) => {
-    navigate(`/coverages/${id}`);
+    setEditCoverageId(id);
+    setEditModalOpen(true);
+  };
+
+  const handleModalSave = () => {
+    fetchCoverages();
   };
 
   return (
@@ -113,6 +122,19 @@ const CoveragesManagementPage = () => {
       ) : (
         <CoveragesTable coverages={filteredCoverages} onEdit={handleEditCoverage} />
       )}
+
+      <CreateCoveragePage
+        open={createModalOpen}
+        onClose={() => setCreateModalOpen(false)}
+        onSave={handleModalSave}
+      />
+
+      <EditCoveragePage
+        open={editModalOpen}
+        coverageId={editCoverageId}
+        onClose={() => setEditModalOpen(false)}
+        onSave={handleModalSave}
+      />
     </Box>
   );
 };

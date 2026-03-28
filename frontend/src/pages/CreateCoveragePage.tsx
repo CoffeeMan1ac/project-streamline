@@ -1,43 +1,74 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   TextField,
-  Container,
   Typography,
   Box,
   Button,
   FormControl,
   Select,
   MenuItem,
+  Dialog,
+  DialogContent,
+  CircularProgress,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import http from "../api/http";
 
-const CreateCoveragePage = () => {
-  const navigate = useNavigate();
-  const [coverageName, setCoverageName] = useState("");
-  const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("");
+interface CoverageCategory {
+  id: string;
+  code: string;
+  label: string;
+}
+
+interface CreateCoveragePageProps {
+  open: boolean;
+  onClose: () => void;
+  onSave: () => void;
+}
+
+const PHONE_INSURANCE_TYPE_ID = "9333558f-9a40-4ad6-b20b-7f45246c70ea";
+
+const CreateCoveragePage = ({ open, onClose, onSave }: CreateCoveragePageProps) => {
+  const [code, setCode] = useState("");
+  const [label, setLabel] = useState("");
+  const [categoryId, setCategoryId] = useState("");
+  const [categories, setCategories] = useState<CoverageCategory[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState({
-    coverageName: "",
-    description: "",
-    category: "",
-  });
+  const [errors, setErrors] = useState({ code: "", label: "", categoryId: "" });
+
+  useEffect(() => {
+    if (!open) return;
+    const fetchCategories = async () => {
+      try {
+        const { data } = await http.get<CoverageCategory[]>(
+          "/backoffice/products/coverage-categories"
+        );
+        setCategories(data);
+      } catch (err) {
+        console.error("Failed to fetch categories:", err);
+      }
+    };
+    fetchCategories();
+  }, [open]);
+
+  const resetForm = () => {
+    setCode("");
+    setLabel("");
+    setCategoryId("");
+    setErrors({ code: "", label: "", categoryId: "" });
+  };
+
+  const handleClose = () => {
+    resetForm();
+    onClose();
+  };
 
   const validateForm = () => {
-    const newErrors = {
-      coverageName: "",
-      description: "",
-      category: "",
-    };
-
-    if (!coverageName) newErrors.coverageName = "Required";
-    if (!description) newErrors.description = "Required";
-    if (!category) newErrors.category = "Required";
-
+    const newErrors = { code: "", label: "", categoryId: "" };
+    if (!code) newErrors.code = "Required";
+    if (!label) newErrors.label = "Required";
+    if (!categoryId) newErrors.categoryId = "Required";
     setErrors(newErrors);
-
-    return Object.values(newErrors).every((error) => error === "");
+    return Object.values(newErrors).every((e) => e === "");
   };
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
@@ -45,16 +76,15 @@ const CreateCoveragePage = () => {
     if (!validateForm()) return;
 
     setIsLoading(true);
-
     try {
-      const payload = {
-        coverageName,
-        description,
-        category,
-      };
-
-      await http.post("/backoffice/coverages", payload);
-      navigate("/coverages");
+      await http.post("/backoffice/products/coverages", {
+        code,
+        label,
+        categoryId,
+        typeId: PHONE_INSURANCE_TYPE_ID,
+      });
+      onSave();
+      handleClose();
     } catch (err) {
       console.error(err);
     } finally {
@@ -62,18 +92,18 @@ const CreateCoveragePage = () => {
     }
   };
 
-  const handleClose = () => {
-    navigate("/coverages");
-  };
-
   return (
-    <Box sx={{ p: { xs: 2, sm: 4, md: 6 } }}>
-      <Container maxWidth="sm" sx={{ p: 3, borderRadius: 2, bgcolor: "background.paper" }}>
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
-          <Typography
-            variant="h4"
-            sx={{ color: "text.primary", fontSize: { xs: "1.5rem", md: "2.125rem" } }}
-          >
+    <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+      <DialogContent sx={{ p: { xs: 2, sm: 4 } }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 2,
+          }}
+        >
+          <Typography variant="h5" fontWeight={700}>
             Create New Coverage
           </Typography>
           <Typography
@@ -83,65 +113,65 @@ const CreateCoveragePage = () => {
             ✕
           </Typography>
         </Box>
+
         <Box component="form" onSubmit={handleSubmit}>
-          <Typography variant="body1" fontWeight="bold" gutterBottom sx={{ color: "text.primary" }}>
-            Coverage Name *
+          <Typography variant="body1" fontWeight="bold" gutterBottom>
+            Code *
+          </Typography>
+          <TextField
+            fullWidth
+            placeholder="e.g., ACCIDENTAL_DAMAGE"
+            value={code}
+            onChange={(e) => {
+              setCode(e.target.value);
+              setErrors((prev) => ({ ...prev, code: "" }));
+            }}
+            error={!!errors.code}
+            helperText={errors.code}
+            disabled={isLoading}
+            sx={{ mb: 3 }}
+          />
+
+          <Typography variant="body1" fontWeight="bold" gutterBottom>
+            Label *
           </Typography>
           <TextField
             fullWidth
             placeholder="e.g., Accidental Damage"
-            value={coverageName}
+            value={label}
             onChange={(e) => {
-              setCoverageName(e.target.value);
-              setErrors((prev) => ({ ...prev, coverageName: "" }));
+              setLabel(e.target.value);
+              setErrors((prev) => ({ ...prev, label: "" }));
             }}
-            error={!!errors.coverageName}
-            helperText={errors.coverageName}
+            error={!!errors.label}
+            helperText={errors.label}
             disabled={isLoading}
             sx={{ mb: 3 }}
           />
 
-          <Typography variant="body1" fontWeight="bold" gutterBottom sx={{ color: "text.primary" }}>
-            Description *
-          </Typography>
-          <TextField
-            fullWidth
-            multiline
-            rows={3}
-            placeholder="e.g., Coverage for unintentional physical damage to the device"
-            value={description}
-            onChange={(e) => {
-              setDescription(e.target.value);
-              setErrors((prev) => ({ ...prev, description: "" }));
-            }}
-            error={!!errors.description}
-            helperText={errors.description}
-            disabled={isLoading}
-            sx={{ mb: 3 }}
-          />
-
-          <Typography variant="body1" fontWeight="bold" gutterBottom sx={{ color: "text.primary" }}>
+          <Typography variant="body1" fontWeight="bold" gutterBottom>
             Category *
           </Typography>
-          <FormControl fullWidth disabled={isLoading} sx={{ mb: errors.category ? 0 : 3 }}>
+          <FormControl fullWidth disabled={isLoading} sx={{ mb: errors.categoryId ? 0 : 3 }}>
             <Select
-              value={category}
+              value={categoryId}
               displayEmpty
               onChange={(e) => {
-                setCategory(e.target.value);
-                setErrors((prev) => ({ ...prev, category: "" }));
+                setCategoryId(e.target.value);
+                setErrors((prev) => ({ ...prev, categoryId: "" }));
               }}
-              error={!!errors.category}
+              error={!!errors.categoryId}
               sx={{ textAlign: "left" }}
             >
               <MenuItem value="">Select category</MenuItem>
-              <MenuItem value="Damage">Damage</MenuItem>
-              <MenuItem value="Warranty">Warranty</MenuItem>
-              <MenuItem value="Theft">Theft</MenuItem>
-              <MenuItem value="Other">Other</MenuItem>
+              {categories.map((cat) => (
+                <MenuItem key={cat.id} value={cat.id}>
+                  {cat.label}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
-          {errors.category && (
+          {errors.categoryId && (
             <div
               style={{
                 color: "#d32f2f",
@@ -150,7 +180,7 @@ const CreateCoveragePage = () => {
                 marginBottom: "24px",
               }}
             >
-              {errors.category}
+              {errors.categoryId}
             </div>
           )}
 
@@ -168,8 +198,8 @@ const CreateCoveragePage = () => {
             </Button>
           </Box>
         </Box>
-      </Container>
-    </Box>
+      </DialogContent>
+    </Dialog>
   );
 };
 
