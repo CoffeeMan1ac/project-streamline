@@ -258,7 +258,14 @@ public class ProductService {
 
   public List<CoverageOptionDto> getAllCoverages() {
     return productCoverageRepository.findAllCoverages().stream()
-        .map(c -> new CoverageOptionDto(c.getId(), c.getCode(), c.getLabel()))
+        .map(
+            c ->
+                new CoverageOptionDto(
+                    c.getId(),
+                    c.getCode(),
+                    c.getLabel(),
+                    c.getCategory().getCode(),
+                    c.getCategory().getLabel()))
         .toList();
   }
 
@@ -279,7 +286,12 @@ public class ProductService {
     coverage.setType(type);
 
     Coverage saved = coverageRepository.save(coverage);
-    return new CoverageOptionDto(saved.getId(), saved.getCode(), saved.getLabel());
+    return new CoverageOptionDto(
+        saved.getId(),
+        saved.getCode(),
+        saved.getLabel(),
+        saved.getCategory().getCode(),
+        saved.getCategory().getLabel());
   }
 
   @Transactional
@@ -296,7 +308,12 @@ public class ProductService {
     coverage.setCategory(category);
 
     Coverage saved = coverageRepository.save(coverage);
-    return new CoverageOptionDto(saved.getId(), saved.getCode(), saved.getLabel());
+    return new CoverageOptionDto(
+        saved.getId(),
+        saved.getCode(),
+        saved.getLabel(),
+        saved.getCategory().getCode(),
+        saved.getCategory().getLabel());
   }
 
   public List<FieldDto> getAllFields() {

@@ -63,20 +63,19 @@ vi.mock("../../components/CoveragesTable", () => ({
   default: ({
     coverages,
     onEdit,
-    onDelete,
   }: {
-    coverages: { id: string; coverageName: string; category: string }[];
+    coverages: { id: string; label: string; categoryLabel: string }[];
     onEdit: (id: string) => void;
-    onDelete: (id: string) => void;
   }) => (
     <div>
       <span>Coverages Table</span>
       {coverages.map((c) => (
         <div key={c.id} data-testid={`coverage-row-${c.id}`}>
-          <span data-testid={`coverage-name-${c.id}`}>{c.coverageName}</span>
-          <span data-testid={`coverage-category-${c.id}`}>{c.category}</span>
-          <button onClick={() => onEdit(c.id)}>Edit {c.id}</button>
-          <button onClick={() => onDelete(c.id)}>Delete {c.id}</button>
+          <span data-testid={`coverage-name-${c.id}`}>{c.label}</span>
+          <span data-testid={`coverage-category-${c.id}`}>{c.categoryLabel}</span>
+          <button onClick={() => onEdit(c.id)} aria-label={`edit ${c.id}`}>
+            Edit {c.id}
+          </button>
         </div>
       ))}
     </div>
@@ -93,24 +92,24 @@ vi.mock("../../api/http", () => ({
 const mockCoverages = [
   {
     id: "1",
-    coverageName: "Accidental Damage",
-    description: "Coverage for unintentional physical damage to the device",
-    category: "Damage",
-    usedInProducts: 5,
+    code: "ACC_DMG",
+    label: "Accidental Damage",
+    categoryCode: "Damage",
+    categoryLabel: "Damage",
   },
   {
     id: "2",
-    coverageName: "Battery Replacement",
-    description: "Coverage for battery degradation and replacement",
-    category: "Warranty",
-    usedInProducts: 0,
+    code: "BATT_REP",
+    label: "Battery Replacement",
+    categoryCode: "Warranty",
+    categoryLabel: "Warranty",
   },
   {
     id: "3",
-    coverageName: "Theft",
-    description: "Protection against theft or robbery of the device",
-    category: "Theft",
-    usedInProducts: 6,
+    code: "THEFT",
+    label: "Theft",
+    categoryCode: "Theft",
+    categoryLabel: "Theft",
   },
 ];
 
@@ -159,7 +158,7 @@ describe("CoveragesManagementPage", () => {
     const http = await import("../../api/http");
     renderPage();
     await waitFor(() => {
-      expect(http.default.get).toHaveBeenCalledWith("/backoffice/coverages");
+      expect(http.default.get).toHaveBeenCalledWith("/backoffice/products/coverages");
     });
   });
 
@@ -234,33 +233,6 @@ describe("CoveragesManagementPage", () => {
     });
     fireEvent.click(screen.getByRole("button", { name: /edit 1/i }));
     expect(mockNavigate).toHaveBeenCalledWith("/coverages/1");
-  });
-
-  test("calls onDelete with correct id when delete is clicked", async () => {
-    const http = await import("../../api/http");
-    vi.mocked(http.default.get).mockResolvedValueOnce({ data: mockCoverages });
-    renderPage();
-    await waitFor(() => {
-      expect(screen.getByRole("button", { name: /delete 1/i })).toBeInTheDocument();
-    });
-    fireEvent.click(screen.getByRole("button", { name: /delete 1/i }));
-    await waitFor(() => {
-      expect(http.default.delete).toHaveBeenCalledWith("/backoffice/coverages/1");
-    });
-  });
-
-  test("shows error alert when delete fails", async () => {
-    const http = await import("../../api/http");
-    vi.mocked(http.default.get).mockResolvedValueOnce({ data: mockCoverages });
-    vi.mocked(http.default.delete).mockRejectedValueOnce(new Error("Delete failed"));
-    renderPage();
-    await waitFor(() => {
-      expect(screen.getByRole("button", { name: /delete 1/i })).toBeInTheDocument();
-    });
-    fireEvent.click(screen.getByRole("button", { name: /delete 1/i }));
-    await waitFor(() => {
-      expect(screen.getByText("Failed to delete coverage. Please try again.")).toBeInTheDocument();
-    });
   });
 
   test("shows error alert when fetching coverages fails", async () => {

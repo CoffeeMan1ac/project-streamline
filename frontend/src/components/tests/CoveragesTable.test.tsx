@@ -7,24 +7,24 @@ import CoveragesTable from "../CoveragesTable";
 const testCoverages = [
   {
     id: "1",
-    coverageName: "Test Coverage 1",
-    description: "Test description 1",
-    category: "Damage",
-    usedInProducts: 5,
+    code: "COV_1",
+    label: "Test Coverage 1",
+    categoryCode: "Damage",
+    categoryLabel: "Damage",
   },
   {
     id: "2",
-    coverageName: "Test Coverage 2",
-    description: "Test description 2",
-    category: "Warranty",
-    usedInProducts: 0,
+    code: "COV_2",
+    label: "Test Coverage 2",
+    categoryCode: "Warranty",
+    categoryLabel: "Warranty",
   },
   {
     id: "3",
-    coverageName: "Test Coverage 3",
-    description: "Test description 3",
-    category: "Theft",
-    usedInProducts: 1,
+    code: "COV_3",
+    label: "Test Coverage 3",
+    categoryCode: "Theft",
+    categoryLabel: "Theft",
   },
 ];
 
@@ -37,7 +37,6 @@ describe("CoveragesTable", () => {
     const props = {
       coverages: testCoverages,
       onEdit: vi.fn(),
-      onDelete: vi.fn(),
       ...overrides,
     };
 
@@ -50,9 +49,8 @@ describe("CoveragesTable", () => {
 
   test("renders table headings", () => {
     renderTable();
-    expect(screen.getByText("COVERAGE NAME")).toBeInTheDocument();
+    expect(screen.getByText("COVERAGE")).toBeInTheDocument();
     expect(screen.getByText("CATEGORY")).toBeInTheDocument();
-    expect(screen.getByText("USED IN PRODUCTS")).toBeInTheDocument();
     expect(screen.getByText("ACTIONS")).toBeInTheDocument();
   });
 
@@ -63,25 +61,11 @@ describe("CoveragesTable", () => {
     expect(screen.getByText("Test Coverage 3")).toBeInTheDocument();
   });
 
-  test("renders coverage descriptions", () => {
-    renderTable();
-    expect(screen.getByText("Test description 1")).toBeInTheDocument();
-    expect(screen.getByText("Test description 2")).toBeInTheDocument();
-    expect(screen.getByText("Test description 3")).toBeInTheDocument();
-  });
-
   test("renders category chips", () => {
     renderTable();
     expect(screen.getByText("Damage")).toBeInTheDocument();
     expect(screen.getByText("Warranty")).toBeInTheDocument();
     expect(screen.getByText("Theft")).toBeInTheDocument();
-  });
-
-  test("renders used in products counts with correct pluralization", () => {
-    renderTable();
-    expect(screen.getByText("5")).toBeInTheDocument();
-    expect(screen.getByText("0")).toBeInTheDocument();
-    expect(screen.getByText("1")).toBeInTheDocument();
   });
 
   test("calls onEdit with correct id when edit is clicked", () => {
@@ -90,13 +74,5 @@ describe("CoveragesTable", () => {
     const editButtons = screen.getAllByTestId("edit-button");
     fireEvent.click(editButtons[0]);
     expect(onEdit).toHaveBeenCalledWith("1");
-  });
-
-  test("calls onDelete with correct id when delete is clicked", () => {
-    const onDelete = vi.fn();
-    renderTable({ onDelete });
-    const deleteButtons = screen.getAllByTestId("delete-button");
-    fireEvent.click(deleteButtons[0]);
-    expect(onDelete).toHaveBeenCalledWith("1");
   });
 });

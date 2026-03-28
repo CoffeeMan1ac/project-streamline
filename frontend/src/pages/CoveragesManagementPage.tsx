@@ -1,24 +1,24 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CircularProgress, Alert } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import CoveragesTable from "../components/CoveragesTable";
 import CoveragesSearchBar from "../components/CoveragesSearchBar";
 import http from "../api/http";
 
-interface CoverageDto {
+interface CoverageOptionDto {
   id: string;
-  coverageName: string;
-  description: string;
-  category: string;
-  usedInProducts: number;
+  code: string;
+  label: string;
+  categoryCode: string;
+  categoryLabel: string;
 }
 
 const CoveragesManagementPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [coverages, setCoverages] = useState<CoverageDto[]>([]);
+  const [coverages, setCoverages] = useState<CoverageOptionDto[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ const CoveragesManagementPage = () => {
     try {
       setLoading(true);
       setError(null);
-      const { data } = await http.get<CoverageDto[]>("/backoffice/coverages");
+      const { data } = await http.get<CoverageOptionDto[]>("/backoffice/products/coverages");
       setCoverages(data);
     } catch {
       setError("Failed to load coverages. Please try again.");
@@ -40,20 +40,21 @@ const CoveragesManagementPage = () => {
     fetchCoverages();
   }, []);
 
-  const handleDeleteCoverage = async (id: string) => {
-    try {
-      await http.delete(`/backoffice/coverages/${id}`);
-      setCoverages((prev) => prev.filter((c) => c.id !== id));
-    } catch {
-      setError("Failed to delete coverage. Please try again.");
-    }
-  };
+  const categories = useMemo(() => {
+    const seen = new Map<string, string>();
+    coverages.forEach((c) => {
+      if (!seen.has(c.categoryCode)) {
+        seen.set(c.categoryCode, c.categoryLabel);
+      }
+    });
+    return Array.from(seen, ([code, label]) => ({ code, label }));
+  }, [coverages]);
 
   const filteredCoverages = coverages.filter((coverage) => {
     const matchesSearch =
-      coverage.coverageName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      coverage.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = categoryFilter === "all" || coverage.category === categoryFilter;
+      coverage.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      coverage.code.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = categoryFilter === "all" || coverage.categoryCode === categoryFilter;
     return matchesSearch && matchesCategory;
   });
 
@@ -92,6 +93,7 @@ const CoveragesManagementPage = () => {
           onSearchChange={setSearchQuery}
           categoryFilter={categoryFilter}
           onCategoryFilterChange={setCategoryFilter}
+          categories={categories}
           totalCoverages={coverages.length}
           showingCoverages={filteredCoverages.length}
           onCreateCoverage={handleCreateCoverage}
@@ -109,11 +111,7 @@ const CoveragesManagementPage = () => {
           <CircularProgress />
         </Box>
       ) : (
-        <CoveragesTable
-          coverages={filteredCoverages}
-          onEdit={handleEditCoverage}
-          onDelete={handleDeleteCoverage}
-        />
+        <CoveragesTable coverages={filteredCoverages} onEdit={handleEditCoverage} />
       )}
     </Box>
   );

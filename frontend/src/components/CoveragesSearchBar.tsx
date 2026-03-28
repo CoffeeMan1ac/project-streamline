@@ -13,11 +13,17 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 
+interface CategoryOption {
+  code: string;
+  label: string;
+}
+
 interface CoveragesSearchBarProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
   categoryFilter: string;
   onCategoryFilterChange: (category: string) => void;
+  categories: CategoryOption[];
   totalCoverages: number;
   showingCoverages: number;
   onCreateCoverage: () => void;
@@ -28,6 +34,7 @@ const CoveragesSearchBar = ({
   onSearchChange,
   categoryFilter,
   onCategoryFilterChange,
+  categories,
   totalCoverages,
   showingCoverages,
   onCreateCoverage,
@@ -69,10 +76,11 @@ const CoveragesSearchBar = ({
               sx={{ borderRadius: 2 }}
             >
               <MenuItem value="all">All Categories</MenuItem>
-              <MenuItem value="Damage">Damage</MenuItem>
-              <MenuItem value="Warranty">Warranty</MenuItem>
-              <MenuItem value="Theft">Theft</MenuItem>
-              <MenuItem value="Other">Other</MenuItem>
+              {categories.map((cat) => (
+                <MenuItem key={cat.code} value={cat.code}>
+                  {cat.label}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
           <Button

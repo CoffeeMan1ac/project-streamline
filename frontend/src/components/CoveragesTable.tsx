@@ -11,21 +11,19 @@ import {
   Box,
 } from "@mui/material";
 
-interface Coverage {
+interface CoverageOptionDto {
   id: string;
-  coverageName: string;
-  description: string;
-  category: string;
-  usedInProducts: number;
+  code: string;
+  label: string;
+  categoryLabel: string;
 }
 
 interface CoveragesTableProps {
-  coverages: Coverage[];
+  coverages: CoverageOptionDto[];
   onEdit: (id: string) => void;
-  onDelete: (id: string) => void;
 }
 
-const CoveragesTable: React.FC<CoveragesTableProps> = ({ coverages, onEdit, onDelete }) => {
+const CoveragesTable: React.FC<CoveragesTableProps> = ({ coverages, onEdit }) => {
   return (
     <Box
       border={1}
@@ -38,9 +36,8 @@ const CoveragesTable: React.FC<CoveragesTableProps> = ({ coverages, onEdit, onDe
         <Table sx={{ minWidth: { xs: "unset", sm: 400 } }}>
           <TableHead>
             <TableRow sx={{ bgcolor: "background.default" }}>
-              <TableCell>COVERAGE NAME</TableCell>
+              <TableCell>COVERAGE</TableCell>
               <TableCell>CATEGORY</TableCell>
-              <TableCell>USED IN PRODUCTS</TableCell>
               <TableCell>ACTIONS</TableCell>
             </TableRow>
           </TableHead>
@@ -48,12 +45,10 @@ const CoveragesTable: React.FC<CoveragesTableProps> = ({ coverages, onEdit, onDe
             {coverages.map((coverage) => (
               <CoverageRow
                 key={coverage.id}
-                coverageName={coverage.coverageName}
-                description={coverage.description}
-                category={coverage.category}
-                usedInProducts={coverage.usedInProducts}
+                code={coverage.code}
+                label={coverage.label}
+                categoryLabel={coverage.categoryLabel}
                 onEdit={() => onEdit(coverage.id)}
-                onDelete={() => onDelete(coverage.id)}
               />
             ))}
           </TableBody>

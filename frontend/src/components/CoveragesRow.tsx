@@ -1,16 +1,13 @@
 import React from "react";
 import { TableRow, TableCell, Chip, IconButton, Typography, Box } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import ShieldOutlinedIcon from "@mui/icons-material/ShieldOutlined";
 
 interface CoverageRowProps {
-  coverageName: string;
-  description: string;
-  category: string;
-  usedInProducts: number;
+  code: string;
+  label: string;
+  categoryLabel: string;
   onEdit: () => void;
-  onDelete: () => void;
 }
 
 const categoryConfig: Record<string, { color: string; bg: string }> = {
@@ -20,15 +17,8 @@ const categoryConfig: Record<string, { color: string; bg: string }> = {
   Other: { color: "#4a148c", bg: "#f3e5f5" },
 };
 
-const CoveragesRow: React.FC<CoverageRowProps> = ({
-  coverageName,
-  description,
-  category,
-  usedInProducts,
-  onEdit,
-  onDelete,
-}) => {
-  const config = categoryConfig[category] ?? { color: "#616161", bg: "#f5f5f5" };
+const CoveragesRow: React.FC<CoverageRowProps> = ({ code, label, categoryLabel, onEdit }) => {
+  const config = categoryConfig[categoryLabel] ?? { color: "#616161", bg: "#f5f5f5" };
 
   return (
     <TableRow>
@@ -50,10 +40,10 @@ const CoveragesRow: React.FC<CoverageRowProps> = ({
           </Box>
           <Box>
             <Typography variant="body2" fontWeight="bold">
-              {coverageName}
+              {label}
             </Typography>
             <Typography variant="caption" color="text.secondary">
-              {description}
+              {code}
             </Typography>
           </Box>
         </Box>
@@ -61,7 +51,7 @@ const CoveragesRow: React.FC<CoverageRowProps> = ({
 
       <TableCell>
         <Chip
-          label={category}
+          label={categoryLabel}
           size="small"
           sx={{
             backgroundColor: config.bg,
@@ -72,17 +62,8 @@ const CoveragesRow: React.FC<CoverageRowProps> = ({
       </TableCell>
 
       <TableCell>
-        <Typography variant="body2">
-          <strong>{usedInProducts}</strong> {usedInProducts === 1 ? "product" : "products"}
-        </Typography>
-      </TableCell>
-
-      <TableCell>
         <IconButton size="small" color="primary" onClick={onEdit} data-testid="edit-button">
           <EditIcon fontSize="small" />
-        </IconButton>
-        <IconButton size="small" color="error" onClick={onDelete} data-testid="delete-button">
-          <DeleteIcon fontSize="small" />
         </IconButton>
       </TableCell>
     </TableRow>

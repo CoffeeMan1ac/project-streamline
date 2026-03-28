@@ -223,7 +223,8 @@ class BackofficeProductControllerTest {
       CreateCoverageRequestDto request =
           new CreateCoverageRequestDto("NEW_COV", "New Coverage", catId, typeId);
       CoverageOptionDto response =
-          new CoverageOptionDto(UUID.randomUUID(), "NEW_COV", "New Coverage");
+          new CoverageOptionDto(
+              UUID.randomUUID(), "NEW_COV", "New Coverage", "CAT_CODE", "Category");
 
       when(productService.createCoverage(any(CreateCoverageRequestDto.class))).thenReturn(response);
 
@@ -266,7 +267,8 @@ class BackofficeProductControllerTest {
       UUID id = UUID.randomUUID();
       UUID catId = UUID.randomUUID();
       UpdateCoverageRequestDto request = new UpdateCoverageRequestDto("Updated Label", catId);
-      CoverageOptionDto response = new CoverageOptionDto(id, "COV_CODE", "Updated Label");
+      CoverageOptionDto response =
+          new CoverageOptionDto(id, "COV_CODE", "Updated Label", "CAT_CODE", "Category");
 
       when(productService.updateCoverage(eq(id), any(UpdateCoverageRequestDto.class)))
           .thenReturn(response);

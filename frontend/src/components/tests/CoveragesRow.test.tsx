@@ -5,12 +5,10 @@ import { Table, TableBody } from "@mui/material";
 import CoverageRow from "../CoveragesRow";
 
 const defaultProps = {
-  coverageName: "Accidental Damage",
-  description: "Coverage for unintentional physical damage to the device",
-  category: "Damage",
-  usedInProducts: 5,
+  code: "ACC_DMG",
+  label: "Accidental Damage",
+  categoryLabel: "Damage",
   onEdit: vi.fn(),
-  onDelete: vi.fn(),
 };
 
 const renderRow = (overrides = {}) =>
@@ -28,16 +26,14 @@ describe("CoverageRow", () => {
     vi.clearAllMocks();
   });
 
-  test("renders coverage name", () => {
+  test("renders coverage label", () => {
     renderRow();
     expect(screen.getByText("Accidental Damage")).toBeInTheDocument();
   });
 
-  test("renders description", () => {
+  test("renders coverage code", () => {
     renderRow();
-    expect(
-      screen.getByText("Coverage for unintentional physical damage to the device")
-    ).toBeInTheDocument();
+    expect(screen.getByText("ACC_DMG")).toBeInTheDocument();
   });
 
   test("renders category chip", () => {
@@ -45,39 +41,23 @@ describe("CoverageRow", () => {
     expect(screen.getByText("Damage")).toBeInTheDocument();
   });
 
-  test("renders used in products count (plural)", () => {
-    renderRow();
-    expect(screen.getByText("5")).toBeInTheDocument();
-    expect(screen.getByText("products")).toBeInTheDocument();
-  });
-
-  test("renders singular product text when count is 1", () => {
-    renderRow({ usedInProducts: 1 });
-    expect(screen.getByText("product")).toBeInTheDocument();
-  });
-
-  test("renders 0 products", () => {
-    renderRow({ usedInProducts: 0 });
-    expect(screen.getByText("0")).toBeInTheDocument();
-  });
-
   test("renders Warranty category chip", () => {
-    renderRow({ category: "Warranty" });
+    renderRow({ categoryLabel: "Warranty" });
     expect(screen.getByText("Warranty")).toBeInTheDocument();
   });
 
   test("renders Theft category chip", () => {
-    renderRow({ category: "Theft" });
+    renderRow({ categoryLabel: "Theft" });
     expect(screen.getByText("Theft")).toBeInTheDocument();
   });
 
   test("renders Other category chip", () => {
-    renderRow({ category: "Other" });
+    renderRow({ categoryLabel: "Other" });
     expect(screen.getByText("Other")).toBeInTheDocument();
   });
 
   test("renders unknown category with default styling", () => {
-    renderRow({ category: "Unknown" });
+    renderRow({ categoryLabel: "Unknown" });
     expect(screen.getByText("Unknown")).toBeInTheDocument();
   });
 
@@ -86,23 +66,11 @@ describe("CoverageRow", () => {
     expect(screen.getByTestId("edit-button")).toBeInTheDocument();
   });
 
-  test("renders delete button", () => {
-    renderRow();
-    expect(screen.getByTestId("delete-button")).toBeInTheDocument();
-  });
-
   test("calls onEdit when edit button is clicked", () => {
     const onEdit = vi.fn();
     renderRow({ onEdit });
     fireEvent.click(screen.getByTestId("edit-button"));
     expect(onEdit).toHaveBeenCalledTimes(1);
-  });
-
-  test("calls onDelete when delete button is clicked", () => {
-    const onDelete = vi.fn();
-    renderRow({ onDelete });
-    fireEvent.click(screen.getByTestId("delete-button"));
-    expect(onDelete).toHaveBeenCalledTimes(1);
   });
 
   test("renders shield icon", () => {

@@ -13,6 +13,12 @@ describe("CoveragesSearchBar", () => {
     onSearchChange: vi.fn(),
     categoryFilter: "all",
     onCategoryFilterChange: vi.fn(),
+    categories: [
+      { code: "Damage", label: "Damage" },
+      { code: "Warranty", label: "Warranty" },
+      { code: "Theft", label: "Theft" },
+      { code: "Other", label: "Other" },
+    ],
     totalCoverages: 8,
     showingCoverages: 5,
     onCreateCoverage: vi.fn(),
