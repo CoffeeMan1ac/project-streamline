@@ -46,8 +46,8 @@ public class BackofficeProductController {
 
   @PostMapping()
   public ResponseEntity<ProductDto> createProduct(@RequestBody CreateProductRequestDto request) {
-    productService.createProduct(request);
-    return ResponseEntity.status(HttpStatus.CREATED).build();
+    ProductDto product = productService.createProduct(request);
+    return ResponseEntity.status(HttpStatus.CREATED).body(product);
   }
 
   @PatchMapping("/{id}/active")

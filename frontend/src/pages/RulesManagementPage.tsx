@@ -70,7 +70,7 @@ const RulesManagementPage = () => {
   const selectedProduct = searchParams.get("product") ?? "";
   const [rules, setRules] = useState<Rule[]>([]);
   const [products, setProducts] = useState<ProductOption[]>([]);
-  const [createRuleOpen, setCreateRuleOpen] = useState(searchParams.get("create") === "true");
+  const [createRuleOpen, setCreateRuleOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -137,6 +137,25 @@ const RulesManagementPage = () => {
       console.error("Failed to delete rule:", err);
     }
   };
+
+  const [productsLoaded, setProductsLoaded] = useState(false);
+
+useEffect(() => {
+  http
+    .get<ProductOption[]>("/backoffice/products/options")
+    .then((res) => {
+      setProducts(res.data);
+      setProductsLoaded(true);
+    })
+    .catch((err) => console.error("Failed to fetch products:", err));
+}, []);
+
+// Open create dialog from query param only after products are loaded
+useEffect(() => {
+  if (productsLoaded && searchParams.get("create") === "true") {
+    setCreateRuleOpen(true);
+  }
+}, [productsLoaded, searchParams]);
 
   const selectedProductName = products.find((p) => p.id === selectedProduct)?.name;
   const numberOfActiveRules = rules.filter((rule) => rule.active).length;
