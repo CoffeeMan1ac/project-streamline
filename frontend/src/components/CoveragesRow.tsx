@@ -14,7 +14,13 @@ const categoryConfig: Record<string, { color: string; bg: string }> = {
   Damage: { color: "#c62828", bg: "#fdecea" },
   Warranty: { color: "#1565c0", bg: "#e3f2fd" },
   Theft: { color: "#e65100", bg: "#fff3e0" },
-  Other: { color: "#4a148c", bg: "#f3e5f5" },
+  Support: { color: "#2e7d32", bg: "#e8f5e9" },
+  Worldwide: { color: "#6a1b9a", bg: "#f3e5f5" },
+  Loss: { color: "#ad1457", bg: "#fce4ec" },
+  Resolution: { color: "#00838f", bg: "#e0f7fa" },
+  "Eco Friendly Coverage": { color: "#33691e", bg: "#f1f8e9" },
+  Excess: { color: "#ef6c00", bg: "#fff8e1" },
+  Other: { color: "#616161", bg: "#f5f5f5" },
 };
 
 const CoveragesRow: React.FC<CoverageRowProps> = ({ code, label, categoryLabel, onEdit }) => {
