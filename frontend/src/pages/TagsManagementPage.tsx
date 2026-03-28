@@ -42,9 +42,9 @@ const TagsManagementPage = () => {
     fetchTags();
   }, [fetchTags]);
 
-  const handleEditTag = async (id: string, label: string, color: string) => {
+  const handleEditTag = async (id: string, label: string, key: string, color: string) => {
     try {
-      await http.put(`/backoffice/products/tags/${id}`, { label, color });
+      await http.put(`/backoffice/products/tags/${id}`, { code: key, label, color });
       await fetchTags();
     } catch {
       setError("Failed to update tag");

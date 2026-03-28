@@ -20,7 +20,7 @@ interface Tag {
 
 interface TagsTableProps {
   tags: Tag[];
-  onEditTag: (id: string, label: string, color: string) => void;
+  onEditTag: (id: string, label: string, key: string, color: string) => void;
   onDeleteTag: (id: string) => void;
 }
 
@@ -45,7 +45,7 @@ const TagsTable: React.FC<TagsTableProps> = ({ tags, onEditTag, onDeleteTag }) =
                 tagName={tag.tagName}
                 tagKey={tag.tagKey}
                 color={tag.color}
-                onEdit={(label, color) => onEditTag(tag.id, label, color)}
+                onEdit={(label, key, color) => onEditTag(tag.id, label, key, color)}
                 onDelete={() => onDeleteTag(tag.id)}
               />
             ))}

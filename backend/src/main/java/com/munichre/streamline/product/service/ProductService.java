@@ -249,6 +249,7 @@ public class ProductService {
     ProductTag tag =
         tagRepository.findById(id).orElseThrow(() -> new ProductTagNotFoundException(id));
 
+    tag.setCode(request.code());
     tag.setLabel(request.label());
     tag.setColor(request.color());
 

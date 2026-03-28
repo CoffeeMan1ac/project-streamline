@@ -347,7 +347,7 @@ class BackofficeProductControllerTest {
     @Test
     void returns200Ok() throws Exception {
       UUID id = UUID.randomUUID();
-      UpdateTagRequestDto request = new UpdateTagRequestDto("Updated Label", "#FF0000");
+      UpdateTagRequestDto request = new UpdateTagRequestDto("TAG_CODE", "Updated Label", "#FF0000");
       TagOptionDto response = new TagOptionDto(id, "TAG_CODE", "Updated Label", "#FF0000");
 
       when(productService.updateTag(eq(id), any(UpdateTagRequestDto.class))).thenReturn(response);
@@ -366,7 +366,7 @@ class BackofficeProductControllerTest {
     @Test
     void returns404WhenTagNotFound() throws Exception {
       UUID id = UUID.randomUUID();
-      UpdateTagRequestDto request = new UpdateTagRequestDto("Label", "#FF0000");
+      UpdateTagRequestDto request = new UpdateTagRequestDto("LABEL_CODE", "Label", "#FF0000");
 
       when(productService.updateTag(eq(id), any(UpdateTagRequestDto.class)))
           .thenThrow(new ProductTagNotFoundException(id));

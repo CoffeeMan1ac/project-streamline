@@ -123,7 +123,13 @@ const EditTag = ({ open, onClose, onUpdate, initialValues }: EditTagProps) => {
             <TextField
               fullWidth
               value={tagKey}
-              onChange={(e) => setTagKey(e.target.value)}
+              onChange={(e) => {
+                const formatted = e.target.value
+                  .toUpperCase()
+                  .replace(/\s/g, "_")
+                  .replace(/[^A-Z0-9_]/g, "");
+                setTagKey(formatted);
+              }}
               error={!!errors.key}
               helperText={errors.key || "Used internally for identification"}
             />

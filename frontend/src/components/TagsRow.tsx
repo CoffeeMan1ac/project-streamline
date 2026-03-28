@@ -18,7 +18,7 @@ interface TagsRowProps {
   tagName: string;
   tagKey: string;
   color?: string;
-  onEdit: (label: string, color: string) => void;
+  onEdit: (label: string, key: string, color: string) => void;
   onDelete: () => void;
 }
 
@@ -33,7 +33,7 @@ const TagsRow: React.FC<TagsRowProps> = ({
   const resolvedColor = colorOptions[color] ?? colorOptions.green;
 
   const handleUpdate = (data: { name: string; key: string; color: string }) => {
-    onEdit(data.name, data.color);
+    onEdit(data.name, data.key, data.color);
     setEditOpen(false);
   };
 
