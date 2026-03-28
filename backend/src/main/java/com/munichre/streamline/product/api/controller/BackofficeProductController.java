@@ -144,4 +144,10 @@ public class BackofficeProductController {
     productService.deleteCoverage(id);
     return ResponseEntity.noContent().build();
   }
+
+  @DeleteMapping("/tags/{id}")
+  public ResponseEntity<Void> deleteTag(@PathVariable UUID id) {
+    productService.deleteTag(id);
+    return ResponseEntity.noContent().build();
+  }
 }

@@ -330,6 +330,13 @@ public class ProductService {
     coverageRepository.delete(coverage);
   }
 
+  @Transactional
+  public void deleteTag(UUID id) {
+    ProductTag tag =
+        tagRepository.findById(id).orElseThrow(() -> new ProductTagNotFoundException(id));
+    tagRepository.delete(tag);
+  }
+
   public List<FieldDto> getAllFields() {
     return fieldRepository.findAll().stream()
         .map(
