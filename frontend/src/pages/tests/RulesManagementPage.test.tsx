@@ -144,9 +144,11 @@ describe("RulesManagementPage", () => {
     });
   });
 
-  test("opens create rule modal when create=true in URL", () => {
+  test("opens create rule modal when create=true in URL", async () => {
     renderPage(["/rules?create=true"]);
-    expect(screen.getByText("Create Rule Modal")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText("Create Rule Modal")).toBeInTheDocument();
+    });
   });
 
   test("calls toggle rule active when toggle is clicked", async () => {
@@ -203,8 +205,8 @@ describe("RulesManagementPage", () => {
   test("handles error when fetching rules fails", async () => {
     const http = await import("../../api/http");
     vi.mocked(http.default.get)
-      .mockResolvedValueOnce({ data: [] })
-      .mockRejectedValueOnce(new Error("Network error"));
+      .mockRejectedValueOnce(new Error("Network error"))
+      .mockResolvedValueOnce({ data: [] });
     vi.spyOn(console, "error").mockImplementation(() => {});
     renderPage(["/rules?product=product-1"]);
     await waitFor(() => {
@@ -215,7 +217,6 @@ describe("RulesManagementPage", () => {
   test("handles error when toggling rule active fails", async () => {
     const http = await import("../../api/http");
     vi.mocked(http.default.get)
-      .mockResolvedValueOnce({ data: [] })
       .mockResolvedValueOnce({
         data: [
           {
@@ -230,7 +231,8 @@ describe("RulesManagementPage", () => {
             },
           },
         ],
-      });
+      })
+      .mockResolvedValueOnce({ data: [] });
     vi.mocked(http.default.patch).mockRejectedValueOnce(new Error("Toggle failed"));
     vi.spyOn(console, "error").mockImplementation(() => {});
 
@@ -294,7 +296,6 @@ describe("RulesManagementPage", () => {
   test("updates rules state after successful toggle", async () => {
     const http = await import("../../api/http");
     vi.mocked(http.default.get)
-      .mockResolvedValueOnce({ data: [] })
       .mockResolvedValueOnce({
         data: [
           {
@@ -309,7 +310,8 @@ describe("RulesManagementPage", () => {
             },
           },
         ],
-      });
+      })
+      .mockResolvedValueOnce({ data: [] });
 
     renderPage(["/rules?product=product-1"]);
 
