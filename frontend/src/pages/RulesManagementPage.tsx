@@ -77,12 +77,6 @@ const RulesManagementPage = () => {
   const handleProductChange = (productId: string) => {
     setSearchParams({ product: productId });
   };
-  useEffect(() => {
-    http
-      .get<ProductOption[]>("/backoffice/products/options")
-      .then((res) => setProducts(res.data))
-      .catch((err) => console.error("Failed to fetch products:", err));
-  }, []);
 
   const fetchRules = useCallback(() => {
     if (!selectedProduct) return;
@@ -138,24 +132,17 @@ const RulesManagementPage = () => {
     }
   };
 
-  const [productsLoaded, setProductsLoaded] = useState(false);
-
-useEffect(() => {
-  http
-    .get<ProductOption[]>("/backoffice/products/options")
-    .then((res) => {
-      setProducts(res.data);
-      setProductsLoaded(true);
-    })
-    .catch((err) => console.error("Failed to fetch products:", err));
-}, []);
-
-// Open create dialog from query param only after products are loaded
-useEffect(() => {
-  if (productsLoaded && searchParams.get("create") === "true") {
-    setCreateRuleOpen(true);
-  }
-}, [productsLoaded, searchParams]);
+  useEffect(() => {
+    http
+      .get<ProductOption[]>("/backoffice/products/options")
+      .then((res) => {
+        setProducts(res.data);
+        if (searchParams.get("create") === "true") {
+          setCreateRuleOpen(true);
+        }
+      })
+      .catch((err) => console.error("Failed to fetch products:", err));
+  }, [searchParams]);
 
   const selectedProductName = products.find((p) => p.id === selectedProduct)?.name;
   const numberOfActiveRules = rules.filter((rule) => rule.active).length;
