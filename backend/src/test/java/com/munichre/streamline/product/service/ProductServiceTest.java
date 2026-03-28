@@ -21,6 +21,7 @@ import com.munichre.streamline.product.exception.ProductNotFoundException;
 import com.munichre.streamline.product.exception.ProductTagNotFoundException;
 import com.munichre.streamline.product.exception.ProductTypeNotFoundException;
 import com.munichre.streamline.product.model.Coverage;
+import com.munichre.streamline.product.model.CoverageCategory;
 import com.munichre.streamline.product.model.Product;
 import com.munichre.streamline.product.model.ProductField;
 import com.munichre.streamline.product.model.ProductTag;
@@ -970,16 +971,24 @@ public class ProductServiceTest {
 
     @Test
     void getAllCoveragesReturnsMappedDtos() {
+      CoverageCategory category = new CoverageCategory();
+      category.setId(UUID.randomUUID());
+      category.setCode("CAT1");
+      category.setLabel("Category 1");
+
       Coverage coverage = new Coverage();
       coverage.setId(UUID.randomUUID());
       coverage.setCode("C1");
       coverage.setLabel("Cov 1");
+      coverage.setCategory(category);
 
       when(productCoverageRepository.findAllCoverages()).thenReturn(List.of(coverage));
 
       var result = productService.getAllCoverages();
       assertThat(result).hasSize(1);
       assertThat(result.get(0).code()).isEqualTo("C1");
+      assertThat(result.get(0).categoryCode()).isEqualTo("CAT1");
+      assertThat(result.get(0).categoryLabel()).isEqualTo("Category 1");
     }
 
     @Test

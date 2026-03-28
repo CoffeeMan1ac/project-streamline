@@ -31,15 +31,15 @@ const CoveragesTable: React.FC<CoveragesTableProps> = ({ coverages, onEdit, onDe
       borderColor="divider"
       borderRadius={2}
       bgcolor="background.paper"
-      sx={{ overflowX: "auto" }}
+      sx={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }}
     >
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: { xs: "unset", sm: 400 } }}>
+        <Table sx={{ minWidth: 500 }}>
           <TableHead>
             <TableRow sx={{ bgcolor: "background.default" }}>
               <TableCell>COVERAGE</TableCell>
-              <TableCell>CATEGORY</TableCell>
-              <TableCell>ACTIONS</TableCell>
+              <TableCell sx={{ width: 150 }}>CATEGORY</TableCell>
+              <TableCell sx={{ width: 100 }}>ACTIONS</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

@@ -63,7 +63,7 @@ const CoveragesRow: React.FC<CoverageRowProps> = ({
         </Box>
       </TableCell>
 
-      <TableCell>
+      <TableCell sx={{ width: 150 }}>
         <Chip
           label={categoryLabel}
           size="small"
@@ -75,7 +75,7 @@ const CoveragesRow: React.FC<CoverageRowProps> = ({
         />
       </TableCell>
 
-      <TableCell>
+      <TableCell sx={{ width: 100 }}>
         <IconButton size="small" color="primary" onClick={onEdit} data-testid="edit-button">
           <EditIcon fontSize="small" />
         </IconButton>
