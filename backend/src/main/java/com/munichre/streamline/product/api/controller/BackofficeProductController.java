@@ -138,4 +138,10 @@ public class BackofficeProductController {
   public ResponseEntity<List<CoverageCategoryDto>> getCoverageCategories() {
     return ResponseEntity.ok(productService.getAllCoverageCategories());
   }
+
+  @DeleteMapping("/coverages/{id}")
+  public ResponseEntity<Void> deleteCoverage(@PathVariable UUID id) {
+    productService.deleteCoverage(id);
+    return ResponseEntity.noContent().build();
+  }
 }

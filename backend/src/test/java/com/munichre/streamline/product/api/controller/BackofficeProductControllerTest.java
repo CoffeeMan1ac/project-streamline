@@ -266,7 +266,8 @@ class BackofficeProductControllerTest {
     void returns200Ok() throws Exception {
       UUID id = UUID.randomUUID();
       UUID catId = UUID.randomUUID();
-      UpdateCoverageRequestDto request = new UpdateCoverageRequestDto("COV_CODE", "Updated Label", catId);
+      UpdateCoverageRequestDto request =
+          new UpdateCoverageRequestDto("COV_CODE", "Updated Label", catId);
       CoverageOptionDto response =
           new CoverageOptionDto(id, "COV_CODE", "Updated Label", "CAT_CODE", "Category");
 

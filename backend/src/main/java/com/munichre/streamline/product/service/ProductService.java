@@ -323,6 +323,13 @@ public class ProductService {
         saved.getCategory().getLabel());
   }
 
+  @Transactional
+  public void deleteCoverage(UUID id) {
+    Coverage coverage =
+        coverageRepository.findById(id).orElseThrow(() -> new CoverageNotFoundException(id));
+    coverageRepository.delete(coverage);
+  }
+
   public List<FieldDto> getAllFields() {
     return fieldRepository.findAll().stream()
         .map(
