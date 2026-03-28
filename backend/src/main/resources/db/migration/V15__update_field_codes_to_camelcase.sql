@@ -1,0 +1,10 @@
+UPDATE fields SET code = 'firstName', label = 'First Name' WHERE code = 'first_name';
+UPDATE fields SET code = 'lastName', label = 'Last Name' WHERE code = 'last_name';
+UPDATE fields SET code = 'emailAddress', label = 'Email Address' WHERE code = 'email';
+UPDATE fields SET code = 'phoneNumber', label = 'Phone Number' WHERE code = 'phone_number';
+UPDATE fields SET code = 'dateOfBirth', label = 'Date of Birth' WHERE code = 'date_of_birth';
+UPDATE fields SET code = 'phoneMake', label = 'Phone Make' WHERE code = 'device_make';
+UPDATE fields SET code = 'phoneModel', label = 'Phone Model' WHERE code = 'device_model';
+UPDATE fields SET code = 'phoneCondition', label = 'Phone Condition' WHERE code = 'device_condition';
+UPDATE fields SET code = 'phoneAge', label = 'Phone Age' WHERE code = 'purchase_date';
+UPDATE fields SET code = 'country', label = 'Country' WHERE code = 'device_value';

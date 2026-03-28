@@ -172,23 +172,6 @@ const QuotesPage = () => {
       const payload = {
         productId: productId,
         applicantData: {
-          // Keys matching form field codes (for form validation)
-          first_name: firstName,
-          last_name: lastName,
-          email: email,
-          phone_number: phone,
-          date_of_birth: dob,
-          device_make: makeLabel,
-          device_model: modelLabel,
-          device_value: "0",
-          purchase_date: phoneAge,
-          device_condition: phoneCondition,
-          // Keys matching rule field names (for rules engine)
-          country: country,
-          phoneCondition: phoneCondition,
-          phoneAge: phoneAge,
-          phoneMake: makeLabel,
-          phoneModel: modelLabel,
           firstName: firstName,
           lastName: lastName,
           emailAddress: email,
@@ -199,6 +182,11 @@ const QuotesPage = () => {
           address2: address2,
           city: city,
           postalCode: postalCode,
+          country: country,
+          phoneMake: makeLabel,
+          phoneModel: modelLabel,
+          phoneCondition: phoneCondition,
+          phoneAge: phoneAge,
         },
       };
 
