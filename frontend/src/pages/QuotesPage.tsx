@@ -318,6 +318,7 @@ const QuotesPage = () => {
                 <Select
                   labelId="phone-occupation-label"
                   id="occupation"
+                  inputProps={{ "data-testid": "occupation-select" }}
                   value={occupation}
                   label="Occupation"
                   onChange={(e) => {
@@ -488,6 +489,7 @@ const QuotesPage = () => {
                 <Select
                   labelId="phone-condition-label"
                   id="phone-condition"
+                  inputProps={{ "data-testid": "phone-condition-select" }}
                   value={phoneCondition}
                   label="Phone Condition"
                   onChange={(e) => {
@@ -515,6 +517,7 @@ const QuotesPage = () => {
                 <Select
                   labelId="phone-age-label"
                   id="phone-age"
+                  inputProps={{ "data-testid": "phone-age-select" }}
                   value={phoneAge}
                   label="Phone Age"
                   onChange={(e) => {
