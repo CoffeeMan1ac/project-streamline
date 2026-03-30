@@ -248,7 +248,7 @@ describe("Sidebar", () => {
         <Sidebar toggleSidebar={vi.fn()} open={true} toggleTheme={vi.fn()} mode="light" />
       </MemoryRouter>
     );
-    expect(screen.getByText("Quotations Management")).toBeInTheDocument();
+    expect(screen.getByText("Quotations")).toBeInTheDocument();
   });
 
   test("highlights quotes nav item when on /quotes path", () => {
@@ -259,7 +259,7 @@ describe("Sidebar", () => {
         <Sidebar toggleSidebar={vi.fn()} open={true} toggleTheme={vi.fn()} mode="light" />
       </MemoryRouter>
     );
-    expect(screen.getByText("Quotations Management")).toBeInTheDocument();
+    expect(screen.getByText("Quotations")).toBeInTheDocument();
   });
 
   test("defaults to rules active on unknown path", () => {

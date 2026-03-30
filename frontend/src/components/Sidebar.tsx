@@ -67,7 +67,7 @@ const Sidebar = ({ toggleSidebar, open, toggleTheme, mode }: SidebarProps) => {
     },
     {
       key: "quotes",
-      label: "Quotations Management",
+      label: "Quotations",
       icon: <SearchOutlinedIcon />,
       path: "/quotes",
     },
@@ -79,7 +79,7 @@ const Sidebar = ({ toggleSidebar, open, toggleTheme, mode }: SidebarProps) => {
     },
     {
       key: "coverages",
-      label: "Coverages Management",
+      label: "Coverages",
       icon: <LayersOutlinedIcon />,
       path: "/coverages",
     },
