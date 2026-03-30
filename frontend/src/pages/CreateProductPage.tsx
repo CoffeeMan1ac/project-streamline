@@ -192,6 +192,7 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
                   fullWidth
                   placeholder="e.g., Premium Shield"
                   value={productName}
+                  slotProps={{ htmlInput: { "data-testid": "product-name-input" } }}
                   onChange={(e) => {
                     setProductName(e.target.value);
                     setErrors((prev) => ({ ...prev, productName: "" }));
@@ -216,6 +217,7 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
                   <Select
                     value={status}
                     label="Select Status"
+                    inputProps={{ "data-testid": "status-select" }}
                     onChange={(e) => {
                       setStatus(e.target.value);
                       setErrors((prev) => ({ ...prev, status: "" }));
@@ -249,6 +251,7 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
               fullWidth
               placeholder="Describe the product..."
               value={description}
+              slotProps={{ htmlInput: { "data-testid": "description-input" } }}
               onChange={(e) => {
                 setDescription(e.target.value);
                 setErrors((prev) => ({ ...prev, description: "" }));
@@ -273,6 +276,7 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
             <TextField
               placeholder="e.g., 14.99"
               value={monthlyPrice}
+              slotProps={{ htmlInput: { "data-testid": "monthly-price-input" } }}
               onChange={(e) => {
                 setMonthlyPrice(e.target.value);
                 setErrors((prev) => ({ ...prev, monthlyPrice: "" }));
@@ -312,7 +316,11 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
                   disabled={isLoading}
                   inputRef={startDateRef}
                   slotProps={{
-                    htmlInput: { min: today, max: endDate || undefined },
+                    htmlInput: {
+                      min: today,
+                      max: endDate || undefined,
+                      "data-testid": "start-date-input",
+                    },
                     input: {
                       endAdornment: (
                         <InputAdornment position="end">
@@ -345,7 +353,7 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
                   helperText="Optional - leave blank for no expiration"
                   inputRef={endDateRef}
                   slotProps={{
-                    htmlInput: { min: startDate || today },
+                    htmlInput: { min: startDate || today, "data-testid": "end-date-input" },
                     input: {
                       endAdornment: (
                         <InputAdornment position="end">
@@ -581,6 +589,7 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
                 variant="outlined"
                 disabled={isLoading}
                 onClick={onClose}
+                data-testid="cancel-button"
                 sx={{
                   borderColor: "#d0d0d0",
                   color: "#424242",
@@ -594,6 +603,7 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
                 type="submit"
                 variant="contained"
                 disabled={isLoading}
+                data-testid="create-product-button"
                 sx={{ backgroundColor: "#0167b2" }}
               >
                 {isLoading ? "Creating..." : "Create Product"}
@@ -640,6 +650,7 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
               fullWidth
               variant="contained"
               endIcon={<ArrowForwardIcon />}
+              data-testid="create-rules-button"
               onClick={() => {
                 setShowSuccess(false);
                 onClose?.();
@@ -652,6 +663,7 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
             <Button
               fullWidth
               variant="outlined"
+              data-testid="skip-button"
               onClick={() => {
                 setShowSuccess(false);
                 onClose?.();
