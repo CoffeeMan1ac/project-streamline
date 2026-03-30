@@ -258,6 +258,7 @@ const CreateRulePage = ({
               <Select
                 value={product}
                 label="Select Product"
+                inputProps={{ "data-testid": "product-select" }}
                 onChange={(e) => {
                   setProduct(e.target.value);
                   setErrors((prev) => ({ ...prev, product: "" }));
@@ -500,12 +501,16 @@ const CreateRulePage = ({
             >
               <FormControlLabel
                 value="ALL"
-                control={<Radio />}
+                control={
+                  <Radio slotProps={{ input: { "data-testid": "logic-all-radio" } as any }} />
+                }
                 label="All conditions must be true"
               />
               <FormControlLabel
                 value="ANY"
-                control={<Radio />}
+                control={
+                  <Radio slotProps={{ input: { "data-testid": "logic-any-radio" } as any }} />
+                }
                 label="At least one condition must be true"
               />
             </RadioGroup>
@@ -523,6 +528,7 @@ const CreateRulePage = ({
               <Select
                 value={outcome}
                 label="Accept or Decline"
+                inputProps={{ "data-testid": "outcome-select" }}
                 onChange={(e) => {
                   setOutcome(e.target.value);
                   setErrors((prev) => ({ ...prev, outcome: "", declineReason: "" }));
@@ -592,8 +598,24 @@ const CreateRulePage = ({
                   }}
                   sx={{ mb: 2 }}
                 >
-                  <FormControlLabel value="override" control={<Radio />} label="Override" />
-                  <FormControlLabel value="delta" control={<Radio />} label="Delta" />
+                  <FormControlLabel
+                    value="override"
+                    control={
+                      <Radio
+                        slotProps={{ input: { "data-testid": "premium-override-radio" } as any }}
+                      />
+                    }
+                    label="Override"
+                  />
+                  <FormControlLabel
+                    value="delta"
+                    control={
+                      <Radio
+                        slotProps={{ input: { "data-testid": "premium-delta-radio" } as any }}
+                      />
+                    }
+                    label="Delta"
+                  />
                 </RadioGroup>
 
                 {premiumOutcome === "override" && (
@@ -656,6 +678,7 @@ const CreateRulePage = ({
                 checked={earlyExit}
                 onChange={(e) => setEarlyExit(e.target.checked)}
                 disabled={isLoading}
+                slotProps={{ input: { "data-testid": "early-exit-switch" } as any }}
               />
             </Box>
             <hr
