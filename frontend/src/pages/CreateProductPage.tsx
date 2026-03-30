@@ -215,6 +215,7 @@ const CreateProductPage = ({ onClose }: CreateProductPageProps) => {
                 >
                   <InputLabel>Select Status</InputLabel>
                   <Select
+                    id="status-select"
                     value={status}
                     label="Select Status"
                     inputProps={{ "data-testid": "status-select" }}
