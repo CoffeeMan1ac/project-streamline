@@ -420,9 +420,9 @@ const CreateRulePage = ({
                         >
                           <MenuItem value="">Select operator</MenuItem>
                           <MenuItem value="equals">Equals</MenuItem>
-                          <MenuItem value="notEquals">Not Equals</MenuItem>
-                          <MenuItem value="greaterThan">Greater Than</MenuItem>
-                          <MenuItem value="lessThan">Less Than</MenuItem>
+                          <MenuItem value="not_equals">Not Equals</MenuItem>
+                          <MenuItem value="greater_than">Greater Than</MenuItem>
+                          <MenuItem value="less_than">Less Than</MenuItem>
                         </Select>
                       </FormControl>
                     </Box>
