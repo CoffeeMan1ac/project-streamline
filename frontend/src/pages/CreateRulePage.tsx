@@ -322,6 +322,7 @@ const CreateRulePage = ({
             <TextField
               fullWidth
               placeholder="e.g., Checks if the applicant meets the age requirement"
+              slotProps={{ htmlInput: { "data-testid": "rule-description-input" } }}
               value={ruleDescription}
               onChange={(e) => {
                 setRuleDescription(e.target.value);
@@ -568,6 +569,7 @@ const CreateRulePage = ({
                 <TextField
                   fullWidth
                   placeholder="e.g., Unfortunately we are unable to insure this device"
+                  slotProps={{ htmlInput: { "data-testid": "decline-reason-input" } }}
                   value={declineReason}
                   onChange={(e) => setDeclineReason(e.target.value)}
                   disabled={isLoading}
