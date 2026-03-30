@@ -22,4 +22,5 @@ VALUES
 UPDATE
 SET
     label = EXCLUDED.label,
+    color = EXCLUDED.color,
     updated_at = now ();
