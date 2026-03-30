@@ -145,7 +145,7 @@ const Sidebar = ({ toggleSidebar, open, toggleTheme, mode }: SidebarProps) => {
                     }}
                   >
                     <img
-                      src="shield_logo.png"
+                      src="/shield_logo.png"
                       alt="Logo"
                       style={{
                         width: "100%",
