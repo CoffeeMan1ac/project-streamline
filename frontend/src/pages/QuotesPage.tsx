@@ -238,7 +238,7 @@ const QuotesPage = () => {
               Personal Details
             </Typography>
 
-            <div style={{ display: "flex", gap: "16px", marginBottom: "16px" }}>
+            <Box sx={{ display: "flex", gap: 2, mb: 2, flexWrap: { xs: "wrap", sm: "nowrap" } }}>
               <TextField
                 fullWidth
                 label="First Name"
@@ -266,9 +266,9 @@ const QuotesPage = () => {
                 helperText={errors.lastName}
                 disabled={isLoading}
               />
-            </div>
+            </Box>
 
-            <div style={{ display: "flex", gap: "16px", marginBottom: "16px" }}>
+            <Box sx={{ display: "flex", gap: 2, mb: 2, flexWrap: { xs: "wrap", sm: "nowrap" } }}>
               <TextField
                 fullWidth
                 label="Email Address"
@@ -295,9 +295,9 @@ const QuotesPage = () => {
                 helperText={errors.phone}
                 disabled={isLoading}
               />
-            </div>
+            </Box>
 
-            <div style={{ display: "flex", gap: "16px", marginBottom: "16px" }}>
+            <Box sx={{ display: "flex", gap: 2, mb: 2, flexWrap: { xs: "wrap", sm: "nowrap" } }}>
               <TextField
                 fullWidth
                 label="Date of Birth"
@@ -341,7 +341,7 @@ const QuotesPage = () => {
                   </div>
                 )}
               </FormControl>
-            </div>
+            </Box>
 
             <TextField
               fullWidth
@@ -370,7 +370,7 @@ const QuotesPage = () => {
               disabled={isLoading}
             />
 
-            <div style={{ display: "flex", gap: "16px", marginBottom: "16px" }}>
+            <Box sx={{ display: "flex", gap: 2, mb: 2, flexWrap: { xs: "wrap", sm: "nowrap" } }}>
               <TextField
                 fullWidth
                 label="City"
@@ -422,13 +422,13 @@ const QuotesPage = () => {
                   </div>
                 )}
               </FormControl>
-            </div>
+            </Box>
 
             <Typography variant="h6" gutterBottom sx={{ color: "text.primary", mt: 4 }}>
               Phone Details
             </Typography>
 
-            <div style={{ display: "flex", gap: "16px", marginBottom: "16px" }}>
+            <Box sx={{ display: "flex", gap: 2, mb: 2, flexWrap: { xs: "wrap", sm: "nowrap" } }}>
               <FormControl fullWidth error={!!errors.phoneMake} disabled={isLoading}>
                 <InputLabel id="phone-make-label">Phone Make</InputLabel>
                 <Select
@@ -481,9 +481,9 @@ const QuotesPage = () => {
                   </div>
                 )}
               </FormControl>
-            </div>
+            </Box>
 
-            <div style={{ display: "flex", gap: "16px", marginBottom: "16px" }}>
+            <Box sx={{ display: "flex", gap: 2, mb: 2, flexWrap: { xs: "wrap", sm: "nowrap" } }}>
               <FormControl fullWidth error={!!errors.phoneCondition} disabled={isLoading}>
                 <InputLabel id="phone-condition-label">Phone Condition</InputLabel>
                 <Select
@@ -539,7 +539,7 @@ const QuotesPage = () => {
                   </div>
                 )}
               </FormControl>
-            </div>
+            </Box>
 
             <Button
               type="submit"
