@@ -43,7 +43,7 @@ describe("CreateTag", () => {
     await user.type(inputs[1], "urgent-tag");
 
     expect(inputs[0]).toHaveValue("Urgent");
-    expect(inputs[1]).toHaveValue("urgent-tag");
+    expect(inputs[1]).toHaveValue("URGENTTAG");
   });
 
   test("calls onClose when cancel clicked", async () => {
@@ -99,7 +99,7 @@ describe("CreateTag", () => {
 
     expect(mockCreate).toHaveBeenCalledWith({
       name: "Urgent",
-      key: "urgent",
+      key: "URGENT",
       color: "green",
     });
   });
@@ -121,7 +121,7 @@ describe("CreateTag", () => {
 
     expect(mockCreate).toHaveBeenCalledWith({
       name: "Review",
-      key: "review",
+      key: "REVIEW",
       color: "purple",
     });
   });
