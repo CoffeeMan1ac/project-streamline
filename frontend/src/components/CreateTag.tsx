@@ -120,9 +120,9 @@ const CreateTag = ({ open, onClose, onCreate }: CreateTagProps) => {
               value={tagKey}
               onChange={(e) => {
                 const formatted = e.target.value
-                  .toLowerCase()
-                  .replace(/\s/g, "-")
-                  .replace(/[^a-z0-9-]/g, "");
+                  .toUpperCase()
+                  .replace(/\s/g, "_")
+                  .replace(/[^A-Z0-9_]/g, "");
                 setTagKey(formatted);
               }}
               error={!!errors.key}
