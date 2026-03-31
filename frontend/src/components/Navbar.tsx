@@ -55,7 +55,10 @@ const Navbar = ({ mode, toggleTheme }: NavbarProps) => {
               alt="Phone Shield logo"
               sx={{ height: 80 }}
             />
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+            <Typography
+              variant="h6"
+              sx={{ fontWeight: "bold", display: { xs: "none", sm: "block" } }}
+            >
               Phone Shield
             </Typography>
           </Box>
