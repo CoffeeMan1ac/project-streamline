@@ -224,7 +224,7 @@ const QuotesPage = () => {
 
   return (
     <>
-      <Box sx={{ p: 6 }}>
+      <Box sx={{ p: { xs: 0, sm: 6 } }}>
         <Container maxWidth="md" sx={{ p: 3, borderRadius: 2, bgcolor: "background.paper" }}>
           <Typography variant="h4" gutterBottom sx={{ color: "text.primary" }}>
             Get Your Quote
