@@ -91,9 +91,6 @@ const AuthCard = ({ onSubmit, error }: AuthCardProps) => {
         Login
       </Button>
       <Box borderTop={1} borderColor="divider" pt={2}>
-        <Typography fontSize="small" sx={{ color: "text.secondary" }}>
-          Demo credentials: admin@phone-shield.com / phone-shield-sweng
-        </Typography>
       </Box>
     </Box>
   );
