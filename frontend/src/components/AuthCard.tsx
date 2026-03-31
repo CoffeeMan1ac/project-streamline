@@ -90,8 +90,7 @@ const AuthCard = ({ onSubmit, error }: AuthCardProps) => {
       <Button fullWidth variant="contained" color="primary" type="submit">
         Login
       </Button>
-      <Box borderTop={1} borderColor="divider" pt={2}>
-      </Box>
+      <Box borderTop={1} borderColor="divider" pt={2}></Box>
     </Box>
   );
 };
