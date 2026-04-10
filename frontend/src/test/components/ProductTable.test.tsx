@@ -1,0 +1,77 @@
+import "@testing-library/jest-dom/vitest";
+import { render, screen, fireEvent, cleanup } from "@testing-library/react";
+import { describe, test, expect, vi, beforeEach } from "vitest";
+import { MemoryRouter } from "react-router-dom";
+import ProductTable from "../../components/ProductTable";
+
+const testProducts = [
+  {
+    id: "1",
+    productName: "Standard Shield",
+    status: "active",
+    active: true,
+    price: "€9.99/month",
+    coverageSummary: "Accidental Damage, Theft",
+  },
+  {
+    id: "2",
+    productName: "Premium Shield",
+    status: "inactive",
+    active: false,
+    price: "€14.99/month",
+    coverageSummary: "Accidental Damage, Theft, Liquid Damage",
+  },
+];
+
+describe("ProductTable", () => {
+  beforeEach(() => {
+    cleanup();
+  });
+
+  const renderTable = (overrides = {}) => {
+    const props = {
+      products: testProducts,
+      onEditProduct: vi.fn(),
+      onToggleProductActive: vi.fn(),
+      onDeleteProduct: vi.fn(),
+      ...overrides,
+    };
+
+    return render(
+      <MemoryRouter>
+        <ProductTable {...props} />
+      </MemoryRouter>
+    );
+  };
+
+  test("renders table headings", () => {
+    renderTable();
+    expect(screen.getByText("PRODUCT NAME")).toBeInTheDocument();
+    expect(screen.getByText("STATUS")).toBeInTheDocument();
+    expect(screen.getByText("PRICE")).toBeInTheDocument();
+    expect(screen.getByText("COVERAGE SUMMARY")).toBeInTheDocument();
+    expect(screen.getByText("ACTIONS")).toBeInTheDocument();
+  });
+
+  test("renders all product rows", () => {
+    renderTable();
+    expect(screen.getByText("Standard Shield")).toBeInTheDocument();
+    expect(screen.getByText("Premium Shield")).toBeInTheDocument();
+  });
+
+  test("calls onEditProduct with correct id when edit is clicked", () => {
+    const onEditProduct = vi.fn();
+    renderTable({ onEditProduct });
+    const editButtons = screen.getAllByTestId("edit-button");
+    fireEvent.click(editButtons[0]);
+    expect(onEditProduct).toHaveBeenCalledWith("1");
+  });
+
+  test("calls onToggleProductActive with correct id when toggle is clicked", () => {
+    const onToggleProductActive = vi.fn();
+    renderTable({ onToggleProductActive });
+    const toggleButtons = screen.getAllByTestId("toggle-button");
+    fireEvent.click(toggleButtons[0]);
+    expect(onToggleProductActive).toHaveBeenCalledWith("1");
+  });
+});
