@@ -100,7 +100,7 @@ phone-shield-sweng
 ## Tests
 
 - Tests can be found in the frontend [here](https://gitlab.scss.tcd.ie/sweng26-group4/project-streamline/-/tree/main/frontend/src/test?ref_type=heads).
-- Tests can be found in the backend [here](https://gitlab.scss.tcd.ie/sweng26-group4/project-streamline/-/tree/main/backend/src/test?ref_type=heads).
+- Tests can be found in the backend [here](https://gitlab.scss.tcd.ie/sweng26-group4/project-streamline/-/tree/main/backend/src/test/java/com/munichre/streamline?ref_type=heads).
 - A test report of our 737 tests can be found [here](https://gitlab.scss.tcd.ie/sweng26-group4/project-streamline/-/pipelines/37249/test_report).
 - Code Coverage was tracked [here](https://gitlab.scss.tcd.ie/sweng26-group4/project-streamline/-/graphs/dev/charts)
 - Command to run and test the application can be seen in the below table.
