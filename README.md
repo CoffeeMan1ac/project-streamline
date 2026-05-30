@@ -81,10 +81,16 @@ Built as a Software Engineering Project (Trinity College Dublin, SwEng 2026 — 
 
 ### Cloud
 
-The application is running on the cloud in two enviroments. Both have since been decommissioned.
+A live demo is deployed on free-tier infrastructure:
 
-- [Software Integration Testing](https://sit.phone-shield.com/)
-- [Production](https://phone-shield.com/)
+- **Frontend** — Cloudflare Pages: https://project-streamline.pages.dev
+- **Backend** — Render: https://project-streamline.onrender.com
+
+The backend sleeps after inactivity, so the first request after a pause
+may take ~40s to wake.
+
+The project was previously deployed to Google Cloud across staging
+(software-integration-testing) and production environments, since decommissioned.
 
 ## Demos
 
