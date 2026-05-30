@@ -1,8 +1,23 @@
-# SwEng26 Group 4 - Project Streamline
-
-[[_TOC_]]
+# Project Streamline
 
 Project Streamline is an end to end decisioning service for a simplified insurance product, delivering automated accept/decline/refer outcomes from applicant data along with a calculated premium and a unique decision reference. It includes a secure decisioning API, a rules component to evaluate configurable business logic for decisions and pricing, a simple web quote simulator to demonstrate real time decisions, and a database for managing rules and recording auditable decision transactions. The project emphasises a production ready engineering workflow with automated CI/CD and comprehensive testing.
+
+Built as a Software Engineering Project (Trinity College Dublin, SwEng 2026 — Group 4) in collaboration with an industry partner, with an emphasis on a production-ready engineering workflow: automated CI/CD and comprehensive testing.
+
+> **Note on internal links.** This project was developed on Trinity College's internal GitLab. Links to project boards, issues, CI pipelines, and test reports are preserved below for completeness but require Trinity VPN access. The full source and commit history are in this repository.
+
+## Tech Stack
+
+| Layer | Technology |
+| --- | --- |
+| Backend | Java 21, Spring Boot 3.5 (Web, Data JPA, Security, Validation) |
+| Database | PostgreSQL, with Flyway migrations |
+| Auth | Firebase Authentication |
+| Frontend | React 19, TypeScript, Vite, Material UI, React Router, Axios |
+| Build / Run | Maven, Docker & Docker Compose |
+| CI/CD | GitLab CI, Google Cloud Build (deployed to Google Cloud) |
+
+## Screenshots
 
 ![](media/customer-portal.png)
 **Figure 1** Customer Portal.
@@ -66,43 +81,27 @@ Project Streamline is an end to end decisioning service for a simplified insuran
 
 ### Cloud
 
-The application is running on the cloud in two enviroments.
+The application is running on the cloud in two enviroments. Both have since been decommissioned.
 
 - [Software Integration Testing](https://sit.phone-shield.com/)
 - [Production](https://phone-shield.com/)
 
-## Application Usage
-
-### Logging into the backoffice portal
-
-Email
-
-```
-admin@phone-shield.com
-```
-
-Password
-
-```
-phone-shield-sweng
-```
-
-## Videos
+## Demos
 
 ### Promo
 
-![](media/Group_4_Promo.mp4)
+[![Promo Video](https://img.youtube.com/vi/VpZ2mztLD0w/maxresdefault.jpg)](https://www.youtube.com/watch?v=VpZ2mztLD0w)
 
 ### Technical, Management, and Green Computing
 
-![](media/Group_4_Technical_Management_and_Green.mp4)
+[![Technical, Management & Green Computing](https://img.youtube.com/vi/eAPUDXRo9pg/maxresdefault.jpg)](https://www.youtube.com/watch?v=eAPUDXRo9pg)
 
 ## Tests
 
-- Tests can be found in the frontend [here](https://gitlab.scss.tcd.ie/sweng26-group4/project-streamline/-/tree/main/frontend/src/test?ref_type=heads).
-- Tests can be found in the backend [here](https://gitlab.scss.tcd.ie/sweng26-group4/project-streamline/-/tree/main/backend/src/test/java/com/munichre/streamline?ref_type=heads).
-- A test report of our 737 tests can be found [here](https://gitlab.scss.tcd.ie/sweng26-group4/project-streamline/-/pipelines/37249/test_report).
-- Code Coverage was tracked [here](https://gitlab.scss.tcd.ie/sweng26-group4/project-streamline/-/graphs/dev/charts)
+- Tests can be found in the frontend [here](frontend/src/test).
+- Tests can be found in the backend [here](backend/src/test/java/com/munichre/streamline).
+- A test report of our 737 tests can be found [here](https://gitlab.scss.tcd.ie/sweng26-group4/project-streamline/-/pipelines/37249/test_report) (VPN required).
+- Code Coverage was tracked [here](https://gitlab.scss.tcd.ie/sweng26-group4/project-streamline/-/graphs/dev/charts) (VPN required)
 - Command to run and test the application can be seen in the below table.
 
 | Directory | Command               | Description                                                                                                                            |
@@ -120,6 +119,8 @@ phone-shield-sweng
 | backend   | mvn verify            | Generate coverage report for backend code, you can view this in backend/target/site/jacoco, there is a html version for visual viewing |
 
 ## Project Management
+
+> All links below require Trinity VPN access.
 
 - Development was tracked on our [Development Board](https://gitlab.scss.tcd.ie/sweng26-group4/project-streamline/-/boards/1276?label_name[]=dev).
 - Sprints were tracked on our [Sprints Board](https://gitlab.scss.tcd.ie/sweng26-group4/project-streamline/-/boards/1369?label_name[]=dev).
@@ -156,3 +157,7 @@ phone-shield-sweng
 
 - Project Contributions per group member can be found [here](https://gitlab.scss.tcd.ie/groups/sweng26-group4/-/contribution_analytics?start_date=2026-01-01).
 - Development Contributions per group member can be found [here](https://gitlab.scss.tcd.ie/sweng26-group4/project-streamline/-/graphs/main).
+
+## License
+
+Released under the [MIT License](LICENSE).
