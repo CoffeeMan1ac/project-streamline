@@ -4,7 +4,7 @@ Project Streamline is an end to end decisioning service for a simplified insuran
 
 Built as a Software Engineering Project (Trinity College Dublin, SwEng 2026 — Group 4) in collaboration with an industry partner, with an emphasis on a production-ready engineering workflow: automated CI/CD and comprehensive testing.
 
-> **Note on internal links.** This project was developed on Trinity College's internal GitLab. Links to project boards, issues, CI pipelines, and test reports are preserved below for completeness but require Trinity VPN access. The full source and commit history are in this repository.
+> **Note on internal links.** This project was developed on Trinity College's internal GitLab. Links to project boards, issues, CI pipelines, and test reports are preserved below for completeness but require Trinity VPN access.
 
 ## Tech Stack
 
