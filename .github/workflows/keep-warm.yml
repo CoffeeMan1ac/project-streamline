@@ -2,6 +2,10 @@ name: Keep backend warm
 
 # Pings the backend so Render's free instance doesn't sleep (15 min idle ->
 # ~40s cold start on the next request). Bump to */5 if cold starts persist.
+#
+# Must hit /ping, NOT a DB-backed route: /ping touches no database, so Neon is
+# left free to auto-suspend. Pinging a DB route every 10 min kept Neon's compute
+# awake 24/7 and blew through the free-tier compute quota, taking the site down.
 
 on:
   schedule:
@@ -14,4 +18,4 @@ jobs:
     steps:
       - run: |
           curl -sS -o /dev/null -w "HTTP %{http_code} in %{time_total}s\n" \
-            https://project-streamline.onrender.com/customer/products || true
+            https://project-streamline.onrender.com/ping || true

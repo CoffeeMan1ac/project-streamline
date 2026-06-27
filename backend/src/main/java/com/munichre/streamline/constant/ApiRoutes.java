@@ -10,4 +10,7 @@ public final class ApiRoutes {
 
   public static final String CUSTOMER_API_BASE = "/customer";
   public static final String BACKOFFICE_API_BASE = "/backoffice";
+
+  // simple endpoint to check the app is up, without hitting the database
+  public static final String PING = "/ping";
 }

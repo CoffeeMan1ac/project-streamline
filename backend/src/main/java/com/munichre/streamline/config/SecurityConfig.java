@@ -2,6 +2,7 @@ package com.munichre.streamline.config;
 
 import static com.munichre.streamline.constant.ApiRoutes.BACKOFFICE_API_ROOT;
 import static com.munichre.streamline.constant.ApiRoutes.CUSTOMER_API_ROOT;
+import static com.munichre.streamline.constant.ApiRoutes.PING;
 
 import com.munichre.streamline.security.exception.UnauthenticatedException;
 import com.munichre.streamline.security.filter.FirebaseTokenFilter;
@@ -47,6 +48,8 @@ public class SecurityConfig {
         .authorizeHttpRequests(
             auth ->
                 auth.requestMatchers(HttpMethod.OPTIONS, "/**")
+                    .permitAll()
+                    .requestMatchers(PING)
                     .permitAll()
                     .requestMatchers(CUSTOMER_API_ROOT)
                     .permitAll()
