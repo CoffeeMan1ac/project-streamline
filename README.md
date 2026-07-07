@@ -35,7 +35,7 @@ Built as a Software Engineering Project (Trinity College Dublin, SwEng 2026 — 
 **Figure 5** Breakdown of rules applied and quotation calculation on an accepted quotation on backoffice portal.
 
 ![](media/rejected-quote.png)
-**Figure 6** Breakdown of rules applied and quotation calculation on an rejected quotation on backoffice portal.
+**Figure 6** Breakdown of rules applied and quotation calculation on a rejected quotation on backoffice portal.
 
 ## Build and Run
 
@@ -69,7 +69,7 @@ Built as a Software Engineering Project (Trinity College Dublin, SwEng 2026 — 
    npm i
    ```
 
-3. Set up enviromental variables as per variables in CICD found [here](https://gitlab.scss.tcd.ie/sweng26-group4/project-streamline/-/settings/ci_cd#js-cicd-variables-settings).
+3. Set up environment variables as per variables in CICD found [here](https://gitlab.scss.tcd.ie/sweng26-group4/project-streamline/-/settings/ci_cd#js-cicd-variables-settings).
 
 4. Run development version of application
 
@@ -114,13 +114,13 @@ The project was previously deployed to Google Cloud across staging
 | --------- | --------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
 | frontend  | npm run format:check  | Checks the formatting of the frontend code                                                                                             |
 | frontend  | npm run format        | Formats the frontend code to the required spec                                                                                         |
-| frontend  | npm run lint          | Lints the frontend code, you need to resolve any listing errors                                                                        |
-| frontend  | npm run lint:fix      | Attemps to fix simple linting errors                                                                                                   |
+| frontend  | npm run lint          | Lints the frontend code, you need to resolve any linting errors                                                                        |
+| frontend  | npm run lint:fix      | Attempts to fix simple linting errors                                                                                                   |
 | frontend  | npm run test          | Tests the frontend code                                                                                                                |
 | frontend  | npm run test:coverage | Generate coverage report for frontend code, you can view this in frontend/coverage, there is a html version for visual viewing         |
 | backend   | mvn spotless:check    | Checks the formatting of the backend code                                                                                              |
 | backend   | mvn spotless:apply    | Formats the backend code to the required spec                                                                                          |
-| backend   | mvn checkstyle:check  | Lints the backend code, you need to resolve any listing errors                                                                         |
+| backend   | mvn checkstyle:check  | Lints the backend code, you need to resolve any linting errors                                                                         |
 | backend   | mvn test              | Tests the backend code                                                                                                                 |
 | backend   | mvn verify            | Generate coverage report for backend code, you can view this in backend/target/site/jacoco, there is a html version for visual viewing |
 
@@ -153,7 +153,7 @@ The project was previously deployed to Google Cloud across staging
 | Theresa James      | Frontend Lead                           | @thjames  | thjames@tcd.ie  |
 | Han McKenna        | Backend Lead                            | @hamckenn | hamckenn@tcd.ie |
 | Orson O'Sullivan   | Full-Stack Developer                    | @orosulli | orosulli@tcd.ie |
-| Catherine Neumeyer | Front-End Developer / Social Media Lead | @neumeyec | neumeye@tcd.ie  |
+| Catherine Neumeyer | Front-End Developer / Social Media Lead | @neumeyec | neumeyec@tcd.ie |
 | Daniel Byrd        | Front-End Developer                     | @dbyrd    | dbyrd@tcd.ie    |
 | Kevin Murphy       | Back-End Developer / Video Editor       | @murphk35 | murphk35@tcd.ie |
 | Denys Keleshohlu   | Back-End Developer                      | @keleshod | keleshod@tcd.ie |
